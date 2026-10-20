@@ -37,6 +37,48 @@ namespace Origam.OrigamEngine;
 /// </summary>
 public static class TranslationBuilder
 {
+    public static IReadOnlyList<string> BuildFiles(
+        OrigamSettings settings,
+        string packageName,
+        Guid packageId
+    )
+    {
+        string[] languages = settings.TranslationBuilderLanguages.Split(',');
+        var files = new List<string>();
+        foreach (string language in languages)
+        {
+            string locale = language.Trim();
+            if (locale.Length == 0)
+            {
+                continue;
+            }
+
+            string fileName = packageName + "-" + locale + ".xml";
+            string outputPath = Path.Combine(
+                settings.ModelSourceControlLocation,
+                "..",
+                "l10n",
+                fileName
+            );
+            if (!string.IsNullOrEmpty(settings.LocalizationFolder))
+            {
+                outputPath = Path.Combine(settings.LocalizationFolder, fileName);
+            }
+
+            Directory.CreateDirectory(Path.GetDirectoryName(Path.GetFullPath(outputPath)));
+            using var currentTranslations = File.Exists(outputPath)
+                ? new LocalizationCache(outputPath)
+                : null;
+            using var output = new MemoryStream();
+            Build(output, currentTranslations, locale, packageId);
+            using var file = new FileStream(outputPath, FileMode.Create);
+            output.Seek(0, SeekOrigin.Begin);
+            output.WriteTo(file);
+            files.Add(fileName);
+        }
+        return files;
+    }
+
     public static void Build(
         Stream stream,
         LocalizationCache currentTranslations,

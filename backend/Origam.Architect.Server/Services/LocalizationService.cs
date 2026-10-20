@@ -19,7 +19,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.DA.ObjectPersistence;
 using Origam.OrigamEngine;
 using Origam.Workbench.Services;
 
@@ -40,41 +39,15 @@ public class LocalizationService(SchemaService schemaService)
             }
 
             var settings = ConfigurationManager.GetActiveConfiguration();
-            var languages = (settings.TranslationBuilderLanguages ?? "")
-                .Split(
-                    separator: ',',
-                    StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries
-                )
-                .Distinct()
-                .ToArray();
-            if (languages.Length == 0)
+            if (
+                string.IsNullOrWhiteSpace(settings.TranslationBuilderLanguages)
+                || settings.TranslationBuilderLanguages.Split(',').All(string.IsNullOrWhiteSpace)
+            )
             {
                 throw new UserOrigamException(Strings.Localization_NoLanguages);
             }
 
-            string outputFolder = string.IsNullOrEmpty(settings.LocalizationFolder)
-                ? Path.GetFullPath(
-                    Path.Combine(settings.ModelSourceControlLocation, path2: "..", path3: "l10n")
-                )
-                : settings.LocalizationFolder;
-            Directory.CreateDirectory(outputFolder);
-
-            var files = new List<string>();
-            foreach (string language in languages)
-            {
-                string fileName = package.Name + "-" + language + ".xml";
-                string outputPath = Path.Combine(outputFolder, fileName);
-                using var currentTranslations = File.Exists(outputPath)
-                    ? new LocalizationCache(outputPath)
-                    : null;
-                using var output = new MemoryStream();
-                TranslationBuilder.Build(output, currentTranslations, language, package.Id);
-                using var file = new FileStream(outputPath, FileMode.Create);
-                output.Position = 0;
-                output.CopyTo(file);
-                files.Add(fileName);
-            }
-            return files;
+            return TranslationBuilder.BuildFiles(settings, package.Name, package.Id);
         }
     }
 }
