@@ -18,7 +18,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { ReactElement } from 'react';
-import { VscChevronDown, VscEllipsis } from 'react-icons/vsc';
+import { VscTriangleDown } from 'react-icons/vsc';
 import S from '@editors/designerEditor/common/designerComponents/Components.module.scss';
 import { Component } from '@editors/designerEditor/common/designerComponents/Component.tsx';
 import { EditorBox } from '@editors/designerEditor/common/designerComponents/EditorBox.tsx';
@@ -36,10 +36,7 @@ export class AsDropDown extends Component {
     return (
       <EditorBox>
         <div className={S.editorButton}>
-          <VscEllipsis />
-        </div>
-        <div className={`${S.editorButton} ${S.dropDownButton}`}>
-          <VscChevronDown />
+          <VscTriangleDown size={9} />
         </div>
       </EditorBox>
     );

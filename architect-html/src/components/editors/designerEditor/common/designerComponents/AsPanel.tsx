@@ -32,6 +32,11 @@ export class AsPanel extends Component {
   }
 
   getDesignerRepresentation(): ReactElement | null {
-    return <div className={S.panel}></div>;
+    // The web client moves direct children up by 20px unless the navigation panel is hidden.
+    return (
+      <div className={S.panel}>
+        {this.get('HideNavigationPanel') === false && <div className={S.navigationPanel} />}
+      </div>
+    );
   }
 }

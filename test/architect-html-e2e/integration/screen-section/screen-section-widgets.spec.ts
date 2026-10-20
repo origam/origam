@@ -512,19 +512,19 @@ test.describe('Screen section widgets (real backend)', () => {
   });
 
   test('ReadOnly paints a widget grey and takes the buttons off a combo', async () => {
-    const white = 'rgb(255, 255, 255)';
+    const editable = 'rgb(247, 246, 250)';
     const grey = 'rgb(233, 232, 240)';
     await editor.openNew('AllDataTypes');
     const tagInput = await editor.dropWidget('TagInput', 'TagInput');
     const tagInputBox = editor.component(tagInput).locator('[class*="editorBox"]');
-    await expect(tagInputBox).toHaveCSS('background-color', white);
+    await expect(tagInputBox).toHaveCSS('background-color', editable);
     await editor.select(tagInput);
     await editor.checkProperty('ReadOnly');
     await expect(tagInputBox).toHaveCSS('background-color', grey);
 
     const comboBox = await editor.dropWidget('AsCombo', 'refTagInputSourceId');
     const comboBoxBox = editor.component(comboBox).locator('[class*="editorBox"]');
-    await expect(comboBoxBox.locator('svg').filter({ visible: true })).toHaveCount(2);
+    await expect(comboBoxBox.locator('svg').filter({ visible: true })).toHaveCount(1);
     await editor.select(comboBox);
     await editor.checkProperty('ReadOnly');
     await expect(comboBoxBox).toHaveCSS('background-color', grey);
