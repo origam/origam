@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.Collections;
 using System.ComponentModel;
+using System.Drawing;
 using System.Globalization;
 using System.Reflection;
 using Origam.Architect.Server.Attributes;
@@ -41,6 +42,7 @@ public class EditorPropertyFactory
     private const string LookupTypeName = "looukup";
     private const string UntypedTypeName = "untyped";
     private const string FieldBindingTypeName = "fieldBinding";
+    private const string ColorTypeName = "color";
 
     public EditorProperty CreateIfMarkedAsEditable(PropertyInfo property, ISchemaItem item)
     {
@@ -73,6 +75,7 @@ public class EditorPropertyFactory
         {
             _ when editedAsText || stringLookup => LookupTypeName,
             _ when untyped => UntypedTypeName,
+            _ when property.PropertyType == typeof(Color) => ColorTypeName,
             _ => ToPropertyTypeName(property),
         };
 
@@ -165,6 +168,10 @@ public class EditorPropertyFactory
         {
             return dataConstant.XmlValue;
         }
+        if (value is Color color)
+        {
+            return ToColorText(color);
+        }
         if (value is ISchemaItem schemaItem && property.GetSetMethod() == null)
         {
             return schemaItem.ToString();
@@ -185,6 +192,18 @@ public class EditorPropertyFactory
         }
 
         return value;
+    }
+
+    // ARGB zero means no color.
+    private static string ToColorText(Color color)
+    {
+        if (color.ToArgb() == 0)
+        {
+            return "";
+        }
+
+        // Lower case as the browser color picker reports it.
+        return $"#{color.R:x2}{color.G:x2}{color.B:x2}";
     }
 
     private (DropDownValue[] Values, TypeConverter Converter) GetAvailableValues(

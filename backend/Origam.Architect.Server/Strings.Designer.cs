@@ -313,6 +313,15 @@ namespace Origam.Architect.Server {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to &quot;{1}&quot; is not a valid color for {0}. Use the #RRGGBB format..
+        /// </summary>
+        internal static string Property_ColorNotValid {
+            get {
+                return ResourceManager.GetString("Property_ColorNotValid", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Type converter {0} of property {1} could not be found..
         /// </summary>
         internal static string Property_ConverterNotFound {

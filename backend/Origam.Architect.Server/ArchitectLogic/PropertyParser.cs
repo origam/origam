@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System.ComponentModel;
+using System.Drawing;
 using System.Globalization;
 using System.Reflection;
 using Origam.Architect.Server.ReturnModels;
@@ -34,6 +35,12 @@ public class PropertyParser(IPersistenceService persistenceService)
 {
     public object Parse(PropertyInfo property, string value, object instance)
     {
+        // Before the null check, an empty color comes as null.
+        if (property.PropertyType == typeof(Color))
+        {
+            return ParseColor(property, value);
+        }
+
         if (value == null)
         {
             return null;
@@ -232,6 +239,34 @@ public class PropertyParser(IPersistenceService persistenceService)
         }
 
         return converted;
+    }
+
+    private static Color ParseColor(PropertyInfo property, string value)
+    {
+        string text = value?.Trim() ?? "";
+        if (text.Length == 0)
+        {
+            // ARGB zero means no color, compared equal with what the getter returns for it.
+            return Color.FromArgb(0);
+        }
+
+        if (
+            text.Length != 7
+            || text[0] != '#'
+            || !int.TryParse(
+                text.AsSpan(1),
+                NumberStyles.AllowHexSpecifier,
+                CultureInfo.InvariantCulture,
+                out int rgb
+            )
+        )
+        {
+            throw new UserOrigamException(
+                string.Format(Strings.Property_ColorNotValid, property.Name, text)
+            );
+        }
+
+        return Color.FromArgb(alpha: 255, baseColor: Color.FromArgb(rgb));
     }
 
     private Exception MakeCouldNotParseException(PropertyInfo property)
