@@ -41,7 +41,9 @@ public class LocalizationService(SchemaService schemaService)
             var settings = ConfigurationManager.GetActiveConfiguration();
             if (
                 string.IsNullOrWhiteSpace(settings.TranslationBuilderLanguages)
-                || settings.TranslationBuilderLanguages.Split(',').All(string.IsNullOrWhiteSpace)
+                || settings
+                    .TranslationBuilderLanguages.Split(TranslationBuilder.LanguageSeparator)
+                    .All(string.IsNullOrWhiteSpace)
             )
             {
                 throw new UserOrigamException(Strings.Localization_NoLanguages);

@@ -34,7 +34,7 @@ namespace Origam.OrigamEngine;
 
 public static class TranslationBuilder
 {
-    private static readonly char LanguageSeparator = ',';
+    public static readonly char LanguageSeparator = ',';
     private static readonly string FileNameSeparator = "-";
     private static readonly string LocalizationFileExtension = ".xml";
     private static readonly string ParentDirectory = "..";
