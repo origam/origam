@@ -1,13 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <x:file
+ 
   xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+ 
   xmlns:ami="http://schemas.origam.com/Origam.Schema.MenuModel.AbstractMenuItem/6.0.2"
+ 
   xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+ 
   xmlns:dcrmi="http://schemas.origam.com/Origam.Schema.MenuModel.DataConstantReferenceMenuItem/6.0.0"
+ 
   xmlns:frmi="http://schemas.origam.com/Origam.Schema.MenuModel.FormReferenceMenuItem/6.0.0"
+ 
   xmlns:rrmi="http://schemas.origam.com/Origam.Schema.MenuModel.ReportReferenceMenuItem/6.0.0"
+ 
   xmlns:s2="http://schemas.origam.com/Origam.Schema.MenuModel.Submenu/6.0.0"
+ 
   xmlns:sdpm="http://schemas.origam.com/Origam.Schema.MenuModel.SelectionDialogParameterMapping/6.0.0"
+ 
   xmlns:wrmi="http://schemas.origam.com/Origam.Schema.MenuModel.WorkflowReferenceMenuItem/6.0.0">
   <dcrmi:MenuItem
     asi:abstract="false"
@@ -741,6 +750,7 @@
         asi:abstract="false"
         ami:alwaysOpenNew="false"
         frmi:autoSaveOnListRecordChange="false"
+        frmi:confirmationRule="Widgets/Rule/Widgets/ER_TagInputSource_Validate.origam#ER_TagInputSource_Validate/5d20e0a3-2bb6-4554-bf8b-5f4b0281a493"
         ami:displayName="Tag input source"
         x:id="83efdf7d-fa37-4c5e-905f-ff9cff25bbf2"
         asi:name="TagInputSource"
