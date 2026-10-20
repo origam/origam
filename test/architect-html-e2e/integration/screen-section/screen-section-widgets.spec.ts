@@ -587,4 +587,18 @@ test.describe('Screen section widgets (real backend)', () => {
       LENGTH_TEST_CONSTANT_ID,
     );
   });
+
+  test('widgets keep the web client look', async () => {
+    await editor.openNew('AllDataTypes');
+    await editor.dropWidget('AsTextBox', 'Text1');
+    await editor.dropWidget('AsCombo', 'refTagInputSourceId');
+    await editor.dropWidget('AsDateBox', 'Date1');
+    await editor.dropWidget('AsCheckBox', 'Boolean1');
+    const groupBox = await editor.dropWidget('GroupBox');
+    await editor.select(groupBox);
+    await editor.setProperty('Text', 'Group');
+    await editor.dropWidget('AsTextBox', 'Text2', groupBox);
+
+    await expect(editor.surface).toHaveScreenshot('section-widgets.png');
+  });
 });
