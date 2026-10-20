@@ -250,7 +250,9 @@ public class Startup
                 options.AllowPasswordFlow();
                 options.AllowRefreshTokenFlow();
                 options.AllowClientCredentialsFlow();
-                options.SetAccessTokenLifetime(TimeSpan.FromHours(1));
+                options.SetAccessTokenLifetime(
+                    TimeSpan.FromMinutes(openIddictConfig.AccessTokenExpirationMinutes)
+                );
                 options.SetRefreshTokenLifetime(TimeSpan.FromDays(30));
                 options
                     .UseAspNetCore()

@@ -39,6 +39,7 @@
   "OpenIddictConfig": {
     "PrivateApiAuthentication":  "Cookie",
     "CookieExpirationMinutes": 60,
+    "AccessTokenExpirationMinutes": 60,
     "AccessTokenIssuer": "https://localhost:44357",
     "CookieSlidingExpiration": true,
     // uncomment following section to enable Google Login

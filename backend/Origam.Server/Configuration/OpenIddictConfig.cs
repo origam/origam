@@ -56,6 +56,7 @@ public class OpenIddictConfig
     public AzureAdLogin AzureAdLogin { get; }
     public bool CookieSlidingExpiration { get; }
     public int CookieExpirationMinutes { get; }
+    public int AccessTokenExpirationMinutes { get; }
     public string AuthenticationPostProcessor { get; }
     public string AccessTokenIssuer { get; }
     public AuthenticationMethod PrivateApiAuthentication { get; }
@@ -76,6 +77,11 @@ public class OpenIddictConfig
             key: "CookieExpirationMinutes",
             defaultValue: 60
         );
+        AccessTokenExpirationMinutes = openIddictSection.GetValue(
+            key: "AccessTokenExpirationMinutes",
+            defaultValue: 60
+        );
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(AccessTokenExpirationMinutes);
         GoogleLogin = ConfigureGoogleLogin(openIddictSection);
         MicrosoftLogin = ConfigureMicrosoftLogin(openIddictSection);
         AzureAdLogin = ConfigureAzureAdLogin(openIddictSection);
