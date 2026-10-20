@@ -22,7 +22,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { activatePackage } from '@support/activatePackage';
 import { closeAiPanel } from '@support/aiPanel';
-import { modelFilePath, resetBackend } from '@support/resetBackend';
+import { modelFilePath, reloadBackend, resetBackend } from '@support/resetBackend';
 
 const SECTION_FILE_NAME = 'NewPanel.origam';
 const WIDGET_TYPES: Record<string, string> = {
@@ -171,6 +171,17 @@ class SectionEditor {
     expect((await response.json()).warnings).toEqual([]);
   }
 
+  async reopen(): Promise<void> {
+    await reloadBackend(this.request, 'Widgets');
+    const response = await this.request.post('/Tab/Open', {
+      data: { schemaItemId: this.sectionId },
+    });
+    expect(response.ok(), await response.text()).toBeTruthy();
+    await this.page.reload();
+    await closeAiPanel(this.page);
+    await expect(this.page.locator('#root')).toContainText('Screen Section Editor: NewPanel');
+  }
+
   async readSavedWidget(widget: string): Promise<ApiControl> {
     const sectionFile = findFile(modelFilePath('Widgets/PanelControlSet'), SECTION_FILE_NAME);
     expect(sectionFile, SECTION_FILE_NAME + ' was not written').toBeTruthy();
@@ -238,6 +249,94 @@ test.describe('Screen section widgets (real backend)', () => {
 
     const textBox = await editor.readSavedWidget('AsTextBox');
     expect(propertyValue(textBox, 'Value')).toBe('Text1');
+  });
+
+  for (const commit of ['Enter', 'Tab', 'blur'] as const) {
+    test(`manual field binding survives save and reopen after ${commit}`, async ({ page }) => {
+      const fieldName = commit === 'Tab' ? 'Text' : 'CalculatedField';
+      await editor.openNew('AllDataTypes');
+      const textBox = await editor.dropWidget('AsTextBox', 'Text1');
+      await editor.select(textBox);
+      const input = editor.propertyInput('Value');
+      await input.fill(fieldName);
+      if (commit === 'Tab') {
+        await expect(page.getByRole('listitem').filter({ hasText: /^Text2$/ })).toBeVisible();
+      } else {
+        await expect(
+          page.getByRole('listitem').filter({ hasText: /^CalculatedField$/ }),
+        ).toHaveCount(0);
+      }
+
+      const updated = page.waitForResponse(response =>
+        response.url().includes('/SectionEditor/Update'),
+      );
+      if (commit === 'blur') {
+        await editor.propertyInput('Caption').click();
+      } else {
+        await input.press(commit);
+      }
+      const response = await updated;
+      expect(response.ok(), await response.text()).toBeTruthy();
+      await expect(input).toHaveValue(fieldName);
+      await editor.save();
+      await editor.reopen();
+      await editor.select(textBox);
+      await expect(editor.propertyInput('Value')).toHaveValue(fieldName);
+      const savedTextBox = await editor.readSavedWidget('AsTextBox');
+      expect(propertyValue(savedTextBox, 'Value')).toBe(fieldName);
+    });
+  }
+
+  test('dropdown selection replaces a manual field binding', async ({ page }) => {
+    await editor.openNew('AllDataTypes');
+    const textBox = await editor.dropWidget('AsTextBox', 'Text1');
+    await editor.select(textBox);
+    await editor.propertyInput('Value').fill('CalculatedField');
+    const updated = page.waitForResponse(response =>
+      response.url().includes('/SectionEditor/Update'),
+    );
+    await editor.propertyInput('Value').press('Enter');
+    const response = await updated;
+    expect(response.ok(), await response.text()).toBeTruthy();
+    await expect(editor.propertyInput('Value')).toHaveValue('CalculatedField');
+
+    await editor.chooseProperty('Value', 'Text2');
+    await expect(editor.propertyInput('Value')).toHaveValue('Text2');
+    await editor.save();
+    await editor.reopen();
+    await editor.select(textBox);
+    await expect(editor.propertyInput('Value')).toHaveValue('Text2');
+    const savedTextBox = await editor.readSavedWidget('AsTextBox');
+    expect(propertyValue(savedTextBox, 'Value')).toBe('Text2');
+  });
+
+  test('Escape cancels a manual field binding edit', async () => {
+    await editor.openNew('AllDataTypes');
+    const textBox = await editor.dropWidget('AsTextBox', 'Text1');
+    await editor.select(textBox);
+    await editor.propertyInput('Value').fill('CalculatedField');
+    await editor.propertyInput('Value').press('Escape');
+    await editor.propertyInput('Caption').click();
+    await expect(editor.propertyInput('Value')).toHaveValue('Text1');
+    await editor.save();
+    const savedTextBox = await editor.readSavedWidget('AsTextBox');
+    expect(propertyValue(savedTextBox, 'Value')).toBe('Text1');
+  });
+
+  test('clearing a field binding removes it from the editor model', async ({ page }) => {
+    await editor.openNew('AllDataTypes');
+    const textBox = await editor.dropWidget('AsTextBox', 'Text1');
+    await editor.select(textBox);
+    await editor.propertyInput('Value').fill('');
+    const updated = page.waitForResponse(response =>
+      response.url().includes('/SectionEditor/Update'),
+    );
+    await editor.propertyInput('Value').press('Tab');
+    const response = await updated;
+    expect(response.ok(), await response.text()).toBeTruthy();
+    await expect(editor.propertyInput('Value')).toHaveValue('');
+    const rootControl = (await response.json()).data.rootControl as ApiControl;
+    expect(propertyValue(findControl(rootControl, textBox.id)!, 'Value')).toBeNull();
   });
 
   test('AsDateBox bound to a date field', async () => {

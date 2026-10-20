@@ -90,7 +90,9 @@ restart_server_with_private_api_authentication() {
   dotnet Origam.Server.dll >> origam-output.txt 2>&1 &
   server_pid=$!
   for attempt in {1..60}; do
-    if [[ "$(curl -sk -o /dev/null -w "%{http_code}" https://localhost/)" == "200" ]]; then
+    if [[ "$(curl -s -H 'X-Forwarded-Proto: https' -H 'Host: localhost' -o /dev/null -w "%{http_code}" http://127.0.0.1:8080/)" == "200" ]]; then
+      # Clear per-worker upstream failures recorded while the backend was stopped.
+      sudo /etc/init.d/nginx reload || exit 1
       return 0
     fi
     sleep 2
@@ -119,40 +121,70 @@ cd /home/origam/server_bin
 print_title "Start server and wait for database to be available"
 start_server
 
-echo "Waiting for Origam.Server.dll to initialize DB..."
-dotnet origam-utils.dll get-root-version --attempts 5 --delay 5000
-return_code=$?
-if [[ "$return_code" != 0 ]]; then
+echo "Waiting for Origam.Server.dll to accept requests..."
+server_ready=false
+for attempt in {1..30}; do
+  if curl --fail --silent -H 'X-Forwarded-Proto: https' -H 'Host: localhost' http://127.0.0.1:8080/ > /dev/null; then
+    server_ready=true
+    break
+  fi
+  sleep 1
+done
+if [[ "$server_ready" != true ]]; then
   print_error "DB initialization failed"
   echo "Origam.Server.dll output:"
   print_file_contents origam-output.txt
   exit 1
 else
-  echo " DB initialized"
+  sudo /etc/init.d/nginx reload || exit 1
+  echo " Server initialized"
 fi
 
-print_title "Run frontend integration tests"
-cd tests_e2e
-yarn install --ignore-engines > /dev/null 2>&1
+test_runner="${ORIGAM_E2E_RUNNER:-playwright}"
+case "$test_runner" in
+  playwright)
+    test_directory=/home/origam/server_bin/tests_e2e
+    ;;
+  legacy)
+    test_directory=/home/origam/server_bin/tests_e2e_legacy
+    ;;
+  *)
+    print_error "Unknown ORIGAM_E2E_RUNNER: $test_runner"
+    exit 1
+    ;;
+esac
+
+print_title "Run $test_runner frontend integration tests"
+cd "$test_directory"
+if [[ "$test_runner" == legacy ]]; then
+  yarn install --frozen-lockfile --ignore-scripts || exit 1
+else
+  yarn install --frozen-lockfile || exit 1
+  yarn playwright install ffmpeg || exit 1
+fi
 yarn test:e2e
 if [[ $? -eq 0 ]]; then
-  sudo cp frontend-integration-test-results.trx /home/origam/output/
+  sudo cp frontend-integration-test-results.trx "/home/origam/output/frontend-integration-test-results-$test_runner.trx"
+  sudo cp -r playwright-report test-results /home/origam/output/ 2>/dev/null || true
+  sudo cp -r screenshots /home/origam/output/legacy-screenshots 2>/dev/null || true
   echo "Success."
 else
-  sudo cp frontend-integration-test-results.trx /home/origam/output/
+  sudo cp frontend-integration-test-results.trx "/home/origam/output/frontend-integration-test-results-$test_runner.trx"
+  sudo cp -r playwright-report test-results /home/origam/output/ 2>/dev/null || true
+  sudo cp -r screenshots /home/origam/output/legacy-screenshots 2>/dev/null || true
   print_error "Frontend integration tests failed"
   exit 1
 fi
 
 print_title "Run user API integration tests in Cookie mode"
 restart_server_with_private_api_authentication Cookie
-cd /home/origam/server_bin/tests_e2e
+cd "$test_directory"
 yarn test:e2e userApi
 if [[ $? -eq 0 ]]; then
-  sudo cp frontend-integration-test-results.trx /home/origam/output/frontend-integration-test-results-cookie-mode.trx
+  sudo cp frontend-integration-test-results.trx "/home/origam/output/frontend-integration-test-results-$test_runner-cookie-mode.trx"
   echo "Success."
 else
-  sudo cp frontend-integration-test-results.trx /home/origam/output/frontend-integration-test-results-cookie-mode.trx
+  sudo cp frontend-integration-test-results.trx "/home/origam/output/frontend-integration-test-results-$test_runner-cookie-mode.trx"
   print_error "User API integration tests in Cookie mode failed"
   exit 1
 fi

@@ -36,6 +36,26 @@ yarn test:e2e:integration:ui
 
 This opens the Playwright UI runner so you can watch and debug the tests interactively.
 
+## CI execution
+
+The GitHub Actions integration workflow splits the full suite across six parallel
+Windows runners using Playwright's `--shard=N/6` option. Each runner has its own
+backend, LocalDB database and model checkout. Tests stay sequential within a shard
+(`workers: 1`, `fullyParallel: false`) because they reset and modify shared state.
+Increasing the worker count against a shared backend would cause tests to interfere.
+
+All shards run to completion even if another shard fails. The final
+`architect-html-e2e-integration` check merges their reports into the
+`playwright-integration-report` artifact and fails if any shard fails. Test results
+and server logs are uploaded separately with the shard number in each artifact name.
+
+The target is approximately 10 minutes rather than the previous 30-minute serial
+run. Actual wall time depends on runner availability, setup time, retries and the
+slowest shard. Sharding keeps the same coverage and retries, but uses more concurrent
+Windows runners and repeats setup on each. Check the first CI run's shard durations
+before treating the target as achieved. Playwright assigns whole files to shards
+with this configuration, so a particularly slow file can limit the speedup.
+
 ---
 
 ## Creating a new test

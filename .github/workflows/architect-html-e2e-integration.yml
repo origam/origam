@@ -1,9 +1,7 @@
 name: "Architect HTML E2E (integration)"
 
-# Heavy job: builds and starts a real Origam.Architect.Server (with an MSSQL
-# LocalDB database and the model in model-tests/model) and runs the Playwright
-# integration suite against it. The lightweight, backend-less smoke suite lives
-# in architect-html-e2e.yml.
+# Each shard builds and starts its own Origam.Architect.Server, MSSQL LocalDB
+# database and model checkout so tests can reset shared state safely.
 
 on:
   push:
@@ -16,10 +14,14 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  e2e-integration:
-    name: architect-html-e2e-integration
+  e2e-shards:
+    name: architect-html-e2e-integration (${{ matrix.shard }}/6)
     runs-on: windows-2025
     timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4, 5, 6]
     permissions:
       actions: read
       contents: read
@@ -176,16 +178,16 @@ jobs:
           # host) with the build dir as its working dir / content root.
           ARCHITECT_SERVER_CMD: 'dotnet "${{ env.SERVER_DLL }}" --urls "https://localhost:7099;http://localhost:5003"'
           ARCHITECT_SERVER_CWD: ${{ env.SERVER_DIR }}
-        run: yarn test:e2e:integration
+        run: yarn test:e2e:integration --shard=${{ matrix.shard }}/6 "--reporter=blob,github,list"
         working-directory: test/architect-html-e2e
 
       # --- Artifacts -------------------------------------------------------
-      - name: Upload Playwright report
+      - name: Upload Playwright blob report
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-integration-report
-          path: test/architect-html-e2e/playwright-report
+          name: playwright-integration-blob-${{ matrix.shard }}
+          path: test/architect-html-e2e/blob-report
           retention-days: 7
           if-no-files-found: ignore
 
@@ -193,7 +195,7 @@ jobs:
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-integration-test-results
+          name: playwright-integration-test-results-${{ matrix.shard }}
           path: test/architect-html-e2e/test-results
           retention-days: 7
           if-no-files-found: ignore
@@ -202,7 +204,58 @@ jobs:
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
         with:
-          name: architect-server-logs
+          name: architect-server-logs-${{ matrix.shard }}
           path: ${{ env.SERVER_DIR }}/logs
           retention-days: 7
           if-no-files-found: ignore
+
+  e2e-integration:
+    name: architect-html-e2e-integration
+    needs: e2e-shards
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      actions: read
+      contents: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install e2e dependencies
+        run: yarn install --immutable
+        working-directory: test/architect-html-e2e
+
+      - name: Download Playwright blob reports
+        uses: actions/download-artifact@v4
+        with:
+          pattern: playwright-integration-blob-*
+          path: test/architect-html-e2e/blob-reports
+          merge-multiple: true
+
+      - name: Merge Playwright reports
+        run: yarn playwright merge-reports --config=playwright.integration.config.ts --reporter=html ./blob-reports
+        working-directory: test/architect-html-e2e
+
+      - name: Upload Playwright report
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-integration-report
+          path: test/architect-html-e2e/playwright-report
+          retention-days: 7
+          if-no-files-found: error
+
+      - name: Check shard results
+        if: ${{ !cancelled() }}
+        env:
+          SHARD_RESULT: ${{ needs.e2e-shards.result }}
+        run: test "$SHARD_RESULT" = success
