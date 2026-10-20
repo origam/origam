@@ -46,15 +46,13 @@ public static class TranslationBuilder
         Guid packageId
     )
     {
-        string[] languages = settings.TranslationBuilderLanguages.Split(LanguageSeparator);
+        var locales = settings
+            .TranslationBuilderLanguages.Split(LanguageSeparator)
+            .Select(language => language.Trim())
+            .Where(locale => locale.Length > 0);
         var files = new List<string>();
-        foreach (string language in languages)
+        foreach (string locale in locales)
         {
-            string locale = language.Trim();
-            if (locale.Length == 0)
-            {
-                continue;
-            }
             string filename =
                 $"{packageName}{FileNameSeparator}{locale}{LocalizationFileExtension}";
             string outputPath = Path.Combine(
