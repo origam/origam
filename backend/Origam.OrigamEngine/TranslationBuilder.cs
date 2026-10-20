@@ -37,6 +37,11 @@ namespace Origam.OrigamEngine;
 /// </summary>
 public static class TranslationBuilder
 {
+    private static readonly string FileNameSeparator = "-";
+    private static readonly string LocalizationFileExtension = ".xml";
+    private static readonly string ParentDirectory = "..";
+    private static readonly string DefaultLocalizationDirectory = "l10n";
+
     public static IReadOnlyList<string> BuildFiles(
         OrigamSettings settings,
         string packageName,
@@ -53,11 +58,11 @@ public static class TranslationBuilder
                 continue;
             }
 
-            string fileName = packageName + "-" + locale + ".xml";
+            string fileName = packageName + FileNameSeparator + locale + LocalizationFileExtension;
             string outputPath = Path.Combine(
                 settings.ModelSourceControlLocation,
-                "..",
-                "l10n",
+                ParentDirectory,
+                DefaultLocalizationDirectory,
                 fileName
             );
             if (!string.IsNullOrEmpty(settings.LocalizationFolder))
