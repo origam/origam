@@ -289,22 +289,7 @@ public class ServiceScriptCommandEditor : AbstractEditor
                 }
             }
 
-            if (activity.Service == null)
-            {
-                // default service selected is DataService
-                foreach (var item in cboService.Items)
-                {
-                    if (item.ToString() == "DataService")
-                    {
-                        cboService.SelectedItem = item;
-                        break;
-                    }
-                }
-            }
-            else
-            {
-                cboService.SelectedItem = activity.Service;
-            }
+            cboService.SelectedItem = activity.Service;
         }
         finally
         {
