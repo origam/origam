@@ -62,7 +62,7 @@ test.describe('Deployment Version creation (real backend)', () => {
 
         await page.getByText('Settings', { exact: true }).click();
         await expect(page.getByTestId('property-select-Service').locator('input')).toHaveValue('DataService');
-        await page.getByTestId('save-button').click();
-        await expect(page.getByTestId('save-button-disabled')).toBeVisible();
+        await page.getByTestId('save-button').filter({ visible: true }).click();
+        await expect(page.getByTestId('save-button-disabled').filter({ visible: true })).toBeVisible();
     });
 });
