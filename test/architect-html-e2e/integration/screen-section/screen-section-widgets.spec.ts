@@ -590,7 +590,9 @@ test.describe('Screen section widgets (real backend)', () => {
 
   test('widgets keep the web client look', async () => {
     await editor.openNew('AllDataTypes');
-    await editor.dropWidget('AsTextBox', 'Text1');
+    const textBox = await editor.dropWidget('AsTextBox', 'Text1');
+    await editor.select(textBox);
+    await editor.setProperty('CaptionLength', '20');
     await editor.dropWidget('AsCombo', 'refTagInputSourceId');
     await editor.dropWidget('AsDateBox', 'Date1');
     await editor.dropWidget('AsCheckBox', 'Boolean1');

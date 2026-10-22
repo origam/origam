@@ -153,6 +153,11 @@ export class Component {
     return controlLayer;
   }
 
+  // A caption that does not fit slides under the controls next to it.
+  get labelZIndex(): number {
+    return this.zIndex - 1;
+  }
+
   get isReadOnly(): boolean {
     return this.get('ReadOnly') === true;
   }
