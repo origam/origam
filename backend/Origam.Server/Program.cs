@@ -67,7 +67,7 @@ public class Program
         }
         catch (Exception e)
         {
-            startupLogger.LogCritical($"{e.Message}\n{e.StackTrace}");
+            startupLogger.LogCritical(e, "Origam server failed to start or stopped unexpectedly.");
             throw;
         }
     }
