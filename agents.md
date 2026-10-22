@@ -15,11 +15,7 @@
 - Format changed C# files with the repository's configured CSharpier version.
   From `backend`, run `dotnet tool restore`, then
   `dotnet csharpier format <changed-file-paths>`. Keep formatting scoped to affected files.
-- For new source files, generate the license header using
-  `./.github/scripts/get-license-header.ps1 -Extension <extension>` in PowerShell or
-  `bash .github/scripts/get-license-header.sh <extension>` on Linux/macOS (e.g. `cs`).
-  Follow the exclusions in `./.github/scripts/check-license-headers.ps1` and run it
-  after adding source files.
+- When adding source files, use the [license-headers skill](.agents/skills/license-headers/SKILL.md).
 
 ## Localization
 
