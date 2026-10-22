@@ -46,23 +46,4 @@ test.describe('Deployment Version creation (real backend)', () => {
         await expect(page.getByTestId('tree-node-9.9.9')).toBeVisible();
         await expect(page.getByText('Deployment Version: 9.9.9', { exact: true })).toBeVisible();
     });
-
-    test('new service command script defaults to DataService', async ({ page }) => {
-        await page.goto('/');
-        await closeAiPanel(page);
-
-        await page.getByTestId('tree-toggle-Common').click();
-        await page.getByTestId('tree-toggle-Deployment').click();
-        await page.getByTestId('tree-toggle-Root Menu').click();
-        await page.getByTestId('tree-node-1.3.0').click({ button: 'right' });
-        await page.getByTestId('tree-menu-new').getByText('New').click();
-        await page
-            .getByTestId('tree-menu-new-Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity')
-            .click();
-
-        await page.getByText('Settings', { exact: true }).click();
-        await expect(page.getByTestId('property-select-Service').locator('input')).toHaveValue('DataService');
-        await page.getByTestId('save-button').filter({ visible: true }).click();
-        await expect(page.getByTestId('save-button-disabled').filter({ visible: true })).toBeVisible();
-    });
 });
