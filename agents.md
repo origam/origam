@@ -1,5 +1,8 @@
 # Project instructions
 
+If `AGENTS.local.md` exists in the repository root, read and apply it as additional
+developer-specific instructions.
+
 ## Implementation
 
 - Prefer constructor dependency injection; the long-term goal is to replace service
