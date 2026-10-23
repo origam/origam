@@ -24,7 +24,7 @@ using Origam.Workbench.Services;
 
 namespace Origam.Architect.Server.Services;
 
-public class LocalizationService(SchemaService schemaService)
+public class LocalizationService(SchemaService schemaService, OrigamSettings settings)
 {
     private readonly object _rebuildLock = new();
 
@@ -38,13 +38,8 @@ public class LocalizationService(SchemaService schemaService)
                 throw new UserOrigamException(Strings.Localization_NoActivePackage);
             }
 
-            var settings = ConfigurationManager.GetActiveConfiguration();
-            if (
-                string.IsNullOrWhiteSpace(settings.TranslationBuilderLanguages)
-                || settings
-                    .TranslationBuilderLanguages.Split(TranslationBuilder.LanguageSeparator)
-                    .All(string.IsNullOrWhiteSpace)
-            )
+            var locales = TranslationBuilder.ParseLanguages(settings.TranslationBuilderLanguages);
+            if (locales.Length == 0)
             {
                 throw new UserOrigamException(Strings.Localization_NoLanguages);
             }

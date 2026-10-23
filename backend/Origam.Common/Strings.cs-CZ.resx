@@ -72,4 +72,10 @@
   <data name="UserNotLoggedInException">
     <value>Uživatel není přihlášen.</value>
   </data>
+  <data name="Configuration_NotFound" xml:space="preserve">
+    <value>Konfigurace nebyla nalezena.</value>
+  </data>
+  <data name="Configuration_ExactlyOneRequired" xml:space="preserve">
+    <value>Pokud není zadán název konfigurace, musí soubor nastavení obsahovat právě jednu konfiguraci.</value>
+  </data>
 </root>

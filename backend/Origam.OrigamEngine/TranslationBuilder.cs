@@ -40,16 +40,22 @@ public static class TranslationBuilder
     private static readonly string ParentDirectory = "..";
     private static readonly string DefaultLocalizationDirectory = "l10n";
 
+    public static string[] ParseLanguages(string languages)
+    {
+        return (languages ?? string.Empty)
+            .Split(LanguageSeparator)
+            .Select(language => language.Trim())
+            .Where(locale => locale.Length > 0)
+            .ToArray();
+    }
+
     public static IReadOnlyList<string> BuildFiles(
         OrigamSettings settings,
         string packageName,
         Guid packageId
     )
     {
-        var locales = settings
-            .TranslationBuilderLanguages.Split(LanguageSeparator)
-            .Select(language => language.Trim())
-            .Where(locale => locale.Length > 0);
+        var locales = ParseLanguages(settings.TranslationBuilderLanguages);
         var files = new List<string>();
         foreach (string locale in locales)
         {

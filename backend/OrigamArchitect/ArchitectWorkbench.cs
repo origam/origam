@@ -2170,25 +2170,16 @@ internal class frmMain : Form, IWorkbench
     /// </summary>
     private bool LoadConfiguration(string configurationName)
     {
-        OrigamSettingsCollection configurations =
-            ConfigurationManager.GetAllUserHomeConfigurations();
         if (configurationName != null)
         {
-            foreach (OrigamSettings config in configurations)
-            {
-                if (config.Name == configurationName)
-                {
-                    ConfigurationManager.SetActiveConfiguration(config);
-                    return true;
-                }
-            }
-            throw new ArgumentOutOfRangeException(
-                nameof(configurationName),
-                configurationName,
-                strings.ConfigurationNotFound_ExceptionMessage
+            ConfigurationManager.SetActiveConfiguration(
+                ConfigurationManager.GetUserHomeConfiguration(configurationName)
             );
+            return true;
         }
 
+        OrigamSettingsCollection configurations =
+            ConfigurationManager.GetAllUserHomeConfigurations();
         if (configurations.Count == 0)
         {
             Commands.CreateNewProject cmd = new Commands.CreateNewProject();

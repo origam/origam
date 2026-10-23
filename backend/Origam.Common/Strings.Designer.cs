@@ -26,6 +26,18 @@ namespace Origam {
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
+
+        public static string Configuration_NotFound {
+            get {
+                return ResourceManager.GetString("Configuration_NotFound", resourceCulture);
+            }
+        }
+
+        public static string Configuration_ExactlyOneRequired {
+            get {
+                return ResourceManager.GetString("Configuration_ExactlyOneRequired", resourceCulture);
+            }
+        }
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         internal Strings() {

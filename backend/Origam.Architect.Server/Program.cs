@@ -43,8 +43,12 @@ public class Program
 {
     public static void Main(string[] args)
     {
+        var settings = ConfigurationManager.GetUserHomeConfiguration(
+            origamSettingsPath: OrigamSettingsReader.DefaultPathToOrigamSettings
+        );
+        ConfigurationManager.SetActiveConfiguration(settings);
         var schema = new SchemaService();
-        var workbench = new Workbench(schema);
+        var workbench = new Workbench(schema, settings);
         workbench.InitializeDefaultServices();
         workbench.Connect();
 
@@ -55,6 +59,7 @@ public class Program
             ServiceManager.Services.GetService<IBusinessServicesService>();
 
         var builder = WebApplication.CreateBuilder(args);
+        builder.Services.AddSingleton(settings);
         builder.Services.AddSingleton(deploymentService);
         builder.Services.AddSingleton<GitNodeStatusService>();
         builder.Services.AddSingleton<ModelTransactionRunner>();
