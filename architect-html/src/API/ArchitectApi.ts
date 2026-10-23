@@ -70,6 +70,10 @@ export class ArchitectApi implements IArchitectApi {
     return (await this.http.get('/Package/GetAll')).data;
   }
 
+  async rebuildLocalizationFiles(): Promise<string[]> {
+    return (await this.http.post('/Localization/Rebuild')).data;
+  }
+
   async createPackage(name: string): Promise<IPackage> {
     return (await this.http.post('/Package/Create', { name })).data;
   }

@@ -1,0 +1,66 @@
+/*
+Copyright 2005 - 2026 Advantage Solutions, s. r. o.
+
+This file is part of ORIGAM (http://www.origam.org).
+
+ORIGAM is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+ORIGAM is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
+*/
+
+import { RootStoreContext, T } from '@/main';
+import Button from '@components/Button/Button';
+import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
+import { observer } from 'mobx-react-lite';
+import { useContext, useState } from 'react';
+import { VscGlobe } from 'react-icons/vsc';
+
+const RebuildLocalizationButton = observer(() => {
+  const rootStore = useContext(RootStoreContext);
+  const [isRunning, setIsRunning] = useState(false);
+  const run = runInFlowWithHandler(rootStore.errorDialogController);
+
+  const handleOnClick = () => {
+    if (isRunning) return;
+    run({
+      action: async () => {
+        setIsRunning(true);
+        rootStore.progressBarState.isWorking = true;
+        try {
+          const files = await rootStore.architectApi.rebuildLocalizationFiles();
+          rootStore.notificationState.pushActionResult({
+            title: T('Localization files rebuilt', 'localization_rebuild_success'),
+            subtitle: files.join(', '),
+          });
+        } finally {
+          setIsRunning(false);
+          rootStore.progressBarState.isWorking = false;
+        }
+      },
+    });
+  };
+
+  if (!rootStore.packagesState.activePackageId) return null;
+
+  return (
+    <Button
+      type="secondary"
+      title={T('Rebuild Localization Files', 'localization_rebuild_label')}
+      prefix={<VscGlobe />}
+      isDisabled={isRunning}
+      onClick={handleOnClick}
+      dataTestId="topbar-rebuild-localization"
+    />
+  );
+});
+
+export default RebuildLocalizationButton;

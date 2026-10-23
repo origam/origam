@@ -61,6 +61,8 @@ export interface IArchitectApi {
 
   getModelCheckResult(): Promise<IModelCheckResult>;
 
+  rebuildLocalizationFiles(): Promise<string[]>;
+
   openTab(schemaItemId: string): Promise<IApiTabData>;
 
   closeTab(tabId: string): Promise<void>;

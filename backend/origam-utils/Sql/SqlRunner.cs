@@ -114,12 +114,7 @@ abstract class SqlRunner : ISqlRunner
 
     protected static OrigamSettings GetOrigamSettings()
     {
-        OrigamSettingsCollection configurations = ConfigurationManager.GetAllConfigurations();
-        if (configurations.Count != 1)
-        {
-            throw new Exception("Exactly one configuration in OrigamSettings is required.");
-        }
-        return configurations[0];
+        return ConfigurationManager.GetConfiguration();
     }
 
     protected abstract string BuildRootVersionSql();

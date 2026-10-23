@@ -28,7 +28,7 @@ namespace Origam;
 
 public class OrigamSettingsReader
 {
-    private static string DefaultPathToOrigamSettings =>
+    public static string DefaultPathToOrigamSettings =>
         Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "OrigamSettings.config");
     private readonly string pathToOrigamSettings;
 
