@@ -3962,10 +3962,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"highlight-words-core@npm:^1.2.0":
-  version: 1.2.2
-  resolution: "highlight-words-core@npm:1.2.2"
-  checksum: 10c0/36a2a93d483dbfa849e6b9832a61053d033d8eab1d271c4f8ddf05c5cc8887c696ddbd816a6fe7604d74b5afae9c643c8620e44e4a0ae5914bb9ab639da016a7
+"highlight-words-core@npm:2.0.0":
+  version: 2.0.0
+  resolution: "highlight-words-core@npm:2.0.0"
+  checksum: 10c0/12afa504745813295ca9a8a456786abd33162d7c1646b4e73fec23c0e4f1568f858ed0df060ca0faaddbd289cdb05bd8fe3239478ac7743500576408dc8d0e7a
   languageName: node
   linkType: hard
 
@@ -5267,13 +5267,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"memoize-one@npm:^4.0.0":
-  version: 4.1.0
-  resolution: "memoize-one@npm:4.1.0"
-  checksum: 10c0/10efb0ca6b1123ba4bc22fbae166aea59cc2ee59ade2c0632de76a2576ac3f12e9c3bc99110d64abc275cf53838e5dcf4d14635c131e03f8dec7f5d90cb24d4e
-  languageName: node
-  linkType: hard
-
 "memoize-one@npm:^5.1.1":
   version: 5.2.1
   resolution: "memoize-one@npm:5.2.1"
@@ -6078,15 +6071,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-highlight-words@npm:^0.21.0":
-  version: 0.21.0
-  resolution: "react-highlight-words@npm:0.21.0"
+"react-highlight-words@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "react-highlight-words@npm:1.0.0"
   dependencies:
-    highlight-words-core: "npm:^1.2.0"
-    memoize-one: "npm:^4.0.0"
+    highlight-words-core: "npm:2.0.0"
   peerDependencies:
-    react: ^0.14.0 || ^15.0.0 || ^16.0.0-0 || ^17.0.0-0 || ^18.0.0-0 || ^19.0.0-0
-  checksum: 10c0/8704097b6ca2b08a943e55e66493fab21d523362c8ea754ef4c7a351b4625b684d7ed1e9155f97d033be78783dacdd88bb83e2766cfc3d462c311551552b8ad5
+    react: ^16.3.0 || ^17.0.0-0 || ^18.0.0-0 || ^19.0.0-0
+  checksum: 10c0/f834bc891a1175eb38f627981b68e130749ec5fe3054f4b12066fcbb83d88e05254a2d6613b70021d3be2fe76efd695662122f9e8e7c423cd4c1daa7717ba5bb
   languageName: node
   linkType: hard
 
@@ -6220,7 +6212,7 @@ __metadata:
     react-color: "npm:^2.19.3"
     react-dom: "npm:19.2.8"
     react-draft-wysiwyg: "npm:^1.15.0"
-    react-highlight-words: "npm:^0.21.0"
+    react-highlight-words: "npm:^1.0.0"
     react-inlinesvg: "npm:4.5.x"
     react-measure: "npm:^2.5.2"
     react-virtualized: "npm:^9.22.6"
