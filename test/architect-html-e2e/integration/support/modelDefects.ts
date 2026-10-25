@@ -33,10 +33,6 @@ const widgetsPackageId = 'f17329d6-3143-420a-a2e6-30e431eea51d';
 // Postgres, so the rule fires on either database.
 const overlongIdentifier = 'x'.repeat(200);
 
-const deploymentVersionFile = path.join(
-  modelDirectory,
-  'AutomaticTests/DeploymentVersion/AutomaticTests/1.0.3.origam',
-);
 const entityWithColumnsFile = path.join(
   modelDirectory,
   'Widgets/DataEntity/Widgets/ArrayTest.origam',
@@ -52,11 +48,13 @@ function replaceOnce(filePath: string, search: string, replacement: string): voi
   fs.writeFileSync(filePath, content.replace(search, replacement), 'utf8');
 }
 
-// Points a deployment activity at a service that does not exist, which the
-// "Invalid References Between Origam Files" check reports.
 export function plantMissingReference(): { instanceId: string } {
-  replaceOnce(deploymentVersionFile, 'bbd7bd32-d40b-441a-bb5b-0b0fa89169d4', missingId);
-  return { instanceId: '7400b485-8bbc-4585-8d8f-36561433cd22' };
+  replaceOnce(
+    entityWithColumnsFile,
+    'adec:defaultLookup="LookupBusinessPartner#LookupBusinessPartner/08d82ef5-df38-48d6-a276-ee5b7f027bd6"',
+    `adec:defaultLookup="LookupBusinessPartner#LookupBusinessPartner/${missingId}"`,
+  );
+  return { instanceId: '0290bc38-cdb3-4a7f-94dc-b9a5aea7a6db' };
 }
 
 // Makes a database column name longer than the database allows, which the

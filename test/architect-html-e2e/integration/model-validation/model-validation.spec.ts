@@ -93,7 +93,7 @@ test.describe('Model validation', () => {
     const section = fileSection(page, 'Invalid References Between Origam Files');
     await expect(section).toContainText(instanceId);
     await expect(section).toContainText(missingId);
-    await expect(section).toContainText('1.0.3.origam');
+    await expect(section).toContainText('ArrayTest.origam');
   });
 
   test('reports a file that no model element references', async ({ page }) => {
