@@ -1,4 +1,7 @@
 {
+  "topbar_menu_label": "Menu",
+  "localization_rebuild_label": "Rebuild Localization Files",
+  "localization_rebuild_success": "Localization files rebuilt",
   "app_packages": "Packages",
   "app_model": "Model",
   "app_properties": "Properties",
