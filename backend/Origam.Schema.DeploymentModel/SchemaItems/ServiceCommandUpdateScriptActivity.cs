@@ -82,6 +82,7 @@ public class ServiceCommandUpdateScriptActivity : AbstractUpdateScriptActivity
     [Category("Service Command Information")]
     [TypeConverter(typeof(ServiceConverter))]
     [XmlReference("service", "ServiceId")]
+    [NotNullModelElementRule()]
     public IService Service
     {
         get

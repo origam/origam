@@ -378,4 +378,13 @@
     <data name="Package_ReferenceStillUsed" xml:space="preserve">
         <value>Package "{0}" cannot be removed from the references because "{1}" uses "{2}" from it.</value>
     </data>
+    <data name="Property_ColorNotValid" xml:space="preserve">
+        <value>"{1}" is not a valid color for {0}. Use the #RRGGBB format.</value>
+    </data>
+    <data name="Localization_NoActivePackage" xml:space="preserve">
+        <value>Select an active package before rebuilding localization files.</value>
+    </data>
+    <data name="Localization_NoLanguages" xml:space="preserve">
+        <value>Configure TranslationBuilderLanguages before rebuilding localization files.</value>
+    </data>
 </root>

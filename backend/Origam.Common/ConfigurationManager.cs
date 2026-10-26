@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 
 namespace Origam;
@@ -63,12 +64,64 @@ public class ConfigurationManager
     )
     {
         CreateUserProfileConfigFile(origamSettingsPath);
-        return new OrigamSettingsReader(_pathToOrigamSettings).GetAll();
+        return GetAllConfigurations();
     }
 
-    public static OrigamSettingsCollection GetAllConfigurations()
+    public static OrigamSettingsCollection GetAllConfigurations(string origamSettingsPath = null)
     {
-        return new OrigamSettingsReader(_pathToOrigamSettings).GetAll();
+        return new OrigamSettingsReader(origamSettingsPath ?? _pathToOrigamSettings).GetAll();
+    }
+
+    public static OrigamSettings GetConfiguration(
+        string configurationName = null,
+        string origamSettingsPath = null
+    )
+    {
+        return SelectConfiguration(
+            GetAllConfigurations(origamSettingsPath),
+            string.IsNullOrEmpty(configurationName) ? null : configurationName,
+            requireSingleConfiguration: true
+        );
+    }
+
+    public static OrigamSettings GetUserHomeConfiguration(
+        string configurationName = null,
+        string origamSettingsPath = null
+    )
+    {
+        return SelectConfiguration(
+            GetAllUserHomeConfigurations(origamSettingsPath),
+            configurationName,
+            requireSingleConfiguration: false
+        );
+    }
+
+    private static OrigamSettings SelectConfiguration(
+        OrigamSettingsCollection configurations,
+        string configurationName,
+        bool requireSingleConfiguration
+    )
+    {
+        if (configurationName != null)
+        {
+            return configurations
+                    .Cast<OrigamSettings>()
+                    .FirstOrDefault(configuration => configuration.Name == configurationName)
+                ?? throw new ArgumentOutOfRangeException(
+                    nameof(configurationName),
+                    configurationName,
+                    Strings.Configuration_NotFound
+                );
+        }
+        if (requireSingleConfiguration && configurations.Count != 1)
+        {
+            throw new Exception(Strings.Configuration_ExactlyOneRequired);
+        }
+        if (configurations.Count == 0)
+        {
+            throw new Exception(Strings.Configuration_NotFound);
+        }
+        return configurations[0];
     }
 
     public static void WriteConfiguration(OrigamSettingsCollection configuration)

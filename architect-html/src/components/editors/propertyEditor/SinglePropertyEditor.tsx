@@ -17,9 +17,10 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { RootStoreContext } from '@/main.tsx';
+import { RootStoreContext, T } from '@/main.tsx';
 import { PropertyValue } from '@api/IArchitectApi';
 import { EditorProperty } from '@editors/gridEditor/EditorProperty.ts';
+import { ColorPropertyInput } from '@editors/propertyEditor/ColorPropertyInput.tsx';
 import { IPropertyManager } from '@editors/propertyEditor/IPropertyManager.tsx';
 import { FilterableSelect } from '@editors/propertyEditor/FilterableSelect.tsx';
 import { NumericPropertyInput } from '@editors/propertyEditor/NumericPropertyInput.tsx';
@@ -31,7 +32,7 @@ import S from '@editors/propertyEditor/SinglePropertyEditor.module.scss';
 import { UntypedPropertyInput } from '@editors/propertyEditor/UntypedPropertyInput.tsx';
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler.ts';
 import { observer } from 'mobx-react-lite';
-import { useContext } from 'react';
+import { ReactNode, useContext } from 'react';
 import { VscCopy } from 'react-icons/vsc';
 
 const NO_WHITESPACE_PROPERTIES = new Set(['Name', 'MappedObjectName']);
@@ -46,6 +47,20 @@ const SinglePropertyEditor = observer(
         await navigator.clipboard.writeText(props.property.value.toString());
       }
     };
+
+    const withCopyButton = (control: ReactNode) => (
+      <div className={S.inputWithCopyButton}>
+        <button
+          type="button"
+          className={S.copyButton}
+          onClick={handleCopyToClipboard}
+          title={T('Copy to clipboard', 'property_copy_to_clipboard')}
+        >
+          <VscCopy />
+        </button>
+        {control}
+      </div>
+    );
 
     const onValueChange = (property: EditorProperty, value: PropertyValue) => {
       runInFlowWithHandler(rootStore.errorDialogController)({
@@ -111,68 +126,47 @@ const SinglePropertyEditor = observer(
       }
 
       if (property.type === 'integer' || property.type === 'float') {
-        return (
-          <div className={S.inputWithCopyButton}>
-            <button
-              type="button"
-              className={S.copyButton}
-              onClick={handleCopyToClipboard}
-              title="Copy to clipboard"
-            >
-              <VscCopy />
-            </button>
-            <NumericPropertyInput
-              property={property}
-              type={property.type}
-              onChange={value => onValueChange(property, value)}
-            />
-          </div>
+        return withCopyButton(
+          <NumericPropertyInput
+            property={property}
+            type={property.type}
+            onChange={value => onValueChange(property, value)}
+          />,
+        );
+      }
+
+      if (property.type === 'color') {
+        return withCopyButton(
+          <ColorPropertyInput
+            property={property}
+            onChange={value => onValueChange(property, value)}
+          />,
         );
       }
 
       if (property.type === 'untyped') {
-        return (
-          <div className={S.inputWithCopyButton}>
-            <button
-              type="button"
-              className={S.copyButton}
-              onClick={handleCopyToClipboard}
-              title="Copy to clipboard"
-            >
-              <VscCopy />
-            </button>
-            <UntypedPropertyInput
-              property={property}
-              onChange={value => onValueChange(property, value)}
-            />
-          </div>
+        return withCopyButton(
+          <UntypedPropertyInput
+            property={property}
+            onChange={value => onValueChange(property, value)}
+          />,
         );
       }
 
-      return (
-        <div className={S.inputWithCopyButton}>
-          <button
-            type="button"
-            className={S.copyButton}
-            onClick={handleCopyToClipboard}
-            title="Copy to clipboard"
-          >
-            <VscCopy />
-          </button>
-          <input
-            type="text"
-            disabled={property.readOnly}
-            data-test-id={`property-input-${property.name}`}
-            value={property.value != null ? String(property.value) : ''}
-            onChange={e => {
-              const next = NO_WHITESPACE_PROPERTIES.has(property.name)
-                ? stripWhitespace(e.target.value)
-                : e.target.value;
-              onValueChange(property, next);
-            }}
-            title={property.value != null ? property.value.toString() : ''}
-          />
-        </div>
+      return withCopyButton(
+        <input
+          type="text"
+          disabled={property.readOnly}
+          data-test-id={`property-input-${property.name}`}
+          value={property.value != null ? String(property.value) : ''}
+          onChange={e => {
+            const next = NO_WHITESPACE_PROPERTIES.has(property.name)
+              ? stripWhitespace(e.target.value)
+              : e.target.value;
+            onValueChange(property, next);
+          }}
+          title={property.value != null ? property.value.toString() : ''}
+        />,
       );
     };
 

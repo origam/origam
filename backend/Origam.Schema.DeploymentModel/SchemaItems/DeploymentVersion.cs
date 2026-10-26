@@ -28,6 +28,7 @@ using System.Xml.Serialization;
 using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema.DeploymentModel.SchemaItems;
+using Origam.Schema.WorkflowModel;
 using Origam.Services;
 using Origam.Workbench.Services;
 
@@ -203,6 +204,13 @@ public class DeploymentVersion : AbstractSchemaItem, IDeploymentVersion
         ;
         var item = base.NewItem<T>(schemaExtensionId, group, itemName);
         (item as AbstractUpdateScriptActivity).ActivityOrder = order;
+        if (item is ServiceCommandUpdateScriptActivity serviceActivity)
+        {
+            serviceActivity.Service =
+                schemaService
+                    .GetProvider<ServiceSchemaItemProvider>()
+                    .GetChildByName("DataService", WorkflowModel.Service.CategoryConst) as IService;
+        }
         return item;
     }
     #endregion
