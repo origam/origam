@@ -78,7 +78,7 @@
     "@types/react-beautiful-dnd": "^13.1.8",
     "@types/react-dom": "19.2.7",
     "@vitejs/plugin-react": "6.1.1",
-    "browserslist": "^4.29.3",
+    "browserslist": "^4.29.4",
     "browserslist-useragent-regexp": "^4.1.4",
     "esbuild": "^0.28.2",
     "identity-obj-proxy": "^3.0.0",
