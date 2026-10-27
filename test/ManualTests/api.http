@@ -1,0 +1,34 @@
+﻿### Test dual authentication on selected endpoints.
+### Assuming the folowing in  appsettings.jon:
+###    "PrivateApiAuthentication":  "Token",
+###    "PrivateApiAdditionalAuthenticationMethods": {
+###        "/api/private/allDataTypesCookie": [ "Cookie" ]
+###    },
+
+### Cookie-enabled endpoint: cookie (expected 200)
+// @no-cookie-jar
+GET {{baseUrl}}/api/private/allDataTypesCookie
+Cookie: .AspNetCore.Identity.Application={{authCookie}}
+
+### Cookie-enabled endpoint: token (expected 200)
+// @no-cookie-jar
+GET {{baseUrl}}/api/private/allDataTypesCookie
+Authorization: Bearer {{accessToken}}
+
+### Cookie-enabled endpoint: no credentials (expected 401)
+// @no-cookie-jar
+GET {{baseUrl}}/api/private/allDataTypesCookie
+
+### Token-only endpoint: cookie (expected 401)
+// @no-cookie-jar
+GET {{baseUrl}}/api/private/link-report
+Cookie: .AspNetCore.Identity.Application={{authCookie}}
+
+### Token-only endpoint: token (expected 200)
+// @no-cookie-jar
+GET {{baseUrl}}/api/private/link-report
+Authorization: Bearer {{accessToken}}
+
+### Token-only endpoint: no credentials (expected 401)
+// @no-cookie-jar
+GET {{baseUrl}}/api/private/link-report

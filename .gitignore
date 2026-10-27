@@ -39,3 +39,4 @@ RuntimeModelConfiguration.json
 /architect-html/ai/prompts
 /backend/Origam.AI.Agent.Tests/benchmark-report.html
 AGENTS.local.md
+http-client.env.json
