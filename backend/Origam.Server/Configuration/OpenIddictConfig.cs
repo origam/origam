@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.Google;
@@ -60,6 +61,10 @@ public class OpenIddictConfig
     public string AuthenticationPostProcessor { get; }
     public string AccessTokenIssuer { get; }
     public AuthenticationMethod PrivateApiAuthentication { get; }
+    public IReadOnlyDictionary<
+        string,
+        AuthenticationMethod[]
+    > PrivateApiAdditionalAuthenticationMethods { get; }
     public ClientApplicationTemplates ClientApplicationTemplates { get; set; }
 
     public OpenIddictConfig(IConfiguration configuration)
@@ -73,6 +78,23 @@ public class OpenIddictConfig
             key: "PrivateApiAuthentication",
             AuthenticationMethod.Cookie
         );
+        PrivateApiAdditionalAuthenticationMethods = openIddictSection
+            .GetSection("PrivateApiAdditionalAuthenticationMethods")
+            .GetChildren()
+            .ToDictionary(
+                endpoint => endpoint.Key,
+                endpoint =>
+                    (endpoint.Get<string[]>() ?? [])
+                        .Select(value => ParseAdditionalAuthenticationMethod(endpoint.Key, value))
+                        .Distinct()
+                        .ToArray(),
+                StringComparer.Ordinal
+            );
+        foreach (var endpoint in PrivateApiAdditionalAuthenticationMethods)
+        {
+            // PathString also validates that endpoint paths start with '/'.
+            _ = new Microsoft.AspNetCore.Http.PathString(endpoint.Key);
+        }
         CookieExpirationMinutes = openIddictSection.GetValue(
             key: "CookieExpirationMinutes",
             defaultValue: 60
@@ -97,6 +119,41 @@ public class OpenIddictConfig
             defaultValue: ""
         );
         AccessTokenIssuer = openIddictSection.GetValue(key: "AccessTokenIssuer", defaultValue: "");
+    }
+
+    public IEnumerable<AuthenticationMethod> GetPrivateApiAuthenticationMethods(string path)
+    {
+        yield return PrivateApiAuthentication;
+        if (PrivateApiAdditionalAuthenticationMethods.TryGetValue(path, out var additionalMethods))
+        {
+            foreach (AuthenticationMethod method in additionalMethods)
+            {
+                if (method != PrivateApiAuthentication)
+                {
+                    yield return method;
+                }
+            }
+        }
+    }
+
+    private static AuthenticationMethod ParseAdditionalAuthenticationMethod(
+        string endpointPath,
+        string value
+    )
+    {
+        if (
+            !Enum.TryParse(value, ignoreCase: true, out AuthenticationMethod method)
+            || !Enum.IsDefined(method)
+        )
+        {
+            throw new ArgumentOutOfRangeException(
+                nameof(PrivateApiAdditionalAuthenticationMethods),
+                value,
+                $"Invalid authentication method '{value}' for endpoint '{endpointPath}'. "
+                    + $"Valid values are: {string.Join(separator: ", ", Enum.GetNames<AuthenticationMethod>())}."
+            );
+        }
+        return method;
     }
 
     private ServerClient ConfigureServerClient(IConfigurationSection identityServerSection)

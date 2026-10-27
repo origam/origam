@@ -26,16 +26,19 @@ using Microsoft.OpenApi;
 using Origam.Schema.EntityModel;
 using Origam.Schema.GuiModel;
 using Origam.Schema.WorkflowModel;
+using Origam.Server.Configuration;
 
 namespace Origam.Server.OpenApi;
 
 public class ModeledOpenApiPageDocumenter(
     ModeledOpenApiPagePolicy pagePolicy,
     ModeledOpenApiSchemaFactory schemaFactory,
-    ModeledOpenApiExampleFactory exampleFactory
+    ModeledOpenApiExampleFactory exampleFactory,
+    OpenIddictConfig openIddictConfig
 )
 {
     public const string AuthenticationSchemeName = "OrigamAuthentication";
+    public const string AdditionalAuthenticationSchemeName = "OrigamAdditionalAuthentication";
 
     public void AddPage(OpenApiDocument document, AbstractPage page)
     {
@@ -174,19 +177,21 @@ public class ModeledOpenApiPageDocumenter(
 
         if (pagePolicy.RequiresAuthentication(page))
         {
-            operation.Security = new List<OpenApiSecurityRequirement>
-            {
-                new()
+            operation.Security = openIddictConfig
+                .GetPrivateApiAuthenticationMethods("/" + page.Url)
+                .Select(method => new OpenApiSecurityRequirement
                 {
                     [
                         new OpenApiSecuritySchemeReference(
-                            AuthenticationSchemeName,
+                            method == openIddictConfig.PrivateApiAuthentication
+                                ? AuthenticationSchemeName
+                                : AdditionalAuthenticationSchemeName,
                             document,
                             externalResource: null
                         )
                     ] = new List<string>(),
-                },
-            };
+                })
+                .ToList();
         }
 
         pathItem.Operations.Add(operationType, operation);

@@ -168,6 +168,88 @@ public class ModeledOpenApiDocumentGenerationTests
         Assert.That(example.GetProperty("result").GetString(), Is.EqualTo("documented"));
     }
 
+    [TestCase("Token", "Cookie", "http", "apiKey")]
+    [TestCase("Cookie", "Token", "apiKey", "http")]
+    public void AdditionalAuthenticationIsDocumentedAsAnAlternativeOnMatchingEndpointOnly(
+        string defaultMethod,
+        string additionalMethod,
+        string defaultSchemeType,
+        string additionalSchemeType
+    )
+    {
+        using var fixture = new ModeledOpenApiFixture();
+        fixture.AddPage<ReportPage>(name: "Legacy", url: "private/legacy");
+        fixture.AddPage<ReportPage>(name: "Other", url: "private/legacy2");
+        fixture.AddPage<ReportPage>(name: "Public", url: "public/legacy");
+        using JsonDocument document = fixture.Generate(
+            new Dictionary<string, string>
+            {
+                ["OpenIddictConfig:PrivateApiAuthentication"] = defaultMethod,
+                ["OpenIddictConfig:PrivateApiAdditionalAuthenticationMethods:/private/legacy:0"] =
+                    additionalMethod,
+                ["OpenIddictConfig:PrivateApiAdditionalAuthenticationMethods:/public/legacy:0"] =
+                    additionalMethod,
+            }
+        );
+        JsonElement paths = document.RootElement.GetProperty("paths");
+        JsonElement security = paths
+            .GetProperty("/private/legacy")
+            .GetProperty("get")
+            .GetProperty("security");
+
+        Assert.That(security.GetArrayLength(), Is.EqualTo(2));
+        Assert.That(
+            security
+                .EnumerateArray()
+                .All(requirement => requirement.EnumerateObject().Count() == 1),
+            Is.True
+        );
+        Assert.That(
+            security
+                .EnumerateArray()
+                .Select(requirement => requirement.EnumerateObject().Single().Name),
+            Is.EquivalentTo(
+                new[]
+                {
+                    ModeledOpenApiPageDocumenter.AuthenticationSchemeName,
+                    ModeledOpenApiPageDocumenter.AdditionalAuthenticationSchemeName,
+                }
+            )
+        );
+        Assert.That(
+            paths
+                .GetProperty("/private/legacy2")
+                .GetProperty("get")
+                .GetProperty("security")
+                .GetArrayLength(),
+            Is.EqualTo(1)
+        );
+        Assert.That(
+            paths
+                .GetProperty("/public/legacy")
+                .GetProperty("get")
+                .TryGetProperty("security", out _),
+            Is.False
+        );
+        JsonElement schemes = document
+            .RootElement.GetProperty("components")
+            .GetProperty("securitySchemes");
+        Assert.That(
+            schemes
+                .GetProperty(ModeledOpenApiPageDocumenter.AuthenticationSchemeName)
+                .GetProperty("type")
+                .GetString(),
+            Is.EqualTo(defaultSchemeType)
+        );
+        Assert.That(
+            schemes
+                .GetProperty(ModeledOpenApiPageDocumenter.AdditionalAuthenticationSchemeName)
+                .GetProperty("type")
+                .GetString(),
+            Is.EqualTo(additionalSchemeType)
+        );
+    }
+
     [Test]
     public void WorkflowJsonDocumentationBecomesRequestExample()
     {
@@ -333,18 +415,21 @@ public class ModeledOpenApiDocumentGenerationTests
                 .Returns(value);
         }
 
-        public JsonDocument Generate()
+        public JsonDocument Generate(Dictionary<string, string> additionalSettings = null)
         {
+            var settings = new Dictionary<string, string>
+            {
+                ["OpenIddictConfig:ClientApplicationTemplates:Configured"] = "true",
+                ["OpenIddictConfig:PrivateApiAuthentication"] = "Token",
+                ["UserApiOptions:PublicRoutes:0"] = "public",
+                ["UserApiOptions:RestrictedRoutes:0"] = "private",
+            };
+            foreach (var setting in additionalSettings ?? [])
+            {
+                settings[setting.Key] = setting.Value;
+            }
             IConfiguration configuration = new ConfigurationBuilder()
-                .AddInMemoryCollection(
-                    new Dictionary<string, string>
-                    {
-                        ["OpenIddictConfig:ClientApplicationTemplates:Configured"] = "true",
-                        ["OpenIddictConfig:PrivateApiAuthentication"] = "Token",
-                        ["UserApiOptions:PublicRoutes:0"] = "public",
-                        ["UserApiOptions:RestrictedRoutes:0"] = "private",
-                    }
-                )
+                .AddInMemoryCollection(settings)
                 .Build();
             var pagePolicy = new ModeledOpenApiPagePolicy(new StartUpConfiguration(configuration));
             var pageDocumenter = new ModeledOpenApiPageDocumenter(
@@ -353,7 +438,8 @@ public class ModeledOpenApiDocumentGenerationTests
                 new ModeledOpenApiExampleFactory(
                     documentationService.Object,
                     NullLogger<ModeledOpenApiExampleFactory>.Instance
-                )
+                ),
+                new OpenIddictConfig(configuration)
             );
             var generator = new ModeledOpenApiDocumentGenerator(
                 new OpenIddictConfig(configuration),

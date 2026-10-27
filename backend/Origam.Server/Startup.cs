@@ -585,7 +585,7 @@ public class Startup
 
         app.UseRouting();
         app.UseCors("OrigamCorsPolicy");
-        
+
         app.UseOpenApiDocumentation(
             startUpConfiguration.OpenApiDocumentationEnabled,
             openApiDocumentProvider

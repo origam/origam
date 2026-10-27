@@ -191,6 +191,7 @@ public static class IApplicationBuilderExtensions
         {
             app.UseAuthentication();
         }
+        app.UseMiddleware<UserApiAdditionalAuthenticationMiddleware>(openIddictConfig);
     }
 
     public static void UseWorkQueueApi(this IApplicationBuilder app)
