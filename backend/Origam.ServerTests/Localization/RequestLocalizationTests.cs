@@ -195,6 +195,38 @@ public class RequestLocalizationTests
     }
 
     [Test]
+    public async Task CorruptCookieFallsThroughToTheHeader()
+    {
+        RequestLocalizationOptions options = CreateOptions(
+            TestLanguageConfig.Create(acceptLanguageEnabled: true)
+        );
+
+        RequestCulture requestCulture = await Resolve(
+            options,
+            acceptLanguage: "en-US,en;q=0.9",
+            rawCookieValue: "fr-CH"
+        );
+
+        Assert.That(requestCulture.Culture.Name, Is.EqualTo("en"));
+    }
+
+    [Test]
+    public async Task CorruptCookieFallsBackToTheDefaultCultureWhenTheHeaderIsOff()
+    {
+        RequestLocalizationOptions options = CreateOptions(
+            TestLanguageConfig.Create(acceptLanguageEnabled: false)
+        );
+
+        RequestCulture requestCulture = await Resolve(
+            options,
+            acceptLanguage: "en-US,en;q=0.9",
+            rawCookieValue: "fr-CH"
+        );
+
+        Assert.That(requestCulture.Culture.Name, Is.EqualTo("de-CH"));
+    }
+
+    [Test]
     public void LocalizationCookieFollowsTheResolvedCulture()
     {
         LanguageConfig languageConfig = TestLanguageConfig.Create(
