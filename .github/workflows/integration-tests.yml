@@ -57,7 +57,7 @@ jobs:
         shell: bash
 
       - name: Upload frontend artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: htmlfrontendbuild
           path: "frontend-html/dist"
@@ -171,10 +171,10 @@ jobs:
         uses: actions/checkout@v7
 
       - name: setup-msbuild
-        uses: microsoft/setup-msbuild@v1
+        uses: microsoft/setup-msbuild@v3
 
       - name: Setup NuGet
-        uses: NuGet/setup-nuget@v2
+        uses: NuGet/setup-nuget@v4
 
       - name: Restore Packages
         run: |
@@ -203,10 +203,10 @@ jobs:
         uses: actions/checkout@v7
 
       - name: setup-msbuild
-        uses: microsoft/setup-msbuild@v1
+        uses: microsoft/setup-msbuild@v3
 
       - name: Setup NuGet
-        uses: NuGet/setup-nuget@v2
+        uses: NuGet/setup-nuget@v4
 
       - name: Restore Packages
         run: |
@@ -222,7 +222,7 @@ jobs:
           msbuild Origam.sln -warnaserror -t:build /p:Configuration="Release Server" /t:Workflow\Origam_WorkflowTests:Publish -v:m
 
       - name: Upload server artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: htmlserverbuild
           path: "backend/Origam.Server/bin/Release/net8.0/publish"
@@ -230,7 +230,7 @@ jobs:
           if-no-files-found: error
 
       - name: Upload workflow integration tests artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: workflowbuild
           path: "backend/Origam.WorkflowTests/bin/Release/net8.0"
@@ -251,7 +251,7 @@ jobs:
         uses: actions/checkout@v7
 
       - name: Download server_bin artifact (for server build context)
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: htmlserverbuild
           path: docker/server/server_bin
@@ -263,7 +263,7 @@ jobs:
         run: mkdir -p docker/server/client_source
 
       - name: Download Frontend artifact (for server build context)
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: htmlfrontendbuild
           path: docker/server/server_bin/clients/origam
@@ -279,7 +279,7 @@ jobs:
         shell: bash
 
       - name: Upload image artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: server-image
           path: origam-server-linux.tar
@@ -309,7 +309,7 @@ jobs:
         uses: actions/checkout@v7
 
       - name: Download workflow integration tests artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: workflowbuild
           path: test/tests_workflow
@@ -320,7 +320,7 @@ jobs:
           cp -r model-tests test/model
 
       - name: Download prebuilt server image
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: server-image
           path: .
@@ -341,16 +341,17 @@ jobs:
           docker compose --env-file envFileMsSql.env -f "docker-compose-mssql.yml" --profile test down
 
       - name: Produce frontend integration test report
-        uses: dorny/test-reporter@v1
+        uses: dorny/test-reporter@v3
         if: success() || failure()
         with:
           name: Frontend Integration Test Results (MSSQL, ${{ matrix.test-runner }})
+          use-actions-summary: false
           path: test/output/frontend-integration-test-results*.trx
           reporter: dotnet-trx
           max-annotations: '0'
 
       - name: Upload E2E diagnostics
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         if: success() || failure()
         with:
           name: e2e-diagnostics-mssql-${{ matrix.test-runner }}
@@ -361,10 +362,11 @@ jobs:
           if-no-files-found: ignore
 
       - name: Produce workflow integration test report
-        uses: dorny/test-reporter@v1
+        uses: dorny/test-reporter@v3
         if: success() || failure()
         with:
           name: Workflow Integration Test Results (MSSQL, ${{ matrix.test-runner }})
+          use-actions-summary: false
           path: test/output/workflow-integration-test-results.trx
           reporter: dotnet-trx
           max-annotations: '0'
@@ -393,7 +395,7 @@ jobs:
         uses: actions/checkout@v7
 
       - name: Download workflow integration tests artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: workflowbuild
           path: test/tests_workflow
@@ -404,7 +406,7 @@ jobs:
           cp -r model-tests test/model
 
       - name: Download prebuilt server image
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: server-image
           path: .
@@ -425,16 +427,17 @@ jobs:
           docker compose --env-file envFilePostgres.env -f "docker-compose-postgresql.yml" --profile test down
 
       - name: Produce frontend integration test report
-        uses: dorny/test-reporter@v1
+        uses: dorny/test-reporter@v3
         if: success() || failure()
         with:
           name: Frontend Integration Test Results (PostgreSQL, ${{ matrix.test-runner }})
+          use-actions-summary: false
           path: test/output/frontend-integration-test-results*.trx
           reporter: dotnet-trx
           max-annotations: '0'
 
       - name: Upload E2E diagnostics
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         if: success() || failure()
         with:
           name: e2e-diagnostics-postgresql-${{ matrix.test-runner }}
@@ -445,10 +448,11 @@ jobs:
           if-no-files-found: ignore
 
       - name: Produce workflow integration test report
-        uses: dorny/test-reporter@v1
+        uses: dorny/test-reporter@v3
         if: success() || failure()
         with:
           name: Workflow Integration Test Results (PostgreSQL, ${{ matrix.test-runner }})
+          use-actions-summary: false
           path: test/output/workflow-integration-test-results.trx
           reporter: dotnet-trx
           max-annotations: '0'
@@ -462,7 +466,7 @@ jobs:
     if: always()
     steps:
       - name: Delete artifacts
-        uses: geekyeggo/delete-artifact@v5
+        uses: geekyeggo/delete-artifact@v6
         with:
           name: |
             htmlserverbuild
