@@ -63,9 +63,9 @@ public class ModeledOpenApiDocumentGenerator(
         document.Components ??= new OpenApiComponents();
         document.Components.SecuritySchemes ??= new Dictionary<string, IOpenApiSecurityScheme>();
         document.Components.SecuritySchemes[ModeledOpenApiPageDocumenter.AuthenticationSchemeName] =
-            CreateAuthenticationScheme(openIddictConfig.PrivateApiAuthentication);
+            CreateAuthenticationScheme(openIddictConfig.PrivateApiAuthenticationMethod);
         AuthenticationMethod additionalMethod =
-            openIddictConfig.PrivateApiAuthentication == AuthenticationMethod.Token
+            openIddictConfig.PrivateApiAuthenticationMethod == AuthenticationMethod.Token
                 ? AuthenticationMethod.Cookie
                 : AuthenticationMethod.Token;
         if (

@@ -60,7 +60,7 @@ public class OpenIddictConfig
     public int AccessTokenExpirationMinutes { get; }
     public string AuthenticationPostProcessor { get; }
     public string AccessTokenIssuer { get; }
-    public AuthenticationMethod PrivateApiAuthentication { get; }
+    public AuthenticationMethod PrivateApiAuthenticationMethod { get; }
     public IReadOnlyDictionary<
         string,
         AuthenticationMethod
@@ -74,7 +74,7 @@ public class OpenIddictConfig
             key: "CookieSlidingExpiration",
             defaultValue: true
         );
-        PrivateApiAuthentication = openIddictSection.GetValue(
+        PrivateApiAuthenticationMethod = openIddictSection.GetValue(
             key: "PrivateApiAuthentication",
             AuthenticationMethod.Cookie
         );
@@ -119,10 +119,10 @@ public class OpenIddictConfig
 
     public IEnumerable<AuthenticationMethod> GetPrivateApiAuthenticationMethods(string path)
     {
-        yield return PrivateApiAuthentication;
+        yield return PrivateApiAuthenticationMethod;
         if (
             PrivateApiAdditionalAuthenticationMethods.TryGetValue(path, out var additionalMethod)
-            && additionalMethod != PrivateApiAuthentication
+            && additionalMethod != PrivateApiAuthenticationMethod
         )
         {
             yield return additionalMethod;

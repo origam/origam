@@ -183,7 +183,7 @@ public static class IApplicationBuilderExtensions
         OpenIddictConfig openIddictConfig
     )
     {
-        if (openIddictConfig.PrivateApiAuthentication == AuthenticationMethod.Token)
+        if (openIddictConfig.PrivateApiAuthenticationMethod == AuthenticationMethod.Token)
         {
             app.UseMiddleware<UserApiTokenAuthenticationMiddleware>();
         }

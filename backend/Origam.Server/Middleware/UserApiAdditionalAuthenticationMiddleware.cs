@@ -44,7 +44,7 @@ public class UserApiAdditionalAuthenticationMiddleware(
                 )
             )
             {
-                if (method == configuration.PrivateApiAuthentication)
+                if (method == configuration.PrivateApiAuthenticationMethod)
                 {
                     continue;
                 }

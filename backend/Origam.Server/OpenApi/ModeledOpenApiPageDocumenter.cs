@@ -183,7 +183,7 @@ public class ModeledOpenApiPageDocumenter(
                 {
                     [
                         new OpenApiSecuritySchemeReference(
-                            method == openIddictConfig.PrivateApiAuthentication
+                            method == openIddictConfig.PrivateApiAuthenticationMethod
                                 ? AuthenticationSchemeName
                                 : AdditionalAuthenticationSchemeName,
                             document,
