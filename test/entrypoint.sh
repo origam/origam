@@ -78,7 +78,8 @@ start_server() {
   cd /home/origam/server_bin
   ./configureServer.sh
   export ASPNETCORE_URLS="http://+:8080"
-  dotnet Origam.Server.dll > origam-output.txt 2>&1 &
+  env 'OpenIddictConfig__PrivateApiAdditionalAuthenticationMethods__/api/private/allDataTypesCookie__0=Cookie' \
+    dotnet Origam.Server.dll > origam-output.txt 2>&1 &
   server_pid=$!
 }
 
