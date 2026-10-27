@@ -1379,49 +1379,49 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@messageformat/core@npm:^3.4.0":
-  version: 3.4.0
-  resolution: "@messageformat/core@npm:3.4.0"
+"@messageformat/core@npm:^3.4.1":
+  version: 3.4.1
+  resolution: "@messageformat/core@npm:3.4.1"
   dependencies:
-    "@messageformat/date-skeleton": "npm:^1.0.0"
-    "@messageformat/number-skeleton": "npm:^1.0.0"
-    "@messageformat/parser": "npm:^5.1.0"
-    "@messageformat/runtime": "npm:^3.0.1"
+    "@messageformat/date-skeleton": "npm:2.0.0-0"
+    "@messageformat/number-skeleton": "npm:2.0.0-0"
+    "@messageformat/parser": "npm:^5.2.0"
+    "@messageformat/runtime": "npm:^3.0.3"
     make-plural: "npm:^7.0.0"
     safe-identifier: "npm:^0.4.1"
-  checksum: 10c0/8f5591c3e72b7771b036452465ee60c912c1cea6adb3d0f55e7a4be8737c02e1d1cb8620bb894dbc9dfcf28f77faff378c3c159e177a0cbe500b1ee74c41f70f
+  checksum: 10c0/76baeab0279e6166de2c754a3ce4e02200a568e682de8f0efc6fd0626dc58bae6c4971ed201a3940d0c39eec5a07cfdb7409d3d97b8d4d96be9ea77fa62c4632
   languageName: node
   linkType: hard
 
-"@messageformat/date-skeleton@npm:^1.0.0":
-  version: 1.0.1
-  resolution: "@messageformat/date-skeleton@npm:1.0.1"
-  checksum: 10c0/13012febbe357047b562895688262134f4e68aee0467fc64cc40fbf46da88c805e49f92e8d23f4c20a8c4c6dd1195ae8f4f6b12deb989ec8301534824cfa0f50
+"@messageformat/date-skeleton@npm:2.0.0-0":
+  version: 2.0.0-0
+  resolution: "@messageformat/date-skeleton@npm:2.0.0-0"
+  checksum: 10c0/37ab71ab645151a56f9200c20e81b5d9d52253486f26307db1c28118e2882a8849d5a04ea2416b223a7a392fb1aa67d95443facd7ba507c2f5875b37b5ac81dd
   languageName: node
   linkType: hard
 
-"@messageformat/number-skeleton@npm:^1.0.0":
-  version: 1.2.0
-  resolution: "@messageformat/number-skeleton@npm:1.2.0"
-  checksum: 10c0/a1ad6b6eed4508996121b7f0283bca3e18e755240eefb30c0dfa58f70de0494d390397ffa105689fbb314e06af6365b4a9e9ab1e8902d11fefe673a4e024642e
+"@messageformat/number-skeleton@npm:2.0.0-0":
+  version: 2.0.0-0
+  resolution: "@messageformat/number-skeleton@npm:2.0.0-0"
+  checksum: 10c0/aaeac26d4675490d6d754ab85ef0a92d05aff05328577db211a18155b1aec4adf61efd060987c4858196be53aacad63cce1735ec202cf64554d858b9764c901a
   languageName: node
   linkType: hard
 
-"@messageformat/parser@npm:^5.1.0":
-  version: 5.1.0
-  resolution: "@messageformat/parser@npm:5.1.0"
+"@messageformat/parser@npm:^5.2.0":
+  version: 5.2.0
+  resolution: "@messageformat/parser@npm:5.2.0"
   dependencies:
     moo: "npm:^0.5.1"
-  checksum: 10c0/d168104fe76ba445f214bf9a5463b33b0adbb22d99016fba519d831e3fe6eb17f36b640558e64e739e5e390d4f8631c43e774f0ecba2e6b13c4a596c4803282c
+  checksum: 10c0/e38c4f6a5ba3b32b7cb75db504b88293edb93ca1644de226bd0f817872f5fd1a12fb0732f595f8d58d8c75d5060639a8050c601dac4dee93edfb5d73da6a161c
   languageName: node
   linkType: hard
 
-"@messageformat/runtime@npm:^3.0.1":
-  version: 3.0.2
-  resolution: "@messageformat/runtime@npm:3.0.2"
+"@messageformat/runtime@npm:^3.0.3":
+  version: 3.0.3
+  resolution: "@messageformat/runtime@npm:3.0.3"
   dependencies:
     make-plural: "npm:^7.0.0"
-  checksum: 10c0/5efb037fab20ab9529da220553f868f857be9ee7c3dd58b12eb96ee16c7d3b32e3bc1f88821e458a4e35fce71ed93e8846818532d97f5e933b442c4b56b1d176
+  checksum: 10c0/bca64d0a81158c93a7d3333b211a5d3466dad9d85c1319919445b9930a084c9a69645aa3ecb6da40de2ef4c28784e273ab29ecce749907e7465370f16d0d6c59
   languageName: node
   linkType: hard
 
@@ -6203,7 +6203,7 @@ __metadata:
     "@esbuild-plugins/node-globals-polyfill": "npm:^0.2.3"
     "@esbuild-plugins/node-modules-polyfill": "npm:^0.2.2"
     "@mapbox/geojson-area": "npm:^0.2.2"
-    "@messageformat/core": "npm:^3.4.0"
+    "@messageformat/core": "npm:^3.4.1"
     "@testing-library/dom": "npm:^10.4.2"
     "@testing-library/jest-dom": "npm:^7.0.1"
     "@testing-library/react": "npm:^16.3.3"
