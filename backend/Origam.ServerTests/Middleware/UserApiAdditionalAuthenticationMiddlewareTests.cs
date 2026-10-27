@@ -73,7 +73,7 @@ public class UserApiAdditionalAuthenticationMiddlewareTests
         };
         if (additionalMethod != null)
         {
-            settings["OpenIddictConfig:PrivateApiAdditionalAuthenticationMethods:/api/legacy:0"] =
+            settings["OpenIddictConfig:PrivateApiAdditionalAuthenticationMethods:/api/legacy"] =
                 additionalMethod;
         }
         var configuration = new OpenIddictConfig(

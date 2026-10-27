@@ -2,7 +2,7 @@
 ### Assuming the folowing in  appsettings.jon:
 ###    "PrivateApiAuthentication":  "Token",
 ###    "PrivateApiAdditionalAuthenticationMethods": {
-###        "/api/private/allDataTypesCookie": [ "Cookie" ]
+###        "/api/private/allDataTypesCookie": "Cookie"
 ###    },
 
 ### Cookie-enabled endpoint: cookie (expected 200)

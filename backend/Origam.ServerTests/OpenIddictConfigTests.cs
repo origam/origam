@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using System.Text;
 using Microsoft.Extensions.Configuration;
 using NUnit.Framework;
 using Origam.Server.Configuration;
@@ -78,24 +79,75 @@ public class OpenIddictConfigTests
         }
     }
 
+    [TestCase("Token", AuthenticationMethod.Token)]
+    [TestCase("Cookie", AuthenticationMethod.Cookie)]
+    public void AdditionalMethodMatchingDefaultIsAcceptedOnlyOnce(
+        string method,
+        AuthenticationMethod expected
+    )
+    {
+        var config = CreatePrivateApiConfiguration(method, method);
+
+        Assert.That(
+            config.GetPrivateApiAuthenticationMethods("/api/legacy"),
+            Is.EqualTo(new[] { expected })
+        );
+    }
+
     [Test]
-    public void RepeatedMethodsAreAcceptedOnlyOnce()
+    public void AdditionalMethodsAreReadFromJsonStrings()
+    {
+        using var stream = new MemoryStream(
+            Encoding.UTF8.GetBytes(
+                """
+                {
+                  "OpenIddictConfig": {
+                    "ClientApplicationTemplates": { "Configured": "true" },
+                    "PrivateApiAuthentication": "Token",
+                    "PrivateApiAdditionalAuthenticationMethods": {
+                      "/api/private/allDataTypesCookie": "Cookie",
+                      "/api/private/tokenOnly": "Token"
+                    }
+                  }
+                }
+                """
+            )
+        );
+        var config = new OpenIddictConfig(new ConfigurationBuilder().AddJsonStream(stream).Build());
+
+        Assert.That(
+            config.PrivateApiAdditionalAuthenticationMethods,
+            Is.EquivalentTo(
+                new Dictionary<string, AuthenticationMethod>
+                {
+                    ["/api/private/allDataTypesCookie"] = AuthenticationMethod.Cookie,
+                    ["/api/private/tokenOnly"] = AuthenticationMethod.Token,
+                }
+            )
+        );
+        Assert.That(
+            config.GetPrivateApiAuthenticationMethods("/api/private/allDataTypesCookie"),
+            Is.EqualTo(new[] { AuthenticationMethod.Token, AuthenticationMethod.Cookie })
+        );
+    }
+
+    [Test]
+    public void ArrayOfAdditionalMethodsIsRejected()
     {
         var settings = new Dictionary<string, string>
         {
             ["OpenIddictConfig:ClientApplicationTemplates:Configured"] = "true",
             ["OpenIddictConfig:PrivateApiAuthentication"] = "Token",
-            ["OpenIddictConfig:PrivateApiAdditionalAuthenticationMethods:/api/legacy:0"] = "Token",
-            ["OpenIddictConfig:PrivateApiAdditionalAuthenticationMethods:/api/legacy:1"] = "Cookie",
-            ["OpenIddictConfig:PrivateApiAdditionalAuthenticationMethods:/api/legacy:2"] = "Cookie",
+            ["OpenIddictConfig:PrivateApiAdditionalAuthenticationMethods:/api/legacy:0"] = "Cookie",
         };
-        var config = new OpenIddictConfig(
-            new ConfigurationBuilder().AddInMemoryCollection(settings).Build()
+
+        var exception = Assert.Throws<ArgumentOutOfRangeException>(() =>
+            new OpenIddictConfig(new ConfigurationBuilder().AddInMemoryCollection(settings).Build())
         );
 
         Assert.That(
-            config.GetPrivateApiAuthenticationMethods("/api/legacy"),
-            Is.EqualTo(new[] { AuthenticationMethod.Token, AuthenticationMethod.Cookie })
+            exception.ParamName,
+            Is.EqualTo(nameof(OpenIddictConfig.PrivateApiAdditionalAuthenticationMethods))
         );
     }
 
@@ -182,7 +234,7 @@ public class OpenIddictConfigTests
         }
         if (additionalMethod != null)
         {
-            settings[$"OpenIddictConfig:PrivateApiAdditionalAuthenticationMethods:{path}:0"] =
+            settings[$"OpenIddictConfig:PrivateApiAdditionalAuthenticationMethods:{path}"] =
                 additionalMethod;
         }
         return new OpenIddictConfig(

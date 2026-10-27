@@ -63,7 +63,7 @@ public class OpenIddictConfig
     public AuthenticationMethod PrivateApiAuthentication { get; }
     public IReadOnlyDictionary<
         string,
-        AuthenticationMethod[]
+        AuthenticationMethod
     > PrivateApiAdditionalAuthenticationMethods { get; }
     public ClientApplicationTemplates ClientApplicationTemplates { get; set; }
 
@@ -83,11 +83,7 @@ public class OpenIddictConfig
             .GetChildren()
             .ToDictionary(
                 endpoint => endpoint.Key,
-                endpoint =>
-                    (endpoint.Get<string[]>() ?? [])
-                        .Select(value => ParseAdditionalAuthenticationMethod(endpoint.Key, value))
-                        .Distinct()
-                        .ToArray(),
+                endpoint => ParseAdditionalAuthenticationMethod(endpoint.Key, endpoint.Value),
                 StringComparer.Ordinal
             );
         foreach (var endpoint in PrivateApiAdditionalAuthenticationMethods)
@@ -124,15 +120,12 @@ public class OpenIddictConfig
     public IEnumerable<AuthenticationMethod> GetPrivateApiAuthenticationMethods(string path)
     {
         yield return PrivateApiAuthentication;
-        if (PrivateApiAdditionalAuthenticationMethods.TryGetValue(path, out var additionalMethods))
+        if (
+            PrivateApiAdditionalAuthenticationMethods.TryGetValue(path, out var additionalMethod)
+            && additionalMethod != PrivateApiAuthentication
+        )
         {
-            foreach (AuthenticationMethod method in additionalMethods)
-            {
-                if (method != PrivateApiAuthentication)
-                {
-                    yield return method;
-                }
-            }
+            yield return additionalMethod;
         }
     }
 

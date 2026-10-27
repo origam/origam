@@ -69,8 +69,8 @@ public class ModeledOpenApiDocumentGenerator(
                 ? AuthenticationMethod.Cookie
                 : AuthenticationMethod.Token;
         if (
-            openIddictConfig.PrivateApiAdditionalAuthenticationMethods.Values.Any(methods =>
-                methods.Contains(additionalMethod)
+            openIddictConfig.PrivateApiAdditionalAuthenticationMethods.Values.Contains(
+                additionalMethod
             )
         )
         {
