@@ -69,6 +69,10 @@
 	"BehindProxy":  "true",
     "LanguageConfig":{
         "Default": "en-US",
+        "AcceptLanguage":{
+            "Enabled": "false",
+            "MatchingCultures": []
+        },
         "Allowed":[
             {
                 "Culture": "en-US",

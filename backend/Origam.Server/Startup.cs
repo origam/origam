@@ -324,16 +324,8 @@ public class Startup
         ConfigureAuthentication(services);
 
         services.Configure<RequestLocalizationOptions>(options =>
-        {
-            options.DefaultRequestCulture = languageConfig.DefaultCulture;
-            options.SupportedCultures = languageConfig.AllowedCultures;
-            options.SupportedUICultures = languageConfig.AllowedCultures;
-            options.RequestCultureProviders.Clear();
-            options.RequestCultureProviders.Insert(
-                index: 0,
-                new OrigamCookieRequestCultureProvider(languageConfig)
-            );
-        });
+            OrigamRequestLocalization.Apply(options, languageConfig)
+        );
 
         foreach (var controllerDllName in startUpConfiguration.ExtensionDlls)
         {
@@ -576,6 +568,7 @@ public class Startup
         var localizationOptions = app
             .ApplicationServices.GetService<IOptions<RequestLocalizationOptions>>()
             .Value;
+        // must stay above UseUserApi: the user api middleware relies on the culture resolved here
         app.UseRequestLocalization(localizationOptions);
 
         app.UseMiddleware<FatalErrorMiddleware>();

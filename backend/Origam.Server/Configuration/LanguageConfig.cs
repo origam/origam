@@ -33,8 +33,11 @@ namespace Origam.Server.Configuration;
 public class LanguageConfig
 {
     public RequestCulture DefaultCulture { get; }
-    public CultureInfo[] AllowedCultures { get; }
+
+    // allowed cultures plus the matching ones; only CultureItems may be offered
+    public CultureInfo[] SupportedCultures { get; }
     public CultureItem[] CultureItems { get; }
+    public bool AcceptLanguageHeaderEnabled { get; }
 
     public LanguageConfig(IConfiguration configuration)
     {
@@ -46,20 +49,60 @@ public class LanguageConfig
             throw new Exception("Default culture in \"LanguageConfig\" cannot be empty");
         }
         DefaultCulture = new RequestCulture(defaultCulture);
-
         CultureItems = languageSection
             .GetSectionOrThrow("Allowed")
             .GetChildren()
             .Select(CultureItem.Create)
             .ToArray();
-        var defaultCultureExists = CultureItems.Any(item => item.CultureName == defaultCulture);
+        var defaultCultureExists = CultureItems.Any(item =>
+            item.CultureName == DefaultCulture.Culture.Name
+        );
         if (!defaultCultureExists)
         {
             throw new Exception(
                 $"The default culture \"{defaultCulture}\" is not among the allowed cultures in the \"LanguageConfig\" section."
             );
         }
-        AllowedCultures = CultureItems.Select(item => new CultureInfo(item.CultureName)).ToArray();
+        CultureInfo[] allowedCultures = CultureItems
+            .Select(item => new CultureInfo(item.CultureName))
+            .ToArray();
+
+        IConfigurationSection acceptLanguageSection = languageSection.GetSection("AcceptLanguage");
+        AcceptLanguageHeaderEnabled = acceptLanguageSection.GetValue<bool>("Enabled");
+        // the section takes effect only when enabled, a leftover MatchingCultures must not widen the
+        // supported cultures
+        CultureInfo[] matchingCultures = AcceptLanguageHeaderEnabled
+            ? ReadMatchingCultures(acceptLanguageSection)
+            : Array.Empty<CultureInfo>();
+        SupportedCultures = allowedCultures.Concat(matchingCultures).Distinct().ToArray();
+    }
+
+    private static CultureInfo[] ReadMatchingCultures(IConfigurationSection acceptLanguageSection)
+    {
+        return (
+            acceptLanguageSection.GetSection("MatchingCultures").Get<string[]>()
+            ?? Array.Empty<string>()
+        )
+            .Select(cultureName => new CultureInfo(cultureName))
+            .ToArray();
+    }
+
+    public CultureItem FindCultureItem(string cultureName)
+    {
+        return TryFindCultureItem(cultureName)
+            ?? CultureItems.FirstOrDefault(item => item.CultureName == DefaultCulture.Culture.Name);
+    }
+
+    // a matching-only culture ("fr" for a "fr-FR" browser) has no item of its own, so the first item
+    // of the same language is used
+    public CultureItem TryFindCultureItem(string cultureName)
+    {
+        CultureInfo culture = new CultureInfo(cultureName ?? string.Empty);
+        return CultureItems.FirstOrDefault(item => item.CultureName == culture.Name)
+            ?? CultureItems.FirstOrDefault(item =>
+                new CultureInfo(item.CultureName).TwoLetterISOLanguageName
+                == culture.TwoLetterISOLanguageName
+            );
     }
 }
 
@@ -69,7 +112,7 @@ public class CultureItem
     {
         return new CultureItem
         {
-            CultureName = section.GetStringOrThrow("Culture"),
+            CultureName = new CultureInfo(section.GetStringOrThrow("Culture")).Name,
             Caption = section.GetStringOrThrow("Caption"),
             ResetPasswordMailSubject = section["ResetPasswordMailSubject"],
             ResetPasswordMailBodyFileName = section["ResetPasswordMailBodyFileName"],

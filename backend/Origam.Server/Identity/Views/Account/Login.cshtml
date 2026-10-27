@@ -35,6 +35,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 @{
     var currentCulture = Context.Features.Get<IRequestCultureFeature>().RequestCulture.Culture.Name;
+    // a culture resolved from Accept-Language may have no item of its own, so the closest one is current
+    var currentCultureItem = languageConfig.TryFindCultureItem(currentCulture);
     var returnUrl = !string.IsNullOrEmpty(Model.ReturnUrl)
         ? Model.ReturnUrl
         : string.IsNullOrEmpty(Context.Request.Path)
@@ -83,7 +85,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
                         {
                             <div class="languageLinkSeparator">|</div>
                         }
-                        var inactiveClass = languageConfig.CultureItems[i].CultureName == currentCulture ? "inactiveLanguageLink" : "";
+                        var inactiveClass = languageConfig.CultureItems[i].CultureName == currentCultureItem?.CultureName ? "inactiveLanguageLink" : "";
                         <a class="languageLink @inactiveClass"
                            value=@languageConfig.CultureItems[i].CultureName
                            href="#">
