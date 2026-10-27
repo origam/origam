@@ -85,7 +85,7 @@
       GeneratePathProperty="true"
       ExcludeAssets="all"
     />
-    <PackageReference Include="SoapCore" Version="1.2.1.16" />
+    <PackageReference Include="SoapCore" Version="1.2.1.18" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="10.2.3" />
     <PackageReference Include="UAParser" Version="3.1.47" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="8.0.8" />
