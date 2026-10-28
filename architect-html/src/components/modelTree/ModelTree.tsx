@@ -312,19 +312,26 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
   function onDelete() {
     run({
       generator: function* () {
-        if (node.isFolder) {
-          const answer = yield askYesNoQuestion(
-            rootStore.dialogStack,
-            T('Delete Folder', 'tree_node_delete_folder_title'),
-            T(
-              'Delete folder "{0}" and all of its contents? This cannot be undone.',
-              'tree_node_delete_folder_confirm',
-              node.nodeText,
-            ),
-          );
-          if (answer !== YesNoResult.Yes) {
-            return;
-          }
+        const answer = yield askYesNoQuestion(
+          rootStore.dialogStack,
+          node.isFolder
+            ? T('Delete Folder', 'tree_node_delete_folder_title')
+            : T('Delete Object', 'tree_node_delete_object_title'),
+          node.isFolder
+            ? T(
+                'Delete folder "{0}" and all of its contents? This cannot be undone.',
+                'tree_node_delete_folder_confirm',
+                node.nodeText,
+              )
+            : T(
+                'Do you really want to delete "{0}"? This cannot be undone.',
+                'tree_node_delete_object_confirm',
+                node.nodeText,
+              ),
+          { showCancel: false },
+        );
+        if (answer !== YesNoResult.Yes) {
+          return;
         }
         yield* node.delete.bind(node)();
       },
