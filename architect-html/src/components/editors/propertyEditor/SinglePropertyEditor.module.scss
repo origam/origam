@@ -17,6 +17,16 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
+@mixin crossedOutSwatch {
+  background: linear-gradient(
+      to top right,
+      transparent calc(50% - 1px),
+      var(--foreground1) 50%,
+      transparent calc(50% + 1px)
+    )
+    var(--background1) !important;
+}
+
 .root {
   display: block;
   width: 100%;
@@ -160,7 +170,31 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
       min-width: 0;
     }
 
-    .copyButton {
+    .colorPicker {
+      flex: 0 0 24px;
+      width: 24px;
+      height: 24px;
+      padding: 0;
+      cursor: pointer;
+
+      &:disabled {
+        cursor: not-allowed;
+      }
+    }
+
+    // A browser drops a whole selector list with an unknown pseudo element.
+    .colorPickerEmpty {
+      &::-webkit-color-swatch {
+        @include crossedOutSwatch;
+      }
+
+      &::-moz-color-swatch {
+        @include crossedOutSwatch;
+      }
+    }
+
+    .copyButton,
+    .clearColorButton {
       background: transparent;
       border: 1px solid var(--background4);
       border-radius: 0.25rem;
@@ -186,10 +220,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
       }
     }
 
-    .openButton {
-      gap: 0.25rem;
-      padding: 0.25rem 0.5rem;
-      white-space: nowrap;
+    .clearColorButton:disabled {
+      background: transparent;
+      border-color: var(--background4);
+      cursor: not-allowed;
+      opacity: 0.5;
     }
   }
 }

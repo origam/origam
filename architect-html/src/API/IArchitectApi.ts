@@ -61,6 +61,8 @@ export interface IArchitectApi {
 
   getModelCheckResult(): Promise<IModelCheckResult>;
 
+  rebuildLocalizationFiles(): Promise<string[]>;
+
   openTab(schemaItemId: string): Promise<IApiTabData>;
 
   closeTab(tabId: string): Promise<void>;
@@ -667,7 +669,15 @@ export interface IPackageReferenceCandidate {
 }
 
 export type PropertyType =
-  'boolean' | 'enum' | 'string' | 'integer' | 'float' | 'looukup' | 'untyped';
+  | 'boolean'
+  | 'enum'
+  | 'string'
+  | 'integer'
+  | 'float'
+  | 'looukup'
+  | 'untyped'
+  | 'fieldBinding'
+  | 'color';
 
 export type PropertyValue = boolean | number | string | string[] | null;
 

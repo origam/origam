@@ -2,30 +2,24 @@
   "name": "origam-html5-tcu",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "yarn@1.22.22",
   "dependencies": {
-    "@babel/helper-get-function-arity": "^7.16.7",
-    "jest": "^27.3.1",
-    "jest-trx-results-processor": "^3.0.2",
-    "msnodesqlv8": "^4.1.2",
-    "mssql": "^7.2.1",
-    "puppeteer": "^10.1.0"
+    "@playwright/test": "^1.63.0",
+    "dotenv": "^16.6.1",
+    "mssql": "^12.7.2",
+    "pg": "^8.23.0",
+    "playwright-trx-reporter": "^1.0.10"
+  },
+  "optionalDependencies": {
+    "msnodesqlv8": "^5.5.0"
   },
   "homepage": "./",
-  "jest": {
-    "testResultsProcessor": "./jestTrxProcessor.js"
-  },
   "scripts": {
-    "test:e2e": "xvfb-run --auto-servernum jest --runInBand  --config jest.config.js",
-    "test:debug": "node --inspect node_modules/jest-cli/bin/jest.js --runInBand  --config jest.config.js"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-  "devDependencies": {
-    "@types/uuid": "^8.3.1",
-    "jest-image-snapshot": "^4.5.1"
+    "test:e2e": "playwright test",
+    "test:debug": "playwright test --debug",
+    "test:ui": "playwright test --ui",
+    "test:ui:mssql": "node runUi.js mssql",
+    "test:ui:postgresql": "node runUi.js postgresql",
+    "show-report": "playwright show-report"
   }
 }

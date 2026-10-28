@@ -13,6 +13,16 @@ RuntimeModelConfiguration.json
 /test/output
 /test/model
 /test/tests_e2e/node_modules
+/test/tests_e2e/.env
+/test/tests_e2e/.env.mssql
+/test/tests_e2e/.env.postgresql
+/test/tests_e2e/playwright-report
+/test/tests_e2e/test-results
+/test/tests_e2e/frontend-integration-test-results.trx
+/test/tests_e2e_legacy/node_modules
+/test/tests_e2e_legacy/.env
+/test/tests_e2e_legacy/frontend-integration-test-results.trx
+/test/tests_e2e_legacy/screenshots/
 /docker/server/client_source/
 /docker/server/Scheduler/
 /chat-html/dist
@@ -28,3 +38,4 @@ RuntimeModelConfiguration.json
 /architect-html/ai/chats
 /architect-html/ai/prompts
 /backend/Origam.AI.Agent.Tests/benchmark-report.html
+AGENTS.local.md

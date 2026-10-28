@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.Collections;
 using System.ComponentModel;
+using System.Drawing;
 using System.Globalization;
 using System.Reflection;
 using Origam.Architect.Server.Attributes;
@@ -31,6 +32,7 @@ using Origam.Extensions;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
 using Origam.Schema.GuiModel;
+using Origam.Schema.MenuModel;
 
 namespace Origam.Architect.Server.Services;
 
@@ -39,6 +41,8 @@ public class EditorPropertyFactory
     // Spelling kept as is, the frontend expects this exact name.
     private const string LookupTypeName = "looukup";
     private const string UntypedTypeName = "untyped";
+    private const string FieldBindingTypeName = "fieldBinding";
+    private const string ColorTypeName = "color";
 
     public EditorProperty CreateIfMarkedAsEditable(PropertyInfo property, ISchemaItem item)
     {
@@ -65,16 +69,32 @@ public class EditorPropertyFactory
         bool untyped = PropertyUtils.IsUntyped(property);
         // An untyped property is edited in its converter's text space.
         bool editedAsText = untyped && dropDownValues.Length > 0;
+        bool stringLookup = property.PropertyType == typeof(string) && dropDownValues.Length > 0;
+
+        string propertyType = property switch
+        {
+            _ when editedAsText || stringLookup => LookupTypeName,
+            _ when untyped => UntypedTypeName,
+            _ when property.PropertyType == typeof(Color) => ColorTypeName,
+            _ => ToPropertyTypeName(property),
+        };
+
+        object serializedValue = value switch
+        {
+            _ when editedAsText => converter.ConvertToString(
+                context,
+                CultureInfo.InvariantCulture,
+                value
+            ),
+            AbstractMenuItem menuItem when converter is MenuItemConverter => menuItem.Path,
+            _ => ToSerializableValue(value, property, instance),
+        };
 
         return new EditorProperty(
             name: property.Name,
             controlPropertyId: null,
-            type: editedAsText ? LookupTypeName
-                : untyped ? UntypedTypeName
-                : ToPropertyTypeName(property),
-            value: editedAsText
-                ? converter.ConvertToString(context, CultureInfo.InvariantCulture, value)
-                : ToSerializableValue(value, property, instance),
+            type: propertyType,
+            value: serializedValue,
             dropDownValues: dropDownValues,
             category: category,
             description: description,
@@ -92,7 +112,7 @@ public class EditorPropertyFactory
         return new EditorProperty(
             name: property.Name,
             controlPropertyId: controlPropertyId,
-            type: LookupTypeName,
+            type: FieldBindingTypeName,
             value: boundFieldName,
             dropDownValues: dropDownValues,
             category: "Data",
@@ -148,6 +168,10 @@ public class EditorPropertyFactory
         {
             return dataConstant.XmlValue;
         }
+        if (value is Color color)
+        {
+            return ToColorText(color);
+        }
         if (value is ISchemaItem schemaItem && property.GetSetMethod() == null)
         {
             return schemaItem.ToString();
@@ -170,6 +194,18 @@ public class EditorPropertyFactory
         return value;
     }
 
+    // ARGB zero means no color.
+    private static string ToColorText(Color color)
+    {
+        if (color.ToArgb() == 0)
+        {
+            return "";
+        }
+
+        // Lower case as the browser color picker reports it.
+        return $"#{color.R:x2}{color.G:x2}{color.B:x2}";
+    }
+
     private (DropDownValue[] Values, TypeConverter Converter) GetAvailableValues(
         PropertyInfo property,
         ITypeDescriptorContext context
@@ -180,8 +216,7 @@ public class EditorPropertyFactory
         if (
             !isReferenceProperty
             && (
-                property.PropertyType == typeof(string)
-                || property.PropertyType == typeof(Guid)
+                property.PropertyType == typeof(Guid)
                 || property.PropertyType == typeof(int)
                 || property.PropertyType == typeof(long)
                 || property.PropertyType == typeof(decimal)

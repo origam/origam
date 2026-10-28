@@ -18,6 +18,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { Component } from '@editors/designerEditor/common/designerComponents/Component.tsx';
+import { IPropertyManager } from '@editors/propertyEditor/IPropertyManager';
 
 export interface IDesignerVerb {
   id: string;
@@ -26,7 +27,7 @@ export interface IDesignerVerb {
   action: () => Generator<Promise<any>, void, any>;
 }
 
-export interface IComponentProvider {
+export interface IComponentProvider extends IPropertyManager {
   components: Component[];
   selectedComponent: Component | null;
   verbs: IDesignerVerb[];

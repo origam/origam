@@ -17,6 +17,8 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
+import { IComponentProvider } from '@editors/designerEditor/common/IComponentProvider';
+
 export interface IValidationError {
   propertyName: string;
   error: string;
@@ -30,6 +32,7 @@ export interface ITabState {
   origamId?: string;
   validationErrors?: IValidationError[];
   warnings?: string[];
+  componentProvider?: IComponentProvider;
   save(): Generator<Promise<any>, void, any>;
   dispose?(): void;
 }

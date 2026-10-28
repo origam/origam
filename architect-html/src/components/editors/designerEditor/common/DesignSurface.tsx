@@ -56,12 +56,6 @@ export const DesignSurface: React.FC<{
     };
   }, [designerState, run, surfaceState]);
 
-  useEffect(() => {
-    return () => {
-      surfaceState.onClose();
-    };
-  }, [surfaceState]);
-
   const toSurfacePoint = (e: { clientX: number; clientY: number }) => {
     const surface = surfaceRef.current!;
     const surfaceRect = surface.getBoundingClientRect();

@@ -18,7 +18,7 @@ RUN apt-get -qq update \
 RUN set -eux; \
     apt-get -qq update; \
     DEBIAN_FRONTEND=noninteractive apt-get -qq install -y --no-install-recommends \
-      ca-certificates curl gnupg xvfb \
+      ca-certificates curl gnupg \
       fonts-ipafont-gothic fonts-wqy-zenhei fonts-thai-tlwg fonts-kacst fonts-freefont-ttf \
       libxss1; \
     install -d -m 0755 /etc/apt/keyrings; \
@@ -49,6 +49,7 @@ COPY --chown=origam:origam tests_workflow \
     /home/origam/tests_workflow/
 
 COPY --chown=origam:origam tests_e2e /home/origam/server_bin/tests_e2e/
+COPY --chown=origam:origam tests_e2e_legacy /home/origam/server_bin/tests_e2e_legacy/
 COPY --chown=origam:origam model /home/origam/projectData/model/
 
 WORKDIR /home/origam/server_bin

@@ -28,6 +28,18 @@ namespace Origam.Architect.Server {
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
+        internal static string Localization_NoActivePackage {
+            get {
+                return ResourceManager.GetString("Localization_NoActivePackage", resourceCulture);
+            }
+        }
+
+        internal static string Localization_NoLanguages {
+            get {
+                return ResourceManager.GetString("Localization_NoLanguages", resourceCulture);
+            }
+        }
+
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         internal Strings() {
         }
@@ -309,6 +321,15 @@ namespace Origam.Architect.Server {
         internal static string ParameterNotFound {
             get {
                 return ResourceManager.GetString("ParameterNotFound", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to &quot;{1}&quot; is not a valid color for {0}. Use the #RRGGBB format..
+        /// </summary>
+        internal static string Property_ColorNotValid {
+            get {
+                return ResourceManager.GetString("Property_ColorNotValid", resourceCulture);
             }
         }
 

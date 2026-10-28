@@ -17,18 +17,19 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {
-  expect,
-  test,
-  type Locator,
-  type Page,
-  type Request,
-  type Response,
-} from '@playwright/test';
-import fs from 'node:fs';
+import { expect, test, type Locator, type Page, type Request } from '@playwright/test';
 import { activatePackage } from '@support/activatePackage';
 import { openConstants } from '@support/modelTree';
-import { modelFilePath, resetBackend } from '@support/resetBackend';
+import {
+  awaitPropertyUpdate,
+  collectServerErrors,
+  expectModelFileContent,
+  expectNoServerErrors,
+  fillProperty,
+  fillRejectedProperty,
+  save,
+} from '@support/propertyEditor';
+import { resetBackend } from '@support/resetBackend';
 import { setServerCulture } from '@support/setServerCulture';
 
 const PACKAGE = 'Root';
@@ -102,7 +103,7 @@ test.describe('Data Constant editor (real backend)', () => {
     await pickOption(page, valueSelect(page), FALSE_OPTION);
     await save(page);
 
-    await expectModelFile(BOOLEAN_FILE, content => content.includes('dc:value="false"'));
+    await expectModelFileContent(BOOLEAN_FILE, content => content.includes('dc:value="false"'));
   });
 
   test('offers a text box for a value with no drop down', async ({ page }) => {
@@ -120,7 +121,7 @@ test.describe('Data Constant editor (real backend)', () => {
     await fillProperty(page, 'Value', 'E2EQUEUE');
     await save(page);
 
-    await expectModelFile(STRING_FILE, content => content.includes('dc:value="E2EQUEUE"'));
+    await expectModelFileContent(STRING_FILE, content => content.includes('dc:value="E2EQUEUE"'));
   });
 
   test('stores a cleared value', async ({ page }) => {
@@ -130,7 +131,7 @@ test.describe('Data Constant editor (real backend)', () => {
     await fillProperty(page, 'Value', '');
     await save(page);
 
-    await expectModelFile(STRING_FILE, content => !content.includes('MAIL'));
+    await expectModelFileContent(STRING_FILE, content => !content.includes('MAIL'));
   });
 
   test('switches the value editor when the data type changes', async ({ page }) => {
@@ -208,7 +209,9 @@ test.describe('Data Constant editor (real backend)', () => {
           await fillProperty(page, 'Value', '1234.5');
           await save(page);
 
-          await expectModelFile(STRING_FILE, content => content.includes('dc:value="1234.5"'));
+          await expectModelFileContent(STRING_FILE, content =>
+            content.includes('dc:value="1234.5"'),
+          );
         });
 
         test(`rejects a ${dataType} value typed with a decimal comma`, async ({ page }) => {
@@ -217,7 +220,10 @@ test.describe('Data Constant editor (real backend)', () => {
           await fillRejectedProperty(page, 'Value', '12,5');
           await save(page);
 
-          await expectModelFile(STRING_FILE, content => !/dc:value="12[.,]?5"/.test(content));
+          await expectModelFileContent(
+            STRING_FILE,
+            content => !/dc:value="12[.,]?5"/.test(content),
+          );
         });
       }
 
@@ -233,7 +239,7 @@ test.describe('Data Constant editor (real backend)', () => {
         await fillProperty(page, 'Value', '2026-02-01');
         await save(page);
 
-        await expectModelFile(STRING_FILE, content =>
+        await expectModelFileContent(STRING_FILE, content =>
           content.includes('dc:value="2026-02-01T00:00:00"'),
         );
       });
@@ -244,7 +250,7 @@ test.describe('Data Constant editor (real backend)', () => {
         await fillRejectedProperty(page, 'Value', '01.02.2026');
         await save(page);
 
-        await expectModelFile(STRING_FILE, content => !content.includes('dc:value="2026-'));
+        await expectModelFileContent(STRING_FILE, content => !content.includes('dc:value="2026-'));
       });
     });
   }
@@ -260,7 +266,7 @@ test.describe('Data Constant editor (real backend)', () => {
         expect(rejectedUpdates).toEqual([]);
         await expect(valueInput(page)).toHaveValue('1234.5');
         await save(page);
-        await expectModelFile(STRING_FILE, content => content.includes('dc:value="1234.5"'));
+        await expectModelFileContent(STRING_FILE, content => content.includes('dc:value="1234.5"'));
       });
     }
 
@@ -272,7 +278,7 @@ test.describe('Data Constant editor (real backend)', () => {
       expect(rejectedUpdates).toEqual([]);
       await expect(valueInput(page)).toHaveValue('-12');
       await save(page);
-      await expectModelFile(STRING_FILE, content => content.includes('dc:value="-12"'));
+      await expectModelFileContent(STRING_FILE, content => content.includes('dc:value="-12"'));
     });
 
     test('accepts a Date value', async ({ page }) => {
@@ -282,7 +288,7 @@ test.describe('Data Constant editor (real backend)', () => {
 
       expect(rejectedUpdates).toEqual([]);
       await save(page);
-      await expectModelFile(STRING_FILE, content =>
+      await expectModelFileContent(STRING_FILE, content =>
         content.includes('dc:value="2026-02-01T00:00:00"'),
       );
     });
@@ -297,25 +303,6 @@ function valueInput(page: Page): Locator {
   return page.getByTestId('property-input-Value');
 }
 
-// A 500 leaves the editor half rendered, which would only show up as a missing
-// element later on.
-function collectServerErrors(page: Page): string[] {
-  const errors: string[] = [];
-  page.on('response', response => {
-    if (response.status() >= 500) {
-      errors.push(`${response.status()} ${response.request().method()} ${response.url()}`);
-    }
-  });
-  return errors;
-}
-
-// The editor keeps loading after the awaited element shows up, so the requests
-// still in flight have to land before the collected errors mean anything.
-async function expectNoServerErrors(page: Page, serverErrors: string[]): Promise<void> {
-  await page.waitForLoadState('networkidle');
-  expect(serverErrors).toEqual([]);
-}
-
 async function openConstantEditor(page: Page, nodeText: string): Promise<void> {
   await page.getByTestId(`tree-node-${nodeText}`).dblclick();
   await expect(page.getByTestId(`tab-${nodeText}`)).toBeVisible();
@@ -328,29 +315,6 @@ async function openStringConstantAs(page: Page, dataType: string): Promise<void>
   await openConstantEditor(page, STRING_CONSTANT);
   await pickNamedOption(page, page.getByTestId('property-select-DataType'), dataType);
   await expect(valueInput(page)).toBeVisible();
-}
-
-async function fillProperty(page: Page, propertyName: string, value: string): Promise<void> {
-  await awaitPropertyUpdate(page, () => fillAndLeave(page, propertyName, value));
-}
-
-async function fillRejectedProperty(
-  page: Page,
-  propertyName: string,
-  value: string,
-): Promise<void> {
-  const response = await propertyUpdateResponse(page, () =>
-    fillAndLeave(page, propertyName, value),
-  );
-  expect(response.status(), await response.text()).toBe(420);
-  await page.getByRole('button', { name: 'Ok', exact: true }).click();
-}
-
-// A value of a constant is sent only once the input is left.
-async function fillAndLeave(page: Page, propertyName: string, value: string): Promise<void> {
-  const input = page.getByTestId(`property-input-${propertyName}`);
-  await input.fill(value);
-  await input.press('Tab');
 }
 
 // Returns the statuses of updates the server rejected while typing.
@@ -416,35 +380,4 @@ async function pickNamedOption(page: Page, select: Locator, text: string): Promi
       .first()
       .click(),
   );
-}
-
-async function awaitPropertyUpdate(page: Page, action: () => Promise<void>): Promise<void> {
-  const response = await propertyUpdateResponse(page, action);
-  expect(response.ok(), await response.text()).toBeTruthy();
-}
-
-async function propertyUpdateResponse(page: Page, action: () => Promise<void>): Promise<Response> {
-  const pendingResponse = page.waitForResponse(
-    response => response.url().includes('/PropertyEditor/Update'),
-    { timeout: 10_000 },
-  );
-  await action();
-  return pendingResponse;
-}
-
-async function save(page: Page): Promise<void> {
-  await page.getByTestId('save-button').click();
-  await expect(page.getByTestId('save-button-disabled')).toBeVisible();
-}
-
-async function expectModelFile(
-  relativePath: string,
-  matches: (content: string) => boolean,
-): Promise<void> {
-  await expect
-    .poll(() => matches(fs.readFileSync(modelFilePath(relativePath), 'utf8')), {
-      message: relativePath,
-      timeout: 5_000,
-    })
-    .toBe(true);
 }

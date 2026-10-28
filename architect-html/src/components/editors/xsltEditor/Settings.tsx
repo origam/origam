@@ -23,9 +23,13 @@ import S from '@editors/xsltEditor/Settings.module.scss';
 import { RootStoreContext, T } from '@/main';
 import { action } from 'mobx';
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler.ts';
-import { useContext } from 'react';
+import { ReactNode, useContext } from 'react';
 import SinglePropertyEditor from '@editors/propertyEditor/SinglePropertyEditor.tsx';
 import { EditorProperty } from '@editors/gridEditor/EditorProperty.ts';
+import {
+  isSchemaItemId,
+  OpenReferenceButton,
+} from '@editors/propertyEditor/OpenReferenceButton.tsx';
 
 export const Settings = observer(({ editorState }: { editorState: XsltEditorState }) => {
   const rootStore = useContext(RootStoreContext);
@@ -64,19 +68,38 @@ export const Settings = observer(({ editorState }: { editorState: XsltEditorStat
     );
   }
 
+  function renderSelectWithOpenButton(
+    select: ReactNode,
+    schemaItemId: string | undefined,
+    dataTestId: string,
+  ) {
+    return (
+      <div className={S.selectWithOpenButton}>
+        {select}
+        {isSchemaItemId(schemaItemId) && (
+          <OpenReferenceButton schemaItemId={schemaItemId} dataTestId={dataTestId} />
+        )}
+      </div>
+    );
+  }
+
   return (
     <>
       <div className={S.inputs}>
         {renderPropertyEditor(editorState.nameProperty, editorState.nameProperty?.name)}
         <div className={S.inputRow}>
           <div>{T('Source Structure', 'source_structure_label')}</div>
-          <select value={editorState.sourceDataStructureId} onChange={onSourceStructureChange}>
-            {editorState.datastructures.map(structure => (
-              <option key={structure?.schemaItemId ?? 'None'} value={structure?.schemaItemId}>
-                {structure?.name}
-              </option>
-            ))}
-          </select>
+          {renderSelectWithOpenButton(
+            <select value={editorState.sourceDataStructureId} onChange={onSourceStructureChange}>
+              {editorState.datastructures.map(structure => (
+                <option key={structure?.schemaItemId ?? 'None'} value={structure?.schemaItemId}>
+                  {structure?.name}
+                </option>
+              ))}
+            </select>,
+            editorState.sourceDataStructureId,
+            'xslt-settings-open-source-structure',
+          )}
         </div>
 
         {editorState.targetStructureProperty ? (
@@ -87,28 +110,36 @@ export const Settings = observer(({ editorState }: { editorState: XsltEditorStat
         ) : (
           <div className={S.inputRow}>
             <div>{T('Target Structure', 'target_structure_label')}</div>
-            <select value={editorState.targetDataStructureId} onChange={onTargetStructureChange}>
-              {editorState.datastructures.map(structure => (
-                <option key={structure?.schemaItemId ?? 'None'} value={structure?.schemaItemId}>
-                  {structure?.name}
-                </option>
-              ))}
-            </select>
+            {renderSelectWithOpenButton(
+              <select value={editorState.targetDataStructureId} onChange={onTargetStructureChange}>
+                {editorState.datastructures.map(structure => (
+                  <option key={structure?.schemaItemId ?? 'None'} value={structure?.schemaItemId}>
+                    {structure?.name}
+                  </option>
+                ))}
+              </select>,
+              editorState.targetDataStructureId,
+              'xslt-settings-open-target-structure',
+            )}
           </div>
         )}
 
         <div className={S.inputRow}>
           <div>{T('Rule Set', 'rule_set_label')}</div>
-          <select
-            value={editorState.ruleSetId}
-            onChange={e => action((editorState.ruleSetId = e.target.value))}
-          >
-            {editorState.ruleSets.map(structure => (
-              <option key={structure?.schemaItemId ?? 'None'} value={structure?.schemaItemId}>
-                {structure?.name}
-              </option>
-            ))}
-          </select>
+          {renderSelectWithOpenButton(
+            <select
+              value={editorState.ruleSetId}
+              onChange={e => action((editorState.ruleSetId = e.target.value))}
+            >
+              {editorState.ruleSets.map(structure => (
+                <option key={structure?.schemaItemId ?? 'None'} value={structure?.schemaItemId}>
+                  {structure?.name}
+                </option>
+              ))}
+            </select>,
+            editorState.ruleSetId,
+            'xslt-settings-open-rule-set',
+          )}
         </div>
       </div>
     </>

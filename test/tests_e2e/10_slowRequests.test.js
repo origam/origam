@@ -1,65 +1,33 @@
-const { sleep, openMenuItem, login, waitForRowCount, waitForRowCountData, beforeEachTest, afterEachTest, getRowCountData
-} = require('./testTools');
-const {widgetsMenuItemId, allDataTypesMenuId, topMenuHeader,  allDataTypesDataViewId,
-  detailTabHandelId,
-  detailDataViewId,
-  masterDataViewId
+const { test, expect } = require("@playwright/test");
+const { openMenuItem, login, waitForRowCount, beforeEachTest } = require('./testTools');
+const {widgetsMenuItemId, allDataTypesMenuId, topMenuHeader, allDataTypesDataViewId
 } = require("./modelIds");
 const {restoreAllDataTypesTable, clearScreenConfiguration} = require("./dbTools");
-const expect = require("expect");
 
-let browser;
 let page;
 
-beforeAll(async() => {
+test.beforeAll(async() => {
   await restoreAllDataTypesTable();
   await clearScreenConfiguration();
 });
 
-beforeEach(async () => {
-  [browser, page] = await beforeEachTest()
+test.beforeEach(async ({ page: testPage }) => {
+  page = testPage;
+  await beforeEachTest(page);
 });
 
-afterEach(async () => {
-  await afterEachTest(browser);
-  browser = undefined;
-});
+
 
 const dataViewId = "dataView_e67865b0-ce91-413c-bed7-1da486399633";
 const text1InputId ="editor_cb584956-8f34-4d95-852e-eff4680a2673";
 
 async function refreshAndThrowChangesAway() {
-  await page.$eval("#refreshButton", elem => elem.click());
-
-  const dontSaveButton = await page.waitForXPath(
-    `//button[@id='dontSaveButton']`,
-    {visible: true}
-  );
-  await dontSaveButton.click();
+  await page.locator("#refreshButton").click();
+  await page.locator("#dontSaveButton").click();
 }
 
-async function throttleRequests(){
-  const client = await page.target().createCDPSession();
-  await client.send('Network.emulateNetworkConditions', {
-    'offline': false,
-    'downloadThroughput': 500 * 1024 / 8,
-    'uploadThroughput': 500 * 1024 / 8,
-    'latency': 20
-  })
-}
-
-async function cancelRequestThrottling(){
-  const client = await page.target().createCDPSession();
-  await client.send('Network.emulateNetworkConditions', {
-    'offline': false,
-    'downloadThroughput': -1,
-    'uploadThroughput': -1,
-    'latency': 0
-  })
-}
-
-describe("Html client", () => {
-  it("Should fill characters typed before the new row in grid is rendered", async () => {
+test.describe("Html client", () => {
+  test("Should fill characters typed before the new row in grid is rendered", async () => {
     await login(page);
     await openMenuItem(
       page,
@@ -71,30 +39,43 @@ describe("Html client", () => {
 
     await waitForRowCount(page, dataViewId,30);
 
-    await throttleRequests();
+    let markCreateObjectReady;
+    let releaseCreateObjectResponse;
+    const createObjectReady = new Promise(resolve => {
+      markCreateObjectReady = resolve;
+    });
+    const createObjectResponseCanContinue = new Promise(resolve => {
+      releaseCreateObjectResponse = resolve;
+    });
+    await page.route("**/internalApi/UIService/CreateObject", async route => {
+      const response = await route.fetch();
+      markCreateObjectReady();
+      await createObjectResponseCanContinue;
+      await route.fulfill({ response });
+    });
 
-    await page.$eval(`#${allDataTypesDataViewId} .addRow`, elem => elem.click());
+    await page.evaluate(() => document.activeElement?.blur());
+    await page.locator(`#${allDataTypesDataViewId} .addRow`)
+      .evaluate(element => element.click());
+    await createObjectReady;
+    await expect.poll(async () => page.evaluate(() => document.activeElement?.tagName))
+      .not.toMatch(/^(INPUT|TEXTAREA)$/);
 
-    // The request throttling should cause these key presses to occur before the input in the
-    // fist column is rendered and focused
-    await page.keyboard.press("a");
-    await page.keyboard.press("b");
-    await page.keyboard.press("c");
+    // Hold the completed response so these keys arrive immediately before the first-column
+    // input is rendered and focused, independent of server response time.
+    await page.keyboard.type("abc");
+    releaseCreateObjectResponse();
 
-    await page.waitForFunction(`document.activeElement == document.getElementById("${text1InputId}")`);
+    const input = page.locator(`#${text1InputId}`);
+    await expect(input).toBeFocused();
 
     await page.keyboard.press("d");
     await page.keyboard.press("e");
     await page.keyboard.press("f");
 
-    let [input] = await page.$x(`//input[@id='${text1InputId}']`)
-    const inputValue = await page.evaluate(x => x.value, input);
-    expect(inputValue).toContain('abcdef');
-
-    await cancelRequestThrottling();
+    await expect(input).toHaveValue(/abcdef/);
 
     await refreshAndThrowChangesAway();
-    await sleep(500);
   });
 });
 

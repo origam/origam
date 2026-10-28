@@ -20,23 +20,23 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import { RootStoreContext, T } from '@/main.tsx';
 import { PropertyValue } from '@api/IArchitectApi';
 import { EditorProperty } from '@editors/gridEditor/EditorProperty.ts';
+import { ColorPropertyInput } from '@editors/propertyEditor/ColorPropertyInput.tsx';
 import { IPropertyManager } from '@editors/propertyEditor/IPropertyManager.tsx';
 import { FilterableSelect } from '@editors/propertyEditor/FilterableSelect.tsx';
 import { NumericPropertyInput } from '@editors/propertyEditor/NumericPropertyInput.tsx';
+import {
+  isSchemaItemId,
+  OpenReferenceButton,
+} from '@editors/propertyEditor/OpenReferenceButton.tsx';
 import S from '@editors/propertyEditor/SinglePropertyEditor.module.scss';
 import { UntypedPropertyInput } from '@editors/propertyEditor/UntypedPropertyInput.tsx';
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler.ts';
 import { observer } from 'mobx-react-lite';
-import { useContext } from 'react';
-import { VscCopy, VscLinkExternal } from 'react-icons/vsc';
+import { ReactNode, useContext } from 'react';
+import { VscCopy } from 'react-icons/vsc';
 
 const NO_WHITESPACE_PROPERTIES = new Set(['Name', 'MappedObjectName']);
 const stripWhitespace = (value: string) => value.replace(/\s+/gu, '');
-
-// Bound fields and converter lookups hold text, not a model reference.
-const GUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/iu;
-const isSchemaItemId = (value: PropertyValue) =>
-  typeof value === 'string' && GUID_PATTERN.test(value);
 
 const SinglePropertyEditor = observer(
   (props: { property: EditorProperty; propertyManager: IPropertyManager; compact?: boolean }) => {
@@ -48,14 +48,19 @@ const SinglePropertyEditor = observer(
       }
     };
 
-    const handleOpenReferencedItem = (schemaItemId: string) => {
-      runInFlowWithHandler(rootStore.errorDialogController)({
-        generator: function* () {
-          yield* rootStore.editorTabViewState.openEditorByOrigamId(schemaItemId)();
-          yield* rootStore.modelTreeState.revealSchemaItem(schemaItemId);
-        },
-      });
-    };
+    const withCopyButton = (control: ReactNode) => (
+      <div className={S.inputWithCopyButton}>
+        <button
+          type="button"
+          className={S.copyButton}
+          onClick={handleCopyToClipboard}
+          title={T('Copy to clipboard', 'property_copy_to_clipboard')}
+        >
+          <VscCopy />
+        </button>
+        {control}
+      </div>
+    );
 
     const onValueChange = (property: EditorProperty, value: PropertyValue) => {
       runInFlowWithHandler(rootStore.errorDialogController)({
@@ -68,7 +73,11 @@ const SinglePropertyEditor = observer(
     };
 
     const renderControl = (property: EditorProperty) => {
-      if (property.type === 'enum' || property.type === 'looukup') {
+      if (
+        property.type === 'enum' ||
+        property.type === 'looukup' ||
+        property.type === 'fieldBinding'
+      ) {
         const selectedValue =
           property.type === 'enum'
             ? (property.dropDownValues.find(
@@ -80,26 +89,22 @@ const SinglePropertyEditor = observer(
           <FilterableSelect
             options={property.dropDownValues}
             selectedValue={selectedValue}
+            allowCustomValue={property.type === 'fieldBinding'}
             disabled={property.readOnly}
             dataTestId={`property-select-${property.name}`}
             onChange={value => onValueChange(property, value)}
           />
         );
+        // Bound fields and converter lookups hold text, not a model reference.
         if (property.type !== 'looukup' || !isSchemaItemId(property.value)) {
           return select;
         }
         return (
           <div className={S.inputWithCopyButton}>
-            <button
-              type="button"
-              className={`${S.copyButton} ${S.openButton}`}
-              onClick={() => handleOpenReferencedItem(String(property.value))}
-              title="Open in editor"
-              data-test-id={`property-open-${property.name}`}
-            >
-              <VscLinkExternal />
-              {T('Open', 'property_open_referenced_item')}
-            </button>
+            <OpenReferenceButton
+              schemaItemId={property.value}
+              dataTestId={`property-open-${property.name}`}
+            />
             {select}
           </div>
         );
@@ -121,68 +126,47 @@ const SinglePropertyEditor = observer(
       }
 
       if (property.type === 'integer' || property.type === 'float') {
-        return (
-          <div className={S.inputWithCopyButton}>
-            <button
-              type="button"
-              className={S.copyButton}
-              onClick={handleCopyToClipboard}
-              title="Copy to clipboard"
-            >
-              <VscCopy />
-            </button>
-            <NumericPropertyInput
-              property={property}
-              type={property.type}
-              onChange={value => onValueChange(property, value)}
-            />
-          </div>
+        return withCopyButton(
+          <NumericPropertyInput
+            property={property}
+            type={property.type}
+            onChange={value => onValueChange(property, value)}
+          />,
+        );
+      }
+
+      if (property.type === 'color') {
+        return withCopyButton(
+          <ColorPropertyInput
+            property={property}
+            onChange={value => onValueChange(property, value)}
+          />,
         );
       }
 
       if (property.type === 'untyped') {
-        return (
-          <div className={S.inputWithCopyButton}>
-            <button
-              type="button"
-              className={S.copyButton}
-              onClick={handleCopyToClipboard}
-              title="Copy to clipboard"
-            >
-              <VscCopy />
-            </button>
-            <UntypedPropertyInput
-              property={property}
-              onChange={value => onValueChange(property, value)}
-            />
-          </div>
+        return withCopyButton(
+          <UntypedPropertyInput
+            property={property}
+            onChange={value => onValueChange(property, value)}
+          />,
         );
       }
 
-      return (
-        <div className={S.inputWithCopyButton}>
-          <button
-            type="button"
-            className={S.copyButton}
-            onClick={handleCopyToClipboard}
-            title="Copy to clipboard"
-          >
-            <VscCopy />
-          </button>
-          <input
-            type="text"
-            disabled={property.readOnly}
-            data-test-id={`property-input-${property.name}`}
-            value={property.value != null ? String(property.value) : ''}
-            onChange={e => {
-              const next = NO_WHITESPACE_PROPERTIES.has(property.name)
-                ? stripWhitespace(e.target.value)
-                : e.target.value;
-              onValueChange(property, next);
-            }}
-            title={property.value != null ? property.value.toString() : ''}
-          />
-        </div>
+      return withCopyButton(
+        <input
+          type="text"
+          disabled={property.readOnly}
+          data-test-id={`property-input-${property.name}`}
+          value={property.value != null ? String(property.value) : ''}
+          onChange={e => {
+            const next = NO_WHITESPACE_PROPERTIES.has(property.name)
+              ? stripWhitespace(e.target.value)
+              : e.target.value;
+            onValueChange(property, next);
+          }}
+          title={property.value != null ? property.value.toString() : ''}
+        />,
       );
     };
 
