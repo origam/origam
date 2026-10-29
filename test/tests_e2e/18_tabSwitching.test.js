@@ -15,6 +15,7 @@ const {
   allDataTypesLazyMenuItemsId,
   allDataTypesLazyDataViewId,
   masterDetailLazyLoadedMenuItemId,
+  masterDataViewId,
   detailDataViewId,
   detailEditorId,
   detailTabHandelId,
@@ -60,6 +61,15 @@ async function getScrollPosition(page, dataViewId) {
     left: element.scrollLeft,
     top: element.scrollTop,
   }));
+}
+
+async function getSplitterPanelSizes(splitter) {
+  return splitter.locator(':scope > [class*="Splitter-module__panel"]').evaluateAll(panels =>
+    panels.map(panel => {
+      const bounds = panel.getBoundingClientRect();
+      return { width: bounds.width, height: bounds.height };
+    })
+  );
 }
 
 async function canvasHasRenderedPixels(page, dataViewId) {
@@ -286,5 +296,56 @@ test.describe("Html client", () => {
     await expect(detailEditor).toBeVisible();
     await detailEditor.focus();
     await expect(detailEditor).toBeFocused();
+  });
+
+  test("Should retain resized splitter panels across section and screen switches", async ({
+    page,
+  }) => {
+    await login(page);
+    await openMenuItem(page, [
+      topMenuHeader,
+      widgetsMenuItemId,
+      sectionsMenuItemId,
+      masterDetailLazyLoadedMenuItemId,
+    ]);
+
+    const masterDataView = page.locator(`#${masterDataViewId}`);
+    const splitter = masterDataView.locator(
+      'xpath=ancestor::*[contains(@class, "Splitter-module__root")][1]'
+    );
+    const divider = splitter.locator(':scope > [class*="Splitter-module__divider"]');
+    const initialSizes = await getSplitterPanelSizes(splitter);
+    expect(initialSizes).toHaveLength(2);
+    const dragDistance = initialSizes[0].height > initialSizes[1].height ? -80 : 80;
+    const bounds = await divider.boundingBox();
+    expect(bounds).not.toBeNull();
+    const x = bounds.x + bounds.width / 2;
+    const y = bounds.y + bounds.height / 2;
+    await page.mouse.move(x, y);
+    await page.mouse.down();
+    await page.mouse.move(x, y + dragDistance, { steps: 5 });
+    await page.mouse.up();
+    await expect.poll(async () => (await getSplitterPanelSizes(splitter))[0].height)
+      .toBeCloseTo(initialSizes[0].height + dragDistance, 0);
+    await waitForApplicationReady(page);
+    const resizedSizes = await getSplitterPanelSizes(splitter);
+    expect(resizedSizes[1].height).toBeCloseTo(initialSizes[1].height - dragDistance, 0);
+
+    await activateSectionTab(page, detailTabHandelId);
+    await activateSectionTab(page, detailsDetailTabHandleId);
+    await activateSectionTab(page, detailTabHandelId);
+    expect(await getSplitterPanelSizes(splitter)).toEqual(resizedSizes);
+
+    await openMenuItem(page, [topMenuHeader, allDataTypesLazyMenuItemsId]);
+    await expect(masterDataView).toBeHidden();
+    expect(await getSplitterPanelSizes(splitter)).toEqual(resizedSizes);
+
+    const screenTab = page.locator('[class*="TabbedViewHandle-module__root"]')
+      .filter({ hasText: /^Master-Detail Lazy Loaded\s*$/ });
+    await screenTab.click();
+    await expect(masterDataView).toBeVisible();
+    expect(await getSplitterPanelSizes(splitter)).toEqual(resizedSizes);
+    await waitForApplicationReady(page);
+    expect(await getSplitterPanelSizes(splitter)).toEqual(resizedSizes);
   });
 });
