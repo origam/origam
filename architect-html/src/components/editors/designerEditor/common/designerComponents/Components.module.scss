@@ -66,13 +66,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   margin-top: 1px;
 }
 
-// Mimics the native checkbox of the web client.
 .designSurfaceCheckbox {
   box-sizing: border-box;
   flex-shrink: 0;
   width: 13px;
   height: 13px;
-  margin: 3px 3px 3px 4px;
   border: 1px solid var(--background6);
   border-radius: 2px;
   background-color: var(--background1);
