@@ -595,7 +595,7 @@ test.describe('Screen section widgets (real backend)', () => {
     );
   });
 
-  test('widgets keep the web client look', async () => {
+  test('widgets keep the web client look', async ({ page }) => {
     await editor.openNew('AllDataTypes');
     const textBox = await editor.dropWidget('AsTextBox', 'Text1');
     await editor.select(textBox);
@@ -608,7 +608,11 @@ test.describe('Screen section widgets (real backend)', () => {
     await editor.setProperty('Text', 'Group');
     await editor.dropWidget('AsTextBox', 'Text2', groupBox);
 
-    await expect(editor.surface).toHaveScreenshot('section-widgets.png');
+    // The surface fills the window, so its size differs between machines.
+    const surface = (await editor.surface.boundingBox())!;
+    await expect(page).toHaveScreenshot('section-widgets.png', {
+      clip: { x: surface.x, y: surface.y, width: 520, height: 420 },
+    });
   });
 
   test('navigation panel follows the panel settings', async () => {
