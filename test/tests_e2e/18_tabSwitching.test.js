@@ -46,6 +46,15 @@ async function activateSectionTab(page, tabHandleId) {
   await waitForApplicationReady(page);
 }
 
+async function getSectionPanel(page, tabHandleId) {
+  const tabHandle = page.locator(`#${tabHandleId}`);
+  const tabIndex = await tabHandle.evaluate(handle =>
+    Array.from(handle.parentElement.children).indexOf(handle)
+  );
+  // Handles and panels have matching order in adjacent containers.
+  return tabHandle.locator("..").locator("xpath=following-sibling::*[1]/*").nth(tabIndex);
+}
+
 async function getScrollPosition(page, dataViewId) {
   return page.locator(`#${dataViewId} .horiz-scrollbar`).evaluate(element => ({
     left: element.scrollLeft,
@@ -150,10 +159,8 @@ test.describe("Html client", () => {
     });
     expect(hiddenEditorCanReceiveFocus).toBe(false);
 
-    const nestedLayout = await page.locator(`#${detailsDetailTabHandleId}`).evaluate(tabHandle => {
-      const handleRow = tabHandle.parentElement;
-      const tabIndex = Array.from(handleRow.children).indexOf(tabHandle);
-      const panel = handleRow.nextElementSibling.children[tabIndex];
+    const nestedPanel = await getSectionPanel(page, detailsDetailTabHandleId);
+    const nestedLayout = await nestedPanel.evaluate(panel => {
       // This model's nested SplitPanel has FixedSize=true and renders as a VBox.
       const layout = panel.firstElementChild;
       function rectangle(element) {
@@ -175,13 +182,9 @@ test.describe("Html client", () => {
 
     // Sample the outgoing buttons on the first frame; readiness waits or retrying
     // assertions would let a visibility transition finish and miss the overlap.
-    const tabSwitch = await page
-      .locator(`#${detailTabHandelId}`)
-      .evaluate(async (tabHandle, previousTabHandleId) => {
-        const previousTabHandle = document.getElementById(previousTabHandleId);
-        const handleRow = previousTabHandle.parentElement;
-        const tabIndex = Array.from(handleRow.children).indexOf(previousTabHandle);
-        const previousPanel = handleRow.nextElementSibling.children[tabIndex];
+    const tabSwitch = await nestedPanel
+      .evaluate(async (previousPanel, nextTabHandleId) => {
+        const tabHandle = document.getElementById(nextTabHandleId);
         const buttons = Array.from(previousPanel.querySelectorAll("button"));
         await Promise.all(
           buttons.flatMap(button =>
@@ -203,7 +206,7 @@ test.describe("Html client", () => {
           visibleBefore,
           visibleAfter: visibleButtonLabels(),
         };
-      }, detailsDetailTabHandleId);
+      }, detailTabHandelId);
     expect(tabSwitch.isActive).toBe(true);
     expect(tabSwitch.visibleBefore).toHaveLength(2);
     expect(tabSwitch.visibleAfter).toEqual([]);
