@@ -142,8 +142,12 @@ public class OpenIddictConfig
             throw new ArgumentOutOfRangeException(
                 nameof(PrivateApiAdditionalAuthenticationMethods),
                 value,
-                $"Invalid authentication method '{value}' for endpoint '{endpointPath}'. "
-                    + $"Valid values are: {string.Join(separator: ", ", Enum.GetNames<AuthenticationMethod>())}."
+                string.Format(
+                    Resources.ErrorInvalidAdditionalAuthenticationMethod,
+                    value,
+                    endpointPath,
+                    string.Join(separator: ", ", Enum.GetNames<AuthenticationMethod>())
+                )
             );
         }
         return method;

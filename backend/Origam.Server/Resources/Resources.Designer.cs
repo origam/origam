@@ -411,6 +411,15 @@ namespace Origam.Server {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invalid authentication method &apos;{0}&apos; for endpoint &apos;{1}&apos;. Valid values are: {2}..
+        /// </summary>
+        public static string ErrorInvalidAdditionalAuthenticationMethod {
+            get {
+                return ResourceManager.GetString("ErrorInvalidAdditionalAuthenticationMethod", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0}, value: &quot;{1}&quot; cannot be parsed to integer..
         /// </summary>
         public static string ErrorInvalidIntParameterValue {
@@ -434,6 +443,15 @@ namespace Origam.Server {
         public static string ErrorLogOut {
             get {
                 return ResourceManager.GetString("ErrorLogOut", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The modeled API contains more than one {0} operation for &apos;{1}&apos;..
+        /// </summary>
+        public static string ErrorModeledApiDuplicateOperation {
+            get {
+                return ResourceManager.GetString("ErrorModeledApiDuplicateOperation", resourceCulture);
             }
         }
         
@@ -724,16 +742,7 @@ namespace Origam.Server {
                 return ResourceManager.GetString("MenuNotAuthorized", resourceCulture);
             }
         }
-
-        /// <summary>
-        ///   Looks up a localized string similar to The modeled API contains more than one {0} operation for '{1}'..
-        /// </summary>
-        public static string ErrorModeledApiDuplicateOperation {
-            get {
-                return ResourceManager.GetString("ErrorModeledApiDuplicateOperation", resourceCulture);
-            }
-        }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Access denied..
         /// </summary>
@@ -742,7 +751,7 @@ namespace Origam.Server {
                 return ResourceManager.GetString("ModeledApiAccessDeniedResponse", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Origam access token..
         /// </summary>
@@ -751,7 +760,7 @@ namespace Origam.Server {
                 return ResourceManager.GetString("ModeledApiAccessTokenDescription", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Origam authentication cookie..
         /// </summary>
@@ -760,7 +769,7 @@ namespace Origam.Server {
                 return ResourceManager.GetString("ModeledApiAuthenticationCookieDescription", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Authentication required..
         /// </summary>
@@ -769,25 +778,16 @@ namespace Origam.Server {
                 return ResourceManager.GetString("ModeledApiAuthenticationRequiredResponse", resourceCulture);
             }
         }
-
+        
         /// <summary>
-        ///   Looks up a localized string similar to A column in '{0}'..
+        ///   Looks up a localized string similar to A column in &apos;{0}&apos;..
         /// </summary>
         public static string ModeledApiColumnDescription {
             get {
                 return ResourceManager.GetString("ModeledApiColumnDescription", resourceCulture);
             }
         }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Public API endpoints defined in the active Origam application model and extension controllers..
-        /// </summary>
-        public static string OpenApiDescription {
-            get {
-                return ResourceManager.GetString("OpenApiDescription", resourceCulture);
-            }
-        }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Modeled {0} endpoint..
         /// </summary>
@@ -796,7 +796,7 @@ namespace Origam.Server {
                 return ResourceManager.GetString("ModeledApiEndpointDescription", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to ColumnName.
         /// </summary>
@@ -805,7 +805,7 @@ namespace Origam.Server {
                 return ResourceManager.GetString("ModeledApiExampleColumnName", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to The modeled endpoint failed..
         /// </summary>
@@ -814,16 +814,16 @@ namespace Origam.Server {
                 return ResourceManager.GetString("ModeledApiFailedResponse", resourceCulture);
             }
         }
-
+        
         /// <summary>
-        ///   Looks up a localized string similar to Origam filter expression..
+        ///   Looks up a localized string similar to Origam filter expression. A condition is [&quot;column&quot;, &quot;operator&quot;, value]. Combine conditions with [&quot;$AND&quot;, ...] or [&quot;$OR&quot;, ...]. Operators include eq, neq, gt, gte, lt, lte, starts, nstarts, ends, nends, contains, ncontains, like, in, nin, between and nbetween..
         /// </summary>
         public static string ModeledApiFilterExpressionDescription {
             get {
                 return ResourceManager.GetString("ModeledApiFilterExpressionDescription", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Custom filtering and ordering input. Available columns: {0}..
         /// </summary>
@@ -832,52 +832,43 @@ namespace Origam.Server {
                 return ResourceManager.GetString("ModeledApiFilterInputDescription", resourceCulture);
             }
         }
-
+        
         /// <summary>
-        ///   Looks up a localized string similar to Optional map from a filter column name to a lookup UUID..
+        ///   Looks up a localized string similar to Optional map from a filter column name to the UUID of the lookup used to resolve that column..
         /// </summary>
         public static string ModeledApiFilterLookupsDescription {
             get {
                 return ResourceManager.GetString("ModeledApiFilterLookupsDescription", resourceCulture);
             }
         }
-
+        
         /// <summary>
-        ///   Looks up a localized string similar to The EXAMPLE_JSON output documentation entry is not valid JSON..
+        ///   Looks up a localized string similar to The EXAMPLE_JSON output documentation entry is not valid JSON and cannot be displayed..
         /// </summary>
         public static string ModeledApiInvalidJsonExample {
             get {
                 return ResourceManager.GetString("ModeledApiInvalidJsonExample", resourceCulture);
             }
         }
-
+        
         /// <summary>
-        ///   Looks up a localized string similar to The EXAMPLE_XML output documentation entry is not valid XML..
+        ///   Looks up a localized string similar to The EXAMPLE_XML output documentation entry is not valid XML and cannot be displayed..
         /// </summary>
         public static string ModeledApiInvalidXmlExample {
             get {
                 return ResourceManager.GetString("ModeledApiInvalidXmlExample", resourceCulture);
             }
         }
-
+        
         /// <summary>
-        ///   Looks up a localized string similar to Could not validate the modeled API XML example "{0}".
-        /// </summary>
-        public static string ModeledApiXmlExampleValidationFailed {
-            get {
-                return ResourceManager.GetString("ModeledApiXmlExampleValidationFailed", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Successful response. The response schema is not available..
+        ///   Looks up a localized string similar to Successful response. The response schema is not available because the output documentation is not filled out. Add an EXAMPLE_JSON, EXAMPLE_XML or EXAMPLE documentation entry to expose an example response here..
         /// </summary>
         public static string ModeledApiMissingOutputDocumentationResponse {
             get {
                 return ResourceManager.GetString("ModeledApiMissingOutputDocumentationResponse", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Modeled endpoint not found..
         /// </summary>
@@ -886,7 +877,7 @@ namespace Origam.Server {
                 return ResourceManager.GetString("ModeledApiNotFoundResponse", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Optional custom ordering. Array order determines sort priority..
         /// </summary>
@@ -895,16 +886,16 @@ namespace Origam.Server {
                 return ResourceManager.GetString("ModeledApiOrderingDescription", resourceCulture);
             }
         }
-
+        
         /// <summary>
-        ///   Looks up a localized string similar to Maps to the modeled parameter '{0}'..
+        ///   Looks up a localized string similar to Maps to the modeled parameter &apos;{0}&apos;..
         /// </summary>
         public static string ModeledApiParameterMapping {
             get {
                 return ResourceManager.GetString("ModeledApiParameterMapping", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Maps to the modeled parameters {0}..
         /// </summary>
@@ -913,16 +904,16 @@ namespace Origam.Server {
                 return ResourceManager.GetString("ModeledApiParametersMapping", resourceCulture);
             }
         }
-
+        
         /// <summary>
-        ///   Looks up a localized string similar to Use the POST operation on the same path..
+        ///   Looks up a localized string similar to  Use the POST operation on the same path to send custom filters and ordering..
         /// </summary>
         public static string ModeledApiPostFiltersHint {
             get {
                 return ResourceManager.GetString("ModeledApiPostFiltersHint", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Successful response..
         /// </summary>
@@ -931,25 +922,16 @@ namespace Origam.Server {
                 return ResourceManager.GetString("ModeledApiSuccessfulResponse", resourceCulture);
             }
         }
-
+        
         /// <summary>
-        ///   Looks up a localized string similar to Modeled API endpoints in the '{0}' folder..
+        ///   Looks up a localized string similar to Modeled API endpoints in the &apos;{0}&apos; folder..
         /// </summary>
         public static string ModeledApiTagDescription {
             get {
                 return ResourceManager.GetString("ModeledApiTagDescription", resourceCulture);
             }
         }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Origam API.
-        /// </summary>
-        public static string OpenApiTitle {
-            get {
-                return ResourceManager.GetString("OpenApiTitle", resourceCulture);
-            }
-        }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Uncategorized.
         /// </summary>
@@ -958,25 +940,25 @@ namespace Origam.Server {
                 return ResourceManager.GetString("ModeledApiUncategorized", resourceCulture);
             }
         }
-
+        
         /// <summary>
-        ///   Looks up a localized string similar to Successful response. This endpoint returns JSON data..
+        ///   Looks up a localized string similar to Successful response. This endpoint returns JSON data, but its response schema cannot be inferred from the Origam model..
         /// </summary>
         public static string ModeledApiUnknownJsonResponse {
             get {
                 return ResourceManager.GetString("ModeledApiUnknownJsonResponse", resourceCulture);
             }
         }
-
+        
         /// <summary>
-        ///   Looks up a localized string similar to OpenAPI documentation generation is not implemented for the modeled page type '{0}'..
+        ///   Looks up a localized string similar to OpenAPI documentation generation is not implemented for the modeled page type &apos;{0}&apos;..
         /// </summary>
         public static string ModeledApiUnsupportedPageTypeDescription {
             get {
                 return ResourceManager.GetString("ModeledApiUnsupportedPageTypeDescription", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to OpenAPI documentation generation is not implemented for this modeled page type..
         /// </summary>
@@ -985,13 +967,40 @@ namespace Origam.Server {
                 return ResourceManager.GetString("ModeledApiUnsupportedPageTypeResponse", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Unsupported page type: {0}.
         /// </summary>
         public static string ModeledApiUnsupportedPageTypeSummary {
             get {
                 return ResourceManager.GetString("ModeledApiUnsupportedPageTypeSummary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not validate the modeled API XML example &quot;{0}&quot;.
+        /// </summary>
+        public static string ModeledApiXmlExampleValidationFailed {
+            get {
+                return ResourceManager.GetString("ModeledApiXmlExampleValidationFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Public API endpoints defined in the active Origam application model and extension controllers..
+        /// </summary>
+        public static string OpenApiDescription {
+            get {
+                return ResourceManager.GetString("OpenApiDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Origam API.
+        /// </summary>
+        public static string OpenApiTitle {
+            get {
+                return ResourceManager.GetString("OpenApiTitle", resourceCulture);
             }
         }
         
