@@ -44,6 +44,8 @@ public class MsSqlDataService : AbstractSqlDataService
     private static readonly log4net.ILog log = log4net.LogManager.GetLogger(
         System.Reflection.MethodBase.GetCurrentMethod().DeclaringType
     );
+    private readonly object snapshotIsolationValidationLock = new();
+    private bool snapshotIsolationValidated;
 
     #region Constructors
     public MsSqlDataService()
@@ -73,6 +75,43 @@ public class MsSqlDataService : AbstractSqlDataService
         sb.ApplicationName = "ORIGAM [" + SecurityManager.CurrentPrincipal.Identity.Name + "]";
         SqlConnection result = new SqlConnection(sb.ToString());
         return result;
+    }
+
+    protected override void ValidateIsolationLevel(
+        IDbConnection connection,
+        IsolationLevel isolationLevel
+    )
+    {
+        if (isolationLevel != IsolationLevel.Snapshot || snapshotIsolationValidated)
+        {
+            return;
+        }
+
+        lock (snapshotIsolationValidationLock)
+        {
+            if (snapshotIsolationValidated)
+            {
+                return;
+            }
+
+            using IDbCommand command = connection.CreateCommand();
+            command.CommandText =
+                "SELECT snapshot_isolation_state FROM sys.databases WHERE database_id = DB_ID()";
+            if (Convert.ToInt32(command.ExecuteScalar()) != 1)
+            {
+                string message = string.Format(
+                    Strings.SnapshotIsolationNotEnabled,
+                    connection.Database
+                );
+                if (log.IsErrorEnabled)
+                {
+                    log.Error(message);
+                }
+                throw new Exception(message);
+            }
+
+            snapshotIsolationValidated = true;
+        }
     }
 
     public override string BuildConnectionString(

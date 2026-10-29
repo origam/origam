@@ -48,12 +48,10 @@ export const SectionToolbox: React.FC<{
 
   const onControlDragStart = (type: ComponentType) => {
     action(() => {
-      if (sectionToolbox.selectedFieldName || type === ComponentType.GroupBox) {
-        surfaceState.draggedComponentData = {
-          identifier: sectionToolbox.selectedFieldName,
-          type: type,
-        };
-      }
+      surfaceState.draggedComponentData = {
+        identifier: sectionToolbox.selectedFieldName,
+        type: type,
+      };
     })();
   };
 
@@ -63,7 +61,7 @@ export const SectionToolbox: React.FC<{
       <div
         key={field.name}
         draggable
-        onClick={() => (sectionToolbox.selectedFieldName = field.name)}
+        onClick={action(() => (sectionToolbox.selectedFieldName = field.name))}
         onDragStart={() => onFieldDragStart(field)}
         className={S.toolboxField + ' ' + (isSelected ? S.selectedField : '')}
       >
@@ -107,7 +105,15 @@ export const SectionToolbox: React.FC<{
               {getControlComponent(ComponentType.AsCombo)}
               {getControlComponent(ComponentType.AsDateBox)}
               {getControlComponent(ComponentType.AsTextBox)}
+              {getControlComponent(ComponentType.BlobControl)}
+              {getControlComponent(ComponentType.Checklist)}
+              {getControlComponent(ComponentType.ColorPicker)}
               {getControlComponent(ComponentType.GroupBox)}
+              {getControlComponent(ComponentType.ImageBox)}
+              {getControlComponent(ComponentType.Label)}
+              {getControlComponent(ComponentType.MultiColumnAdapterFieldWrapper)}
+              {getControlComponent(ComponentType.RadioButton)}
+              {getControlComponent(ComponentType.TagInput)}
             </div>
           ),
         },

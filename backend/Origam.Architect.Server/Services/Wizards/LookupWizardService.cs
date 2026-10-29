@@ -72,6 +72,8 @@ public class LookupWizardService(
     public CreateWizardResult CreateLookup(CreateLookupModel input)
     {
         RequireName(input.Name, Strings.Wizard_LookupNameRequired);
+        RequireUniqueLookupName(input.Name);
+        RequireUniqueDataStructureName(LookupHelper.GetDataStructureName(input.Name));
         var entity = RetrieveEntity(input.EntityId);
 
         var idColumn =

@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using System.Globalization;
 using Microsoft.AspNetCore.Mvc;
 using Origam.Architect.Server.Services;
 using Origam.DA.Service;
@@ -36,10 +37,11 @@ namespace Origam.Architect.Server.Controllers;
 // on disk itself (`git checkout`/`git clean` of model-tests/model) and the server
 // cannot see when that starts or ends:
 //
-//   POST /Test/BeginReset  -> stop reacting to file changes
+//   POST /Test/BeginReset  -> forget the tabs while their files still exist,
+//                             stop reacting to file changes
 //   (caller restores the model files on disk)
-//   POST /Test/EndReset    -> forget the tabs, re-read the clean model, discard
-//                             the file events the restore produced
+//   POST /Test/EndReset    -> re-read the clean model, discard the file events
+//                             the restore produced
 //
 // Doing it in one call would leave the restore's events in FileEventQueue, which
 // only processes them a second after the last change - that is, in the middle of
@@ -50,6 +52,7 @@ public class TestController(
     SchemaService schemaService,
     IPersistenceService persistenceService,
     TabService tabService,
+    ModelCheckService modelCheckService,
     IWebHostEnvironment environment
 ) : ControllerBase
 {
@@ -61,6 +64,7 @@ public class TestController(
             return NotFound();
         }
 
+        tabService.CloseAllTabs();
         GetFileEventQueue()?.Pause();
         return Ok();
     }
@@ -78,8 +82,7 @@ public class TestController(
         SecurityManager.SetServerIdentity();
         try
         {
-            // Drop all open editor tabs (kept in the singleton TabService).
-            tabService.CloseAllTabs();
+            modelCheckService.ClearCache();
 
             // Re-read the file model from disk. FlushCache/LoadSchema on their own
             // keep the cached file index, so files removed on disk (a git reset of
@@ -110,6 +113,22 @@ public class TestController(
             // change how every following test behaves.
             GetFileEventQueue()?.Continue();
         }
+    }
+
+    // Edited values must not depend on the server culture, so tests pin a
+    // non-invariant one instead of trusting the machine. Empty name restores it.
+    [HttpPost("SetCulture")]
+    public IActionResult SetCulture([FromQuery] string name)
+    {
+        if (!environment.IsDevelopment())
+        {
+            return NotFound();
+        }
+
+        CultureInfo.DefaultThreadCurrentCulture = string.IsNullOrEmpty(name)
+            ? null
+            : new CultureInfo(name);
+        return Ok();
     }
 
     private FileEventQueue GetFileEventQueue() =>

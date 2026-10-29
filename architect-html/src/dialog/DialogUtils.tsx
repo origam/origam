@@ -22,12 +22,12 @@ import { YesNoQuestion } from '@dialogs/components/YesNoQuestion';
 import { NameInputDialog } from '@dialogs/components/NameInputDialog';
 import { IDialogStackState } from '@dialogs/types';
 import { action } from 'mobx';
-import { Info } from '@/dialog/components/Info.tsx';
 
 export function askYesNoQuestion(
   dialogStack: IDialogStackState,
   title: string,
   question: string,
+  { showCancel = true }: { showCancel?: boolean } = {},
 ): Promise<YesNoResult> {
   return new Promise(
     action((resolve: (value: YesNoResult) => void) => {
@@ -47,10 +47,14 @@ export function askYesNoQuestion(
             closeDialog();
             resolve(YesNoResult.No);
           }}
-          onCancelClick={() => {
-            closeDialog();
-            resolve(YesNoResult.Cancel);
-          }}
+          onCancelClick={
+            showCancel
+              ? () => {
+                  closeDialog();
+                  resolve(YesNoResult.Cancel);
+                }
+              : undefined
+          }
         />,
       );
     }),
@@ -92,28 +96,6 @@ export function askForName(
           onCancelClick={() => {
             closeDialog();
             resolve(null);
-          }}
-        />,
-      );
-    }),
-  );
-}
-
-export function showInfo(
-  dialogStack: IDialogStackState,
-  title: string,
-  text: string,
-): Promise<YesNoResult> {
-  return new Promise(
-    action(() => {
-      const closeDialog = dialogStack.pushDialog(
-        '',
-        <Info
-          screenTitle={title}
-          okLabel={T('OK', 'dialog_ok')}
-          message={text}
-          onOkClick={() => {
-            closeDialog();
           }}
         />,
       );

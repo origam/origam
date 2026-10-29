@@ -39,13 +39,13 @@
       <ItemGroup>
         <PackageReference
           Include="Roslynator.Analyzers"
-          Version="5.0.0"
+          Version="5.0.1"
           PrivateAssets="all"
           IncludeAssets="build;analyzers;buildtransitive"
         />
         <PackageReference
           Include="Roslynator.Formatting.Analyzers"
-          Version="5.0.0"
+          Version="5.0.1"
           PrivateAssets="all"
           IncludeAssets="build;analyzers;buildtransitive"
         />
@@ -57,7 +57,7 @@
         />
         <PackageReference
           Include="Meziantou.Analyzer"
-          Version="3.0.190"
+          Version="3.0.303"
           Condition="'$(DisableMeziantouAnalyzer)' != 'true'"
           PrivateAssets="all"
           IncludeAssets="build;analyzers;buildtransitive"

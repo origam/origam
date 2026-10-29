@@ -38,6 +38,8 @@ public static class ArchitectTargetOptions
                 "Tab",
                 "Model",
                 "PropertyEditor",
+                "SectionEditor",
+                "ScreenEditor",
                 "CommunityWebSearch",
                 "ItemTypeCatalog",
             ],
@@ -57,6 +59,7 @@ public static class ArchitectTargetOptions
             PathsNeverExposedAsTools = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
             {
                 "/Model/GetSchemaItemInfos",
+                "/ScreenEditor/GetSections",
             },
             SectionDescriptions = new Dictionary<string, string>(StringComparer.Ordinal)
             {

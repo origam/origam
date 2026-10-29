@@ -38,7 +38,12 @@ public class ToolCallTracker(int maxIterations) : IToolInvocationFilter
         "remove",
     ];
 
-    private static readonly string[] TargetArgumentNames = ["schemaItemId", "SchemaItemId"];
+    private static readonly string[] TargetArgumentNames =
+    [
+        "schemaItemId",
+        "SchemaItemId",
+        "editorSchemaItemId",
+    ];
 
     private readonly List<AffectedNode> affectedNodes = new();
 
@@ -126,7 +131,7 @@ public class ToolCallTracker(int maxIterations) : IToolInvocationFilter
             }
         }
 
-        if (isMutating)
+        if (isMutating && !ReportsNothingChanged(content))
         {
             ModelChanged = true;
             if (!extractedFromResult)
@@ -138,11 +143,25 @@ public class ToolCallTracker(int maxIterations) : IToolInvocationFilter
                         targetId!,
                         label: null,
                         itemTypeName: null,
-                        ClassifyAction(functionName)
+                        context.Arguments.ContainsKey("editorSchemaItemId")
+                            ? "updated"
+                            : ClassifyAction(functionName)
                     );
                 }
             }
         }
+    }
+
+    private static bool ReportsNothingChanged(string? content)
+    {
+        if (content is null || !LooksLikeJsonObject(content))
+        {
+            return false;
+        }
+
+        using var document = JsonDocument.Parse(content);
+        return document.RootElement.TryGetProperty(propertyName: "isDirty", out var isDirty)
+            && isDirty.ValueKind == JsonValueKind.False;
     }
 
     private static bool WasDiscarded(JsonElement root)

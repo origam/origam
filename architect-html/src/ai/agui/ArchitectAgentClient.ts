@@ -85,7 +85,10 @@ function toAguiMessages(messages: ChatMessage[]): Message[] {
     converted.push({
       id: message.id,
       role: 'user',
-      content: [{ type: 'text', text: message.text }, ...imageParts],
+      content:
+        message.text.length > 0
+          ? [{ type: 'text', text: message.text }, ...imageParts]
+          : imageParts,
     });
   }
 

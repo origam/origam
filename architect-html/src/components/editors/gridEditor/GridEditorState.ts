@@ -21,15 +21,20 @@ import { T } from '@/main';
 import { IArchitectApi, IUpdatePropertiesResult } from '@api/IArchitectApi';
 import { IEditorNode } from '@components/editorTabView/EditorTabViewState';
 import { ITabState, IValidationError } from '@/components/editorTabView/ITabState';
+import { ModelTreeState } from '@components/modelTree/ModelTreeState';
 import { EditorProperty, toChanges } from '@editors/gridEditor/EditorProperty';
 import { IPropertyManager } from '@editors/propertyEditor/IPropertyManager';
-import { computed, observable } from 'mobx';
+import { computed, observable, when } from 'mobx';
+
+export const UnsentValueDelayMs = 300;
 
 export class GridEditorState implements ITabState, IPropertyManager {
   @observable accessor properties: EditorProperty[];
   @observable accessor isSaving = false;
   @observable accessor isActive = false;
   @observable accessor _isDirty: boolean;
+  @observable.ref private accessor unsentProperty: EditorProperty | undefined;
+  @observable private accessor isSendingUnsentValue = false;
 
   constructor(
     public tabId: string,
@@ -37,6 +42,7 @@ export class GridEditorState implements ITabState, IPropertyManager {
     properties: EditorProperty[] | undefined,
     isDirty: boolean,
     protected architectApi: IArchitectApi,
+    protected modelTreeState: ModelTreeState,
   ) {
     this._isDirty = isDirty;
     this.properties = properties ?? [];
@@ -48,7 +54,8 @@ export class GridEditorState implements ITabState, IPropertyManager {
     for (const property of this.properties) {
       someHasError = someHasError || !!property.error;
     }
-    return this._isDirty && !someHasError;
+    const hasLocalChange = !!this.unsentProperty || this.isSendingUnsentValue;
+    return (this._isDirty || hasLocalChange) && !someHasError;
   }
 
   @computed
@@ -82,13 +89,43 @@ export class GridEditorState implements ITabState, IPropertyManager {
   *save(): Generator<Promise<any>, void, any> {
     try {
       this.isSaving = true;
+      yield* this.sendUnsentValue();
       yield this.architectApi.persistChanges(this.editorNode.origamId);
-      if (this.editorNode.parent) {
-        yield* this.editorNode.parent.loadChildren();
-      }
+      const treeNode = this.editorNode.parent;
+      const fallbackParent =
+        treeNode?.origamId === this.editorNode.origamId ? treeNode.parent : treeNode;
+      yield* this.modelTreeState.reloadParentOf(this.editorNode.origamId, fallbackParent);
       this._isDirty = false;
     } finally {
       this.isSaving = false;
+    }
+  }
+
+  setUnsentValue(property: EditorProperty, value: string) {
+    property.value = value;
+    this.unsentProperty = property;
+  }
+
+  // One request at a time, so the server never applies an older value after a newer one.
+  *sendUnsentValue(): Generator<Promise<any>, void, any> {
+    for (;;) {
+      if (this.isSendingUnsentValue) {
+        yield when(() => !this.isSendingUnsentValue);
+      } else if (this.unsentProperty) {
+        const property = this.unsentProperty;
+        this.unsentProperty = undefined;
+        this.isSendingUnsentValue = true;
+        try {
+          yield* this.onPropertyUpdated(property, property.value);
+        } catch (error) {
+          this.unsentProperty ??= property;
+          throw error;
+        } finally {
+          this.isSendingUnsentValue = false;
+        }
+      } else {
+        return;
+      }
     }
   }
 
@@ -121,6 +158,10 @@ export class GridEditorState implements ITabState, IPropertyManager {
       changes,
     )) as IUpdatePropertiesResult;
     for (const property of this.properties) {
+      // The server would echo the older value and overwrite what was typed meanwhile.
+      if (property === this.unsentProperty) {
+        continue;
+      }
       const propertyUpdate = updateResult.propertyUpdates.find(
         update => property.name === update.propertyName,
       );

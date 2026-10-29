@@ -17,10 +17,9 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { IArchitectApi, IDesignerEditorData, IUpdatePropertiesResult } from '@api/IArchitectApi';
-import { EditorProperty } from '@components/editors/gridEditor/EditorProperty';
+import { IArchitectApi, IDesignerEditorData } from '@api/IArchitectApi';
 import { IEditorNode } from '@components/editorTabView/EditorTabViewState';
-import { PropertiesState } from '@components/properties/PropertiesState';
+import { ModelTreeState } from '@components/modelTree/ModelTreeState';
 import { Component } from '@editors/designerEditor/common/designerComponents/Component';
 import { DesignSurfaceState } from '@editors/designerEditor/common/DesignSurfaceState';
 import { IDesignerEditorState } from '@editors/designerEditor/common/IDesignerEditorState';
@@ -36,6 +35,7 @@ export abstract class DesignerEditorState implements IDesignerEditorState {
 
   @observable accessor isActive: boolean = false;
   @observable accessor isDirty: boolean = false;
+  @observable.shallow accessor warnings: string[] = [];
 
   get origamId() {
     return this.editorNode.origamId;
@@ -45,36 +45,34 @@ export abstract class DesignerEditorState implements IDesignerEditorState {
     return this.toolbox.name;
   }
 
+  get componentProvider() {
+    return this.surface;
+  }
+
   protected constructor(
     public tabId: string,
     protected editorNode: IEditorNode,
     isDirty: boolean,
     editorData: IDesignerEditorData,
-    propertiesState: PropertiesState,
     toolbox: ToolboxState,
     protected architectApi: IArchitectApi,
+    private modelTreeState: ModelTreeState,
     runGeneratorHandled: (args: FlowHandlerInput) => CancellablePromise<any>,
     loadComponent?: (componentId: string) => Promise<ReactElement>,
   ) {
     this.isDirty = isDirty;
+    this.warnings = editorData.warnings ?? [];
     this.toolbox = toolbox;
     this.surface = new DesignSurfaceState(
       editorData,
-      propertiesState,
       this.update.bind(this),
       runGeneratorHandled,
       loadComponent,
     );
-    propertiesState.onPropertyUpdated = this.onPropertyUpdated.bind(this);
-    toolbox.onNameTopPropertiesChanged = () => (this.isDirty = true);
-  }
-
-  *onPropertyUpdated(
-    property: EditorProperty,
-    value: any,
-  ): Generator<Promise<IUpdatePropertiesResult>, void, IUpdatePropertiesResult> {
-    property.value = value;
-    yield* this.update() as any;
+    toolbox.onNameTopPropertiesChanged = warnings => {
+      this.isDirty = true;
+      this.warnings = warnings;
+    };
   }
 
   public abstract delete(components: Component[]): void;
@@ -84,9 +82,7 @@ export abstract class DesignerEditorState implements IDesignerEditorState {
   protected abstract update(): Generator<Promise<any>, void, any>;
 
   *save(): Generator<Promise<any>, void, any> {
-    if (this.editorNode.parent) {
-      yield* this.editorNode.parent.loadChildren();
-    }
+    yield* this.modelTreeState.reloadParentOf(this.editorNode.origamId, this.editorNode.parent);
     this.isDirty = false;
   }
 }

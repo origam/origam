@@ -18,7 +18,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { AiToolSectionsState } from '@/ai/AiToolSectionsState';
-import { T } from '@/main';
 import {
   DocumentationEditorData,
   EditorType,
@@ -26,6 +25,7 @@ import {
   IApiEditorProperty,
   IArchitectApi,
   IDeploymentScriptsGeneratorModuleData,
+  IModelCheckResultsEditorData,
   ISearchResultsEditorData,
   IScreenEditorData,
   ISectionEditorData,
@@ -33,7 +33,6 @@ import {
 } from '@api/IArchitectApi';
 import { EditorData } from '@components/modelTree/EditorData';
 import { ModelTreeState } from '@components/modelTree/ModelTreeState';
-import { PropertiesState } from '@components/properties/PropertiesState';
 import AiSettingsModule from '@modules/aiSettings/AiSettingsModule';
 import AiSettingsModuleState from '@modules/aiSettings/AiSettingsModuleState';
 import DeploymentScriptsEditor from '@editors/DeploymentScriptsEditor/DeploymentScriptsEditor';
@@ -50,7 +49,9 @@ import { EditorContainer } from '@editors/EditorContainer.tsx';
 import { EditorProperty } from '@editors/gridEditor/EditorProperty';
 import GridEditor from '@editors/gridEditor/GridEditor';
 import { GridEditorState } from '@editors/gridEditor/GridEditorState';
+import ModelCheckResultsView from '@components/modelCheck/ModelCheckResultsView';
 import SearchResultsView from '@components/search/SearchResultsView';
+import { ModelCheckResultsTabState } from '@components/modelCheck/ModelCheckResultsTabState';
 import { SearchResultsTabState } from '@components/search/SearchResultsTabState';
 import { XsltEditorState } from '@editors/gridEditor/XsltEditorState.ts';
 import XsltEditor from '@editors/xsltEditor/XsltEditor';
@@ -63,14 +64,13 @@ import { CancellablePromise } from 'mobx/dist/api/flow';
 export function getEditorContainer(args: {
   editorType: EditorType;
   editorData: EditorData;
-  propertiesState: PropertiesState;
   architectApi: IArchitectApi;
   modelTreeState: ModelTreeState;
   uiState: UIState;
   aiToolSectionsState: AiToolSectionsState;
   runGeneratorHandled: (args: FlowHandlerInput) => CancellablePromise<any>;
 }) {
-  const { editorType, editorData, propertiesState, architectApi, modelTreeState, uiState } = args;
+  const { editorType, editorData, architectApi, modelTreeState, uiState } = args;
   const { node, data, isDirty } = editorData;
 
   if (editorType === 'AiSettingsModule') {
@@ -116,6 +116,7 @@ export function getEditorContainer(args: {
       properties,
       isDirty,
       architectApi,
+      modelTreeState,
     );
     return new EditorContainer(editorState, <DeploymentScriptsEditor editorState={editorState} />);
   }
@@ -128,8 +129,9 @@ export function getEditorContainer(args: {
       properties,
       isDirty,
       architectApi,
+      modelTreeState,
     );
-    const editorComponent = <GridEditor editorState={editorState} title={editorState.title} />;
+    const editorComponent = <GridEditor editorState={editorState} />;
     return new EditorContainer(editorState, editorComponent);
   }
 
@@ -141,6 +143,7 @@ export function getEditorContainer(args: {
       properties,
       isDirty,
       architectApi,
+      modelTreeState,
     );
     const editorComponent = <XsltEditor editorState={editorState} />;
     return new EditorContainer(editorState, editorComponent);
@@ -154,9 +157,9 @@ export function getEditorContainer(args: {
       node,
       isDirty,
       sectionData,
-      propertiesState,
       sectionToolboxState,
       architectApi,
+      modelTreeState,
       args.runGeneratorHandled,
     );
     const editorComponent = <ScreenSectionEditor designerState={state} />;
@@ -171,9 +174,9 @@ export function getEditorContainer(args: {
       node,
       isDirty,
       screenData,
-      propertiesState,
       screenToolboxState,
       architectApi,
+      modelTreeState,
       args.runGeneratorHandled,
     );
     const editorComponent = <ScreenEditor designerState={state} />;
@@ -188,13 +191,9 @@ export function getEditorContainer(args: {
       documentationData,
       isDirty,
       architectApi,
+      modelTreeState,
     );
-    const editorComponent = (
-      <GridEditor
-        editorState={editorState}
-        title={T('Documentation: {0}', 'documentation_editor_title', documentationData.label)}
-      />
-    );
+    const editorComponent = <GridEditor editorState={editorState} />;
     return new EditorContainer(editorState, editorComponent);
   }
 
@@ -216,6 +215,12 @@ export function getEditorContainer(args: {
       searchResultsData.results ?? [],
     );
     return new EditorContainer(editorState, <SearchResultsView editorState={editorState} />);
+  }
+
+  if (editorType === 'ModelCheckResultsEditor') {
+    const modelCheckData = data as IModelCheckResultsEditorData;
+    const editorState = new ModelCheckResultsTabState(editorData.editorId, modelCheckData.result);
+    return new EditorContainer(editorState, <ModelCheckResultsView editorState={editorState} />);
   }
 
   return null;

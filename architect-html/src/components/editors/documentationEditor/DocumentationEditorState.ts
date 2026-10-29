@@ -17,12 +17,14 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
+import { T } from '@/main';
 import {
   DocumentationEditorData,
   IArchitectApi,
   IUpdatePropertiesResult,
 } from '@api/IArchitectApi';
 import { IEditorNode } from '@components/editorTabView/EditorTabViewState';
+import { ModelTreeState } from '@components/modelTree/ModelTreeState';
 import { EditorProperty, toChanges } from '@editors/gridEditor/EditorProperty';
 import { GridEditorState } from '@editors/gridEditor/GridEditorState';
 
@@ -33,22 +35,25 @@ export class DocumentationEditorState extends GridEditorState {
     private documentationData: DocumentationEditorData,
     isDirty: boolean,
     architectApi: IArchitectApi,
+    modelTreeState: ModelTreeState,
   ) {
     const properties = documentationData.properties.map(property => new EditorProperty(property));
-    super(editorId, editorNode, properties, isDirty, architectApi);
+    super(editorId, editorNode, properties, isDirty, architectApi, modelTreeState);
   }
 
   get label() {
     return `[${this.documentationData.label}]`;
   }
 
+  get title(): string {
+    return T('Documentation: {0}', 'documentation_editor_title', this.documentationData.label);
+  }
+
   *save(): Generator<Promise<any>, void, any> {
     try {
       this.isSaving = true;
       yield this.architectApi.persistDocumentationChanges(this.editorNode.origamId);
-      if (this.editorNode.parent) {
-        yield* this.editorNode.parent.loadChildren();
-      }
+      yield* this.modelTreeState.reloadParentOf(this.editorNode.origamId, this.editorNode.parent);
       this._isDirty = false;
     } finally {
       this.isSaving = false;

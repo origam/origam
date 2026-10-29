@@ -274,6 +274,7 @@ public static class XmlExtensions
         {
             Indent = true,
             NewLineOnAttributes = true,
+            NewLineChars = "\r\n",
             DoNotEscapeUriAttributes = false,
         };
         // The Replace is necessary because extra new lines were added after

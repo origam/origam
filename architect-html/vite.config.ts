@@ -103,6 +103,14 @@ export default defineConfig({
         target: 'http://localhost:5003',
         secure: false,
       },
+      '/ModelCheck': {
+        target: 'http://localhost:5003',
+        secure: false,
+      },
+      '/Localization': {
+        target: 'http://localhost:5003',
+        secure: false,
+      },
       '/wizards': {
         target: 'https://localhost:7099',
         secure: false,

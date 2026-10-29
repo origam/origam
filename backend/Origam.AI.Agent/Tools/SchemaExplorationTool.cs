@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System.ComponentModel;
+using System.Text.Json.Nodes;
 using Origam.AI.Agent.Services;
 using Origam.AI.Agent.Strategy.Architect;
 using Origam.AI.Agent.Strategy.Architect.Api;
@@ -82,8 +83,30 @@ public class SchemaExplorationTool(
             return $"Error: Backend returned {response.StatusCode}";
         }
 
-        var yaml = yamlSerializer.SerializeFromJson(response.Body);
+        var yaml = yamlSerializer.SerializeFromJson(PreferExactMatches(response.Body, query));
 
         return string.IsNullOrWhiteSpace(yaml) ? "No matches found." : yaml;
+    }
+
+    private static string PreferExactMatches(string json, string query)
+    {
+        if (JsonNode.Parse(json) is not JsonArray results)
+        {
+            return json;
+        }
+
+        var ordered = results
+            .Select(result => result?.DeepClone())
+            .OrderBy(result =>
+                string.Equals(
+                    result?["nodeText"]?.GetValue<string>(),
+                    query,
+                    StringComparison.OrdinalIgnoreCase
+                )
+                    ? 0
+                    : 1
+            )
+            .ToArray();
+        return new JsonArray(ordered).ToJsonString();
     }
 }

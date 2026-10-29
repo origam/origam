@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using Origam.Architect.Server.ReturnModels;
+using Origam.Architect.Server.Services.ScreenEditor;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
 
@@ -28,7 +29,8 @@ namespace Origam.Architect.Server.Services;
 public class TabResponseFactory(
     TreeNodeFactory treeNodeFactory,
     PropertyEditorService propertyEditorService,
-    DesignerEditorService designerEditorService
+    DesignerEditorService designerEditorService,
+    ScreenEditorService screenEditorService
 )
 {
     public OpenTabData CreatedTabData(TabData tab)
@@ -78,7 +80,7 @@ public class TabResponseFactory(
                 propertyEditorService.GetEditorPropertiesWithErrors(item),
             EditorSubType.XsltEditor => propertyEditorService.GetEditorPropertiesWithErrors(item),
             EditorSubType.ScreenSectionEditor => designerEditorService.GetSectionEditorData(item),
-            EditorSubType.ScreenEditor => designerEditorService.GetScreenEditorData(item),
+            EditorSubType.ScreenEditor => screenEditorService.GetScreenEditorData(item),
             _ => null,
         };
     }

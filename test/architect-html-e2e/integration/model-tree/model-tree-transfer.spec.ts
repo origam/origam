@@ -129,6 +129,23 @@ test.describe('Model tree move and copy (real backend)', () => {
     await expectModelFile(`${CONSTANTS_DIR}/UngroupedConstant.origam`, true);
   });
 
+  test('Paste from the context menu closes the menu', async ({ page }) => {
+    await openConstants(page);
+
+    await openContextMenu(page, 'UngroupedConstant');
+    await awaitMoveVerdicts(page, () =>
+      menuItem(page, 'UngroupedConstant', 'tree-menu-copy').click(),
+    );
+
+    await openContextMenu(page, 'AutomaticTests');
+    await expectMoveSucceeds(page, () =>
+      menuItem(page, 'AutomaticTests', 'tree-menu-paste').click(),
+    );
+
+    await expect(page.getByTestId('tree-node-Copy of UngroupedConstant')).toBeVisible();
+    await expect(page.getByRole('menu')).toHaveCount(0);
+  });
+
   test('Cut from the context menu moves a constant into a group', async ({ page }) => {
     await openConstants(page);
 

@@ -21,6 +21,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.ComponentModel;
 using System.Reflection;
+using Origam.Extensions;
+using Origam.Schema.EntityModel;
 
 namespace Origam.Architect.Server.Utils;
 
@@ -31,5 +33,98 @@ public static class PropertyUtils
         var browsableAttribute = (BrowsableAttribute)
             Attribute.GetCustomAttribute(property, typeof(BrowsableAttribute), inherit: true);
         return browsableAttribute?.Browsable ?? true;
+    }
+
+    public static bool IsUntyped(PropertyInfo property)
+    {
+        return property.PropertyType == typeof(object);
+    }
+
+    public static TypeConverter CreateConverter(PropertyInfo property)
+    {
+        string converterTypeName = property
+            .GetAttribute<TypeConverterAttribute>()
+            ?.ConverterTypeName;
+        if (converterTypeName == null)
+        {
+            return null;
+        }
+
+        Type type = Type.GetType(converterTypeName);
+        if (type == null)
+        {
+            throw new Exception(
+                string.Format(Strings.Property_ConverterNotFound, converterTypeName, property.Name)
+            );
+        }
+
+        return Activator.CreateInstance(type) as TypeConverter;
+    }
+
+    public static void SetValue(PropertyInfo property, object instance, object value)
+    {
+        // The Value setter converts text by the machine culture, the editor uses the XML format.
+        if (
+            instance is DataConstant dataConstant
+            && property.Name == nameof(DataConstant.Value)
+            && value is string text
+        )
+        {
+            SetDataConstantValue(property, dataConstant, text);
+            return;
+        }
+
+        try
+        {
+            property.SetValue(instance, value);
+        }
+        catch (TargetInvocationException exception)
+            when (IsRejectedValueException(exception.InnerException))
+        {
+            throw MakeValueNotReadException(property, exception.InnerException);
+        }
+    }
+
+    private static void SetDataConstantValue(
+        PropertyInfo property,
+        DataConstant dataConstant,
+        string value
+    )
+    {
+        try
+        {
+            dataConstant.XmlValue = value;
+        }
+        catch (NotSupportedException)
+        {
+            throw new UserOrigamException(
+                string.Format(Strings.Property_DataTypeWithoutValue, dataConstant.DataType)
+            );
+        }
+        catch (Exception exception) when (IsRejectedValueException(exception))
+        {
+            throw MakeValueNotReadException(property, exception);
+        }
+    }
+
+    public static bool IsRejectedValueException(Exception exception)
+    {
+        return exception
+            is FormatException
+                or OverflowException
+                or InvalidCastException
+                or ArgumentException;
+    }
+
+    public static UserOrigamException MakeValueNotReadException(
+        PropertyInfo property,
+        Exception exception
+    )
+    {
+        return new UserOrigamException(
+            string.Format(Strings.Property_ValueNotRead, property.Name, exception.Message),
+            exception.StackTrace,
+            exception
+        );
     }
 }

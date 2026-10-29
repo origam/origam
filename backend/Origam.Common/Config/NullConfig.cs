@@ -27,4 +27,9 @@ public class NullConfig : IConfig
     {
         return null;
     }
+
+    public string GetString(string[] appSettingsPath)
+    {
+        return null;
+    }
 }

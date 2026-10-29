@@ -40,12 +40,15 @@ public class Workbench
         MethodBase.GetCurrentMethod().DeclaringType
     );
 
-    private readonly CancellationTokenSource modelCheckCancellationTokenSource = new();
+    private readonly CancellationTokenSource backgroundInitializationCancellationTokenSource =
+        new();
     private SchemaService schema;
+    private readonly OrigamSettings _settings;
 
-    public Workbench(SchemaService schema)
+    public Workbench(SchemaService schema, OrigamSettings settings)
     {
         this.schema = schema;
+        _settings = settings;
     }
 
     public bool PopulateEmptyDatabaseOnLoad { get; set; } = true;
@@ -96,11 +99,6 @@ public class Workbench
 
     public void Connect()
     {
-        if (!LoadConfiguration())
-        {
-            return;
-        }
-
         InitPersistenceService();
         InitializeConnectedServices();
         RunBackgroundInitializationTasks();
@@ -110,25 +108,6 @@ public class Workbench
     {
         IPersistenceService persistence = OrigamEngine.OrigamEngine.CreatePersistenceService();
         ServiceManager.Services.AddService(persistence);
-    }
-
-    private bool LoadConfiguration()
-    {
-        string origamSettingsPath = Path.Combine(
-            AppDomain.CurrentDomain.BaseDirectory,
-            path2: "OrigamSettings.config"
-        );
-        OrigamSettingsCollection configurations = ConfigurationManager.GetAllUserHomeConfigurations(
-            origamSettingsPath
-        );
-        var configuration = configurations.Cast<OrigamSettings>().FirstOrDefault();
-        if (configuration != null)
-        {
-            ConfigurationManager.SetActiveConfiguration(configuration);
-            return true;
-        }
-
-        throw new Exception("Configuration not found");
     }
 
     private void InitializeConnectedServices()
@@ -146,8 +125,7 @@ public class Workbench
         ServiceManager.Services.AddService(new AttachmentService());
         ServiceManager.Services.AddService(new RuleEngineService());
 
-        var settings = ConfigurationManager.GetActiveConfiguration();
-        ServiceManager.Services.AddService(new DatabaseProfileService(settings));
+        ServiceManager.Services.AddService(new DatabaseProfileService(_settings));
     }
 
     public void RunBackgroundInitializationTasks()
@@ -157,7 +135,7 @@ public class Workbench
         {
             return;
         }
-        var cancellationToken = modelCheckCancellationTokenSource.Token;
+        var cancellationToken = backgroundInitializationCancellationTokenSource.Token;
         Task.Factory.StartNew(
                 () =>
                 {
@@ -167,7 +145,6 @@ public class Workbench
                     )
                     {
                         IndexReferences(independentPersistenceService, cancellationToken);
-                        DoModelChecks(independentPersistenceService, cancellationToken);
                     }
                 },
                 cancellationToken
@@ -208,21 +185,5 @@ public class Workbench
                 ReferenceIndexManager.Add(item);
             });
         ReferenceIndexManager.Initialize();
-    }
-
-    private void DoModelChecks(
-        FilePersistenceService independentPersistenceService,
-        CancellationToken cancellationToken
-    )
-    {
-        List<Dictionary<ISchemaItem, string>> errorFragments = ModelRules.GetErrors(
-            schemaProviders: new OrigamProviderBuilder()
-                .SetSchemaProvider(independentPersistenceService.SchemaProvider)
-                .GetAll(),
-            independentPersistenceService: independentPersistenceService,
-            cancellationToken: cancellationToken
-        );
-        var persistenceProvider = (FilePersistenceProvider)
-            independentPersistenceService.SchemaProvider;
     }
 }

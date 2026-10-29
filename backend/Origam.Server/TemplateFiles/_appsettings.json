@@ -1,4 +1,7 @@
 {
+  "Database": {
+    "IsolationLevel": "ReadCommitted"
+  },
   "PathToClientApp": "clients/origam",
   "ChatConfig": {
     "PathToChatApp": "",

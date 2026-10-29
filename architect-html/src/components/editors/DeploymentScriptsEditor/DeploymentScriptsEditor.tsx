@@ -21,31 +21,37 @@ import ActionPanel from '@/components/ActionPanel/ActionPanel';
 import SaveButtonHOC from '@/components/SaveButtonHOC/SaveButtonHOC';
 import { TabView } from '@/components/tabView/TabView';
 import { TabViewState } from '@/components/tabView/TabViewState';
+import { useDebouncedCallback } from '@/hooks/useDebouncedCallback';
 import { RootStoreContext, T } from '@/main';
 import CodeEditor from '@editors/codeEditor/CodeEditor';
 import S from '@editors/DeploymentScriptsEditor/DeploymentScriptsEditor.module.scss';
-import { GridEditorState } from '@editors/gridEditor/GridEditorState';
+import { GridEditorState, UnsentValueDelayMs } from '@editors/gridEditor/GridEditorState';
 import PropertyEditor from '@editors/propertyEditor/PropertyEditor';
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
-import { useContext } from 'react';
+import { observer } from 'mobx-react-lite';
+import { useContext, useState } from 'react';
 
-const DeploymentScriptsEditor = ({ editorState }: { editorState: GridEditorState }) => {
+const DeploymentScriptsEditor = observer(({ editorState }: { editorState: GridEditorState }) => {
   const rootStore = useContext(RootStoreContext);
+  const [tabViewState] = useState(() => new TabViewState());
 
-  const handleInputChange = (value: any) => {
-    const textProperty = editorState.properties.find(x => x.name === 'CommandText')!;
+  const sendUnsentValueLater = useDebouncedCallback(() => {
     runInFlowWithHandler(rootStore.errorDialogController)({
-      generator: function* () {
-        yield* editorState.onPropertyUpdated(textProperty, value);
-      },
+      generator: () => editorState.sendUnsentValue(),
     });
+  }, UnsentValueDelayMs);
+
+  const handleInputChange = (value: string | undefined) => {
+    const textProperty = editorState.properties.find(x => x.name === 'CommandText')!;
+    editorState.setUnsentValue(textProperty, value ?? '');
+    sendUnsentValueLater();
   };
 
   return (
     <div className={S.root}>
       <TabView
         width={400}
-        state={new TabViewState()}
+        state={tabViewState}
         items={[
           {
             label: T('SQL', 'editor_DeploymentScripts_TabLabel_Sql'),
@@ -97,6 +103,6 @@ const DeploymentScriptsEditor = ({ editorState }: { editorState: GridEditorState
       />
     </div>
   );
-};
+});
 
 export default DeploymentScriptsEditor;

@@ -35,6 +35,7 @@ import { CreateDataStructureWizard } from '@components/modelTree/createWizard/Cr
 import { CreateScreenFromSectionWizard } from '@components/modelTree/createWizard/CreateScreenFromSectionWizard';
 import { CreateMenuItemWizard } from '@components/modelTree/createWizard/CreateMenuItemWizard';
 import { CreateWorkflowMenuItemWizard } from '@components/modelTree/createWizard/CreateWorkflowMenuItemWizard';
+import { CreateDataConstantMenuItemWizard } from '@components/modelTree/createWizard/CreateDataConstantMenuItemWizard';
 import { CreateRoleWizard } from '@components/modelTree/createWizard/CreateRoleWizard';
 import { CreateLocalizationChildEntityWizard } from '@components/modelTree/createWizard/CreateLocalizationChildEntityWizard';
 import { CreateScreenSectionWizard } from '@components/modelTree/createWizard/CreateScreenSectionWizard';
@@ -48,6 +49,7 @@ import {
   isPasteShortcut,
   isTypingTarget,
 } from '@/utils/keyShortcuts';
+import { hasInvalidFileNameChars, isReservedOrUnsafeFileName } from '@/utils/fileNameRules';
 import { observer } from 'mobx-react-lite';
 import { DragEvent as ReactDragEvent, useContext, useEffect, useRef } from 'react';
 import {
@@ -103,28 +105,6 @@ const DeploymentBadges = observer(({ node }: { node: TreeNode }) => {
     </>
   );
 });
-
-const RESERVED_DEVICE_NAME = /^(con|prn|aux|nul|com[1-9]|lpt[1-9])(\.|$)/i;
-const INVALID_FOLDER_NAME_CHARS = /[\\/:*?"<>|]/;
-
-function hasControlChar(value: string): boolean {
-  for (const char of value) {
-    if (char.charCodeAt(0) < 0x20) {
-      return true;
-    }
-  }
-  return false;
-}
-
-function isReservedOrUnsafeFolderName(name: string): boolean {
-  if (name === '.' || name === '..') {
-    return true;
-  }
-  if (name.endsWith('.')) {
-    return true;
-  }
-  return RESERVED_DEVICE_NAME.test(name);
-}
 
 const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number }) => {
   const rootStore = useContext(RootStoreContext);
@@ -196,6 +176,8 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
   }
 
   function onPaste() {
+    // Paste disables itself while busy, which cancels the menu's close-on-click animation.
+    hideAll();
     run({ generator: () => transfer.drop(node, transfer.clipboardMode === 'copy') });
   }
 
@@ -330,19 +312,26 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
   function onDelete() {
     run({
       generator: function* () {
-        if (node.isFolder) {
-          const answer = yield askYesNoQuestion(
-            rootStore.dialogStack,
-            T('Delete Folder', 'tree_node_delete_folder_title'),
-            T(
-              'Delete folder "{0}" and all of its contents? This cannot be undone.',
-              'tree_node_delete_folder_confirm',
-              node.nodeText,
-            ),
-          );
-          if (answer !== YesNoResult.Yes) {
-            return;
-          }
+        const answer = yield askYesNoQuestion(
+          rootStore.dialogStack,
+          node.isFolder
+            ? T('Delete Folder', 'tree_node_delete_folder_title')
+            : T('Delete Object', 'tree_node_delete_object_title'),
+          node.isFolder
+            ? T(
+                'Delete folder "{0}" and all of its contents? This cannot be undone.',
+                'tree_node_delete_folder_confirm',
+                node.nodeText,
+              )
+            : T(
+                'Do you really want to delete "{0}"? This cannot be undone.',
+                'tree_node_delete_object_confirm',
+                node.nodeText,
+              ),
+          { showCancel: false },
+        );
+        if (answer !== YesNoResult.Yes) {
+          return;
         }
         yield* node.delete.bind(node)();
       },
@@ -630,6 +619,19 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
     });
   }
 
+  function showDataStructureFilterSetSql() {
+    run({
+      generator: function* () {
+        const result = yield rootStore.architectApi.getDataStructureFilterSetSql(node.origamId);
+        rootStore.editorTabViewState.openShowSqlEditor(
+          result.filterSetId,
+          `${result.dataStructureName} / ${result.filterSetName}`,
+          result.sql,
+        );
+      },
+    });
+  }
+
   function openCreateMenuItemWizard() {
     const closeDialog = rootStore.dialogStack.pushDialog(
       '',
@@ -660,10 +662,10 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
     if (name.length === 0) {
       return T('Folder name cannot be empty.', 'create_folder_error_empty');
     }
-    if (INVALID_FOLDER_NAME_CHARS.test(name) || hasControlChar(name)) {
+    if (hasInvalidFileNameChars(name)) {
       return T('Folder name contains invalid characters.', 'create_folder_error_invalid_chars');
     }
-    if (isReservedOrUnsafeFolderName(name)) {
+    if (isReservedOrUnsafeFileName(name)) {
       return T('Folder name is reserved or not allowed.', 'create_folder_error_reserved');
     }
     const taken = existingNames.some(
@@ -703,6 +705,31 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
       '',
       <CreateWorkflowMenuItemWizard
         workflowId={node.origamId}
+        parentNodeName={node.nodeText}
+        onCancel={() => closeDialog()}
+        onCreate={result => {
+          closeDialog();
+          run({
+            generator: function* () {
+              yield* rootStore.modelTreeState.loadPackageNodes.bind(rootStore.modelTreeState)();
+              showCreatedConfirmation(
+                T('Menu Item', 'wizard_artifact_menu_item'),
+                result?.searchResults ?? [],
+              );
+            },
+          });
+        }}
+      />,
+      undefined,
+      false,
+    );
+  }
+
+  function openCreateDataConstantMenuItemWizard() {
+    const closeDialog = rootStore.dialogStack.pushDialog(
+      '',
+      <CreateDataConstantMenuItemWizard
+        dataConstantId={node.origamId}
         parentNodeName={node.nodeText}
         onCancel={() => closeDialog()}
         onCreate={result => {
@@ -780,6 +807,7 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
   const labelClassNames = [
     S.iconAndText,
     node.isCurrentVersion ? S.currentVersion : '',
+    node.isMandatoryField ? S.bold : '',
     !node.isInActivePackage && !node.isFileDirty ? S.crossPackage : '',
     node.isFileDirty ? S.dirty : '',
     isCutSource ? S.cutNode : '',
@@ -822,7 +850,7 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
           <Menu id={menuId} onVisibilityChange={onMenuVisibilityChange}>
             {node.contextMenuItems.length > 0 ? (
               <Submenu label={T('New', 'tree_node_submenu_new')} data-test-id="tree-menu-new">
-                {node.contextMenuItems.map(item => (
+                {node.newTypeMenuItems.map(item => (
                   <Item
                     key={item.typeName + item.caption}
                     id={item.typeName}
@@ -831,6 +859,23 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
                   >
                     {item.caption}
                   </Item>
+                ))}
+                {node.newTypeMenuItems.length > 0 && node.unusedParameterNames.length > 0 && (
+                  <Separator />
+                )}
+                {node.unusedParameterNames.map(name => (
+                  <Submenu key={name} label={name} data-test-id={`tree-menu-new-param-${name}`}>
+                    {node.parameterMenuItems(name).map(item => (
+                      <Item
+                        key={item.typeName + item.caption}
+                        id={`${name}-${item.typeName}`}
+                        data-test-id={`tree-menu-new-param-${name}-${item.typeName}`}
+                        onClick={() => run({ generator: node.createNode(item.typeName, name) })}
+                      >
+                        {item.caption}
+                      </Item>
+                    ))}
+                  </Submenu>
                 ))}
               </Submenu>
             ) : (
@@ -893,10 +938,27 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
                 </Item>
               </Submenu>
             )}
+            {node.isDataStructureFilterSet && (
+              <Submenu label={T('Actions', 'tree_node_submenu_actions')}>
+                <Item id="show-filter-set-sql" onClick={showDataStructureFilterSetSql}>
+                  {T('Show SQL', 'tree_node_show_sql')}
+                </Item>
+              </Submenu>
+            )}
             {node.isSequentialWorkflow && (
               <Submenu label={T('Actions', 'tree_node_submenu_actions')}>
                 <Item id="create-workflow-menu-item" onClick={openCreateWorkflowMenuItemWizard}>
                   {T('Create Menu Item', 'tree_node_create_workflow_menu_item')}
+                </Item>
+              </Submenu>
+            )}
+            {node.isDataConstant && (
+              <Submenu label={T('Actions', 'tree_node_submenu_actions')}>
+                <Item
+                  id="create-data-constant-menu-item"
+                  onClick={openCreateDataConstantMenuItemWizard}
+                >
+                  {T('Create Menu Item', 'tree_node_create_data_constant_menu_item')}
                 </Item>
               </Submenu>
             )}

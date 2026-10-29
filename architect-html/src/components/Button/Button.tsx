@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import S from '@components/button/Button.module.scss';
+import S from '@components/Button/Button.module.scss';
 import cn from 'classnames';
 
 const Button = ({
@@ -26,6 +26,7 @@ const Button = ({
   prefix,
   isDisabled,
   isAnimated,
+  isCompact,
   onClick,
   dataTestId,
 }: {
@@ -34,6 +35,7 @@ const Button = ({
   prefix?: React.ReactNode;
   isDisabled?: boolean;
   isAnimated?: boolean;
+  isCompact?: boolean;
   onClick: () => void;
   dataTestId?: string;
 }) => {
@@ -44,8 +46,19 @@ const Button = ({
         [S.secondary]: type === 'secondary',
         [S.disabled]: isDisabled,
         [S.animate]: isAnimated,
+        [S.compact]: isCompact,
       })}
-      onClick={onClick}
+      role="button"
+      tabIndex={isDisabled ? -1 : 0}
+      onClick={() => {
+        if (!isDisabled) onClick();
+      }}
+      onKeyDown={event => {
+        if (!isDisabled && (event.key === 'Enter' || event.key === ' ')) {
+          event.preventDefault();
+          event.currentTarget.click();
+        }
+      }}
       aria-disabled={isDisabled}
       data-test-id={dataTestId}
     >

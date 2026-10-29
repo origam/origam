@@ -18,19 +18,24 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { RootStoreContext } from '@/main';
+import S from '@components/properties/Properties.module.scss';
 import PropertyEditor from '@editors/propertyEditor/PropertyEditor';
+import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
 import { observer } from 'mobx-react-lite';
 import { useContext } from 'react';
 
 const Properties = observer(() => {
   const rootStore = useContext(RootStoreContext);
   const propertiesState = rootStore.propertiesState;
+  const provider = propertiesState.provider;
+  const run = runInFlowWithHandler(rootStore.errorDialogController);
 
   return (
-    <div>
+    <div data-test-id="properties">
       {propertiesState.components.length ? (
         <select
-          value={propertiesState.selectedComponent?.id}
+          data-test-id="properties-component-select"
+          value={propertiesState.selectedComponent?.id ?? ''}
           onChange={e => propertiesState.setSelectedComponent(e.target.value)}
         >
           {[undefined, ...propertiesState.components].map(component => (
@@ -40,7 +45,30 @@ const Properties = observer(() => {
           ))}
         </select>
       ) : null}
-      <PropertyEditor propertyManager={propertiesState} properties={propertiesState.properties} />
+      {/* Keyed and bound to its own provider so a pending edit cannot land in another tab. */}
+      {provider && (
+        <PropertyEditor
+          key={propertiesState.selectedComponent?.id}
+          propertyManager={provider}
+          properties={propertiesState.properties}
+        />
+      )}
+      {propertiesState.verbs.length > 0 && (
+        <div className={S.verbs}>
+          {propertiesState.verbs.map(verb => (
+            <button
+              key={verb.id}
+              type="button"
+              className={S.verb}
+              disabled={verb.disabled}
+              data-test-id={`designer-verb-${verb.id}`}
+              onClick={() => run({ generator: verb.action })}
+            >
+              {verb.label}
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   );
 });

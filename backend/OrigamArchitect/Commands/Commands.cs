@@ -932,53 +932,11 @@ public class GenerateLocalizationFile : AbstractMenuCommand
     public override void Run()
     {
         OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
-        string[] languages = settings.TranslationBuilderLanguages.Split(",".ToCharArray());
-        SchemaService ss =
-            ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
-        string packageName = ss.ActiveExtension.Name;
-        foreach (string language in languages)
-        {
-            string fileName = packageName + "-" + language.Trim() + ".xml";
-            string outputPath = Path.Combine(
-                Path.Combine(settings.ModelSourceControlLocation, @"..\l10n"),
-                fileName
-            );
-            if (!string.IsNullOrEmpty(settings.LocalizationFolder))
-            {
-                outputPath = Path.Combine(settings.LocalizationFolder, fileName);
-            }
-            LocalizationCache currentTranslations = null;
-            if (File.Exists(outputPath))
-            {
-                currentTranslations = new LocalizationCache(outputPath);
-            }
-            MemoryStream ms = new MemoryStream();
-            FileStream fs = null;
-            try
-            {
-                TranslationBuilder.Build(
-                    ms,
-                    currentTranslations,
-                    language,
-                    ss.ActiveSchemaExtensionId
-                );
-                fs = new FileStream(outputPath, FileMode.Create);
-                ms.Seek(0, SeekOrigin.Begin);
-                ms.WriteTo(fs);
-            }
-            finally
-            {
-                if (fs != null)
-                {
-                    fs.Close();
-                }
-
-                if (ms != null)
-                {
-                    ms.Close();
-                }
-            }
-        }
+        TranslationBuilder.BuildFiles(
+            settings,
+            _schemaService.ActiveExtension.Name,
+            _schemaService.ActiveSchemaExtensionId
+        );
     }
 }
 

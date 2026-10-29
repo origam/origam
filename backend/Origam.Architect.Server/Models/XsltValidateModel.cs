@@ -30,4 +30,5 @@ public class XsltValidateModel
     public Guid SourceDataStructureId { get; set; }
     public Guid TargetDataStructureId { get; set; }
     public Guid RuleSetId { get; set; }
+    public List<Parameter> Parameters { get; set; } = [];
 }

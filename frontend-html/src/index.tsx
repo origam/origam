@@ -51,6 +51,7 @@ import {
   isSearchShortcut,
   isSaveShortcut
 } from "utils/keyShortcuts";
+import { installApplicationDebugMonitor } from "utils/ApplicationDebugMonitor";
 
 configure({ enforceActions: "never" });
 
@@ -136,6 +137,7 @@ async function main() {
     user = await ensureLogin();
   } catch (e) {
     const application = createApplication();
+    installApplicationDebugMonitor(application);
     await initLocaleCookie(application);
     await translationsInit(application);
     root.render(<RootError error={e}/>);
@@ -147,6 +149,7 @@ async function main() {
       return;
     }
     const application = createApplication();
+    installApplicationDebugMonitor(application);
     getApi(application).setAccessToken(user.access_token);
     sessionStorage.setItem("origamAuthToken", user.access_token);
     userManager.events.addUserLoaded((user: any) => {

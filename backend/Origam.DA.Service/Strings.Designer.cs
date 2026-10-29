@@ -582,6 +582,15 @@ namespace Origam.DA.Service {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} Could Not Finish.
+        /// </summary>
+        internal static string ModelCheckerCouldNotFinish {
+            get {
+                return ResourceManager.GetString("ModelCheckerCouldNotFinish", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No changes in dataset.
         /// </summary>
         internal static string NoChangesInDataSet {
@@ -707,6 +716,15 @@ namespace Origam.DA.Service {
             }
         }
         
+        /// <summary>
+        ///   Looks up a localized string similar to Snapshot isolation was requested, but it is not enabled for database '{0}'.
+        /// </summary>
+        internal static string SnapshotIsolationNotEnabled {
+            get {
+                return ResourceManager.GetString("SnapshotIsolationNotEnabled", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to SortSet not found.
         /// </summary>

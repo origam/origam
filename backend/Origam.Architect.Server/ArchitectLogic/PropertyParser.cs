@@ -19,16 +19,28 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using System.ComponentModel;
+using System.Drawing;
+using System.Globalization;
 using System.Reflection;
+using Origam.Architect.Server.ReturnModels;
+using Origam.Architect.Server.Utils;
 using Origam.DA.ObjectPersistence;
+using Origam.Schema.MenuModel;
 using Origam.Workbench.Services;
 
 namespace Origam.Architect.Server.ArchitectLogic;
 
 public class PropertyParser(IPersistenceService persistenceService)
 {
-    public object Parse(PropertyInfo property, string value)
+    public object Parse(PropertyInfo property, string value, object instance)
     {
+        // Before the null check, an empty color comes as null.
+        if (property.PropertyType == typeof(Color))
+        {
+            return ParseColor(property, value);
+        }
+
         if (value == null)
         {
             return null;
@@ -37,6 +49,26 @@ public class PropertyParser(IPersistenceService persistenceService)
         if (property.PropertyType == typeof(string))
         {
             return value;
+        }
+
+        if (PropertyUtils.IsUntyped(property))
+        {
+            return ParseConvertedValue(
+                property,
+                value,
+                instance,
+                PropertyUtils.CreateConverter(property)
+            );
+        }
+
+        if (
+            property.PropertyType.IsAssignableTo(typeof(AbstractMenuItem))
+            && !Guid.TryParse(value, out _)
+            && PropertyUtils.CreateConverter(property) is MenuItemConverter converter
+        )
+        {
+            object converted = ParseConvertedValue(property, value, instance, converter);
+            return ValidateReferenceType(property, converted);
         }
 
         if (property.PropertyType == typeof(bool))
@@ -132,29 +164,109 @@ public class PropertyParser(IPersistenceService persistenceService)
 
             IPersistent referenced =
                 persistenceService.SchemaProvider.RetrieveInstance<IPersistent>(referenceId);
-            if (referenced != null && !referenced.GetType().IsAssignableTo(property.PropertyType))
-            {
-                throw new Exception(
-                    string.Format(
-                        Strings.PropertyReferenceTypeNotValid,
-                        property.Name,
-                        property.PropertyType.Name,
-                        referenced.GetType().Name
-                    )
-                );
-            }
-
-            return referenced;
-        }
-
-        if (property.PropertyType == typeof(object))
-        {
-            return value;
+            return ValidateReferenceType(property, referenced);
         }
 
         throw new Exception(
             $"Type {property.PropertyType.Name} of property {property.Name} cannot be parsed."
         );
+    }
+
+    private static object ValidateReferenceType(PropertyInfo property, object referenced)
+    {
+        if (referenced != null && !property.PropertyType.IsInstanceOfType(referenced))
+        {
+            throw new UserOrigamException(
+                string.Format(
+                    Strings.PropertyReferenceTypeNotValid,
+                    property.Name,
+                    property.PropertyType.Name,
+                    referenced.GetType().Name
+                )
+            );
+        }
+
+        return referenced;
+    }
+
+    // Converter-backed properties are edited in the converter's text space, invariant.
+    private static object ParseConvertedValue(
+        PropertyInfo property,
+        string value,
+        object instance,
+        TypeConverter converter
+    )
+    {
+        if (value.Length == 0)
+        {
+            return null;
+        }
+
+        var context = new Context(instance);
+        if (converter == null || !converter.CanConvertFrom(context, typeof(string)))
+        {
+            if (PropertyUtils.IsUntyped(property))
+            {
+                return value;
+            }
+
+            throw new UserOrigamException(
+                string.Format(
+                    Strings.PropertyReferenceValueNotValid,
+                    value,
+                    property.Name,
+                    property.PropertyType.Name
+                )
+            );
+        }
+
+        object converted;
+        try
+        {
+            converted = converter.ConvertFrom(context, CultureInfo.InvariantCulture, value);
+        }
+        catch (Exception exception) when (PropertyUtils.IsRejectedValueException(exception))
+        {
+            throw PropertyUtils.MakeValueNotReadException(property, exception);
+        }
+
+        // A converter answers text it cannot match with null, which would clear the value.
+        if (converted == null)
+        {
+            throw new UserOrigamException(
+                string.Format(Strings.Property_ValueNotOffered, property.Name, value)
+            );
+        }
+
+        return converted;
+    }
+
+    private static Color ParseColor(PropertyInfo property, string value)
+    {
+        string text = value?.Trim() ?? "";
+        if (text.Length == 0)
+        {
+            // ARGB zero means no color, compared equal with what the getter returns for it.
+            return Color.FromArgb(0);
+        }
+
+        if (
+            text.Length != 7
+            || text[0] != '#'
+            || !int.TryParse(
+                text.AsSpan(1),
+                NumberStyles.AllowHexSpecifier,
+                CultureInfo.InvariantCulture,
+                out int rgb
+            )
+        )
+        {
+            throw new UserOrigamException(
+                string.Format(Strings.Property_ColorNotValid, property.Name, text)
+            );
+        }
+
+        return Color.FromArgb(alpha: 255, baseColor: Color.FromArgb(rgb));
     }
 
     private Exception MakeCouldNotParseException(PropertyInfo property)

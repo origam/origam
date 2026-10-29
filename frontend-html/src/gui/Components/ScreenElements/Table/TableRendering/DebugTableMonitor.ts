@@ -18,36 +18,63 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import {getDataView} from "model/selectors/DataView/getDataView";
-import _ from "lodash";
+
+interface TableDebugData {
+  data: Array<Record<string, any>>;
+  rendered: boolean;
+  renderRevision: number;
+  renderedRevision: number;
+}
+
+const renderTimers = new Map<string, ReturnType<typeof setTimeout>>();
 
 export function clearTableDebugValues(ctx: any){
   const dataView = getDataView(ctx);
   const tableId = dataView.modelInstanceId;
   const win = (window as any);
-  if(win.tableDebugMonitor && win.tableDebugMonitor[tableId]){
-    win.tableDebugMonitor[tableId].data = [];
+  const tableData = ensureTableDataExists(win, tableId);
+  const renderTimer = renderTimers.get(tableId);
+  if (renderTimer) {
+    clearTimeout(renderTimer);
+    renderTimers.delete(tableId);
   }
+  tableData.data = [];
+  tableData.rendered = false;
+  tableData.renderRevision++;
 }
-export const setTableDebugRendered = _.debounce(setRenderedInternal, 200);
 
-function ensureTableDataExists(win: any, tableId: string) {
+function ensureTableDataExists(win: any, tableId: string): TableDebugData {
   if (!win.tableDebugMonitor) {
     win.tableDebugMonitor = {};
   }
   if (!win.tableDebugMonitor[tableId]) {
     win.tableDebugMonitor[tableId] = {
       data: [],
-      rendered: false
+      rendered: false,
+      renderRevision: 0,
+      renderedRevision: 0,
     }
   }
+  return win.tableDebugMonitor[tableId];
 }
 
-export function setRenderedInternal(ctx: any){
+export function setTableDebugRendered(ctx: any){
   const dataView = getDataView(ctx);
   const tableId = dataView.modelInstanceId;
   const win = (window as any);
-  ensureTableDataExists(win, tableId);
-  win.tableDebugMonitor[tableId].rendered = true;
+  const renderRevision = ensureTableDataExists(win, tableId).renderRevision;
+  const currentTimer = renderTimers.get(tableId);
+  if (currentTimer) {
+    clearTimeout(currentTimer);
+  }
+  renderTimers.set(tableId, setTimeout(() => {
+    renderTimers.delete(tableId);
+    const tableData = ensureTableDataExists(win, tableId);
+    if (tableData.renderRevision === renderRevision) {
+      tableData.rendered = true;
+      tableData.renderedRevision = renderRevision;
+    }
+  }, 200));
 }
 
 export function setTableDebugValue(ctx: any, propertyId: string | null, rowIndex: number, value: any){

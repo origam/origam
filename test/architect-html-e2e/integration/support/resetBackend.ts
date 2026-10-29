@@ -23,12 +23,14 @@ import path from 'node:path';
 import type { APIRequestContext } from '@playwright/test';
 import { activatePackage } from '@support/activatePackage';
 
-function findRepoRoot(): string {
+export function findRepoRoot(): string {
   let dir = process.cwd();
   while (!fs.existsSync(path.join(dir, 'model-tests'))) {
     const parent = path.dirname(dir);
     if (parent === dir) {
-      throw new Error('Could not locate the repository root (no model-tests directory above the current working directory).');
+      throw new Error(
+        'Could not locate the repository root (no model-tests directory above the current working directory).',
+      );
     }
     dir = parent;
   }
@@ -36,8 +38,10 @@ function findRepoRoot(): string {
 }
 
 const repoRoot = findRepoRoot();
-const MODEL_DIR = 'model-tests/model';
+export const MODEL_DIR = 'model-tests/model';
 const DEFAULT_PACKAGE = 'Root Menu';
+
+export const modelDirectory = path.join(repoRoot, MODEL_DIR);
 
 export function readModelFile(relativePath: string): string {
   return fs.readFileSync(path.join(repoRoot, MODEL_DIR, relativePath), 'utf8');
@@ -87,6 +91,17 @@ export async function resetBackend(request: APIRequestContext): Promise<void> {
   await postOrThrow(request, '/Test/EndReset');
 
   await activatePackage(request, DEFAULT_PACKAGE);
+}
+
+// Reloads without repairing files first, for tests that need the planted damage to reach the live model.
+export async function reloadBackend(
+  request: APIRequestContext,
+  packageName: string = DEFAULT_PACKAGE,
+): Promise<void> {
+  await postOrThrow(request, '/Test/BeginReset');
+  await postOrThrow(request, '/Test/EndReset');
+
+  await activatePackage(request, packageName);
 }
 
 export function modelFilePath(relativePath: string): string {

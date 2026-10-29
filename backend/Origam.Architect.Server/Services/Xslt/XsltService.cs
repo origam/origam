@@ -44,14 +44,23 @@ public class XsltService(
     public ValidationResult Validate(TransformationInput input)
     {
         string xsl = GetXsl(input.SchemaItemId);
-        return ValidateXslt(xsl, input);
+        List<ParameterData> parameters = (
+            GetParameterList(xsl).Parameters ?? new List<ParameterData>()
+        )
+            .Select(declaredParameter =>
+                input.Parameters.FirstOrDefault(parameter =>
+                    parameter.Name == declaredParameter.Name
+                ) ?? declaredParameter
+            )
+            .ToList();
+        return ValidateXslt(xsl, input with { Parameters = parameters });
     }
 
     public TransformationResult Transform(TransformationInput input)
     {
         string xsl = GetXsl(input.SchemaItemId);
         var result = new TransformationResult();
-        return Transform(input: input, xslt: xsl, validateOnly: true, result: result);
+        return Transform(input: input, xslt: xsl, validateOnly: true, result: result) ?? result;
     }
 
     public ParametersResult GetParameters(Guid schemaItemId)
@@ -98,12 +107,11 @@ public class XsltService(
             || Transform(input: input, xslt: xsl, validateOnly: true, result: result) == null
         )
         {
-            result.Text = Strings.XsltValidationFailed;
             return result;
         }
 
         result.AddToOutput(Strings.XsltValidationSuccess);
-        result.Text = Strings.XsltValidationSuccess;
+        result.IsValid = true;
         return result;
     }
 
@@ -186,7 +194,7 @@ public class XsltService(
         catch (Exception ex)
         {
             ErrorMessage(ex, result);
-            return result;
+            return null;
         }
         finally
         {
@@ -224,6 +232,7 @@ public class XsltService(
         XmlDocument xsltDoc = LoadXslt(xsl, result);
         if (xsltDoc == null)
         {
+            result.Parameters = null;
             return result;
         }
 

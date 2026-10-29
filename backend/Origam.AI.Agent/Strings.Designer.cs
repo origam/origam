@@ -106,7 +106,7 @@ namespace Origam.AI.Agent {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Architect server unreachable (is it running with Swagger in Development?)..
+        ///   Looks up a localized string similar to Architect server unreachable (is its Swagger endpoint available?)..
         /// </summary>
         internal static string ArchitectUnreachable {
             get {

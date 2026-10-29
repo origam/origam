@@ -150,6 +150,15 @@ namespace Origam.DA.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invalid Database:IsolationLevel value '{0}'.
+        /// </summary>
+        internal static string InvalidDatabaseIsolationLevel {
+            get {
+                return ResourceManager.GetString("InvalidDatabaseIsolationLevel", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Invalid number of keys in the primary key of this object.
         /// </summary>
         internal static string InvalidNumberKeys {

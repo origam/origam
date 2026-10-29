@@ -33,6 +33,7 @@ public class AsCheckBox : ControlBase, IAsControl
     )]
     public int GridColumnWidth { get; set; } = 100;
 
+    [Category("(ORIGAM)")]
     public string Text { get; set; }
 
     [Browsable(true)]
@@ -48,7 +49,6 @@ public class AsCheckBox : ControlBase, IAsControl
 
     public override void Initialize(ControlSetItem controlSetItem)
     {
-        Text = controlSetItem.Name;
         Height = 20;
     }
 }

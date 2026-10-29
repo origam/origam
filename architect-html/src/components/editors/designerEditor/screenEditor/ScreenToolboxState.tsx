@@ -50,7 +50,7 @@ export class ScreenToolboxState {
   private updateTopProperties() {
     return function* (
       this: ScreenToolboxState,
-    ): Generator<Promise<IScreenEditorModel>, void, IScreenEditorModel> {
+    ): Generator<Promise<IScreenEditorModel>, string[], IScreenEditorModel> {
       const updateResult = yield this.architectApi.updateScreenEditor({
         schemaItemId: this.toolboxState.id,
         name: this.toolboxState.name,
@@ -60,6 +60,7 @@ export class ScreenToolboxState {
       const newData = updateResult.data;
       this.toolboxState.name = newData.name;
       this.toolboxState.selectedDataSourceId = newData.selectedDataSourceId;
+      return newData.warnings ?? [];
     }.bind(this);
   }
 }

@@ -49,6 +49,10 @@ public class PackageVersion : IComparable<PackageVersion>
     )
     {
         versionNums = new List<int>();
+        if (string.IsNullOrEmpty(completeVersionString))
+        {
+            return false;
+        }
         foreach (string versionStr in completeVersionString.Split('.'))
         {
             if (!int.TryParse(versionStr, out int versionNum))

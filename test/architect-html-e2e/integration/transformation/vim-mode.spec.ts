@@ -27,6 +27,7 @@ const TRANSFORMATION = 'SD_Empty';
 const FIRST_LINE = '<?xml version="1.0" encoding="UTF-8"?>';
 
 async function enableVimMode(page: Page) {
+  await page.getByTestId('topbar-menu').click();
   await page.getByTestId('topbar-settings').click();
   const vimCheckbox = page.getByRole('checkbox', { name: 'Vim mode' });
   if (!(await vimCheckbox.isChecked())) {
@@ -37,16 +38,6 @@ async function enableVimMode(page: Page) {
 
 function editorCodeArea(page: Page) {
   return page.getByTestId('code-editor').first().locator('.view-lines');
-}
-
-async function typeAndWaitForPropertyUpdates(page: Page, text: string) {
-  for (const character of text) {
-    const propertyUpdated = page.waitForResponse(
-      response => response.url().includes('/PropertyEditor/Update') && response.ok(),
-    );
-    await page.keyboard.type(character);
-    await propertyUpdated;
-  }
 }
 
 async function openTransformation(page: Page) {
@@ -88,7 +79,7 @@ test.describe('Vim mode in the transformation editor (real backend)', () => {
     await page.keyboard.press('i');
     await expect(statusBar).toContainText('--INSERT--');
 
-    await typeAndWaitForPropertyUpdates(page, 'vimtest');
+    await page.keyboard.type('vimtest');
     await expect(codeArea).toContainText('vimtest');
 
     await page.keyboard.press('Escape');

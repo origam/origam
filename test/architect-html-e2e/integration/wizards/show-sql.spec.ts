@@ -63,4 +63,31 @@ test.describe('Show SQL for data structure (real backend)', () => {
 
     await expect(page.getByText('SQL: Dimension1').nth(1)).toBeVisible();
   });
+
+  test('Show SQL on a filter set declares and applies its parameter', async ({ page }) => {
+    await page.goto('/');
+
+    await page.getByTestId('tree-toggle-Data').click();
+    await page.getByTestId('tree-toggle-Data Structures').click();
+    await page.getByTestId('tree-toggle-Work Queue').click();
+    await page.getByTestId('tree-toggle-WorkQueueEntry_Delete').click();
+    await page.getByTestId('tree-toggle-Filter Sets').click();
+    await page.getByTestId('tree-node-GetId').click({ button: 'right' });
+    await page.getByText('Actions', { exact: true }).click();
+    await page.getByText('Show SQL').click();
+
+    const code = page.getByRole('code');
+    await expect(code).toContainText('-- SQL statements for data structure: WorkQueueEntry_Delete');
+
+    await expect
+      .poll(async () => normalizeSql(await code.innerText()))
+      .toMatch(/DECLARE @?WorkQueueEntry_parId /);
+    await expect
+      .poll(async () => normalizeSql(await code.innerText()))
+      .toMatch(
+        /SELECT WorkQueueEntry\.Id AS Id FROM WorkQueueEntry AS WorkQueueEntry WHERE \( \(@?WorkQueueEntry_parId = WorkQueueEntry\.Id\)\);/,
+      );
+
+    await expect(page.getByText('SQL: WorkQueueEntry_Delete / GetId').nth(1)).toBeVisible();
+  });
 });

@@ -28,6 +28,7 @@ enum EStorageKeys {
   AI_PANEL_WIDTH = 'aiPanelWidth',
   AI_PANEL_VISIBLE = 'aiPanelVisible',
   PROPERTY_SECTION_COLLAPSED = 'propertySectionCollapsed',
+  MODEL_CHECK_STATE = 'modelCheckState',
 }
 
 type TPropertySectionCollapsed = { [category: string]: boolean };
@@ -66,12 +67,21 @@ const defaultDsGeneratorState: IDsGeneratorPersistedState = {
   selectedDeploymentVersionId: null,
 };
 
+export interface IModelCheckPersistedState {
+  isOpen: boolean;
+}
+
+const defaultModelCheckState: IModelCheckPersistedState = {
+  isOpen: false,
+};
+
 const STORAGE_DEFAULTS = {
   [EStorageKeys.TREE_EXPANDED_NODES]: [] as string[],
   [EStorageKeys.SETTINGS]: defaultSettings,
   [EStorageKeys.DEPLOYMENT_SCRIPTS_GENERATOR_STATE]: defaultDsGeneratorState,
   [EStorageKeys.SIDEBAR_WIDTH]: SIDEBAR_DEFAULT_WIDTH,
   [EStorageKeys.PROPERTY_SECTION_COLLAPSED]: {} as TPropertySectionCollapsed,
+  [EStorageKeys.MODEL_CHECK_STATE]: defaultModelCheckState,
 } as const;
 
 function clampSidebarWidth(value: number): number {
@@ -94,6 +104,9 @@ export class UIState {
   @observable accessor aiPanelWidth: number = AI_PANEL_DEFAULT_WIDTH;
   @observable accessor aiPanelVisible: boolean = true;
   @observable accessor propertySectionCollapsed: TPropertySectionCollapsed = {};
+  @observable accessor modelCheckState: IModelCheckPersistedState = {
+    ...defaultModelCheckState,
+  };
 
   constructor() {
     this.expandedNodes = this.loadStateFromLocalStorage(EStorageKeys.TREE_EXPANDED_NODES);
@@ -125,6 +138,9 @@ export class UIState {
     this.propertySectionCollapsed = this.loadStateFromLocalStorage(
       EStorageKeys.PROPERTY_SECTION_COLLAPSED,
     );
+
+    const loadedModelCheckState = this.loadStateFromLocalStorage(EStorageKeys.MODEL_CHECK_STATE);
+    this.modelCheckState = { ...defaultModelCheckState, ...loadedModelCheckState };
   }
 
   isPropertySectionCollapsed(category: string): boolean {
@@ -223,5 +239,11 @@ export class UIState {
       EStorageKeys.DEPLOYMENT_SCRIPTS_GENERATOR_STATE,
       JSON.stringify(this.dsGeneratorState),
     );
+  }
+
+  @action
+  setModelCheckOpen(isOpen: boolean) {
+    this.modelCheckState = { ...this.modelCheckState, isOpen };
+    localStorage.setItem(EStorageKeys.MODEL_CHECK_STATE, JSON.stringify(this.modelCheckState));
   }
 }

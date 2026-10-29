@@ -23,10 +23,10 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v7
 
       - name: Setup node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v7
         with:
           node-version: '22'
 
@@ -80,10 +80,10 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v7
 
       - name: Setup node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v7
         with:
           node-version: '22'
 
@@ -124,10 +124,10 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v7
 
       - name: Setup node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v7
         with:
           node-version: '22'
 
@@ -168,7 +168,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v7
 
       - name: setup-msbuild
         uses: microsoft/setup-msbuild@v1
@@ -179,7 +179,6 @@ jobs:
       - name: Restore Packages
         run: |
           cd backend
-          nuget restore Origam.ProjectAutomation/packages.config -PackagesDirectory packages -NonInteractive
           msbuild Origam.sln -t:restore /p:Configuration="Release Architect Server" -v:m
       - name: Build Server Architect
         run: |
@@ -201,7 +200,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v7
 
       - name: setup-msbuild
         uses: microsoft/setup-msbuild@v1
@@ -212,7 +211,6 @@ jobs:
       - name: Restore Packages
         run: |
           cd backend
-          nuget restore Origam.ProjectAutomation/packages.config -PackagesDirectory packages -NonInteractive
           msbuild Origam.sln -t:restore /p:Configuration="Release Server" -v:m
       - name: Build Server
         run: |
@@ -250,7 +248,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v7
 
       - name: Download server_bin artifact (for server build context)
         uses: actions/download-artifact@v4
@@ -289,8 +287,10 @@ jobs:
 
   integration-tests-mssql:
     needs: [ build-frontend, build-server, build-server-image ]
-    name: integration-tests-mssql
+    name: ${{ matrix.test-runner == 'legacy' && 'integration-tests-mssql-legacy' || 'integration-tests-mssql' }}
     runs-on: ubuntu-latest
+    env:
+      ORIGAM_E2E_RUNNER: ${{ matrix.test-runner }}
     permissions:
       id-token: write
       actions: read
@@ -302,10 +302,11 @@ jobs:
       fail-fast: false
       matrix:
         language: [ 'csharp' ]
+        test-runner: [ playwright, legacy ]
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v7
 
       - name: Download workflow integration tests artifact
         uses: actions/download-artifact@v4
@@ -331,7 +332,7 @@ jobs:
         run: |
           cd test
           mkdir output
-          docker compose --env-file envFileMsSql.env -f "docker-compose-mssql.yml" --profile test up --abort-on-container-exit
+          docker compose --env-file envFileMsSql.env -f "docker-compose-mssql.yml" --profile test up --abort-on-container-exit --exit-code-from server-mssql
 
       - name: Clean up
         if: always()
@@ -343,24 +344,37 @@ jobs:
         uses: dorny/test-reporter@v1
         if: success() || failure()
         with:
-          name: Frontend Integration Test Results
-          path: test/output/frontend-integration-test-results.trx
+          name: Frontend Integration Test Results (MSSQL, ${{ matrix.test-runner }})
+          path: test/output/frontend-integration-test-results*.trx
           reporter: dotnet-trx
           max-annotations: '0'
+
+      - name: Upload E2E diagnostics
+        uses: actions/upload-artifact@v4
+        if: success() || failure()
+        with:
+          name: e2e-diagnostics-mssql-${{ matrix.test-runner }}
+          path: |
+            test/output/playwright-report
+            test/output/test-results
+            test/output/legacy-screenshots
+          if-no-files-found: ignore
 
       - name: Produce workflow integration test report
         uses: dorny/test-reporter@v1
         if: success() || failure()
         with:
-          name: Workflow Integration Test Results
+          name: Workflow Integration Test Results (MSSQL, ${{ matrix.test-runner }})
           path: test/output/workflow-integration-test-results.trx
           reporter: dotnet-trx
           max-annotations: '0'
 
   integration-tests-postgres:
     needs: [ build-frontend, build-server, build-server-image ]
-    name: integration-tests-pgsql
+    name: ${{ matrix.test-runner == 'legacy' && 'integration-tests-pgsql-legacy' || 'integration-tests-pgsql' }}
     runs-on: ubuntu-latest
+    env:
+      ORIGAM_E2E_RUNNER: ${{ matrix.test-runner }}
     permissions:
       id-token: write
       actions: read
@@ -372,10 +386,11 @@ jobs:
       fail-fast: false
       matrix:
         language: [ 'csharp' ]
+        test-runner: [ playwright, legacy ]
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v7
 
       - name: Download workflow integration tests artifact
         uses: actions/download-artifact@v4
@@ -401,7 +416,7 @@ jobs:
         run: |
           cd test
           mkdir output
-          docker compose --env-file envFilePostgres.env -f "docker-compose-postgresql.yml" --profile test up --abort-on-container-exit
+          docker compose --env-file envFilePostgres.env -f "docker-compose-postgresql.yml" --profile test up --abort-on-container-exit --exit-code-from server-postgres
 
       - name: Clean up
         if: always()
@@ -413,16 +428,27 @@ jobs:
         uses: dorny/test-reporter@v1
         if: success() || failure()
         with:
-          name: Frontend Integration Test Results
-          path: test/output/frontend-integration-test-results.trx
+          name: Frontend Integration Test Results (PostgreSQL, ${{ matrix.test-runner }})
+          path: test/output/frontend-integration-test-results*.trx
           reporter: dotnet-trx
           max-annotations: '0'
+
+      - name: Upload E2E diagnostics
+        uses: actions/upload-artifact@v4
+        if: success() || failure()
+        with:
+          name: e2e-diagnostics-postgresql-${{ matrix.test-runner }}
+          path: |
+            test/output/playwright-report
+            test/output/test-results
+            test/output/legacy-screenshots
+          if-no-files-found: ignore
 
       - name: Produce workflow integration test report
         uses: dorny/test-reporter@v1
         if: success() || failure()
         with:
-          name: Workflow Integration Test Results
+          name: Workflow Integration Test Results (PostgreSQL, ${{ matrix.test-runner }})
           path: test/output/workflow-integration-test-results.trx
           reporter: dotnet-trx
           max-annotations: '0'

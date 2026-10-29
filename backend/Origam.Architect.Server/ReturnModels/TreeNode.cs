@@ -54,6 +54,7 @@ public class TreeNode
     public bool IsInActivePackage { get; set; } = true;
     public bool IsFileDirty { get; set; }
     public bool IsFolder { get; set; }
+    public bool IsMandatoryField { get; set; }
     public string Role { get; set; }
 
     public bool CanDrag { get; set; }
@@ -99,6 +100,7 @@ public class TreeNodeFactory(
             IsInActivePackage = IsInActivePackage(node),
             IsFileDirty = gitNodeStatusService.IsFileDirty(node as IPersistent),
             IsFolder = node is SchemaItemGroup,
+            IsMandatoryField = node.FontStyle == "Bold",
             Role = (node as IAuthorizationContextContainer)?.AuthorizationContext,
             CanDrag = node is ISchemaItem { IsPersisted: true },
         };
@@ -106,12 +108,15 @@ public class TreeNodeFactory(
 
     public List<TreeNode> CreateChildren(IBrowserNode2 node, int depth)
     {
-        return node.ChildNodes()
-            .Cast<IBrowserNode2>()
-            .OrderBy(childNode => childNode.NodeText)
+        return OrderForTree(node.ChildNodes().Cast<IBrowserNode2>())
             .Where(childNode => childNode is not ISchemaItem item || item.IsPersisted)
             .Select(childNode => CreateRecursive(childNode, depth))
             .ToList();
+    }
+
+    public static IOrderedEnumerable<IBrowserNode2> OrderForTree(IEnumerable<IBrowserNode2> nodes)
+    {
+        return nodes.OrderBy(node => node);
     }
 
     public TreeNode CreateRecursive(IBrowserNode2 node, int remainingDepth)

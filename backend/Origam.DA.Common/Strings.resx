@@ -102,4 +102,7 @@
 	<data name="IndexMaxLength" xml:space="preserve">
 		<value>Index name in database is composed of entity and index name. The final index name {0} exceeds max {1} identifier length of {2} characters.</value>
 	</data>
+	<data name="InvalidDatabaseIsolationLevel">
+		<value>Invalid Database:IsolationLevel value '{0}'. Use ReadCommitted, ReadUncommitted, RepeatableRead, Serializable, or Snapshot.</value>
+	</data>
 </root>

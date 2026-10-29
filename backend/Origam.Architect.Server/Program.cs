@@ -30,6 +30,8 @@ using Origam.Architect.Server.Interfaces.Services;
 using Origam.Architect.Server.ReturnModels;
 using Origam.Architect.Server.Services;
 using Origam.Architect.Server.Services.Move;
+using Origam.Architect.Server.Services.ScreenEditor;
+using Origam.Architect.Server.Services.SectionEditor;
 using Origam.Architect.Server.Services.Wizards;
 using Origam.Architect.Server.Services.Xslt;
 using Origam.Extensions;
@@ -41,8 +43,12 @@ public class Program
 {
     public static void Main(string[] args)
     {
+        var settings = ConfigurationManager.GetUserHomeConfiguration(
+            origamSettingsPath: OrigamSettingsReader.DefaultPathToOrigamSettings
+        );
+        ConfigurationManager.SetActiveConfiguration(settings);
         var schema = new SchemaService();
-        var workbench = new Workbench(schema);
+        var workbench = new Workbench(schema, settings);
         workbench.InitializeDefaultServices();
         workbench.Connect();
 
@@ -53,6 +59,7 @@ public class Program
             ServiceManager.Services.GetService<IBusinessServicesService>();
 
         var builder = WebApplication.CreateBuilder(args);
+        builder.Services.AddSingleton(settings);
         builder.Services.AddSingleton(deploymentService);
         builder.Services.AddSingleton<GitNodeStatusService>();
         builder.Services.AddSingleton<ModelTransactionRunner>();
@@ -64,6 +71,8 @@ public class Program
         builder.Services.AddSingleton<TabResponseFactory>();
         builder.Services.AddTransient<XsltService>();
         builder.Services.AddSingleton<SearchService>();
+        builder.Services.AddSingleton<ModelCheckService>();
+        builder.Services.AddSingleton<LocalizationService>();
         builder.Services.AddSingleton<PanelControlFactory>();
         builder.Services.AddSingleton<MoveNodeResolver>();
         builder.Services.AddSingleton<MoveRuleEvaluator>();
@@ -74,7 +83,12 @@ public class Program
         builder.Services.AddSingleton<SchemaItemMoveService>();
         builder.Services.AddSingleton<PropertyEditorService>();
         builder.Services.AddSingleton<ItemTypeCatalogService>();
+        builder.Services.AddSingleton<ApiControlFactory>();
+        builder.Services.AddSingleton<SectionWidgetFactory>();
         builder.Services.AddSingleton<DesignerEditorService>();
+        builder.Services.AddSingleton<ScreenToolbox>();
+        builder.Services.AddSingleton<ScreenAutoLayout>();
+        builder.Services.AddSingleton<ScreenEditorService>();
         builder.Services.AddSingleton<DeploymentVersionCurrentService>();
         builder.Services.AddSingleton<DeploymentScriptRunnerService>();
         builder.Services.AddSingleton<ControlAdapterFactory>();
@@ -87,6 +101,9 @@ public class Program
         builder.Services.AddSingleton<IAddToDeploymentService, AddToDeploymentService>();
         builder.Services.AddSingleton<IAddToModelService, AddToModelService>();
         builder.Services.AddSingleton<ModelGroupService>();
+        builder.Services.AddSingleton<PackageService>();
+        builder.Services.AddSingleton<PackageReferenceService>();
+        builder.Services.AddSingleton<MenuItemService>();
         builder.Services.AddSingleton<FilterWizardService>();
         builder.Services.AddSingleton<ScreenWizardService>();
         builder.Services.AddSingleton<ScreenSectionWizardService>();
@@ -126,12 +143,8 @@ public class Program
         });
 
         var app = builder.Build();
-        if (app.Environment.IsDevelopment())
-        {
-            app.UseSwagger();
-            app.UseSwaggerUI();
-        }
-
+        app.UseSwagger();
+        app.UseSwaggerUI();
         app.UseMiddleware<OrigamErrorHandlingMiddleware>();
         app.UseMiddleware<ServerIdentityMiddleware>();
         app.UseStaticFiles();
