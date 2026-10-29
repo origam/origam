@@ -1,4 +1,5 @@
 const { test, expect } = require("@playwright/test");
+const { createHash } = require("crypto");
 const {
   openMenuItem,
   login,
@@ -72,19 +73,84 @@ async function getSplitterPanelSizes(splitter) {
   );
 }
 
-async function canvasHasRenderedPixels(page, dataViewId) {
-  return page.locator(`#${dataViewId} canvas`).evaluateAll(canvases =>
-    canvases.some(canvas => {
+async function getCanvasContents(page, dataViewId, tabToActivate) {
+  const tabHandle = await tabToActivate?.elementHandle();
+  const contents = await page.evaluate(async ({ dataViewId, tabHandle }) => {
+    if (tabHandle) {
+      tabHandle.click();
+      // Capture the incoming frame before readiness waits allow a delayed repaint.
+      await new Promise(requestAnimationFrame);
+    }
+    const dataView = document.getElementById(dataViewId);
+    if (!dataView) {
+      return [];
+    }
+    if (tabHandle && getComputedStyle(dataView).visibility !== "visible") {
+      throw new Error("The table was not visible in the first activation frame.");
+    }
+    const canvases = Array.from(dataView.querySelectorAll("canvas"));
+    return canvases.map(canvas => {
+      const dimensions = { width: canvas.width, height: canvas.height };
       if (canvas.width === 0 || canvas.height === 0) {
-        return false;
+        return { ...dimensions, hasNonWhitePixels: false, image: null };
       }
       const context = canvas.getContext("2d");
-      return context && context.getImageData(0, 0, 1, 1).data[3] !== 0;
-    })
-  );
+      const pixels = context.getImageData(0, 0, canvas.width, canvas.height).data;
+      let hasNonWhitePixels = false;
+      for (let index = 0; index < pixels.length; index += 4) {
+        if (
+          pixels[index + 3] !== 0 &&
+          (pixels[index] < 255 || pixels[index + 1] < 255 || pixels[index + 2] < 255)
+        ) {
+          hasNonWhitePixels = true;
+          break;
+        }
+      }
+      return { ...dimensions, hasNonWhitePixels, image: canvas.toDataURL() };
+    });
+  }, { dataViewId, tabHandle });
+  // Hash in Node so this also works against HTTP test servers without Web Crypto.
+  return contents.map(({ image, ...canvas }) => ({
+    ...canvas,
+    pixelHash: image === null ? null : createHash("sha256").update(image).digest("hex"),
+  }));
 }
 
 test.describe("Html client", () => {
+  test("Should reject blank canvas contents and detect missing cell text", async ({ page }) => {
+    await page.waitForLoadState("networkidle");
+    await page.route("http://canvas.test/", route => route.fulfill({
+      contentType: "text/html",
+      body: '<div id="canvas-content-test"><canvas width="200" height="100"></canvas></div>',
+    }));
+    await page.goto("http://canvas.test/");
+    const canvas = page.locator("canvas");
+    expect((await getCanvasContents(page, "canvas-content-test"))[0].hasNonWhitePixels).toBe(false);
+    await canvas.evaluate(canvas => {
+      const context = canvas.getContext("2d");
+      context.fillStyle = "white";
+      context.fillRect(0, 0, canvas.width, canvas.height);
+    });
+    const blankContents = await getCanvasContents(page, "canvas-content-test");
+    expect(blankContents[0].hasNonWhitePixels).toBe(false);
+
+    await canvas.evaluate(canvas => {
+      const context = canvas.getContext("2d");
+      context.strokeStyle = "gray";
+      context.strokeRect(10, 10, 180, 80);
+    });
+    const gridOnlyContents = await getCanvasContents(page, "canvas-content-test");
+    await canvas.evaluate(canvas => {
+      const context = canvas.getContext("2d");
+      context.fillStyle = "black";
+      context.fillText("Table cell", 20, 40);
+    });
+    const cellContents = await getCanvasContents(page, "canvas-content-test");
+    expect(cellContents[0].hasNonWhitePixels).toBe(true);
+    expect(cellContents).not.toEqual(blankContents);
+    expect(cellContents).not.toEqual(gridOnlyContents);
+  });
+
   test("Should hide animated controls on the first frame of screen and section switches", async ({
     page,
   }) => {
@@ -173,27 +239,19 @@ test.describe("Html client", () => {
     const scrollPosition = await getScrollPosition(page, allDataTypesLazyDataViewId);
     expect(scrollPosition.left).toBeGreaterThan(0);
     expect(scrollPosition.top).toBeGreaterThan(0);
-    await expect.poll(() => canvasHasRenderedPixels(page, allDataTypesLazyDataViewId)).toBe(true);
-    const canvasDimensions = await dataView.locator("canvas").evaluateAll(canvases =>
-      canvases.map(canvas => ({
-        width: canvas.width,
-        height: canvas.height,
-      }))
-    );
+    const canvasContents = await getCanvasContents(page, allDataTypesLazyDataViewId);
+    expect(canvasContents.length).toBeGreaterThan(0);
+    for (const canvas of canvasContents) {
+      expect(canvas.width).toBeGreaterThan(0);
+      expect(canvas.height).toBeGreaterThan(0);
+      expect(canvas.hasNonWhitePixels).toBe(true);
+    }
 
     await openMenuItem(page, [topMenuHeader, sectionsMenuItemId, masterDetailLazyLoadedMenuItemId]);
 
     await expect(dataView).toBeHidden();
     expect(await getScrollPosition(page, allDataTypesLazyDataViewId)).toEqual(scrollPosition);
-    expect(
-      await dataView.locator("canvas").evaluateAll(canvases =>
-        canvases.map(canvas => ({
-          width: canvas.width,
-          height: canvas.height,
-        }))
-      )
-    ).toEqual(canvasDimensions);
-    expect(await canvasHasRenderedPixels(page, allDataTypesLazyDataViewId)).toBe(true);
+    expect(await getCanvasContents(page, allDataTypesLazyDataViewId)).toEqual(canvasContents);
 
     await activateSectionTab(page, detailTabHandelId);
     const detailDataView = page.locator(`#${detailDataViewId}`);
@@ -202,7 +260,8 @@ test.describe("Html client", () => {
     const screenTab = page
       .locator('[class*="TabbedViewHandle-module__root"]')
       .filter({ hasText: /^All Data Types Lazy Loaded\s*$/ });
-    await screenTab.click();
+    const firstFrameContents = await getCanvasContents(page, allDataTypesLazyDataViewId, screenTab);
+    expect(firstFrameContents).toEqual(canvasContents);
     await expect(screenTab).toHaveClass(/\bisActive\b/);
     await expect(dataView).toBeVisible();
     await expect(detailDataView).toBeHidden();
@@ -211,7 +270,7 @@ test.describe("Html client", () => {
     await expect
       .poll(() => getScrollPosition(page, allDataTypesLazyDataViewId))
       .toEqual(scrollPosition);
-    await expect.poll(() => canvasHasRenderedPixels(page, allDataTypesLazyDataViewId)).toBe(true);
+    expect(await getCanvasContents(page, allDataTypesLazyDataViewId)).toEqual(canvasContents);
   });
 
   test("Should exclude inactive sections from focus and preserve nested panel layout", async ({
