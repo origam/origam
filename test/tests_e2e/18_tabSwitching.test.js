@@ -75,6 +75,78 @@ async function canvasHasRenderedPixels(page, dataViewId) {
 }
 
 test.describe("Html client", () => {
+  test("Should hide animated controls on the first frame of screen and section switches", async ({
+    page,
+  }) => {
+    await login(page);
+    // Use the application's compiled styles to cover controls absent from this test model.
+    const switches = await page.evaluate(async () => {
+      const rules = Array.from(document.styleSheets).flatMap(sheet => Array.from(sheet.cssRules));
+      function styleClass(moduleName, localName) {
+        const prefix = `.${moduleName}-module__${localName}__`;
+        const rule = rules.find(rule =>
+          rule.selectorText?.startsWith(prefix) && /^\.[\w-]+$/.test(rule.selectorText)
+        );
+        if (!rule) {
+          throw new Error(`Missing application style: ${moduleName}.${localName}`);
+        }
+        return rule.selectorText.slice(1);
+      }
+
+      const results = [];
+      for (const moduleName of ["Screen", "TabbedViewPanel"]) {
+        const panel = document.createElement("div");
+        panel.className = styleClass(moduleName, "root");
+        panel.classList.toggle("isActive", moduleName === "TabbedViewPanel");
+        document.body.append(panel);
+
+        function addControl(name, moduleName, localName, tagName = "div") {
+          const control = document.createElement(tagName);
+          control.className = styleClass(moduleName, localName);
+          control.dataset.control = name;
+          panel.append(control);
+          return control;
+        }
+
+        const checklist = addControl("checklist", "CheckList", "root");
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.dataset.control = "checkbox";
+        checklist.append(checkbox);
+        const mapSearch = addControl("map search", "MapPerspectiveUI", "mapSearch");
+        const mapInput = document.createElement("input");
+        mapInput.className = "input";
+        mapInput.dataset.control = "map input";
+        mapSearch.append(mapInput);
+        addControl("filter input", "FilterSettingsCommon", "input", "input");
+        addControl("filter operator", "FilterSettingsComboBox", "trigger", "button");
+        addControl("column button", "ColumnsDialog", "button", "button");
+
+        const controls = Array.from(panel.querySelectorAll("[data-control]"));
+        function visibleControls() {
+          return controls
+            .filter(control => getComputedStyle(control).visibility === "visible")
+            .map(control => control.dataset.control);
+        }
+
+        const visibleBefore = visibleControls();
+        await new Promise(requestAnimationFrame);
+        panel.classList.toggle("isHidden", moduleName === "Screen");
+        panel.classList.remove("isActive");
+        await new Promise(requestAnimationFrame);
+        const visibleAfter = visibleControls();
+        panel.remove();
+        results.push({ moduleName, visibleBefore, visibleAfter });
+      }
+      return results;
+    });
+
+    for (const result of switches) {
+      expect(result.visibleBefore, result.moduleName).toHaveLength(7);
+      expect(result.visibleAfter, result.moduleName).toEqual([]);
+    }
+  });
+
   test("Should preserve scroll position and canvas contents across screen switches", async ({
     page,
   }) => {
