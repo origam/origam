@@ -117,6 +117,9 @@ async function getCanvasContents(page, dataViewId, tabToActivate) {
 }
 
 test.describe("Html client", () => {
+  // Verify getCanvasContents itself using controlled drawings on a mocked page.
+  // Playwright fulfills canvas.test without an external server; HTTP also checks
+  // that canvas comparison works without browser Web Crypto.
   test("Should reject blank canvas contents and detect missing cell text", async ({ page }) => {
     await page.waitForLoadState("networkidle");
     await page.route("http://canvas.test/", route => route.fulfill({
