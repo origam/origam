@@ -33,7 +33,7 @@
     "draft-js": "^0.11.7",
     "draftjs-to-html": "^0.9.1",
     "html-to-draftjs": "^1.5.0",
-    "immer": "^11.1.21",
+    "immer": "^11.2.7",
     "immutable": "^5.1.9",
     "js-cookie": "^3.0.8",
     "js-file-download": "^0.4.12",
