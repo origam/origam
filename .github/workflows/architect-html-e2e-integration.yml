@@ -32,10 +32,10 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Setup node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: '22'
 
@@ -47,15 +47,15 @@ jobs:
         shell: bash
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v6
         with:
           dotnet-version: '8.0.x'
 
       - name: Setup MSBuild
-        uses: microsoft/setup-msbuild@v2
+        uses: microsoft/setup-msbuild@v3
 
       - name: Setup NuGet
-        uses: NuGet/setup-nuget@v2
+        uses: NuGet/setup-nuget@v4
 
       # --- Build the Architect Server -------------------------------------
       - name: Restore backend
@@ -184,7 +184,7 @@ jobs:
       # --- Artifacts -------------------------------------------------------
       - name: Upload Playwright blob report
         if: ${{ !cancelled() }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: playwright-integration-blob-${{ matrix.shard }}
           path: test/architect-html-e2e/blob-report
@@ -193,7 +193,7 @@ jobs:
 
       - name: Upload Playwright test results
         if: ${{ !cancelled() }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: playwright-integration-test-results-${{ matrix.shard }}
           path: test/architect-html-e2e/test-results
@@ -202,7 +202,7 @@ jobs:
 
       - name: Upload Architect Server logs
         if: ${{ !cancelled() }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: architect-server-logs-${{ matrix.shard }}
           path: ${{ env.SERVER_DIR }}/logs
@@ -220,10 +220,10 @@ jobs:
       contents: read
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Setup node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: '22'
 
@@ -235,7 +235,7 @@ jobs:
         working-directory: test/architect-html-e2e
 
       - name: Download Playwright blob reports
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           pattern: playwright-integration-blob-*
           path: test/architect-html-e2e/blob-reports
@@ -247,7 +247,7 @@ jobs:
 
       - name: Upload Playwright report
         if: ${{ !cancelled() }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: playwright-integration-report
           path: test/architect-html-e2e/playwright-report
