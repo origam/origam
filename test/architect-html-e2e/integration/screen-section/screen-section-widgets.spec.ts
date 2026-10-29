@@ -93,6 +93,7 @@ function findFile(directory: string, fileName: string): string | undefined {
 class SectionEditor {
   readonly toolbox: Locator;
   readonly surface: Locator;
+  readonly navigationPanel: Locator;
   private sectionId = '';
   private dropCount = 0;
 
@@ -102,6 +103,7 @@ class SectionEditor {
   ) {
     this.toolbox = page.getByTestId('toolbox');
     this.surface = page.getByTestId('design-surface');
+    this.navigationPanel = this.surface.getByTestId('navigation-panel');
   }
 
   async openNew(dataSource: string): Promise<void> {
@@ -149,6 +151,11 @@ class SectionEditor {
 
   async select(control: ApiControl): Promise<void> {
     await this.component(control).click({ position: { x: 3, y: 3 } });
+    await this.page.getByText('Properties', { exact: true }).click();
+  }
+
+  async selectPanel(): Promise<void> {
+    await this.navigationPanel.click();
     await this.page.getByText('Properties', { exact: true }).click();
   }
 
@@ -602,5 +609,28 @@ test.describe('Screen section widgets (real backend)', () => {
     await editor.dropWidget('AsTextBox', 'Text2', groupBox);
 
     await expect(editor.surface).toHaveScreenshot('section-widgets.png');
+  });
+
+  test('navigation panel follows the panel settings', async () => {
+    await editor.openNew('AllDataTypes');
+    const navigationPanel = editor.navigationPanel;
+    const addButton = navigationPanel.getByTestId('navigation-panel-add');
+    const copyButton = navigationPanel.getByTestId('navigation-panel-copy');
+    const deleteButton = navigationPanel.getByTestId('navigation-panel-delete');
+    await expect(addButton).toHaveCount(0);
+    await expect(deleteButton).toHaveCount(0);
+
+    await editor.selectPanel();
+    await editor.setProperty('PanelTitle', 'Orders');
+    await expect(navigationPanel).toContainText('Orders');
+    await editor.checkProperty('ShowNewButton');
+    await expect(addButton).toBeVisible();
+    await expect(copyButton).toBeVisible();
+    await editor.checkProperty('HideCopyButton');
+    await expect(copyButton).toHaveCount(0);
+    await editor.checkProperty('ShowDeleteButton');
+    await expect(deleteButton).toBeVisible();
+    await editor.checkProperty('HideNavigationPanel');
+    await expect(navigationPanel).toHaveCount(0);
   });
 });
