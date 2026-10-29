@@ -19,8 +19,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { Component } from '@editors/designerEditor/common/designerComponents/Component';
 import S from '@editors/designerEditor/common/designerComponents/Components.module.scss';
+import { NavigationPanel } from '@editors/designerEditor/common/designerComponents/NavigationPanel';
 import { sectionLayer } from '@editors/designerEditor/common/Layers';
 import { ReactElement } from 'react';
+
+const rowNavigationMinWidth = 640;
 
 export class AsPanel extends Component {
   get canHaveChildren(): boolean {
@@ -32,10 +35,18 @@ export class AsPanel extends Component {
   }
 
   getDesignerRepresentation(): ReactElement | null {
-    // The web client moves direct children up by 20px unless the navigation panel is hidden.
+    const showNewButton = this.get('ShowNewButton') === true;
     return (
       <div className={S.panel}>
-        {this.get('HideNavigationPanel') === false && <div className={S.navigationPanel} />}
+        {this.get('HideNavigationPanel') === false && (
+          <NavigationPanel
+            title={this.get('PanelTitle') ?? ''}
+            showNewButton={showNewButton}
+            showDeleteButton={this.get('ShowDeleteButton') === true}
+            showCopyButton={showNewButton && this.get('HideCopyButton') !== true}
+            showRowNavigation={this.width >= rowNavigationMinWidth}
+          />
+        )}
       </div>
     );
   }
