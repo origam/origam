@@ -153,6 +153,11 @@ export class Component {
     return controlLayer;
   }
 
+  // A caption that does not fit slides under the controls next to it.
+  get labelZIndex(): number {
+    return this.zIndex - 1;
+  }
+
   get isReadOnly(): boolean {
     return this.get('ReadOnly') === true;
   }
@@ -197,33 +202,22 @@ export class Component {
 
   getLabelStyle() {
     switch (this.labelPosition) {
+      // The web client has no Bottom caption and renders it on the left.
       case LabelPosition.Left:
+      case LabelPosition.Bottom:
         return {
           left: `${this.absoluteLeft - this.labelWidth}px`,
           top: `${this.absoluteTop}px`,
-          width: `${this.labelWidth}px`,
-          height: `${this.height}px`,
         };
       case LabelPosition.Right:
         return {
-          left: `${this.absoluteLeft + this.width + 10}px`,
+          left: `${this.absoluteLeft + this.width + 4}px`,
           top: `${this.absoluteTop}px`,
-          width: `${this.labelWidth}px`,
-          height: `${this.height}px`,
-        };
-      case LabelPosition.Bottom:
-        return {
-          left: `${this.absoluteLeft}px`,
-          top: `${this.absoluteTop + this.height}px`,
-          width: `${this.width}px`,
-          height: `${this.labelWidth}px`,
         };
       case LabelPosition.Top:
         return {
           left: `${this.absoluteLeft}px`,
-          top: `${this.absoluteTop + -20}px`,
-          width: `${this.width}px`,
-          height: `${this.labelWidth}px`,
+          top: `${this.absoluteTop - 20}px`,
         };
       case null:
       case undefined:

@@ -31,7 +31,7 @@ export class BlobControl extends Component {
   getDesignerRepresentation(): ReactElement | null {
     return (
       <EditorBox>
-        <div className={`${S.editorButton} ${S.dropDownButton}`}>
+        <div className={S.editorButton}>
           <VscChevronDown />
         </div>
       </EditorBox>

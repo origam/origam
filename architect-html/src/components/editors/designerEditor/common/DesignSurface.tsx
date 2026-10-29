@@ -157,7 +157,7 @@ export const DesignSurface: React.FC<{
               className={S.componentLabel}
               style={{
                 ...component.getLabelStyle(),
-                zIndex: component.zIndex,
+                zIndex: component.labelZIndex,
               }}
             >
               {component.data.identifier}

@@ -93,6 +93,7 @@ function findFile(directory: string, fileName: string): string | undefined {
 class SectionEditor {
   readonly toolbox: Locator;
   readonly surface: Locator;
+  readonly navigationPanel: Locator;
   private sectionId = '';
   private dropCount = 0;
 
@@ -102,6 +103,7 @@ class SectionEditor {
   ) {
     this.toolbox = page.getByTestId('toolbox');
     this.surface = page.getByTestId('design-surface');
+    this.navigationPanel = this.surface.getByTestId('navigation-panel');
   }
 
   async openNew(dataSource: string): Promise<void> {
@@ -149,6 +151,11 @@ class SectionEditor {
 
   async select(control: ApiControl): Promise<void> {
     await this.component(control).click({ position: { x: 3, y: 3 } });
+    await this.page.getByText('Properties', { exact: true }).click();
+  }
+
+  async selectPanel(): Promise<void> {
+    await this.navigationPanel.click();
     await this.page.getByText('Properties', { exact: true }).click();
   }
 
@@ -512,19 +519,19 @@ test.describe('Screen section widgets (real backend)', () => {
   });
 
   test('ReadOnly paints a widget grey and takes the buttons off a combo', async () => {
-    const white = 'rgb(255, 255, 255)';
+    const editable = 'rgb(247, 246, 250)';
     const grey = 'rgb(233, 232, 240)';
     await editor.openNew('AllDataTypes');
     const tagInput = await editor.dropWidget('TagInput', 'TagInput');
     const tagInputBox = editor.component(tagInput).locator('[class*="editorBox"]');
-    await expect(tagInputBox).toHaveCSS('background-color', white);
+    await expect(tagInputBox).toHaveCSS('background-color', editable);
     await editor.select(tagInput);
     await editor.checkProperty('ReadOnly');
     await expect(tagInputBox).toHaveCSS('background-color', grey);
 
     const comboBox = await editor.dropWidget('AsCombo', 'refTagInputSourceId');
     const comboBoxBox = editor.component(comboBox).locator('[class*="editorBox"]');
-    await expect(comboBoxBox.locator('svg').filter({ visible: true })).toHaveCount(2);
+    await expect(comboBoxBox.locator('svg').filter({ visible: true })).toHaveCount(1);
     await editor.select(comboBox);
     await editor.checkProperty('ReadOnly');
     await expect(comboBoxBox).toHaveCSS('background-color', grey);
@@ -586,5 +593,48 @@ test.describe('Screen section widgets (real backend)', () => {
     expect(propertyValue(savedWrapper.children[1], 'MappingCondition')).toBe(
       LENGTH_TEST_CONSTANT_ID,
     );
+  });
+
+  test('widgets keep the web client look', async ({ page }) => {
+    await editor.openNew('AllDataTypes');
+    const textBox = await editor.dropWidget('AsTextBox', 'Text1');
+    await editor.select(textBox);
+    await editor.setProperty('CaptionLength', '20');
+    await editor.dropWidget('AsCombo', 'refTagInputSourceId');
+    await editor.dropWidget('AsDateBox', 'Date1');
+    await editor.dropWidget('AsCheckBox', 'Boolean1');
+    const groupBox = await editor.dropWidget('GroupBox');
+    await editor.select(groupBox);
+    await editor.setProperty('Text', 'Group');
+    await editor.dropWidget('AsTextBox', 'Text2', groupBox);
+
+    // The surface fills the window, so its size differs between machines.
+    const surface = (await editor.surface.boundingBox())!;
+    await expect(page).toHaveScreenshot('section-widgets.png', {
+      clip: { x: surface.x, y: surface.y, width: 520, height: 420 },
+    });
+  });
+
+  test('navigation panel follows the panel settings', async () => {
+    await editor.openNew('AllDataTypes');
+    const navigationPanel = editor.navigationPanel;
+    const addButton = navigationPanel.getByTestId('navigation-panel-add');
+    const copyButton = navigationPanel.getByTestId('navigation-panel-copy');
+    const deleteButton = navigationPanel.getByTestId('navigation-panel-delete');
+    await expect(addButton).toHaveCount(0);
+    await expect(deleteButton).toHaveCount(0);
+
+    await editor.selectPanel();
+    await editor.setProperty('PanelTitle', 'Orders');
+    await expect(navigationPanel).toContainText('Orders');
+    await editor.checkProperty('ShowNewButton');
+    await expect(addButton).toBeVisible();
+    await expect(copyButton).toBeVisible();
+    await editor.checkProperty('HideCopyButton');
+    await expect(copyButton).toHaveCount(0);
+    await editor.checkProperty('ShowDeleteButton');
+    await expect(deleteButton).toBeVisible();
+    await editor.checkProperty('HideNavigationPanel');
+    await expect(navigationPanel).toHaveCount(0);
   });
 });

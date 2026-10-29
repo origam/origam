@@ -32,9 +32,11 @@ export class AsCheckBox extends Component {
 
   getDesignerRepresentation(): ReactElement | null {
     return (
-      <div className={S.designSurfaceEditorContainer}>
-        <div className={S.designSurfaceCheckbox}></div>
-        <div>{this.properties.find(x => x.name === 'Text')?.value}</div>
+      <div className={S.checkBox}>
+        <div className={S.checkBoxEditor}>
+          <div className={S.designSurfaceCheckbox}></div>
+        </div>
+        <div className={S.checkBoxCaption}>{this.get('Text')}</div>
       </div>
     );
   }

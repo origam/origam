@@ -25,37 +25,48 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   user-select: none;
   margin-right: 15px;
   margin-bottom: 15px;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 18px;
 }
 
 .innerContainer {
   position: absolute;
   overflow: auto;
-  font-size: 12px;
 }
 
 .componentLabel {
   position: absolute;
+  display: flex;
+  align-items: center;
+  height: 20px;
+  padding-right: 0.5em;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
+// Outline instead of border so the frame does not shift or enlarge the control.
 .designComponent {
   position: absolute;
   display: flex;
   align-items: center;
   user-select: none;
 
-  border: 1px solid var(--background8);
+  outline: 1px dashed var(--background5);
+  outline-offset: -1px;
 
   &.borderless {
-    border-color: transparent;
+    outline: none;
   }
 
   &.selected {
-    border: 1px solid var(--foreground3);
+    outline: 1px solid var(--foreground3);
   }
 
   &.dragging {
     opacity: 0.8;
-    border: 1px solid var(--background6);
+    outline: 1px solid var(--background6);
   }
 }
 
