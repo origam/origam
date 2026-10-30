@@ -20,16 +20,13 @@ updates:
       # Keep Microsoft.OpenApi on the 2.x release line. Upgrading to 3.x requires additional migration work.
       - dependency-name: "Microsoft.OpenApi"
         versions: [">=3.0.0"]
-      # Origam targets .NET 8, so keep this package on the .NET 8-compatible major version until upgrade to .NET 10.
-      - dependency-name: "Microsoft.Extensions.Logging.Log4Net.AspNetCore"
-        versions: [">=9.0.0"]
-      # Microsoft.VisualStudio.Web.CodeGeneration.Design 8.0.7 requires Roslyn 4.8.0 exactly.
+      # Microsoft.VisualStudio.Web.CodeGeneration.Design 10.0.2 requires Roslyn 5.0.0 exactly.
       - dependency-name: "Microsoft.CodeAnalysis.Common"
-        versions: [">=4.8.1"]
+        versions: [">=5.0.1"]
       - dependency-name: "Microsoft.CodeAnalysis.CSharp"
-        versions: [">=4.8.1"]
+        versions: [">=5.0.1"]
       - dependency-name: "Microsoft.CodeAnalysis.VisualBasic"
-        versions: [">=4.8.1"]
+        versions: [">=5.0.1"]
   - package-ecosystem: "npm"
     directory: "/frontend-html"
     open-pull-requests-limit: 20

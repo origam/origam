@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Worker">
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <Nullable>disable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>dotnet-OrigamScheduler-1f8a6076-b75e-4df2-802a-7a2e5e7a266a</UserSecretsId>
@@ -65,7 +65,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.13" />
     <PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="10.0.13" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Log4Net.AspNetCore" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Log4Net.AspNetCore" Version="10.0.0" />
     <ProjectReference Include="..\Origam.Common\Origam.Common.csproj" />
     <ProjectReference Include="..\Origam.OrigamEngine\Origam.OrigamEngine.csproj" />
     <ProjectReference Include="..\Origam.DA.Common\Origam.DA.Common.csproj" />
