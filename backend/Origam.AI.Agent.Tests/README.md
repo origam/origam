@@ -7,7 +7,7 @@ records tool calls, tokens, wall time and cost, and prints them as a benchmark.
 
 ```
 MSBuild.exe Origam.sln -t:"AI\Origam_AI_Agent_Tests" -p:Configuration="Release Architect Server"
-vstest.console.exe Origam.AI.Agent.Tests/bin/Release/net8.0/Origam.AI.Agent.Tests.dll
+vstest.console.exe Origam.AI.Agent.Tests/bin/Release/net10.0/Origam.AI.Agent.Tests.dll
 ```
 
 The tests boot Architect in-process. Set `ORIGAM_ARCHITECT_URL` to run them against an
@@ -64,5 +64,5 @@ Each test asks the agent for one widget and reads the saved section back through
 for the drop-down, checklist and tag input and are ignored when that lookup is missing.
 
 ```
-dotnet test Origam.AI.Agent.Tests/bin/Debug/net8.0/Origam.AI.Agent.Tests.dll --filter "FullyQualifiedName~AgentIntegrationTests.Widget_" --logger "console;verbosity=detailed"
+dotnet test Origam.AI.Agent.Tests/bin/Debug/net10.0/Origam.AI.Agent.Tests.dll --filter "FullyQualifiedName~AgentIntegrationTests.Widget_" --logger "console;verbosity=detailed"
 ```
