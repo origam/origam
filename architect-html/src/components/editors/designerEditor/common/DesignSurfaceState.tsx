@@ -42,6 +42,8 @@ export class DesignSurfaceState implements IComponentProvider {
   @observable public accessor selectedComponent: Component | null = null;
   @observable accessor dragState: DragState = idleDragState();
   @observable accessor resizeState: ResizeState = idleResizeState();
+  @observable accessor isTabOrderMode = false;
+  @observable private accessor tabOrderedIds: string[] = [];
   panel: Component = null as any; // will be assigned in loadComponents
   panelId: string | undefined;
   getVerbs: (component: Component) => IDesignerVerb[] = () => [];
@@ -139,6 +141,68 @@ export class DesignSurfaceState implements IComponentProvider {
   ): Generator<Promise<IUpdatePropertiesResult>, void, IUpdatePropertiesResult> {
     property.value = value;
     yield* this.updateEditor() as any;
+  }
+
+  @action
+  toggleTabOrderMode() {
+    this.isTabOrderMode = !this.isTabOrderMode;
+    this.tabOrderedIds = [];
+    this.selectComponent(null);
+  }
+
+  showsTabOrder(component: Component) {
+    return (
+      component.id !== this.panelId &&
+      component.data.type !== ComponentType.TabPage &&
+      !!component.getProperty('TabIndex')
+    );
+  }
+
+  isTabOrderFixed(component: Component) {
+    return component.parent?.data.type === ComponentType.SplitPanel;
+  }
+
+  isTabOrderAssigned(component: Component) {
+    return this.tabOrderedIds.includes(component.id);
+  }
+
+  tabOrderLabel(component: Component) {
+    const tabIndices: number[] = [];
+    for (let current: Component | null = component; current; current = current.parent) {
+      if (this.showsTabOrder(current)) {
+        tabIndices.unshift(current.tabIndex);
+      }
+    }
+    return tabIndices.join('.');
+  }
+
+  *assignTabIndex(component: Component, continueFrom: boolean): Generator<Promise<any>, void, any> {
+    const parent = component.parent;
+    if (!parent || this.isTabOrderFixed(component) || !this.showsTabOrder(component)) {
+      return;
+    }
+    const siblings = this.getChildren(parent)
+      .filter(sibling => this.showsTabOrder(sibling))
+      .sort((siblingA, siblingB) => siblingA.tabIndex - siblingB.tabIndex);
+    const assigned = continueFrom
+      ? siblings.slice(0, siblings.indexOf(component) + 1)
+      : [
+          ...siblings.filter(sibling => sibling !== component && this.isTabOrderAssigned(sibling)),
+          component,
+        ];
+    const ordered = [...assigned, ...siblings.filter(sibling => !assigned.includes(sibling))];
+    this.tabOrderedIds = [
+      ...this.tabOrderedIds.filter(id => !siblings.some(sibling => sibling.id === id)),
+      ...assigned.map(sibling => sibling.id),
+    ];
+    let isChanged = false;
+    ordered.forEach((sibling, index) => {
+      isChanged ||= sibling.tabIndex !== index;
+      sibling.tabIndex = index;
+    });
+    if (isChanged) {
+      yield* this.updateEditor();
+    }
   }
 
   @action

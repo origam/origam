@@ -194,15 +194,19 @@ class SectionEditor {
     expect(sectionFile, SECTION_FILE_NAME + ' was not written').toBeTruthy();
     expect(fs.readFileSync(sectionFile!, 'utf8')).toContain('#' + widget + '/');
 
-    const response = await this.request.post('/SectionEditor/Update', {
-      data: { schemaItemId: this.sectionId, modelChanges: [] },
-    });
-    expect(response.ok(), await response.text()).toBeTruthy();
-    const rootControl = (await response.json()).data.rootControl as ApiControl;
+    const rootControl = await this.readSection();
     const shortType = WIDGET_TYPES[widget] ?? widget;
     const savedWidget = findWidget(rootControl, shortType);
     expect(savedWidget, widget + ' is not in the saved section').toBeTruthy();
     return savedWidget!;
+  }
+
+  async readSection(): Promise<ApiControl> {
+    const response = await this.request.post('/SectionEditor/Update', {
+      data: { schemaItemId: this.sectionId, modelChanges: [] },
+    });
+    expect(response.ok(), await response.text()).toBeTruthy();
+    return (await response.json()).data.rootControl as ApiControl;
   }
 
   private toolboxItem(name: string): Locator {
@@ -211,6 +215,14 @@ class SectionEditor {
 
   component(control: ApiControl): Locator {
     return this.surface.locator(`[class~="${control.id}"]`);
+  }
+
+  tabOrderBadge(control: ApiControl): Locator {
+    return this.surface.getByTestId(`tab-order-badge-${control.id}`);
+  }
+
+  async clickInTabOrder(control: ApiControl, modifiers: 'Control'[] = []): Promise<void> {
+    await this.component(control).click({ position: { x: 3, y: 3 }, modifiers });
   }
 
   async checkProperty(name: string): Promise<void> {
@@ -636,5 +648,61 @@ test.describe('Screen section widgets (real backend)', () => {
     await expect(deleteButton).toBeVisible();
     await editor.checkProperty('HideNavigationPanel');
     await expect(navigationPanel).toHaveCount(0);
+  });
+
+  test('tab order mode orders the fields in the order they are clicked', async ({ page }) => {
+    await editor.openNew('AllDataTypes');
+    const text1 = await editor.dropWidget('AsTextBox', 'Text1');
+    const text2 = await editor.dropWidget('AsTextBox', 'Text2');
+    const date1 = await editor.dropWidget('AsDateBox', 'Date1');
+    const tabOrderButton = page.getByTestId('tab-order-button');
+    await tabOrderButton.click();
+    await expect(tabOrderButton).toHaveText('Finish Tab Order');
+
+    for (const control of [date1, text2, text1]) {
+      await editor.clickInTabOrder(control);
+    }
+    await expect(editor.tabOrderBadge(date1)).toHaveText('0');
+    await expect(editor.tabOrderBadge(text2)).toHaveText('1');
+    await expect(editor.tabOrderBadge(text1)).toHaveText('2');
+    await expect(editor.tabOrderBadge(text1)).toHaveClass(/assigned/u);
+
+    await tabOrderButton.click();
+    await expect(tabOrderButton).toHaveText('Tab Order');
+    await expect(editor.tabOrderBadge(text1)).toHaveCount(0);
+    await editor.save();
+    const section = await editor.readSection();
+    expect(propertyValue(findControl(section, date1.id)!, 'TabIndex')).toBe(0);
+    expect(propertyValue(findControl(section, text2.id)!, 'TabIndex')).toBe(1);
+    expect(propertyValue(findControl(section, text1.id)!, 'TabIndex')).toBe(2);
+  });
+
+  test('Ctrl+click in tab order mode continues from the clicked field', async ({ page }) => {
+    await editor.openNew('AllDataTypes');
+    const text1 = await editor.dropWidget('AsTextBox', 'Text1');
+    const text2 = await editor.dropWidget('AsTextBox', 'Text2');
+    const date1 = await editor.dropWidget('AsDateBox', 'Date1');
+    const tabOrderButton = page.getByTestId('tab-order-button');
+    await tabOrderButton.click();
+    for (const control of [text1, text2, date1]) {
+      await editor.clickInTabOrder(control);
+    }
+    await expect(editor.tabOrderBadge(date1)).toHaveText('2');
+
+    await tabOrderButton.click();
+    await tabOrderButton.click();
+    await expect(editor.tabOrderBadge(text1)).not.toHaveClass(/assigned/u);
+    await editor.clickInTabOrder(text1, ['Control']);
+    await editor.clickInTabOrder(date1);
+    await expect(editor.tabOrderBadge(text1)).toHaveText('0');
+    await expect(editor.tabOrderBadge(date1)).toHaveText('1');
+    await expect(editor.tabOrderBadge(text2)).toHaveText('2');
+    await expect(editor.tabOrderBadge(text2)).not.toHaveClass(/assigned/u);
+
+    await editor.save();
+    const section = await editor.readSection();
+    expect(propertyValue(findControl(section, text1.id)!, 'TabIndex')).toBe(0);
+    expect(propertyValue(findControl(section, date1.id)!, 'TabIndex')).toBe(1);
+    expect(propertyValue(findControl(section, text2.id)!, 'TabIndex')).toBe(2);
   });
 });

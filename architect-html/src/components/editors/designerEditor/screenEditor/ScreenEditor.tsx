@@ -22,6 +22,7 @@ import SaveButtonHOC from '@/components/SaveButtonHOC/SaveButtonHOC';
 import { T } from '@/main';
 import { DesignerWarnings } from '@editors/designerEditor/common/DesignerWarnings';
 import { DesignSurface } from '@editors/designerEditor/common/DesignSurface';
+import { TabOrderButton } from '@editors/designerEditor/common/TabOrderButton';
 import S from '@editors/designerEditor/screenEditor/ScreenEditor.module.scss';
 import { ScreenEditorState } from '@editors/designerEditor/screenEditor/ScreenEditorState';
 import { ScreenToolbox } from '@editors/designerEditor/screenEditor/ScreenToolbox';
@@ -41,7 +42,12 @@ const ScreenEditor = observer(({ designerState }: { designerState: ScreenEditorS
               'screen_editor_title',
               designerState.screenToolbox.toolboxState.name,
             )}
-            buttons={<SaveButtonHOC />}
+            buttons={
+              <>
+                <TabOrderButton surface={designerState.surface} />
+                <SaveButtonHOC />
+              </>
+            }
             body={<DesignerWarnings designerState={designerState} />}
           />
         </div>

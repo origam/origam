@@ -23,8 +23,10 @@ import { Component } from '@editors/designerEditor/common/designerComponents/Com
 import S from '@editors/designerEditor/common/DesignerSurface.module.scss';
 import { ResizeHandle } from '@editors/designerEditor/common/DesignSurfaceState';
 import { IDesignerEditorState } from '@editors/designerEditor/common/IDesignerEditorState';
+import { tabOrderLayer } from '@editors/designerEditor/common/Layers';
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
 import { isTypingTarget } from '@/utils/keyShortcuts';
+import cn from 'classnames';
 import { observer } from 'mobx-react-lite';
 import React, { useContext, useEffect, useRef } from 'react';
 import { Item, Menu } from '@origam/react-contexify';
@@ -71,7 +73,7 @@ export const DesignSurface: React.FC<{
 
   const onDrop = (e: React.DragEvent) => {
     e.preventDefault();
-    if (!surfaceState.draggedComponentData || !surfaceRef.current) {
+    if (!surfaceState.draggedComponentData || !surfaceRef.current || surfaceState.isTabOrderMode) {
       return;
     }
     const dropPoint = toSurfacePoint(e);
@@ -104,7 +106,7 @@ export const DesignSurface: React.FC<{
   };
 
   const handleComponentMouseDown = (e: React.MouseEvent, component: Component) => {
-    if (e.button !== 0 || !surfaceRef.current) return;
+    if (e.button !== 0 || !surfaceRef.current || surfaceState.isTabOrderMode) return;
 
     // Prevent dragging when clicking resize handles
     if ((e.target as HTMLElement).classList.contains(S.resizeHandle)) {
@@ -118,6 +120,12 @@ export const DesignSurface: React.FC<{
 
   const handleComponentClick = (event: React.MouseEvent, component: Component) => {
     event.stopPropagation();
+    if (surfaceState.isTabOrderMode) {
+      if (!(event as any).clickedComponent) {
+        run({ generator: surfaceState.assignTabIndex(component, event.ctrlKey || event.metaKey) });
+      }
+      return;
+    }
     const componentToSelect = (event as any).clickedComponent
       ? (event as any).clickedComponent
       : component;
@@ -129,6 +137,17 @@ export const DesignSurface: React.FC<{
       return;
     }
     surfaceState.selectComponent(null);
+  };
+
+  const getComponentCursor = (component: Component) => {
+    if (surfaceState.draggingComponentId === component.id) {
+      return 'move';
+    }
+    const isTabOrderFixed =
+      surfaceState.isTabOrderMode &&
+      surfaceState.showsTabOrder(component) &&
+      surfaceState.isTabOrderFixed(component);
+    return isTabOrderFixed ? 'not-allowed' : 'default';
   };
 
   const handleResizeStart = (e: React.MouseEvent, component: Component, handle: ResizeHandle) => {
@@ -173,7 +192,7 @@ export const DesignSurface: React.FC<{
                 top: `${component.absoluteTop}px`,
                 width: `${component.width}px`,
                 height: `${component.height}px`,
-                cursor: surfaceState.draggingComponentId === component.id ? 'move' : 'default',
+                cursor: getComponentCursor(component),
                 zIndex: component.zIndex,
               }}
               onMouseDown={e => handleComponentMouseDown(e, component)}
@@ -218,6 +237,22 @@ export const DesignSurface: React.FC<{
                   />
                 ))}
             </div>
+            {surfaceState.isTabOrderMode && surfaceState.showsTabOrder(component) && (
+              <div
+                data-test-id={`tab-order-badge-${component.id}`}
+                className={cn(S.tabOrderBadge, {
+                  [S.fixed]: surfaceState.isTabOrderFixed(component),
+                  [S.assigned]: surfaceState.isTabOrderAssigned(component),
+                })}
+                style={{
+                  left: `${component.absoluteLeft}px`,
+                  top: `${component.absoluteTop}px`,
+                  zIndex: tabOrderLayer,
+                }}
+              >
+                {surfaceState.tabOrderLabel(component)}
+              </div>
+            )}
           </React.Fragment>
         ))}
       <Menu id={'TAB_LABEL_MENU'} animation="fade">

@@ -70,6 +70,28 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   }
 }
 
+.tabOrderBadge {
+  position: absolute;
+  padding: 0 3px;
+  border: 1px solid var(--brand);
+  background-color: var(--brand);
+  color: #fff;
+  font-size: 11px;
+  line-height: 14px;
+  white-space: nowrap;
+  pointer-events: none;
+
+  &.assigned {
+    background-color: var(--background1);
+    color: var(--brand);
+  }
+
+  &.fixed {
+    border-color: var(--background6);
+    background-color: var(--background6);
+  }
+}
+
 .resizeHandle {
   position: absolute;
   width: 8px;
