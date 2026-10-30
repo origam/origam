@@ -183,7 +183,7 @@ public static class IApplicationBuilderExtensions
         OpenIddictConfig openIddictConfig
     )
     {
-        if (openIddictConfig.PrivateApiAuthentication == AuthenticationMethod.Token)
+        if (openIddictConfig.PrivateApiAuthenticationMethod == AuthenticationMethod.Token)
         {
             app.UseMiddleware<UserApiTokenAuthenticationMiddleware>();
         }
@@ -191,6 +191,7 @@ public static class IApplicationBuilderExtensions
         {
             app.UseAuthentication();
         }
+        app.UseMiddleware<UserApiAdditionalAuthenticationMiddleware>(openIddictConfig);
     }
 
     public static void UseWorkQueueApi(this IApplicationBuilder app)

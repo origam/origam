@@ -250,7 +250,9 @@ public class Startup
                 options.AllowPasswordFlow();
                 options.AllowRefreshTokenFlow();
                 options.AllowClientCredentialsFlow();
-                options.SetAccessTokenLifetime(TimeSpan.FromHours(1));
+                options.SetAccessTokenLifetime(
+                    TimeSpan.FromMinutes(openIddictConfig.AccessTokenExpirationMinutes)
+                );
                 options.SetRefreshTokenLifetime(TimeSpan.FromDays(30));
                 options
                     .UseAspNetCore()
@@ -581,6 +583,9 @@ public class Startup
         app.UseMiddleware<FatalErrorMiddleware>();
         app.UseMiddleware<OrigamErrorHandlingMiddleware>();
 
+        app.UseRouting();
+        app.UseCors("OrigamCorsPolicy");
+
         app.UseOpenApiDocumentation(
             startUpConfiguration.OpenApiDocumentationEnabled,
             openApiDocumentProvider
@@ -588,8 +593,6 @@ public class Startup
         app.UseUserApi(startUpConfiguration, openIddictConfig);
         app.UseWorkQueueApi();
 
-        app.UseRouting();
-        app.UseCors("OrigamCorsPolicy");
         app.UseAuthentication();
         app.UseAuthorization();
 
