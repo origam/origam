@@ -61,7 +61,7 @@ public class ExternalController : Microsoft.AspNetCore.Mvc.Controller
 
     // Initiate roundtrip to external authentication provider.
     [HttpGet]
-    public IActionResult Challenge(string provider, string returnUrl)
+    public async Task<IActionResult> Challenge(string provider, string returnUrl)
     {
         if (string.IsNullOrEmpty(returnUrl))
         {
@@ -77,7 +77,40 @@ public class ExternalController : Microsoft.AspNetCore.Mvc.Controller
         var redirectUrl = Url.Action(nameof(Callback), controller: "External", new { returnUrl });
         var props = signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
 
+        if (provider == IdentityServerDefaults.WindowsAdScheme)
+        {
+            return await ProcessWindowsLoginAsync(props);
+        }
+
         return Challenge(props, provider);
+    }
+
+    private async Task<IActionResult> ProcessWindowsLoginAsync(AuthenticationProperties properties)
+    {
+        var result = await HttpContext.AuthenticateAsync(IdentityServerDefaults.WindowsAdScheme);
+        if (!result.Succeeded || result.Principal?.Identity?.IsAuthenticated != true)
+        {
+            return Challenge(IdentityServerDefaults.WindowsAdScheme);
+        }
+
+        var userId = result.Principal.FindFirst(ClaimTypes.PrimarySid)?.Value;
+        var userName = result.Principal.Identity.Name;
+        if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(userName))
+        {
+            return Challenge(IdentityServerDefaults.WindowsAdScheme);
+        }
+
+        // Windows authentication retries this endpoint instead of following RedirectUri.
+        // Transfer the IIS identity to the cookie read by the external callback.
+        var identity = new ClaimsIdentity(IdentityServerDefaults.WindowsAdScheme);
+        identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, userId));
+        identity.AddClaim(new Claim(type: "name", userName));
+        await HttpContext.SignInAsync(
+            IdentityConstants.ExternalScheme,
+            new ClaimsPrincipal(identity),
+            properties
+        );
+        return Redirect(properties.RedirectUri);
     }
 
     // Post-processing of external authentication.
