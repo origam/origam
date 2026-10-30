@@ -22,8 +22,8 @@ developer-specific instructions.
 
 ## Localization
 
-- Localize only text and messages visible to end users. Keep developer-facing text,
-  such as diagnostic logs and developer tooling messages, unlocalized.
-- Add end-user strings to the project's `Strings.resx` (or equivalent resource file)
+- Store all display text and messages in neutral English resources. Translate only
+  end-user-visible strings into other supported languages.
+- Add strings to the project's `Strings.resx` (or equivalent resource file)
   and access them through the generated `Strings.<Key>` properties, optionally using
   `string.Format`. Use `ResourceUtils.GetString` only when explicitly requested.
