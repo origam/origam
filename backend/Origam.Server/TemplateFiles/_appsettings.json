@@ -130,6 +130,15 @@
   },
   "LanguageConfig": {
     "Default": "en-US",
+    // uncomment following section to take the language from the browser's Accept-Language
+    // header until the web client stores the language on its first load; after that the stored
+    // language wins. MatchingCultures are resolved but not offered on the login page; one without
+    // an Allowed language of its own is used until the web client stores the Default culture.
+    /*
+    "AcceptLanguage": {
+      "Enabled": "true",
+      "MatchingCultures": [ "en", "de" ]
+    },*/
     "Allowed": [
       {
         "Culture": "en-US",

@@ -19,54 +19,25 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using System.Globalization;
-using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Options;
 using Origam.Server.Pages;
 
 namespace Origam.Server.Middleware;
 
 public class UserApiMiddleware
 {
-    private readonly RequestLocalizationOptions requestLocalizationOptions;
+    // must accept next: UseMiddleware resolves this ctor with it, a parameterless ctor fails at
+    // pipeline build
+    public UserApiMiddleware(RequestDelegate next) { }
 
-    public UserApiMiddleware(
-        RequestDelegate next,
-        IOptions<RequestLocalizationOptions> requestLocalizationOptions
-    )
+    public Task Invoke(HttpContext context, IWebHostEnvironment environment)
     {
-        this.requestLocalizationOptions = requestLocalizationOptions.Value;
-    }
-
-    public async Task Invoke(HttpContext context, IWebHostEnvironment environment)
-    {
-        await SetThreadCultureFromCookie(context);
+        // the culture comes from UseRequestLocalization, the same resolution as the rest of the request
         var userApiProcessor = new CoreUserApiProcessor(new CoreHttpTools(), environment);
         var contextWrapper = new StandardHttpContextWrapper(context);
         userApiProcessor.Process(contextWrapper);
-        await Task.CompletedTask;
-    }
-
-    private async Task SetThreadCultureFromCookie(HttpContext context)
-    {
-        var cultureProvider = requestLocalizationOptions
-            .RequestCultureProviders.OfType<OrigamCookieRequestCultureProvider>()
-            .First();
-        var cultureResult = await cultureProvider.DetermineProviderCultureResult(context);
-        var culture = cultureResult?.Cultures.FirstOrDefault();
-        if (culture != null)
-        {
-            Thread.CurrentThread.CurrentUICulture = new CultureInfo(culture.Value.ToString());
-        }
-        var uiCulture = cultureResult?.UICultures.FirstOrDefault();
-        if (uiCulture != null)
-        {
-            Thread.CurrentThread.CurrentCulture = new CultureInfo(uiCulture.Value.ToString());
-        }
+        return Task.CompletedTask;
     }
 }
