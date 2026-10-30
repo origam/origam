@@ -55,7 +55,7 @@
     "react-highlight-words": "^1.0.0",
     "react-inlinesvg": "4.5.x",
     "react-measure": "^2.5.2",
-    "react-virtualized": "^9.22.6",
+    "react-virtualized": "^10.0.0",
     "sass": "^1.106.0",
     "stream-browserify": "^3.0.0",
     "string-strip-html": "^13.7.7",
