@@ -140,6 +140,14 @@ export class Component {
     this.getProperty('CaptionLength')!.value = value;
   }
 
+  get tabIndex(): number {
+    return Number(this.get('TabIndex') ?? 0);
+  }
+
+  set tabIndex(value: number) {
+    this.getProperty('TabIndex')!.value = value;
+  }
+
   private _labelPosition: LabelPosition;
   get labelPosition(): LabelPosition {
     return this._labelPosition;
