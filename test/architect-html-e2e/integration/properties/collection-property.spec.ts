@@ -37,6 +37,7 @@ const WORK_QUEUE_COMMAND = {
   id: '780a1b21-3043-4fe6-a9a7-8c0648a56ebc',
   name: 'Execute_WorkQueueTest',
 };
+const ENTITY_WITH_ANCESTORS = { id: '7a2338f2-7290-4cec-b0ad-2c0ee6386885', name: 'AllDataTypes' };
 
 test.describe('Collection properties (real backend)', () => {
   test.use({ actionTimeout: 10_000, navigationTimeout: 20_000 });
@@ -78,8 +79,13 @@ test.describe('Collection properties (real backend)', () => {
   test('shows the properties of the selected member', async ({ page, request }) => {
     await openEditor(page, request, WORKFLOW_ACTION);
     const dialog = await openCollection(page, 'ParameterMappings');
-    await expect(dialog.locator('[data-test-id^="collection-member-"]')).toHaveCount(2);
+    await expect(dialog.locator('[data-test-id^="collection-member-"]')).toHaveText([
+      'BusinessPartnerId',
+      'UserName',
+    ]);
+    await expect(member(dialog, 'BusinessPartnerId')).toHaveAttribute('aria-selected', 'true');
 
+    await member(dialog, 'UserName').click();
     await member(dialog, 'BusinessPartnerId').click();
     await expect(member(dialog, 'BusinessPartnerId')).toHaveAttribute('aria-selected', 'true');
     await expect(member(dialog, 'UserName')).toHaveAttribute('aria-selected', 'false');
@@ -128,6 +134,42 @@ test.describe('Collection properties (real backend)', () => {
     await member(dialog, 'NewMapping').click();
     await expectReadOnlyValue(dialog, 'Key', 'NewMapping');
     await expectReadOnlyValue(dialog, 'Value', 'Name');
+  });
+
+  test('shows a nested dictionary as a collection', async ({ page, request }) => {
+    await openEditor(page, request, ENTITY_WITH_ANCESTORS);
+    const dialog = await openCollection(page, 'Ancestors');
+
+    await member(dialog, 'IOrigamEntity2').click();
+    await expectReadOnlyValue(dialog, 'Ancestor', 'IOrigamEntity2');
+    await expect(dialog.getByTestId('property-input-ParentFolderIds')).toHaveValue('(Collection)');
+  });
+
+  test('opens a single dialog on a double click', async ({ page, request }) => {
+    await openEditor(page, request, MENU_ACTION);
+
+    await page.getByTestId('property-collection-ParameterMappings').dblclick();
+    await page.waitForLoadState('networkidle');
+    await expect(page.getByTestId('collection-editor')).toHaveCount(1);
+  });
+
+  test('loads the members only when the dialog opens', async ({ request }) => {
+    const response = await request.post('/Tab/Open', { data: { schemaItemId: MENU_ACTION.id } });
+    expect(response.ok(), await response.text()).toBeTruthy();
+    const properties: { name: string; type: string; value: unknown }[] = (await response.json())
+      .data;
+
+    const mappings = properties.find(property => property.name === 'ParameterMappings');
+    expect(mappings?.type).toBe('collection');
+    expect(mappings?.value).toBeNull();
+  });
+
+  test('rejects a property that is not a collection', async ({ request }) => {
+    const response = await request.post('/PropertyEditor/GetCollection', {
+      data: { schemaItemId: MENU_ACTION.id, propertyName: 'Name' },
+    });
+    expect(response.status()).toBe(420);
+    expect(await response.text()).toContain('Name is not a collection property.');
   });
 
   test('closes without changing the model', async ({ page, request }) => {
