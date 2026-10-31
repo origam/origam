@@ -84,12 +84,19 @@ public class PropertyEditorService(EditorPropertyFactory propertyFactory)
     {
         PropertyInfo property = PropertyUtils
             .GetVisibleProperties(item.GetType())
-            .First(property =>
+            .FirstOrDefault(property =>
                 property.Name == propertyName
                 && PropertyUtils.CanBeEdited(property)
                 && PropertyUtils.IsCollection(property)
             );
-        return propertyFactory.ToCollectionMembers((ICollection)property.GetValue(item));
+        if (property == null)
+        {
+            throw new UserOrigamException(
+                string.Format(Strings.Property_NotCollection, propertyName)
+            );
+        }
+
+        return propertyFactory.ToCollectionMembers((IEnumerable)property.GetValue(item));
     }
 
     public IEnumerable<EditorProperty> GetEditorPropertiesWithErrors(ISchemaItem item)

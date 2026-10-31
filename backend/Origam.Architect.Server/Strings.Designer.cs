@@ -352,6 +352,15 @@ namespace Origam.Architect.Server {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to {0} is not a collection property..
+        /// </summary>
+        internal static string Property_NotCollection {
+            get {
+                return ResourceManager.GetString("Property_NotCollection", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to &quot;{1}&quot; is not one of the values offered for {0}..
         /// </summary>
         internal static string Property_ValueNotOffered {
