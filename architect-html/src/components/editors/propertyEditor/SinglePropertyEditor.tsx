@@ -33,7 +33,7 @@ import S from '@editors/propertyEditor/SinglePropertyEditor.module.scss';
 import { UntypedPropertyInput } from '@editors/propertyEditor/UntypedPropertyInput.tsx';
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler.ts';
 import { observer } from 'mobx-react-lite';
-import { ReactNode, useContext } from 'react';
+import { ReactNode, useContext, useState } from 'react';
 import { VscCopy, VscEllipsis } from 'react-icons/vsc';
 
 const NO_WHITESPACE_PROPERTIES = new Set(['Name', 'MappedObjectName']);
@@ -42,6 +42,7 @@ const stripWhitespace = (value: string) => value.replace(/\s+/gu, '');
 const SinglePropertyEditor = observer(
   (props: { property: EditorProperty; propertyManager: IPropertyManager; compact?: boolean }) => {
     const rootStore = useContext(RootStoreContext);
+    const [isOpeningCollection, setIsOpeningCollection] = useState(false);
 
     const handleCopyToClipboard = async () => {
       if (props.property.value != null) {
@@ -75,19 +76,24 @@ const SinglePropertyEditor = observer(
 
     const openCollectionEditor = (property: EditorProperty) => {
       const propertyManager = props.propertyManager;
+      setIsOpeningCollection(true);
       runInFlowWithHandler(rootStore.errorDialogController)({
         generator: function* () {
-          const members = propertyManager.loadCollectionMembers
-            ? yield* propertyManager.loadCollectionMembers(property)
-            : (property.value as ICollectionMember[]);
-          const closeDialog = rootStore.dialogStack.pushDialog(
-            '',
-            <CollectionEditorDialog
-              propertyName={property.name}
-              members={members}
-              onClose={() => closeDialog()}
-            />,
-          );
+          try {
+            const members = propertyManager.loadCollectionMembers
+              ? yield* propertyManager.loadCollectionMembers(property)
+              : ((property.value as ICollectionMember[] | null) ?? []);
+            const closeDialog = rootStore.dialogStack.pushDialog(
+              '',
+              <CollectionEditorDialog
+                propertyName={property.name}
+                members={members}
+                onClose={() => closeDialog()}
+              />,
+            );
+          } finally {
+            setIsOpeningCollection(false);
+          }
         },
       });
     };
@@ -105,6 +111,7 @@ const SinglePropertyEditor = observer(
             <button
               type="button"
               className={S.collectionButton}
+              disabled={isOpeningCollection}
               onClick={() => openCollectionEditor(property)}
               title={T('Show the items', 'property_collection_open')}
               data-test-id={`property-collection-${property.name}`}
