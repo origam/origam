@@ -23,10 +23,10 @@ const isDev = import.meta.env.DEV;
 
 const frontendOrigin = window.location.origin;
 
-// In dev, the identity server still runs on 44357, so fix authority accordingly
-const authority = isDev
-  ? "https://localhost:44357"
-  : frontendOrigin; // in prod, SPA is served by the server
+// oidc-client-ts fetches the discovery doc from here. Docker proxies the OIDC
+// endpoints through Vite, so the authority is the SPA origin there.
+const authority = import.meta.env.VITE_OIDC_AUTHORITY
+  ?? (isDev ? "https://localhost:44357" : frontendOrigin);
 
 const redirectBase = frontendOrigin; // where the SPA is actually running (5173 in dev, server in prod)
 

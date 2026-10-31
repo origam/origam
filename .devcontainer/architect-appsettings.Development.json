@@ -1,0 +1,8 @@
+{
+  "SpaConfig": {
+    "PathToClientApplication": "/home/origam/ClientApplication"
+  },
+  "Ai": {
+    "ApiKey": ""
+  }
+}
