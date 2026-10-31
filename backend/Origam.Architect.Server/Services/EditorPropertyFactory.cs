@@ -57,22 +57,13 @@ public class EditorPropertyFactory
 
     public EditorProperty Create(PropertyInfo property, object instance)
     {
-        string category = property.GetAttribute<CategoryAttribute>()?.Category;
-        string description = property.GetAttribute<DescriptionAttribute>()?.Description;
-
         if (PropertyUtils.IsCollection(property))
         {
-            return new EditorProperty(
-                name: property.Name,
-                controlPropertyId: null,
-                type: CollectionTypeName,
-                value: ToCollectionMembers((ICollection)property.GetValue(instance)),
-                dropDownValues: [],
-                category: category,
-                description: description,
-                readOnly: true
-            );
+            return CreateReadOnly(property, CollectionTypeName, value: null);
         }
+
+        string category = property.GetAttribute<CategoryAttribute>()?.Category;
+        string description = property.GetAttribute<DescriptionAttribute>()?.Description;
 
         var context = new Context(instance);
         (DropDownValue[] dropDownValues, TypeConverter converter) = GetAvailableValues(
@@ -199,14 +190,33 @@ public class EditorPropertyFactory
         return value;
     }
 
-    public List<CollectionMember> ToCollectionMembers(ICollection collection)
+    private static EditorProperty CreateReadOnly(PropertyInfo property, string type, object value)
+    {
+        return new EditorProperty(
+            name: property.Name,
+            controlPropertyId: null,
+            type: type,
+            value: value,
+            dropDownValues: [],
+            category: property.GetAttribute<CategoryAttribute>()?.Category,
+            description: property.GetAttribute<DescriptionAttribute>()?.Description,
+            readOnly: true
+        );
+    }
+
+    public List<CollectionMember> ToCollectionMembers(IEnumerable collection)
     {
         if (collection == null)
         {
             return [];
         }
 
-        return collection.Cast<object>().Select(ToCollectionMember).ToList();
+        IEnumerable<CollectionMember> members = collection
+            .Cast<object>()
+            .Select(ToCollectionMember);
+        return collection is IDictionary
+            ? members.OrderBy(member => member.Name, StringComparer.OrdinalIgnoreCase).ToList()
+            : members.ToList();
     }
 
     private CollectionMember ToCollectionMember(object member)
@@ -214,9 +224,32 @@ public class EditorPropertyFactory
         List<EditorProperty> properties = PropertyUtils
             .GetVisibleProperties(member.GetType())
             .Where(PropertyUtils.CanBeEdited)
-            .Select(property => Create(property, member).AsReadOnly())
+            .Select(property => CreateMemberProperty(property, member))
             .ToList();
         return new CollectionMember(Name: GetMemberName(member), Properties: properties);
+    }
+
+    private EditorProperty CreateMemberProperty(PropertyInfo property, object member)
+    {
+        if (PropertyUtils.IsCollection(property))
+        {
+            return CreateReadOnly(
+                property,
+                CollectionTypeName,
+                ToCollectionMembers((IEnumerable)property.GetValue(member))
+            );
+        }
+
+        if (property.PropertyType.IsAssignableTo(typeof(ISchemaItem)))
+        {
+            return CreateReadOnly(
+                property,
+                type: "string",
+                value: property.GetValue(member)?.ToString()
+            );
+        }
+
+        return Create(property, member).AsReadOnly();
     }
 
     private static string GetMemberName(object member)
