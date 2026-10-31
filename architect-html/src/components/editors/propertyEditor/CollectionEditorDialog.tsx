@@ -46,7 +46,7 @@ export const CollectionEditorDialog = observer(
         title={T('{0} Collection Editor', 'collection_editor_title', props.propertyName)}
         buttonsCenter={
           <button data-test-id="collection-editor-close" onClick={props.onClose}>
-            {T('Close', 'dialog_close')}
+            {T('Close', 'wizard_close')}
           </button>
         }
       >
