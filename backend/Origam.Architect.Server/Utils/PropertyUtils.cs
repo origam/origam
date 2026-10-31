@@ -54,8 +54,10 @@ public static class PropertyUtils
 
     public static bool IsCollection(PropertyInfo property)
     {
-        return property.PropertyType != typeof(byte[])
-            && typeof(ICollection).IsAssignableFrom(property.PropertyType);
+        Type type = property.PropertyType;
+        return type != typeof(string)
+            && type != typeof(byte[])
+            && typeof(IEnumerable).IsAssignableFrom(type);
     }
 
     public static TypeConverter CreateConverter(PropertyInfo property)
