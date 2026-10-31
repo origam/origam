@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 using Microsoft.AspNetCore.Mvc;
 using Origam.Architect.Server.Models;
@@ -59,4 +60,11 @@ public class PropertyEditorController(PropertyEditorService propertyService, Tab
             IsDirty = tab.IsDirty,
         };
     }
+
+    [HttpPost("GetCollection")]
+    public List<CollectionMember> GetCollection([Required] [FromBody] CollectionModel input) =>
+        propertyService.GetCollectionMembers(
+            tabService.OpenDefaultTab(input.SchemaItemId).Item,
+            input.PropertyName
+        );
 }

@@ -55,12 +55,32 @@ public class EditorProperty
     public bool ReadOnly { get; }
     public Guid? ControlPropertyId { get; }
     public List<string> Errors { get; set; }
+
+    public EditorProperty AsReadOnly()
+    {
+        return new EditorProperty(
+            name: Name,
+            controlPropertyId: ControlPropertyId,
+            type: Type,
+            value: Value,
+            dropDownValues: DropDownValues,
+            category: Category,
+            description: Description,
+            readOnly: true
+        );
+    }
 }
 
 public class DropDownValue(string Name, object Value)
 {
     public string Name { get; } = Name;
     public object Value { get; } = Value;
+}
+
+public class CollectionMember(string Name, List<EditorProperty> Properties)
+{
+    public string Name { get; } = Name;
+    public List<EditorProperty> Properties { get; } = Properties;
 }
 
 class Context : ITypeDescriptorContext

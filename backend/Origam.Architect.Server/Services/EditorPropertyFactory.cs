@@ -43,6 +43,7 @@ public class EditorPropertyFactory
     private const string UntypedTypeName = "untyped";
     private const string FieldBindingTypeName = "fieldBinding";
     private const string ColorTypeName = "color";
+    private const string CollectionTypeName = "collection";
 
     public EditorProperty CreateIfMarkedAsEditable(PropertyInfo property, ISchemaItem item)
     {
@@ -58,6 +59,20 @@ public class EditorPropertyFactory
     {
         string category = property.GetAttribute<CategoryAttribute>()?.Category;
         string description = property.GetAttribute<DescriptionAttribute>()?.Description;
+
+        if (PropertyUtils.IsCollection(property))
+        {
+            return new EditorProperty(
+                name: property.Name,
+                controlPropertyId: null,
+                type: CollectionTypeName,
+                value: ToCollectionMembers((ICollection)property.GetValue(instance)),
+                dropDownValues: [],
+                category: category,
+                description: description,
+                readOnly: true
+            );
+        }
 
         var context = new Context(instance);
         (DropDownValue[] dropDownValues, TypeConverter converter) = GetAvailableValues(
@@ -180,18 +195,38 @@ public class EditorPropertyFactory
         {
             return persistentObject.Id;
         }
-        if (value is ICollection collection)
-        {
-            var editorValue = new List<object>();
-            foreach (var item in collection)
-            {
-                editorValue.Add(item is IPersistent persistentValue ? persistentValue.Id : value);
-            }
-
-            return editorValue;
-        }
 
         return value;
+    }
+
+    public List<CollectionMember> ToCollectionMembers(ICollection collection)
+    {
+        if (collection == null)
+        {
+            return [];
+        }
+
+        return collection.Cast<object>().Select(ToCollectionMember).ToList();
+    }
+
+    private CollectionMember ToCollectionMember(object member)
+    {
+        List<EditorProperty> properties = PropertyUtils
+            .GetVisibleProperties(member.GetType())
+            .Where(PropertyUtils.CanBeEdited)
+            .Select(property => Create(property, member).AsReadOnly())
+            .ToList();
+        return new CollectionMember(Name: GetMemberName(member), Properties: properties);
+    }
+
+    private static string GetMemberName(object member)
+    {
+        return member switch
+        {
+            DictionaryEntry entry => entry.Key.ToString(),
+            ISchemaItem schemaItem => schemaItem.Name,
+            _ => member.ToString(),
+        };
     }
 
     // ARGB zero means no color.

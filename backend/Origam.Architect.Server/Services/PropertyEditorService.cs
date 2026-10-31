@@ -19,8 +19,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using System.Collections;
 using System.Reflection;
 using Origam.Architect.Server.ReturnModels;
+using Origam.Architect.Server.Utils;
 using Origam.DA;
 using Origam.Extensions;
 using Origam.Schema;
@@ -33,8 +35,8 @@ public class PropertyEditorService(EditorPropertyFactory propertyFactory)
 {
     private IEnumerable<EditorProperty> GetEditorPropertiesByName(ISchemaItem item, string[] names)
     {
-        var properties = item.GetType()
-            .GetProperties()
+        var properties = PropertyUtils
+            .GetVisibleProperties(item.GetType())
             .Where(prop => names.Contains(prop.Name))
             .Select(prop => propertyFactory.Create(prop, item));
         return properties;
@@ -71,11 +73,23 @@ public class PropertyEditorService(EditorPropertyFactory propertyFactory)
             return xsltProperties;
         }
 
-        IEnumerable<EditorProperty> properties = item.GetType()
-            .GetProperties()
+        IEnumerable<EditorProperty> properties = PropertyUtils
+            .GetVisibleProperties(item.GetType())
             .Select(prop => propertyFactory.CreateIfMarkedAsEditable(prop, item))
             .Where(x => x != null);
         return properties;
+    }
+
+    public List<CollectionMember> GetCollectionMembers(ISchemaItem item, string propertyName)
+    {
+        PropertyInfo property = PropertyUtils
+            .GetVisibleProperties(item.GetType())
+            .First(property =>
+                property.Name == propertyName
+                && PropertyUtils.CanBeEdited(property)
+                && PropertyUtils.IsCollection(property)
+            );
+        return propertyFactory.ToCollectionMembers((ICollection)property.GetValue(item));
     }
 
     public IEnumerable<EditorProperty> GetEditorPropertiesWithErrors(ISchemaItem item)
@@ -90,11 +104,9 @@ public class PropertyEditorService(EditorPropertyFactory propertyFactory)
 
     public List<string> GetRuleErrorsIfExist(EditorProperty editorProperty, ISchemaItem item)
     {
-        Type type = item.GetType();
-        PropertyInfo[] properties = type.GetProperties();
-        PropertyInfo propertyInfo = properties.First(property =>
-            property.Name == editorProperty.Name
-        );
+        PropertyInfo propertyInfo = PropertyUtils
+            .GetVisibleProperties(item.GetType())
+            .First(property => property.Name == editorProperty.Name);
         return GetRuleErrors(propertyInfo, item);
     }
 }
