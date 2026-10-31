@@ -24,6 +24,7 @@ import {
   IApiTabData,
   IApiTreeNode,
   IArchitectApi,
+  ICollectionMember,
   ICreateLookupRequest,
   ICreateWizardResult,
   IDatabaseResultResponse,
@@ -247,6 +248,18 @@ export class ArchitectApi implements IArchitectApi {
       await this.http.post(`/PropertyEditor/Update`, {
         schemaItemId,
         changes,
+      })
+    ).data;
+  }
+
+  async getCollectionMembers(
+    schemaItemId: string,
+    propertyName: string,
+  ): Promise<ICollectionMember[]> {
+    return (
+      await this.http.post(`/PropertyEditor/GetCollection`, {
+        schemaItemId,
+        propertyName,
       })
     ).data;
   }

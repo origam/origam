@@ -18,8 +18,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { RootStoreContext, T } from '@/main.tsx';
-import { PropertyValue } from '@api/IArchitectApi';
+import { ICollectionMember, PropertyValue } from '@api/IArchitectApi';
 import { EditorProperty } from '@editors/gridEditor/EditorProperty.ts';
+import { CollectionEditorDialog } from '@editors/propertyEditor/CollectionEditorDialog.tsx';
 import { ColorPropertyInput } from '@editors/propertyEditor/ColorPropertyInput.tsx';
 import { IPropertyManager } from '@editors/propertyEditor/IPropertyManager.tsx';
 import { FilterableSelect } from '@editors/propertyEditor/FilterableSelect.tsx';
@@ -33,7 +34,7 @@ import { UntypedPropertyInput } from '@editors/propertyEditor/UntypedPropertyInp
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler.ts';
 import { observer } from 'mobx-react-lite';
 import { ReactNode, useContext } from 'react';
-import { VscCopy } from 'react-icons/vsc';
+import { VscCopy, VscEllipsis } from 'react-icons/vsc';
 
 const NO_WHITESPACE_PROPERTIES = new Set(['Name', 'MappedObjectName']);
 const stripWhitespace = (value: string) => value.replace(/\s+/gu, '');
@@ -72,7 +73,48 @@ const SinglePropertyEditor = observer(
       });
     };
 
+    const openCollectionEditor = (property: EditorProperty) => {
+      const propertyManager = props.propertyManager;
+      runInFlowWithHandler(rootStore.errorDialogController)({
+        generator: function* () {
+          const members = propertyManager.loadCollectionMembers
+            ? yield* propertyManager.loadCollectionMembers(property)
+            : (property.value as ICollectionMember[]);
+          const closeDialog = rootStore.dialogStack.pushDialog(
+            '',
+            <CollectionEditorDialog
+              propertyName={property.name}
+              members={members}
+              onClose={() => closeDialog()}
+            />,
+          );
+        },
+      });
+    };
+
     const renderControl = (property: EditorProperty) => {
+      if (property.type === 'collection') {
+        return (
+          <div className={S.inputWithCopyButton}>
+            <input
+              type="text"
+              disabled
+              data-test-id={`property-input-${property.name}`}
+              value={T('(Collection)', 'property_collection')}
+            />
+            <button
+              type="button"
+              className={S.collectionButton}
+              onClick={() => openCollectionEditor(property)}
+              title={T('Show the items', 'property_collection_open')}
+              data-test-id={`property-collection-${property.name}`}
+            >
+              <VscEllipsis />
+            </button>
+          </div>
+        );
+      }
+
       if (
         property.type === 'enum' ||
         property.type === 'looukup' ||

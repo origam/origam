@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { IUpdatePropertiesResult, PropertyValue } from '@api/IArchitectApi';
+import { ICollectionMember, IUpdatePropertiesResult, PropertyValue } from '@api/IArchitectApi';
 import { EditorProperty } from '@editors/gridEditor/EditorProperty';
 
 export interface IPropertyManager {
@@ -25,4 +25,8 @@ export interface IPropertyManager {
     property: EditorProperty,
     value: PropertyValue,
   ): Generator<Promise<IUpdatePropertiesResult>, void, IUpdatePropertiesResult>;
+
+  loadCollectionMembers?(
+    property: EditorProperty,
+  ): Generator<Promise<ICollectionMember[]>, ICollectionMember[], ICollectionMember[]>;
 }

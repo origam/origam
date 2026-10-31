@@ -18,7 +18,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { T } from '@/main';
-import { IArchitectApi, IUpdatePropertiesResult } from '@api/IArchitectApi';
+import { IArchitectApi, ICollectionMember, IUpdatePropertiesResult } from '@api/IArchitectApi';
 import { IEditorNode } from '@components/editorTabView/EditorTabViewState';
 import { ITabState, IValidationError } from '@/components/editorTabView/ITabState';
 import { ModelTreeState } from '@components/modelTree/ModelTreeState';
@@ -168,5 +168,11 @@ export class GridEditorState implements ITabState, IPropertyManager {
       property.update(propertyUpdate);
     }
     this._isDirty = updateResult.isDirty;
+  }
+
+  *loadCollectionMembers(
+    property: EditorProperty,
+  ): Generator<Promise<ICollectionMember[]>, ICollectionMember[], ICollectionMember[]> {
+    return yield this.architectApi.getCollectionMembers(this.editorNode.origamId, property.name);
   }
 }
