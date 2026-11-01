@@ -41,6 +41,33 @@ async function snapLinePositions(surface: Locator, orientation: Orientation): Pr
     );
 }
 
+async function marginLineSpans(surface: Locator): Promise<{ start: number; length: number }[]> {
+  return surface.locator('[data-test-id="snap-line"][data-kind="margin"]').evaluateAll(lines =>
+    lines.map(line => {
+      const rect = line.getBoundingClientRect();
+      const isVertical = line.getAttribute('data-orientation') === 'vertical';
+      return {
+        start: Math.round(isVertical ? rect.top : rect.left),
+        length: Math.round(isVertical ? rect.height : rect.width),
+      };
+    }),
+  );
+}
+
+async function baselinePositions(surface: Locator): Promise<number[]> {
+  return surface
+    .locator('[data-test-id="snap-line"][data-kind="baseline"]')
+    .evaluateAll(lines => lines.map(line => Math.round(line.getBoundingClientRect().top)));
+}
+
+async function textTop(element: Locator): Promise<number> {
+  return element.evaluate(node => {
+    const range = document.createRange();
+    range.selectNodeContents(node);
+    return Math.round(range.getBoundingClientRect().top);
+  });
+}
+
 async function grab(page: Page, target: Locator): Promise<{ x: number; y: number }> {
   const box = (await target.boundingBox())!;
   const center = { x: box.x + box.width / 2, y: box.y + box.height / 2 };
@@ -50,7 +77,6 @@ async function grab(page: Page, target: Locator): Promise<{ x: number; y: number
 }
 
 async function release(page: Page): Promise<ApiControl> {
-  // A response to an update sent before the release would still carry the old layout.
   const updateSent = page.waitForRequest(request =>
     request.url().includes('/SectionEditor/Update'),
   );
@@ -175,5 +201,70 @@ test.describe('Screen section snap lines (real backend)', () => {
 
     const result = findControl(await release(page), inner.id)!;
     expect(value(result, 'Top')).toBe(value(inner, 'Top') + dy);
+  });
+
+  test('a widget dragged near the spacing below a neighbour snaps to it', async ({ page }) => {
+    const anchor = await editor.dropWidget('AsTextBox', 'Text1');
+    const moved = await editor.dropWidget('AsTextBox', 'Text2');
+    const anchorBox = (await editor.component(anchor).boundingBox())!;
+    const anchorBottom = value(anchor, 'Top') + value(anchor, 'Height');
+    const gap = value(moved, 'Top') - anchorBottom;
+
+    const start = await grab(page, editor.component(moved));
+    await page.mouse.move(start.x, start.y - gap + 10, { steps: 5 });
+    await expect
+      .poll(() => marginLineSpans(editor.surface))
+      .toContainEqual({ start: Math.round(anchorBox.y + value(anchor, 'Height')), length: 6 });
+
+    const result = findControl(await release(page), moved.id)!;
+    expect(value(result, 'Top')).toBe(anchorBottom + 6);
+  });
+
+  test('a widget dragged near the spacing beside a neighbour snaps to it', async ({ page }) => {
+    const [anchor, moved] = await dropTwoTextBoxes(140);
+    const anchorBox = (await editor.component(anchor).boundingBox())!;
+    const anchorWidth = value(anchor, 'Width');
+
+    const start = await grab(page, editor.component(moved));
+    await page.mouse.move(
+      start.x + anchorWidth + 9 - 140,
+      start.y - value(moved, 'Top') + value(anchor, 'Top'),
+      { steps: 5 },
+    );
+    await expect
+      .poll(() => marginLineSpans(editor.surface))
+      .toContainEqual({ start: Math.round(anchorBox.x + anchorWidth), length: 6 });
+
+    const result = findControl(await release(page), moved.id)!;
+    expect(value(result, 'Left')).toBe(value(anchor, 'Left') + anchorWidth + 6);
+    expect(value(result, 'Top')).toBe(value(anchor, 'Top'));
+  });
+
+  test('a label dragged near the baseline of a field caption snaps to it', async ({ page }) => {
+    const field = await editor.dropWidget('AsTextBox', 'Text1', undefined, { x: 150, y: 120 });
+    await editor.select(field);
+    await editor.chooseProperty('CaptionPosition', 'Top');
+    const label = await editor.dropWidget('Label');
+    await editor.select(label);
+    await editor.setProperty('Text', 'Hello');
+    await editor.setProperty('Left', String(value(field, 'Left') + 120));
+    const caption = editor.surface.getByText('Text 1', { exact: true });
+    const captionBox = (await caption.boundingBox())!;
+
+    const start = await grab(page, editor.component(label));
+    await page.mouse.move(start.x, start.y + value(field, 'Top') - 15 - value(label, 'Top'), {
+      steps: 5,
+    });
+    await expect
+      .poll(async () =>
+        (await baselinePositions(editor.surface)).some(
+          position => position >= captionBox.y && position < captionBox.y + captionBox.height,
+        ),
+      )
+      .toBe(true);
+
+    await release(page);
+    const labelText = editor.component(label).getByText('Hello', { exact: true });
+    await expect.poll(() => textTop(labelText)).toBe(await textTop(caption));
   });
 });
