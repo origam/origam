@@ -111,6 +111,8 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
   const editorTabViewState = rootStore.editorTabViewState;
   const modelTreeState = rootStore.modelTreeState;
   const transfer = modelTreeState.transfer;
+  const isAncestor = node.itemType === 'Origam.Schema.SchemaItemAncestor';
+  const canUseItemCommands = !node.isNonPersistentItem && !isAncestor;
   const highlightedNodeId = modelTreeState.highlightedNodeId;
   const highlightToken = modelTreeState.highlightToken;
   const menuId = 'SideMenu' + node.id;
@@ -785,6 +787,7 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
   const isHighlighted = highlightedNodeId === node.id;
   const isCutSource = transfer.isCutSource(node);
   const canPaste =
+    !isAncestor &&
     transfer.hasSource &&
     !transfer.isBusy &&
     transfer.mayTransferTo(node, transfer.clipboardMode === 'copy');
@@ -848,7 +851,7 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
             <DeploymentBadges node={node} />
           </div>
           <Menu id={menuId} onVisibilityChange={onMenuVisibilityChange}>
-            {node.contextMenuItems.length > 0 ? (
+            {!isAncestor && node.contextMenuItems.length > 0 ? (
               <Submenu label={T('New', 'tree_node_submenu_new')} data-test-id="tree-menu-new">
                 {node.newTypeMenuItems.map(item => (
                   <Item
@@ -1056,7 +1059,7 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
               {T('Move to...', 'tree_node_move_to')}
             </Item>
             <Separator />
-            {!node.isNonPersistentItem && (
+            {canUseItemCommands && (
               <Item id="edit" data-test-id="tree-menu-edit" onClick={() => onNodeDoubleClick(node)}>
                 {T('Edit', 'tree_node_edit')}
               </Item>
@@ -1070,12 +1073,12 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
                 {T('Rename', 'tree_node_rename_folder')}
               </Item>
             )}
-            {!node.isNonPersistentItem && (!node.isFolder || node.isInActivePackage) && (
+            {canUseItemCommands && (!node.isFolder || node.isInActivePackage) && (
               <Item id="delete" data-test-id="tree-menu-delete" onClick={onDelete}>
                 {T('Delete', 'tree_node_delete')}
               </Item>
             )}
-            {!node.isNonPersistentItem && (
+            {canUseItemCommands && (
               <Item
                 id="documentation"
                 data-test-id="tree-menu-documentation"
@@ -1084,12 +1087,12 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
                 {T('Documentation', 'tree_node_documentation')}
               </Item>
             )}
-            {!node.isNonPersistentItem && (
+            {canUseItemCommands && (
               <Item id="references" data-test-id="tree-menu-references" onClick={findReferences}>
                 {T('Find references', 'tree_node_references')}
               </Item>
             )}
-            {!node.isNonPersistentItem && (
+            {canUseItemCommands && (
               <Item
                 id="dependencies"
                 data-test-id="tree-menu-dependencies"
