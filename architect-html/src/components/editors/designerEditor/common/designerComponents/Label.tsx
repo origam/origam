@@ -29,7 +29,7 @@ export class Label extends Component {
   getDesignerRepresentation(): ReactElement | null {
     return (
       <div className={S.designSurfaceEditorContainer}>
-        <div>{this.properties.find(x => x.name === 'Text')?.value}</div>
+        <div>{this.get('Text')}</div>
       </div>
     );
   }
