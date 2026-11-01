@@ -91,9 +91,16 @@ export const DesignSurface: React.FC<{
         surfaceState.updateDragging(point.x, point.y, !e.altKey);
       }
     };
+    const handleAltKey = (e: KeyboardEvent) => {
+      if (e.key === 'Alt') {
+        surfaceState.setSnapEnabled(!e.altKey);
+      }
+    };
     const handleMouseUp = (e: MouseEvent) => {
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('mouseup', handleMouseUp);
+      window.removeEventListener('keydown', handleAltKey);
+      window.removeEventListener('keyup', handleAltKey);
       if (!surfaceRef.current) return;
       if (surfaceState.dragState.didDrag || surfaceState.resizeState.didResize) {
         ignoreNextSurfaceClick.current = true;
@@ -104,6 +111,8 @@ export const DesignSurface: React.FC<{
     };
     window.addEventListener('mousemove', handleMouseMove);
     window.addEventListener('mouseup', handleMouseUp);
+    window.addEventListener('keydown', handleAltKey);
+    window.addEventListener('keyup', handleAltKey);
   };
 
   const handleComponentMouseDown = (e: React.MouseEvent, component: Component) => {

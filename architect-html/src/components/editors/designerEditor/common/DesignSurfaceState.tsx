@@ -52,9 +52,10 @@ export class DesignSurfaceState implements IComponentProvider {
   @observable public accessor selectedComponent: Component | null = null;
   @observable accessor dragState: DragState = idleDragState();
   @observable accessor resizeState: ResizeState = idleResizeState();
-  @observable accessor snapLines: SnapLine[] = [];
+  @observable.ref accessor snapLines: SnapLine[] = [];
   @observable accessor isTabOrderMode = false;
   @observable private accessor tabOrderedIds: string[] = [];
+  private snapTargetsCache: { container: Component | null; targets: SnapTargets } | null = null;
   panel: Component = null as any; // will be assigned in loadComponents
   panelId: string | undefined;
   getVerbs: (component: Component) => IDesignerVerb[] = () => [];
@@ -105,6 +106,7 @@ export class DesignSurfaceState implements IComponentProvider {
 
   @action
   restorePointerStates() {
+    this.snapLines = [];
     if (this.dragState.component) {
       const draggedId = this.dragState.component.id;
       this.dragState.component = this.components.find(x => x.id === draggedId) ?? null;
@@ -126,6 +128,16 @@ export class DesignSurfaceState implements IComponentProvider {
           this.resizeState.isSnapEnabled,
         );
       }
+    }
+  }
+
+  @action
+  setSnapEnabled(isSnapEnabled: boolean) {
+    if (this.dragState.didDrag) {
+      this.updateDragging(this.dragState.lastX, this.dragState.lastY, isSnapEnabled);
+    }
+    if (this.resizeState.didResize) {
+      this.updateResizing(this.resizeState.lastX, this.resizeState.lastY, isSnapEnabled);
     }
   }
 
@@ -254,13 +266,22 @@ export class DesignSurfaceState implements IComponentProvider {
   }
 
   private getSnapTargets(component: Component, container: Component | null): SnapTargets {
+    let cache = this.snapTargetsCache;
+    if (!cache || cache.container !== container) {
+      cache = { container, targets: this.collectSnapTargets(component, container) };
+      this.snapTargetsCache = cache;
+    }
+    return cache.targets;
+  }
+
+  private collectSnapTargets(component: Component, container: Component | null): SnapTargets {
     if (!container) {
       return noSnapTargets;
     }
     const siblings = this.getChildren(container).filter(
       child => child.id !== component.id && child.isActive,
     );
-    return { container: innerBoundsOf(container), siblings: siblings.map(boundsOf) };
+    return { container: container.contentBounds, siblings: siblings.map(boundsOf) };
   }
 
   private canChangeParent(component: Component) {
@@ -276,6 +297,7 @@ export class DesignSurfaceState implements IComponentProvider {
       return;
     }
     this.selectComponent(component);
+    this.snapTargetsCache = null;
     this.dragState = {
       component,
       startX: mouseX,
@@ -379,6 +401,7 @@ export class DesignSurfaceState implements IComponentProvider {
   @action
   startResizing(component: Component, handle: ResizeHandle, mouseX: number, mouseY: number) {
     this.selectComponent(component);
+    this.snapTargetsCache = null;
     this.resizeState = {
       component,
       handle,
@@ -428,64 +451,19 @@ export class DesignSurfaceState implements IComponentProvider {
     deltaX += offset.x;
     deltaY += offset.y;
 
-    switch (this.resizeState.handle) {
-      case 'right':
-        component.width = Math.max(minComponentHeight, originalWidth + deltaX);
-        break;
-      case 'bottom':
-        component.height = Math.max(minComponentHeight, originalHeight + deltaY);
-        break;
-      case 'left': {
-        const newWidth = originalWidth - deltaX;
-        if (newWidth >= minComponentWidth) {
-          component.width = newWidth;
-          component.absoluteLeft = originalLeft + deltaX;
-        }
-        break;
-      }
-      case 'top': {
-        const newHeight = originalHeight - deltaY;
-        if (newHeight >= minComponentHeight) {
-          component.height = newHeight;
-          component.absoluteTop = originalTop + deltaY;
-        }
-        break;
-      }
-      case 'topLeft': {
-        const newHeightTL = originalHeight - deltaY;
-        const newWidthTL = originalWidth - deltaX;
-        if (newHeightTL >= minComponentHeight) {
-          component.height = newHeightTL;
-          component.absoluteTop = originalTop + deltaY;
-        }
-        if (newWidthTL >= minComponentWidth) {
-          component.width = newWidthTL;
-          component.absoluteLeft = originalLeft + deltaX;
-        }
-        break;
-      }
-      case 'topRight': {
-        const newHeightTR = originalHeight - deltaY;
-        if (newHeightTR >= minComponentHeight) {
-          component.height = newHeightTR;
-          component.absoluteTop = originalTop + deltaY;
-        }
-        component.width = Math.max(minComponentWidth, originalWidth + deltaX);
-        break;
-      }
-      case 'bottomLeft': {
-        const newWidthBL = originalWidth - deltaX;
-        if (newWidthBL >= minComponentWidth) {
-          component.width = newWidthBL;
-          component.absoluteLeft = originalLeft + deltaX;
-        }
-        component.height = Math.max(minComponentHeight, originalHeight + deltaY);
-        break;
-      }
-      case 'bottomRight':
-        component.width = Math.max(minComponentWidth, originalWidth + deltaX);
-        component.height = Math.max(minComponentHeight, originalHeight + deltaY);
-        break;
+    if (edges.includes('left')) {
+      component.width = Math.max(minComponentWidth, originalWidth - deltaX);
+      component.absoluteLeft = originalLeft + originalWidth - component.width;
+    }
+    if (edges.includes('right')) {
+      component.width = Math.max(minComponentWidth, originalWidth + deltaX);
+    }
+    if (edges.includes('top')) {
+      component.height = Math.max(minComponentHeight, originalHeight - deltaY);
+      component.absoluteTop = originalTop + originalHeight - component.height;
+    }
+    if (edges.includes('bottom')) {
+      component.height = Math.max(minComponentHeight, originalHeight + deltaY);
     }
     this.snapLines = findSnapLines(boundsOf(component), targets, edges);
   }
@@ -595,16 +573,6 @@ function boundsAt(component: Component, left: number, top: number): Bounds {
     right: left + component.width,
     bottom: top + component.height,
     baseline: baseline === null ? null : baseline - component.absoluteTop + top,
-  };
-}
-
-function innerBoundsOf(container: Component): Bounds {
-  return {
-    left: container.absoluteLeft + container.childOffsetLeft,
-    top: container.absoluteTop + container.childOffsetTop,
-    right: container.absoluteRight,
-    bottom: container.absoluteBottom,
-    baseline: null,
   };
 }
 
