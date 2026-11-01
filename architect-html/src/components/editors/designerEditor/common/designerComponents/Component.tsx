@@ -21,6 +21,7 @@ import { IComponentData } from '@editors/designerEditor/common/ComponentType';
 import S from '@editors/designerEditor/common/designerComponents/Components.module.scss';
 import { LabelPosition, parseLabelPosition } from '@editors/designerEditor/common/LabelPosition';
 import { controlLayer } from '@editors/designerEditor/common/Layers';
+import { Bounds } from '@editors/designerEditor/common/Snapping';
 import { EditorProperty } from '@editors/gridEditor/EditorProperty';
 import { action, observable } from 'mobx';
 import { Observer } from 'mobx-react-lite';
@@ -118,6 +119,16 @@ export class Component {
 
   get childOffsetTop() {
     return 0;
+  }
+
+  get contentBounds(): Bounds {
+    return {
+      left: this.absoluteLeft + this.childOffsetLeft,
+      top: this.absoluteTop + this.childOffsetTop,
+      right: this.absoluteRight,
+      bottom: this.absoluteBottom,
+      baseline: null,
+    };
   }
 
   get absoluteBottom(): number {
