@@ -76,6 +76,15 @@ async function grab(page: Page, target: Locator): Promise<{ x: number; y: number
   return center;
 }
 
+async function waitForCenter(target: Locator, x: number, y: number) {
+  await expect
+    .poll(async () => {
+      const box = (await target.boundingBox())!;
+      return [Math.round(box.x + box.width / 2), Math.round(box.y + box.height / 2)];
+    })
+    .toEqual([Math.round(x), Math.round(y)]);
+}
+
 async function release(page: Page): Promise<ApiControl> {
   const updateSent = page.waitForRequest(request =>
     request.url().includes('/SectionEditor/Update'),
@@ -142,6 +151,7 @@ test.describe('Screen section snap lines (real backend)', () => {
 
     const start = await grab(page, editor.component(moved));
     await page.mouse.move(start.x - 28, start.y, { steps: 5 });
+    await waitForCenter(editor.component(moved), start.x - 28, start.y);
     await expect(editor.surface.getByTestId('snap-line')).toHaveCount(0);
 
     const result = findControl(await release(page), moved.id)!;
@@ -154,6 +164,7 @@ test.describe('Screen section snap lines (real backend)', () => {
     const start = await grab(page, editor.component(moved));
     await page.keyboard.down('Alt');
     await page.mouse.move(start.x - 35, start.y, { steps: 5 });
+    await waitForCenter(editor.component(moved), start.x - 35, start.y);
     await expect(editor.surface.getByTestId('snap-line')).toHaveCount(0);
 
     const root = await release(page);
@@ -197,6 +208,7 @@ test.describe('Screen section snap lines (real backend)', () => {
 
     const start = await grab(page, editor.component(inner));
     await page.mouse.move(start.x, start.y + dy, { steps: 5 });
+    await waitForCenter(editor.component(inner), start.x, start.y + dy);
     await expect(editor.surface.getByTestId('snap-line')).toHaveCount(0);
 
     const result = findControl(await release(page), inner.id)!;
@@ -249,12 +261,13 @@ test.describe('Screen section snap lines (real backend)', () => {
     await editor.setProperty('Text', 'Hello');
     await editor.setProperty('Left', String(value(field, 'Left') + 120));
     const caption = editor.surface.getByText('Text 1', { exact: true });
+    const labelText = editor.component(label).getByText('Hello', { exact: true });
     const captionBox = (await caption.boundingBox())!;
+    const misalignment = 4;
+    const dy = (await textTop(caption)) - (await textTop(labelText)) + misalignment;
 
     const start = await grab(page, editor.component(label));
-    await page.mouse.move(start.x, start.y + value(field, 'Top') - 15 - value(label, 'Top'), {
-      steps: 5,
-    });
+    await page.mouse.move(start.x, start.y + dy, { steps: 5 });
     await expect
       .poll(async () =>
         (await baselinePositions(editor.surface)).some(
@@ -264,7 +277,6 @@ test.describe('Screen section snap lines (real backend)', () => {
       .toBe(true);
 
     await release(page);
-    const labelText = editor.component(label).getByText('Hello', { exact: true });
     await expect.poll(() => textTop(labelText)).toBe(await textTop(caption));
   });
 });
