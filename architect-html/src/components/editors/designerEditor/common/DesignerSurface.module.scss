@@ -104,6 +104,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   &.horizontal {
     height: 1px;
   }
+
+  &.baseline {
+    background-color: var(--brand);
+  }
 }
 
 .resizeHandle {

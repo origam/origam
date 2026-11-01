@@ -32,7 +32,9 @@ import {
   Edge,
   findSnapLines,
   findSnapOffset,
+  noSnapTargets,
   SnapLine,
+  SnapTargets,
 } from '@editors/designerEditor/common/Snapping';
 import { EditorProperty } from '@editors/gridEditor/EditorProperty';
 import { FlowHandlerInput } from '@errors/runInFlowWithHandler';
@@ -245,24 +247,20 @@ export class DesignSurfaceState implements IComponentProvider {
     const container = this.canChangeParent(component)
       ? this.findComponentAt(mouseX, mouseY, component)
       : component.parent;
-    const targets = isSnapEnabled ? this.getSnapTargets(component, container) : [];
-    const offset = findSnapOffset(
-      { left, top, right: left + component.width, bottom: top + component.height },
-      targets,
-      allEdges,
-    );
+    const targets = isSnapEnabled ? this.getSnapTargets(component, container) : noSnapTargets;
+    const offset = findSnapOffset(boundsAt(component, left, top), targets, allEdges);
     this.updatePosition(component, left + offset.x, top + offset.y);
     this.snapLines = findSnapLines(boundsOf(component), targets, allEdges);
   }
 
-  private getSnapTargets(component: Component, container: Component | null): Bounds[] {
+  private getSnapTargets(component: Component, container: Component | null): SnapTargets {
     if (!container) {
-      return [];
+      return noSnapTargets;
     }
     const siblings = this.getChildren(container).filter(
       child => child.id !== component.id && child.isActive,
     );
-    return [innerBoundsOf(container), ...siblings.map(boundsOf)];
+    return { container: innerBoundsOf(container), siblings: siblings.map(boundsOf) };
   }
 
   private canChangeParent(component: Component) {
@@ -413,14 +411,16 @@ export class DesignSurfaceState implements IComponentProvider {
     this.resizeState.isSnapEnabled = isSnapEnabled;
     const { originalWidth, originalHeight, originalLeft, originalTop } = this.resizeState;
     const edges = resizedEdges[this.resizeState.handle];
-    const targets = isSnapEnabled ? this.getSnapTargets(component, component.parent) : [];
-    // Only the edges under the handle snap, so shifting the whole box by the delta is enough.
+    const targets = isSnapEnabled
+      ? this.getSnapTargets(component, component.parent)
+      : noSnapTargets;
     const offset = findSnapOffset(
       {
-        left: originalLeft + deltaX,
-        top: originalTop + deltaY,
-        right: originalLeft + originalWidth + deltaX,
-        bottom: originalTop + originalHeight + deltaY,
+        left: originalLeft + (edges.includes('left') ? deltaX : 0),
+        top: originalTop + (edges.includes('top') ? deltaY : 0),
+        right: originalLeft + originalWidth + (edges.includes('right') ? deltaX : 0),
+        bottom: originalTop + originalHeight + (edges.includes('bottom') ? deltaY : 0),
+        baseline: null,
       },
       targets,
       edges,
@@ -584,11 +584,17 @@ function idleResizeState(): ResizeState {
 }
 
 function boundsOf(component: Component): Bounds {
+  return boundsAt(component, component.absoluteLeft, component.absoluteTop);
+}
+
+function boundsAt(component: Component, left: number, top: number): Bounds {
+  const baseline = component.textBaseline;
   return {
-    left: component.absoluteLeft,
-    top: component.absoluteTop,
-    right: component.absoluteRight,
-    bottom: component.absoluteBottom,
+    left,
+    top,
+    right: left + component.width,
+    bottom: top + component.height,
+    baseline: baseline === null ? null : baseline - component.absoluteTop + top,
   };
 }
 
@@ -598,6 +604,7 @@ function innerBoundsOf(container: Component): Bounds {
     top: container.absoluteTop + container.childOffsetTop,
     right: container.absoluteRight,
     bottom: container.absoluteBottom,
+    baseline: null,
   };
 }
 
