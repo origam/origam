@@ -21,10 +21,18 @@ import { sectionLayer } from '@editors/designerEditor/common/Layers.ts';
 import { ReactElement } from 'react';
 import S from '@editors/designerEditor/common/designerComponents/Components.module.scss';
 import { Component } from '@editors/designerEditor/common/designerComponents/Component.tsx';
+import { Bounds } from '@editors/designerEditor/common/Snapping';
+
+const titleHeight = 23;
 
 export class GroupBox extends Component {
   get canHaveChildren(): boolean {
     return true;
+  }
+
+  get contentBounds(): Bounds {
+    const bounds = super.contentBounds;
+    return this.get('Text') ? { ...bounds, top: bounds.top + titleHeight } : bounds;
   }
 
   get zIndex(): number {

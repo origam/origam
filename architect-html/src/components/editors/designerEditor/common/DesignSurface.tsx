@@ -23,7 +23,8 @@ import { Component } from '@editors/designerEditor/common/designerComponents/Com
 import S from '@editors/designerEditor/common/DesignerSurface.module.scss';
 import { ResizeHandle } from '@editors/designerEditor/common/DesignSurfaceState';
 import { IDesignerEditorState } from '@editors/designerEditor/common/IDesignerEditorState';
-import { tabOrderLayer } from '@editors/designerEditor/common/Layers';
+import { snapLineLayer, tabOrderLayer } from '@editors/designerEditor/common/Layers';
+import { SnapLine } from '@editors/designerEditor/common/Snapping';
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
 import { isTypingTarget } from '@/utils/keyShortcuts';
 import cn from 'classnames';
@@ -85,14 +86,21 @@ export const DesignSurface: React.FC<{
       if (!surfaceRef.current) return;
       const point = toSurfacePoint(e);
       if (surfaceState.isResizing) {
-        surfaceState.updateResizing(point.x, point.y);
+        surfaceState.updateResizing(point.x, point.y, !e.altKey);
       } else if (surfaceState.isDragging) {
-        surfaceState.updateDragging(point.x, point.y);
+        surfaceState.updateDragging(point.x, point.y, !e.altKey);
+      }
+    };
+    const handleAltKey = (e: KeyboardEvent) => {
+      if (e.key === 'Alt') {
+        surfaceState.setSnapEnabled(!e.altKey);
       }
     };
     const handleMouseUp = (e: MouseEvent) => {
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('mouseup', handleMouseUp);
+      window.removeEventListener('keydown', handleAltKey);
+      window.removeEventListener('keyup', handleAltKey);
       if (!surfaceRef.current) return;
       if (surfaceState.dragState.didDrag || surfaceState.resizeState.didResize) {
         ignoreNextSurfaceClick.current = true;
@@ -103,6 +111,8 @@ export const DesignSurface: React.FC<{
     };
     window.addEventListener('mousemove', handleMouseMove);
     window.addEventListener('mouseup', handleMouseUp);
+    window.addEventListener('keydown', handleAltKey);
+    window.addEventListener('keyup', handleAltKey);
   };
 
   const handleComponentMouseDown = (e: React.MouseEvent, component: Component) => {
@@ -255,6 +265,18 @@ export const DesignSurface: React.FC<{
             )}
           </React.Fragment>
         ))}
+      {surfaceState.snapLines.map((line, index) => (
+        <div
+          key={index}
+          data-test-id="snap-line"
+          data-orientation={line.orientation}
+          data-kind={line.kind}
+          className={cn(S.snapLine, S[line.orientation], {
+            [S.baseline]: line.kind === 'baseline',
+          })}
+          style={getSnapLineStyle(line)}
+        />
+      ))}
       <Menu id={'TAB_LABEL_MENU'} animation="fade">
         <Item
           disabled={({ props }) => props.deleteDisabled}
@@ -267,3 +289,9 @@ export const DesignSurface: React.FC<{
     </div>
   );
 });
+
+function getSnapLineStyle(line: SnapLine): React.CSSProperties {
+  return line.orientation === 'vertical'
+    ? { left: line.position, top: line.from, height: line.to - line.from, zIndex: snapLineLayer }
+    : { left: line.from, top: line.position, width: line.to - line.from, zIndex: snapLineLayer };
+}
