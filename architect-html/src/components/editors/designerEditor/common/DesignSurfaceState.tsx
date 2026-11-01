@@ -26,6 +26,14 @@ import {
 import { ComponentType, IComponentData } from '@editors/designerEditor/common/ComponentType';
 import { Component } from '@editors/designerEditor/common/designerComponents/Component';
 import { toComponentRecursive } from '@editors/designerEditor/common/designerComponents/ControlToComponent';
+import {
+  allEdges,
+  Bounds,
+  Edge,
+  findSnapLines,
+  findSnapOffset,
+  SnapLine,
+} from '@editors/designerEditor/common/Snapping';
 import { EditorProperty } from '@editors/gridEditor/EditorProperty';
 import { FlowHandlerInput } from '@errors/runInFlowWithHandler';
 import { action, observable } from 'mobx';
@@ -42,6 +50,7 @@ export class DesignSurfaceState implements IComponentProvider {
   @observable public accessor selectedComponent: Component | null = null;
   @observable accessor dragState: DragState = idleDragState();
   @observable accessor resizeState: ResizeState = idleResizeState();
+  @observable accessor snapLines: SnapLine[] = [];
   @observable accessor isTabOrderMode = false;
   @observable private accessor tabOrderedIds: string[] = [];
   panel: Component = null as any; // will be assigned in loadComponents
@@ -98,14 +107,22 @@ export class DesignSurfaceState implements IComponentProvider {
       const draggedId = this.dragState.component.id;
       this.dragState.component = this.components.find(x => x.id === draggedId) ?? null;
       if (this.dragState.didDrag) {
-        this.updateDragging(this.dragState.lastX, this.dragState.lastY);
+        this.updateDragging(
+          this.dragState.lastX,
+          this.dragState.lastY,
+          this.dragState.isSnapEnabled,
+        );
       }
     }
     if (this.resizeState.component) {
       const resizedId = this.resizeState.component.id;
       this.resizeState.component = this.components.find(x => x.id === resizedId) ?? null;
       if (this.resizeState.didResize) {
-        this.updateResizing(this.resizeState.lastX, this.resizeState.lastY);
+        this.updateResizing(
+          this.resizeState.lastX,
+          this.resizeState.lastY,
+          this.resizeState.isSnapEnabled,
+        );
       }
     }
   }
@@ -206,8 +223,9 @@ export class DesignSurfaceState implements IComponentProvider {
   }
 
   @action
-  updateDragging(mouseX: number, mouseY: number) {
-    if (!this.dragState.component) return;
+  updateDragging(mouseX: number, mouseY: number, isSnapEnabled: boolean) {
+    const component = this.dragState.component;
+    if (!component) return;
 
     const dx = Math.round(mouseX - this.dragState.startX);
     const dy = Math.round(mouseY - this.dragState.startY);
@@ -221,10 +239,36 @@ export class DesignSurfaceState implements IComponentProvider {
     this.dragState.didDrag = true;
     this.dragState.lastX = mouseX;
     this.dragState.lastY = mouseY;
-    this.updatePosition(
-      this.dragState.component,
-      this.dragState.originalLeft + dx,
-      this.dragState.originalTop + dy,
+    this.dragState.isSnapEnabled = isSnapEnabled;
+    const left = this.dragState.originalLeft + dx;
+    const top = this.dragState.originalTop + dy;
+    const container = this.canChangeParent(component)
+      ? this.findComponentAt(mouseX, mouseY, component)
+      : component.parent;
+    const targets = isSnapEnabled ? this.getSnapTargets(component, container) : [];
+    const offset = findSnapOffset(
+      { left, top, right: left + component.width, bottom: top + component.height },
+      targets,
+      allEdges,
+    );
+    this.updatePosition(component, left + offset.x, top + offset.y);
+    this.snapLines = findSnapLines(boundsOf(component), targets, allEdges);
+  }
+
+  private getSnapTargets(component: Component, container: Component | null): Bounds[] {
+    if (!container) {
+      return [];
+    }
+    const siblings = this.getChildren(container).filter(
+      child => child.id !== component.id && child.isActive,
+    );
+    return [innerBoundsOf(container), ...siblings.map(boundsOf)];
+  }
+
+  private canChangeParent(component: Component) {
+    return (
+      component.data.type !== ComponentType.GroupBox &&
+      component.data.type !== ComponentType.AsPanel
     );
   }
 
@@ -243,6 +287,7 @@ export class DesignSurfaceState implements IComponentProvider {
       originalLeft: component.absoluteLeft,
       originalTop: component.absoluteTop,
       didDrag: false,
+      isSnapEnabled: true,
     };
   }
 
@@ -251,14 +296,12 @@ export class DesignSurfaceState implements IComponentProvider {
     const draggingComponent = this.dragState.component;
     const didDrag = this.dragState.didDrag;
     this.dragState = idleDragState();
+    this.snapLines = [];
     if (!draggingComponent || !didDrag) {
       return;
     }
 
-    if (
-      draggingComponent.data.type !== ComponentType.GroupBox &&
-      draggingComponent.data.type !== ComponentType.AsPanel
-    ) {
+    if (this.canChangeParent(draggingComponent)) {
       const targetParent = this.findComponentAt(mouseX, mouseY, draggingComponent);
       const previousParent = draggingComponent.parent;
       if (targetParent && draggingComponent.parent != targetParent) {
@@ -350,23 +393,40 @@ export class DesignSurfaceState implements IComponentProvider {
       originalLeft: component.absoluteLeft,
       originalTop: component.absoluteTop,
       didResize: false,
+      isSnapEnabled: true,
     };
   }
 
   @action
-  updateResizing(mouseX: number, mouseY: number) {
+  updateResizing(mouseX: number, mouseY: number, isSnapEnabled: boolean) {
     if (!this.resizeState.component || !this.resizeState.handle) return;
 
     const component = this.resizeState.component;
-    const deltaX = Math.round(mouseX - this.resizeState.startX);
-    const deltaY = Math.round(mouseY - this.resizeState.startY);
+    let deltaX = Math.round(mouseX - this.resizeState.startX);
+    let deltaY = Math.round(mouseY - this.resizeState.startY);
     if (!this.resizeState.didResize && deltaX === 0 && deltaY === 0) {
       return;
     }
     this.resizeState.didResize = true;
     this.resizeState.lastX = mouseX;
     this.resizeState.lastY = mouseY;
+    this.resizeState.isSnapEnabled = isSnapEnabled;
     const { originalWidth, originalHeight, originalLeft, originalTop } = this.resizeState;
+    const edges = resizedEdges[this.resizeState.handle];
+    const targets = isSnapEnabled ? this.getSnapTargets(component, component.parent) : [];
+    // Only the edges under the handle snap, so shifting the whole box by the delta is enough.
+    const offset = findSnapOffset(
+      {
+        left: originalLeft + deltaX,
+        top: originalTop + deltaY,
+        right: originalLeft + originalWidth + deltaX,
+        bottom: originalTop + originalHeight + deltaY,
+      },
+      targets,
+      edges,
+    );
+    deltaX += offset.x;
+    deltaY += offset.y;
 
     switch (this.resizeState.handle) {
       case 'right':
@@ -427,6 +487,7 @@ export class DesignSurfaceState implements IComponentProvider {
         component.height = Math.max(minComponentHeight, originalHeight + deltaY);
         break;
     }
+    this.snapLines = findSnapLines(boundsOf(component), targets, edges);
   }
 
   @action
@@ -434,6 +495,7 @@ export class DesignSurfaceState implements IComponentProvider {
     const resizedComponent = this.resizeState.component;
     const didResize = this.resizeState.didResize;
     this.resizeState = idleResizeState();
+    this.snapLines = [];
     if (!resizedComponent || !didResize) {
       return;
     }
@@ -472,6 +534,7 @@ interface DragState {
   originalLeft: number;
   originalTop: number;
   didDrag: boolean;
+  isSnapEnabled: boolean;
 }
 
 interface ResizeState {
@@ -486,6 +549,7 @@ interface ResizeState {
   originalLeft: number;
   originalTop: number;
   didResize: boolean;
+  isSnapEnabled: boolean;
 }
 
 function idleDragState(): DragState {
@@ -498,6 +562,7 @@ function idleDragState(): DragState {
     originalLeft: 0,
     originalTop: 0,
     didDrag: false,
+    isSnapEnabled: true,
   };
 }
 
@@ -514,6 +579,25 @@ function idleResizeState(): ResizeState {
     originalLeft: 0,
     originalTop: 0,
     didResize: false,
+    isSnapEnabled: true,
+  };
+}
+
+function boundsOf(component: Component): Bounds {
+  return {
+    left: component.absoluteLeft,
+    top: component.absoluteTop,
+    right: component.absoluteRight,
+    bottom: component.absoluteBottom,
+  };
+}
+
+function innerBoundsOf(container: Component): Bounds {
+  return {
+    left: container.absoluteLeft + container.childOffsetLeft,
+    top: container.absoluteTop + container.childOffsetTop,
+    right: container.absoluteRight,
+    bottom: container.absoluteBottom,
   };
 }
 
@@ -524,3 +608,14 @@ const minComponentWidth = 20;
 
 export type ResizeHandle =
   'top' | 'right' | 'bottom' | 'left' | 'topLeft' | 'topRight' | 'bottomRight' | 'bottomLeft';
+
+const resizedEdges: Record<ResizeHandle, Edge[]> = {
+  top: ['top'],
+  right: ['right'],
+  bottom: ['bottom'],
+  left: ['left'],
+  topLeft: ['top', 'left'],
+  topRight: ['top', 'right'],
+  bottomRight: ['bottom', 'right'],
+  bottomLeft: ['bottom', 'left'],
+};

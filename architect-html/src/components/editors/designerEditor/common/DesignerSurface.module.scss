@@ -92,6 +92,20 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   }
 }
 
+.snapLine {
+  position: absolute;
+  background-color: var(--foreground3);
+  pointer-events: none;
+
+  &.vertical {
+    width: 1px;
+  }
+
+  &.horizontal {
+    height: 1px;
+  }
+}
+
 .resizeHandle {
   position: absolute;
   width: 8px;
