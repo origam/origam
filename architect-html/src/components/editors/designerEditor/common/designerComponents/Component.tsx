@@ -26,6 +26,14 @@ import { action, observable } from 'mobx';
 import { Observer } from 'mobx-react-lite';
 import { ReactElement } from 'react';
 
+const captionHeight = 20;
+const lineHeight = 18;
+export const lineBaseline = 13;
+
+export function getCenteredLineBaseline(top: number, height: number) {
+  return top + Math.round((height - lineHeight) / 2) + lineBaseline;
+}
+
 export class Component {
   id: string;
   @observable.ref accessor parent: Component | null;
@@ -225,12 +233,25 @@ export class Component {
       case LabelPosition.Top:
         return {
           left: `${this.absoluteLeft}px`,
-          top: `${this.absoluteTop - 20}px`,
+          top: `${this.absoluteTop - captionHeight}px`,
         };
       case null:
       case undefined:
       case LabelPosition.None:
         return { display: 'none' };
+    }
+  }
+
+  get textBaseline(): number | null {
+    switch (this.labelPosition) {
+      case LabelPosition.Left:
+      case LabelPosition.Right:
+      case LabelPosition.Bottom:
+        return getCenteredLineBaseline(this.absoluteTop, captionHeight);
+      case LabelPosition.Top:
+        return getCenteredLineBaseline(this.absoluteTop - captionHeight, captionHeight);
+      default:
+        return null;
     }
   }
 
