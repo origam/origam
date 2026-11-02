@@ -129,6 +129,10 @@ export class TreeNode implements IEditorNode {
     );
   }
 
+  get canCreateLocalizationChildEntity() {
+    return this.itemType === 'Origam.Schema.EntityModel.TableMappingItem';
+  }
+
   get isDataEntityColumn() {
     return (
       this.itemType === 'Origam.Schema.EntityModel.FieldMappingItem' ||
