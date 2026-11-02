@@ -63,7 +63,21 @@ public class ModeledOpenApiDocumentGenerator(
         document.Components ??= new OpenApiComponents();
         document.Components.SecuritySchemes ??= new Dictionary<string, IOpenApiSecurityScheme>();
         document.Components.SecuritySchemes[ModeledOpenApiPageDocumenter.AuthenticationSchemeName] =
-            CreateAuthenticationScheme();
+            CreateAuthenticationScheme(openIddictConfig.PrivateApiAuthenticationMethod);
+        AuthenticationMethod additionalMethod =
+            openIddictConfig.PrivateApiAuthenticationMethod == AuthenticationMethod.Token
+                ? AuthenticationMethod.Cookie
+                : AuthenticationMethod.Token;
+        if (
+            openIddictConfig.PrivateApiAdditionalAuthenticationMethods.Values.Contains(
+                additionalMethod
+            )
+        )
+        {
+            document.Components.SecuritySchemes[
+                ModeledOpenApiPageDocumenter.AdditionalAuthenticationSchemeName
+            ] = CreateAuthenticationScheme(additionalMethod);
+        }
 
         foreach (AbstractPage page in pages)
         {
@@ -71,9 +85,9 @@ public class ModeledOpenApiDocumentGenerator(
         }
     }
 
-    private OpenApiSecurityScheme CreateAuthenticationScheme()
+    private static OpenApiSecurityScheme CreateAuthenticationScheme(AuthenticationMethod method)
     {
-        if (openIddictConfig.PrivateApiAuthentication == AuthenticationMethod.Token)
+        if (method == AuthenticationMethod.Token)
         {
             return new OpenApiSecurityScheme
             {

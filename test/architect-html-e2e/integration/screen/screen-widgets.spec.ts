@@ -134,6 +134,10 @@ class ScreenEditor {
     return this.surface.locator(`[class~="${control.id}"]`);
   }
 
+  tabOrderBadge(control: ApiControl): Locator {
+    return this.surface.getByTestId(`tab-order-badge-${control.id}`);
+  }
+
   async select(control: ApiControl): Promise<void> {
     await this.component(control).click({ position: { x: 3, y: 3 } });
     await this.page.getByText('Properties', { exact: true }).click();
@@ -382,6 +386,37 @@ test.describe('Screen editor widgets (real backend)', () => {
     expect(Number(property(savedLower, 'Top')?.value)).toBeGreaterThan(
       Number(property(savedUpper, 'Height')?.value),
     );
+  });
+
+  test('tab order mode leaves the SplitPanel sections in their docking order', async ({ page }) => {
+    await editor.openNew();
+    const splitPanel = await editor.drop('Widgets', 'SplitPanel', editor.surface, {
+      x: 60,
+      y: 60,
+    });
+    const lower = await editor.drop(
+      'Screen Sections',
+      DETAIL_SECTION,
+      editor.component(splitPanel),
+      { x: 40, y: 150 },
+    );
+    const upper = await editor.drop(
+      'Screen Sections',
+      MASTER_SECTION,
+      editor.component(splitPanel),
+      { x: 40, y: 5 },
+    );
+
+    await page.getByTestId('tab-order-button').click();
+    await expect(editor.tabOrderBadge(splitPanel)).toHaveText('0');
+    await expect(editor.tabOrderBadge(upper)).toHaveText('0.0');
+    await expect(editor.tabOrderBadge(lower)).toHaveText('0.1');
+    await expect(editor.tabOrderBadge(lower)).toHaveClass(/fixed/u);
+    await expect(editor.component(lower)).toHaveCSS('cursor', 'not-allowed');
+
+    await editor.component(lower).click({ position: { x: 3, y: 3 } });
+    await expect(editor.tabOrderBadge(lower)).toHaveText('0.1');
+    await expect(editor.tabOrderBadge(lower)).not.toHaveClass(/assigned/u);
   });
 
   test('a Panel alone is saved with the screen', async () => {

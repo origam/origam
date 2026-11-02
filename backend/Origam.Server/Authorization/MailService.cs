@@ -67,27 +67,15 @@ class MailService : IMailService
     private string GetDefaultResetPasswordSubject()
     {
         return languageConfig
-            .CultureItems.Where(cultname =>
-                cultname.CultureName.Equals(Thread.CurrentThread.CurrentUICulture.Name)
-            )
-            .Select(cultname =>
-            {
-                return cultname.ResetPasswordMailSubject;
-            })
-            .FirstOrDefault();
+            .FindCultureItem(Thread.CurrentThread.CurrentUICulture.Name)
+            .ResetPasswordMailSubject;
     }
 
     private string GetDefaultResetPasswordFileName()
     {
         return languageConfig
-            .CultureItems.Where(cultname =>
-                cultname.CultureName.Equals(Thread.CurrentThread.CurrentUICulture.Name)
-            )
-            .Select(cultname =>
-            {
-                return cultname.ResetPasswordMailBodyFileName;
-            })
-            .FirstOrDefault();
+            .FindCultureItem(Thread.CurrentThread.CurrentUICulture.Name)
+            .ResetPasswordMailBodyFileName;
     }
 
     public void SendPasswordResetToken(

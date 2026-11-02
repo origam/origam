@@ -309,6 +309,11 @@ public class TabService(
 
             object newValue = propertyParser.Parse(propertyToChange, change.Value, tab.Item);
             object oldValue = propertyToChange.GetValue(tab.Item);
+            // A setter may have side effects, e.g. a formatting rule renames itself.
+            if (Equals(oldValue, newValue))
+            {
+                continue;
+            }
             PropertyUtils.SetValue(propertyToChange, tab.Item, newValue);
             // Read back, the setter may store the parsed value converted, e.g. text as a number.
             if (!Equals(oldValue, propertyToChange.GetValue(tab.Item)))

@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.Collections;
 using System.ComponentModel;
+using System.Drawing;
 using System.Globalization;
 using System.Reflection;
 using Origam.Architect.Server.Attributes;
@@ -41,6 +42,8 @@ public class EditorPropertyFactory
     private const string LookupTypeName = "looukup";
     private const string UntypedTypeName = "untyped";
     private const string FieldBindingTypeName = "fieldBinding";
+    private const string ColorTypeName = "color";
+    private const string CollectionTypeName = "collection";
 
     public EditorProperty CreateIfMarkedAsEditable(PropertyInfo property, ISchemaItem item)
     {
@@ -54,6 +57,11 @@ public class EditorPropertyFactory
 
     public EditorProperty Create(PropertyInfo property, object instance)
     {
+        if (PropertyUtils.IsCollection(property))
+        {
+            return CreateReadOnly(property, CollectionTypeName, value: null);
+        }
+
         string category = property.GetAttribute<CategoryAttribute>()?.Category;
         string description = property.GetAttribute<DescriptionAttribute>()?.Description;
 
@@ -73,6 +81,7 @@ public class EditorPropertyFactory
         {
             _ when editedAsText || stringLookup => LookupTypeName,
             _ when untyped => UntypedTypeName,
+            _ when property.PropertyType == typeof(Color) => ColorTypeName,
             _ => ToPropertyTypeName(property),
         };
 
@@ -165,6 +174,10 @@ public class EditorPropertyFactory
         {
             return dataConstant.XmlValue;
         }
+        if (value is Color color)
+        {
+            return ToColorText(color);
+        }
         if (value is ISchemaItem schemaItem && property.GetSetMethod() == null)
         {
             return schemaItem.ToString();
@@ -173,18 +186,92 @@ public class EditorPropertyFactory
         {
             return persistentObject.Id;
         }
-        if (value is ICollection collection)
-        {
-            var editorValue = new List<object>();
-            foreach (var item in collection)
-            {
-                editorValue.Add(item is IPersistent persistentValue ? persistentValue.Id : value);
-            }
-
-            return editorValue;
-        }
 
         return value;
+    }
+
+    private static EditorProperty CreateReadOnly(PropertyInfo property, string type, object value)
+    {
+        return new EditorProperty(
+            name: property.Name,
+            controlPropertyId: null,
+            type: type,
+            value: value,
+            dropDownValues: [],
+            category: property.GetAttribute<CategoryAttribute>()?.Category,
+            description: property.GetAttribute<DescriptionAttribute>()?.Description,
+            readOnly: true
+        );
+    }
+
+    public List<CollectionMember> ToCollectionMembers(IEnumerable collection)
+    {
+        if (collection == null)
+        {
+            return [];
+        }
+
+        IEnumerable<CollectionMember> members = collection
+            .Cast<object>()
+            .Select(ToCollectionMember);
+        return collection is IDictionary
+            ? members.OrderBy(member => member.Name, StringComparer.OrdinalIgnoreCase).ToList()
+            : members.ToList();
+    }
+
+    private CollectionMember ToCollectionMember(object member)
+    {
+        List<EditorProperty> properties = PropertyUtils
+            .GetVisibleProperties(member.GetType())
+            .Where(PropertyUtils.CanBeEdited)
+            .Select(property => CreateMemberProperty(property, member))
+            .ToList();
+        return new CollectionMember(Name: GetMemberName(member), Properties: properties);
+    }
+
+    private EditorProperty CreateMemberProperty(PropertyInfo property, object member)
+    {
+        if (PropertyUtils.IsCollection(property))
+        {
+            return CreateReadOnly(
+                property,
+                CollectionTypeName,
+                ToCollectionMembers((IEnumerable)property.GetValue(member))
+            );
+        }
+
+        if (property.PropertyType.IsAssignableTo(typeof(ISchemaItem)))
+        {
+            return CreateReadOnly(
+                property,
+                type: "string",
+                value: property.GetValue(member)?.ToString()
+            );
+        }
+
+        return Create(property, member).AsReadOnly();
+    }
+
+    private static string GetMemberName(object member)
+    {
+        return member switch
+        {
+            DictionaryEntry entry => entry.Key.ToString(),
+            ISchemaItem schemaItem => schemaItem.Name,
+            _ => member.ToString(),
+        };
+    }
+
+    // ARGB zero means no color.
+    private static string ToColorText(Color color)
+    {
+        if (color.ToArgb() == 0)
+        {
+            return "";
+        }
+
+        // Lower case as the browser color picker reports it.
+        return $"#{color.R:x2}{color.G:x2}{color.B:x2}";
     }
 
     private (DropDownValue[] Values, TypeConverter Converter) GetAvailableValues(

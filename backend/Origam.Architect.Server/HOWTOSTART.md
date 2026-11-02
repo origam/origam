@@ -5,7 +5,7 @@ Build the project.
 
 Create OrigamSettings.config file to
 ```
-backend\Origam.Architect.Server\bin\Debug\net8.0
+backend\Origam.Architect.Server\bin\Debug\net10.0
 ```
 Content must contain the following, but make sure you set the correct value for **ModelSourceControlLocation**
 ```xml
@@ -38,7 +38,7 @@ Content must contain the following, but make sure you set the correct value for 
 ```
 Then we have to configure logging by adding the **log4net.config** to the same folder
 ```
-backend\Origam.Architect.Server\bin\Debug\net8.0\log4net.config
+backend\Origam.Architect.Server\bin\Debug\net10.0\log4net.config
 ```
 You can customize the file however you want. Here is a basic logging setup
 ```xml

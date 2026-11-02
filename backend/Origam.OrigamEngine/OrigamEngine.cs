@@ -20,7 +20,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Linq;
 using System.Security.Principal;
 using Origam.Extensions;
 using Origam.Schema;
@@ -115,8 +114,8 @@ public class OrigamEngine
         log.Info("Connecting ORIGAM Runtime.");
         AppDomain.CurrentDomain.SetPrincipalPolicy(PrincipalPolicy.NoPrincipal);
         SecurityManager.SetServerIdentity();
-        SetActiveConfiguration(configName);
-        var settings = ConfigurationManager.GetActiveConfiguration();
+        var settings = ConfigurationManager.GetConfiguration(configName);
+        ConfigurationManager.SetActiveConfiguration(settings);
         if (customServiceFactory != null)
         {
             serviceFactory = customServiceFactory;
@@ -158,34 +157,6 @@ public class OrigamEngine
             RestartTimer.Start();
         }
         log.Info("ORIGAM Runtime Connected");
-    }
-
-    private static void SetActiveConfiguration(string configName = "")
-    {
-        var configurations = ConfigurationManager.GetAllConfigurations();
-        var origamSettings = GetSettings(configName, configurations);
-        ConfigurationManager.SetActiveConfiguration(origamSettings);
-    }
-
-    private static OrigamSettings GetSettings(
-        string configName,
-        OrigamSettingsCollection configurations
-    )
-    {
-        if (string.IsNullOrEmpty(configName))
-        {
-            if (configurations.Count != 1)
-            {
-                throw new Exception(ResourceUtils.GetString("ErrorOnlyOneOrigamSettings"));
-            }
-            return configurations[0];
-        }
-        return configurations
-                .Cast<OrigamSettings>()
-                .FirstOrDefault(settings => settings.Name == configName)
-            ?? throw new ArgumentException(
-                $"Configuration {configName} not found in settings file."
-            );
     }
 
     public static void SetRestart()

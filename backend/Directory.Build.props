@@ -1,5 +1,7 @@
 ﻿<Project>
   <PropertyGroup>
+    <!-- Keep dependency auditing scoped to direct package references. -->
+    <NuGetAuditMode Condition="'$(NuGetAuditMode)' == ''">direct</NuGetAuditMode>
     <!-- 
       Enabiling origam-utils causes the tests on github to fail with 
       System.PlatformNotSupportedException: System.Data.SqlClient is not supported on this platform.
@@ -32,20 +34,20 @@
         <EnableNETAnalyzers>true</EnableNETAnalyzers>
         <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-        <CSharpier_FrameworkVersion>net8.0</CSharpier_FrameworkVersion>
+        <CSharpier_FrameworkVersion>net10.0</CSharpier_FrameworkVersion>
         <CSharpier_Check>false</CSharpier_Check>
       </PropertyGroup>
 
       <ItemGroup>
         <PackageReference
           Include="Roslynator.Analyzers"
-          Version="5.0.0"
+          Version="5.0.1"
           PrivateAssets="all"
           IncludeAssets="build;analyzers;buildtransitive"
         />
         <PackageReference
           Include="Roslynator.Formatting.Analyzers"
-          Version="5.0.0"
+          Version="5.0.1"
           PrivateAssets="all"
           IncludeAssets="build;analyzers;buildtransitive"
         />
@@ -57,7 +59,7 @@
         />
         <PackageReference
           Include="Meziantou.Analyzer"
-          Version="3.0.292"
+          Version="3.0.315"
           Condition="'$(DisableMeziantouAnalyzer)' != 'true'"
           PrivateAssets="all"
           IncludeAssets="build;analyzers;buildtransitive"

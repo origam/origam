@@ -17,9 +17,11 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { RootStoreContext } from '@/main.tsx';
-import { PropertyValue } from '@api/IArchitectApi';
+import { RootStoreContext, T } from '@/main.tsx';
+import { ICollectionMember, PropertyValue } from '@api/IArchitectApi';
 import { EditorProperty } from '@editors/gridEditor/EditorProperty.ts';
+import { CollectionEditorDialog } from '@editors/propertyEditor/CollectionEditorDialog.tsx';
+import { ColorPropertyInput } from '@editors/propertyEditor/ColorPropertyInput.tsx';
 import { IPropertyManager } from '@editors/propertyEditor/IPropertyManager.tsx';
 import { FilterableSelect } from '@editors/propertyEditor/FilterableSelect.tsx';
 import { NumericPropertyInput } from '@editors/propertyEditor/NumericPropertyInput.tsx';
@@ -31,8 +33,8 @@ import S from '@editors/propertyEditor/SinglePropertyEditor.module.scss';
 import { UntypedPropertyInput } from '@editors/propertyEditor/UntypedPropertyInput.tsx';
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler.ts';
 import { observer } from 'mobx-react-lite';
-import { useContext } from 'react';
-import { VscCopy } from 'react-icons/vsc';
+import { ReactNode, useContext, useState } from 'react';
+import { VscCopy, VscEllipsis } from 'react-icons/vsc';
 
 const NO_WHITESPACE_PROPERTIES = new Set(['Name', 'MappedObjectName']);
 const stripWhitespace = (value: string) => value.replace(/\s+/gu, '');
@@ -40,12 +42,27 @@ const stripWhitespace = (value: string) => value.replace(/\s+/gu, '');
 const SinglePropertyEditor = observer(
   (props: { property: EditorProperty; propertyManager: IPropertyManager; compact?: boolean }) => {
     const rootStore = useContext(RootStoreContext);
+    const [isOpeningCollection, setIsOpeningCollection] = useState(false);
 
     const handleCopyToClipboard = async () => {
       if (props.property.value != null) {
         await navigator.clipboard.writeText(props.property.value.toString());
       }
     };
+
+    const withCopyButton = (control: ReactNode) => (
+      <div className={S.inputWithCopyButton}>
+        <button
+          type="button"
+          className={S.copyButton}
+          onClick={handleCopyToClipboard}
+          title={T('Copy to clipboard', 'property_copy_to_clipboard')}
+        >
+          <VscCopy />
+        </button>
+        {control}
+      </div>
+    );
 
     const onValueChange = (property: EditorProperty, value: PropertyValue) => {
       runInFlowWithHandler(rootStore.errorDialogController)({
@@ -57,7 +74,54 @@ const SinglePropertyEditor = observer(
       });
     };
 
+    const openCollectionEditor = (property: EditorProperty) => {
+      const propertyManager = props.propertyManager;
+      setIsOpeningCollection(true);
+      runInFlowWithHandler(rootStore.errorDialogController)({
+        generator: function* () {
+          try {
+            const members = propertyManager.loadCollectionMembers
+              ? yield* propertyManager.loadCollectionMembers(property)
+              : ((property.value as ICollectionMember[] | null) ?? []);
+            const closeDialog = rootStore.dialogStack.pushDialog(
+              '',
+              <CollectionEditorDialog
+                propertyName={property.name}
+                members={members}
+                onClose={() => closeDialog()}
+              />,
+            );
+          } finally {
+            setIsOpeningCollection(false);
+          }
+        },
+      });
+    };
+
     const renderControl = (property: EditorProperty) => {
+      if (property.type === 'collection') {
+        return (
+          <div className={S.inputWithCopyButton}>
+            <input
+              type="text"
+              disabled
+              data-test-id={`property-input-${property.name}`}
+              value={T('(Collection)', 'property_collection')}
+            />
+            <button
+              type="button"
+              className={S.collectionButton}
+              disabled={isOpeningCollection}
+              onClick={() => openCollectionEditor(property)}
+              title={T('Show the items', 'property_collection_open')}
+              data-test-id={`property-collection-${property.name}`}
+            >
+              <VscEllipsis />
+            </button>
+          </div>
+        );
+      }
+
       if (
         property.type === 'enum' ||
         property.type === 'looukup' ||
@@ -111,68 +175,47 @@ const SinglePropertyEditor = observer(
       }
 
       if (property.type === 'integer' || property.type === 'float') {
-        return (
-          <div className={S.inputWithCopyButton}>
-            <button
-              type="button"
-              className={S.copyButton}
-              onClick={handleCopyToClipboard}
-              title="Copy to clipboard"
-            >
-              <VscCopy />
-            </button>
-            <NumericPropertyInput
-              property={property}
-              type={property.type}
-              onChange={value => onValueChange(property, value)}
-            />
-          </div>
+        return withCopyButton(
+          <NumericPropertyInput
+            property={property}
+            type={property.type}
+            onChange={value => onValueChange(property, value)}
+          />,
+        );
+      }
+
+      if (property.type === 'color') {
+        return withCopyButton(
+          <ColorPropertyInput
+            property={property}
+            onChange={value => onValueChange(property, value)}
+          />,
         );
       }
 
       if (property.type === 'untyped') {
-        return (
-          <div className={S.inputWithCopyButton}>
-            <button
-              type="button"
-              className={S.copyButton}
-              onClick={handleCopyToClipboard}
-              title="Copy to clipboard"
-            >
-              <VscCopy />
-            </button>
-            <UntypedPropertyInput
-              property={property}
-              onChange={value => onValueChange(property, value)}
-            />
-          </div>
+        return withCopyButton(
+          <UntypedPropertyInput
+            property={property}
+            onChange={value => onValueChange(property, value)}
+          />,
         );
       }
 
-      return (
-        <div className={S.inputWithCopyButton}>
-          <button
-            type="button"
-            className={S.copyButton}
-            onClick={handleCopyToClipboard}
-            title="Copy to clipboard"
-          >
-            <VscCopy />
-          </button>
-          <input
-            type="text"
-            disabled={property.readOnly}
-            data-test-id={`property-input-${property.name}`}
-            value={property.value != null ? String(property.value) : ''}
-            onChange={e => {
-              const next = NO_WHITESPACE_PROPERTIES.has(property.name)
-                ? stripWhitespace(e.target.value)
-                : e.target.value;
-              onValueChange(property, next);
-            }}
-            title={property.value != null ? property.value.toString() : ''}
-          />
-        </div>
+      return withCopyButton(
+        <input
+          type="text"
+          disabled={property.readOnly}
+          data-test-id={`property-input-${property.name}`}
+          value={property.value != null ? String(property.value) : ''}
+          onChange={e => {
+            const next = NO_WHITESPACE_PROPERTIES.has(property.name)
+              ? stripWhitespace(e.target.value)
+              : e.target.value;
+            onValueChange(property, next);
+          }}
+          title={property.value != null ? property.value.toString() : ''}
+        />,
       );
     };
 

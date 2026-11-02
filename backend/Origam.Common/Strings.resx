@@ -183,4 +183,10 @@ under certain conditions.</value>
   <data name="ArrayCannotBeConverted" xml:space="preserve">
     <value>Array cannot be converted to string.</value>
   </data>
+  <data name="Configuration_NotFound" xml:space="preserve">
+    <value>Configuration not found.</value>
+  </data>
+  <data name="Configuration_ExactlyOneRequired" xml:space="preserve">
+    <value>The settings file must contain exactly one configuration when no configuration name is specified.</value>
+  </data>
 </root>

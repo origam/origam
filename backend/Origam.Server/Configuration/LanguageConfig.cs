@@ -33,8 +33,11 @@ namespace Origam.Server.Configuration;
 public class LanguageConfig
 {
     public RequestCulture DefaultCulture { get; }
-    public CultureInfo[] AllowedCultures { get; }
+
+    // the configured cultures are the only ones a request may resolve to and the only ones offered
+    public CultureInfo[] SupportedCultures { get; }
     public CultureItem[] CultureItems { get; }
+    public bool AcceptLanguageHeaderEnabled { get; }
 
     public LanguageConfig(IConfiguration configuration)
     {
@@ -46,20 +49,50 @@ public class LanguageConfig
             throw new Exception("Default culture in \"LanguageConfig\" cannot be empty");
         }
         DefaultCulture = new RequestCulture(defaultCulture);
-
         CultureItems = languageSection
             .GetSectionOrThrow("Allowed")
             .GetChildren()
             .Select(CultureItem.Create)
             .ToArray();
-        var defaultCultureExists = CultureItems.Any(item => item.CultureName == defaultCulture);
+        var defaultCultureExists = CultureItems.Any(item =>
+            item.CultureName == DefaultCulture.Culture.Name
+        );
         if (!defaultCultureExists)
         {
             throw new Exception(
                 $"The default culture \"{defaultCulture}\" is not among the allowed cultures in the \"LanguageConfig\" section."
             );
         }
-        AllowedCultures = CultureItems.Select(item => new CultureInfo(item.CultureName)).ToArray();
+        AcceptLanguageHeaderEnabled = languageSection.GetValue<bool>("UseAcceptLanguageHeader");
+        SupportedCultures = CultureItems
+            .Select(item => new CultureInfo(item.CultureName))
+            .ToArray();
+    }
+
+    public CultureItem FindCultureItem(string cultureName)
+    {
+        return TryFindCultureItem(cultureName)
+            ?? CultureItems.FirstOrDefault(item => item.CultureName == DefaultCulture.Culture.Name);
+    }
+
+    // the requested culture may be one nobody configured ("fr-CA") or no culture at all ("*" in an
+    // Accept-Language header), so the exact name is tried first and then the language
+    public CultureItem TryFindCultureItem(string cultureName)
+    {
+        CultureInfo culture;
+        try
+        {
+            culture = new CultureInfo(cultureName ?? string.Empty);
+        }
+        catch (CultureNotFoundException)
+        {
+            return null;
+        }
+        return CultureItems.FirstOrDefault(item => item.CultureName == culture.Name)
+            ?? CultureItems.FirstOrDefault(item =>
+                new CultureInfo(item.CultureName).TwoLetterISOLanguageName
+                == culture.TwoLetterISOLanguageName
+            );
     }
 }
 
@@ -69,7 +102,7 @@ public class CultureItem
     {
         return new CultureItem
         {
-            CultureName = section.GetStringOrThrow("Culture"),
+            CultureName = new CultureInfo(section.GetStringOrThrow("Culture")).Name,
             Caption = section.GetStringOrThrow("Caption"),
             ResetPasswordMailSubject = section["ResetPasswordMailSubject"],
             ResetPasswordMailBodyFileName = section["ResetPasswordMailBodyFileName"],

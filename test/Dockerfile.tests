@@ -1,18 +1,14 @@
 ARG SERVER_IMAGE=origam-server-linux
+FROM mcr.microsoft.com/dotnet/sdk:10.0-noble AS dotnet-sdk
+
 FROM ${SERVER_IMAGE}
 
 # Ensure we run privileged steps as root
 USER root
 SHELL ["/bin/bash", "-c"]
 
-# INSTALL dotnet SDK (because we will run dotnet test later on)
-RUN apt-get -qq update \
- && apt-get -qq install -y wget gpg apt-transport-https sudo \
- && wget https://packages.microsoft.com/config/debian/12/packages-microsoft-prod.deb -O /tmp/packages-microsoft-prod.deb \
- && dpkg -i /tmp/packages-microsoft-prod.deb \
- && rm /tmp/packages-microsoft-prod.deb \
- && apt-get -qq update \
- && apt-get -qq install -y dotnet-sdk-8.0 
+# Install the SDK used by dotnet test from the matching Ubuntu-based image.
+COPY --from=dotnet-sdk /usr/share/dotnet /usr/share/dotnet
 
 # Install Chrome (modern keyring flow; no apt-key)
 RUN set -eux; \

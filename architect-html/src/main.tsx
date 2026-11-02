@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import App from '@/App';
 import { AiAgentApp } from '@/ai/AiAgentApp';
+import '@/fonts/ibmPlexSans.css';
 import '@/index.css';
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
 import { RootStore } from '@stores/RootStore';

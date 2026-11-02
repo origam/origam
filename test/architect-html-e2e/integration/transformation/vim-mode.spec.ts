@@ -27,6 +27,7 @@ const TRANSFORMATION = 'SD_Empty';
 const FIRST_LINE = '<?xml version="1.0" encoding="UTF-8"?>';
 
 async function enableVimMode(page: Page) {
+  await page.getByTestId('topbar-menu').click();
   await page.getByTestId('topbar-settings').click();
   const vimCheckbox = page.getByRole('checkbox', { name: 'Vim mode' });
   if (!(await vimCheckbox.isChecked())) {

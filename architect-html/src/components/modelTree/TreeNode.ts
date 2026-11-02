@@ -129,6 +129,10 @@ export class TreeNode implements IEditorNode {
     );
   }
 
+  get canCreateLocalizationChildEntity() {
+    return this.itemType === 'Origam.Schema.EntityModel.TableMappingItem';
+  }
+
   get isDataEntityColumn() {
     return (
       this.itemType === 'Origam.Schema.EntityModel.FieldMappingItem' ||
@@ -186,8 +190,19 @@ export class TreeNode implements IEditorNode {
   }
 
   *toggle() {
-    this.rootStore.uiState.setExpanded(this.id, !this.isExpanded);
+    if (this.isExpanded) {
+      this.collapse();
+    } else {
+      this.rootStore.uiState.setExpanded(this.id, true);
+    }
     yield;
+  }
+
+  private collapse() {
+    this.rootStore.uiState.setExpanded(this.id, false);
+    for (const child of this.children) {
+      child.collapse();
+    }
   }
 
   *delete() {

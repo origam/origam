@@ -24,6 +24,7 @@ import {
   IApiTabData,
   IApiTreeNode,
   IArchitectApi,
+  ICollectionMember,
   ICreateLookupRequest,
   ICreateWizardResult,
   IDatabaseResultResponse,
@@ -68,6 +69,10 @@ export class ArchitectApi implements IArchitectApi {
 
   async getPackages(): Promise<IPackagesInfo> {
     return (await this.http.get('/Package/GetAll')).data;
+  }
+
+  async rebuildLocalizationFiles(): Promise<string[]> {
+    return (await this.http.post('/Localization/Rebuild')).data;
   }
 
   async createPackage(name: string): Promise<IPackage> {
@@ -243,6 +248,18 @@ export class ArchitectApi implements IArchitectApi {
       await this.http.post(`/PropertyEditor/Update`, {
         schemaItemId,
         changes,
+      })
+    ).data;
+  }
+
+  async getCollectionMembers(
+    schemaItemId: string,
+    propertyName: string,
+  ): Promise<ICollectionMember[]> {
+    return (
+      await this.http.post(`/PropertyEditor/GetCollection`, {
+        schemaItemId,
+        propertyName,
       })
     ).data;
   }

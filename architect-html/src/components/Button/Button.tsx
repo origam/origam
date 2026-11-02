@@ -48,7 +48,17 @@ const Button = ({
         [S.animate]: isAnimated,
         [S.compact]: isCompact,
       })}
-      onClick={onClick}
+      role="button"
+      tabIndex={isDisabled ? -1 : 0}
+      onClick={() => {
+        if (!isDisabled) onClick();
+      }}
+      onKeyDown={event => {
+        if (!isDisabled && (event.key === 'Enter' || event.key === ' ')) {
+          event.preventDefault();
+          event.currentTarget.click();
+        }
+      }}
       aria-disabled={isDisabled}
       data-test-id={dataTestId}
     >

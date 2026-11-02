@@ -110,6 +110,10 @@ export default defineConfig({
         target: proxyTargetHttps,
         secure: false,
       },
+      '/Localization': {
+        target: 'http://localhost:5003',
+        secure: false,
+      },
       '/wizards': {
         target: proxyTargetHttps,
         secure: false,

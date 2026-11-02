@@ -18,7 +18,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { expect, test } from '@playwright/test';
+import { activatePackage } from '@support/activatePackage';
 import { plantBrokenGroupReference } from '@support/modelDefects';
+import { openConstants } from '@support/modelTree';
 import { reloadBackend, resetBackend } from '@support/resetBackend';
 
 // One of the tests damages the model files on disk, so they must not overlap.
@@ -37,6 +39,34 @@ test.describe('Search virtual entity test', () => {
     await expect(page.locator('tbody')).toContainText('IActive');
     await page.getByRole('cell', { name: 'Virtual Entity' }).first().click();
     await expect(page.locator('tbody')).toContainText('Virtual Entity');
+  });
+
+  test('closing search results activates the last remaining editor', async ({ page, request }) => {
+    await activatePackage(request, 'Root');
+    await openConstants(page);
+
+    await page.getByTestId('tree-node-DefaultMailWorkQueueName').dblclick();
+    await expect(
+      page.getByText('Data Constant: DefaultMailWorkQueueName', {
+        exact: true,
+      }),
+    ).toBeVisible();
+    await page.getByTestId('tree-node-DefaultNotificationTemplate').dblclick();
+    const lastEditorHeader = page.getByText('Data Constant: DefaultNotificationTemplate', {
+      exact: true,
+    });
+    await expect(lastEditorHeader).toBeVisible();
+
+    await page.getByTestId('topbar-search-input').fill('IActive');
+    const searchTab = page.getByTestId('tab-Search: IActive');
+    await expect(searchTab).toHaveClass(/activeTab/);
+    await expect(lastEditorHeader).toBeHidden();
+
+    await page.getByTestId('tab-close-Search: IActive').click();
+
+    await expect(searchTab).toHaveCount(0);
+    await expect(page.getByTestId('tab-DefaultNotificationTemplate')).toHaveClass(/activeTab/);
+    await expect(lastEditorHeader).toBeVisible();
   });
 
   test('finds items whose group is missing', async ({ request }) => {

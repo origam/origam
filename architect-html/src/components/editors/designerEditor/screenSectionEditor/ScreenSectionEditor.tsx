@@ -22,6 +22,7 @@ import SaveButtonHOC from '@/components/SaveButtonHOC/SaveButtonHOC';
 import { RootStoreContext, T } from '@/main';
 import { DesignerWarnings } from '@editors/designerEditor/common/DesignerWarnings';
 import { DesignSurface } from '@editors/designerEditor/common/DesignSurface';
+import { TabOrderButton } from '@editors/designerEditor/common/TabOrderButton';
 import S from '@editors/designerEditor/screenSectionEditor/ScreenSectionEditor.module.scss';
 import { ScreenSectionEditorState } from '@editors/designerEditor/screenSectionEditor/ScreenSectionEditorState';
 import { SectionToolbox } from '@editors/designerEditor/screenSectionEditor/SectionToolbox';
@@ -56,7 +57,12 @@ export const ScreenSectionEditor = observer(
               'screen_section_editor_title',
               designerState.sectionToolbox.toolboxState.name,
             )}
-            buttons={<SaveButtonHOC />}
+            buttons={
+              <>
+                <TabOrderButton surface={designerState.surface} />
+                <SaveButtonHOC />
+              </>
+            }
             body={<DesignerWarnings designerState={designerState} />}
           />
         </div>

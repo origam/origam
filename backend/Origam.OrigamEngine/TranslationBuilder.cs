@@ -32,12 +32,60 @@ using Origam.Workbench.Services;
 
 namespace Origam.OrigamEngine;
 
-/// <summary>
-/// Summary description for TranslationBuilder.
-/// </summary>
 public static class TranslationBuilder
 {
-    public static void Build(
+    public static readonly char LanguageSeparator = ',';
+    private static readonly string FileNameSeparator = "-";
+    private static readonly string LocalizationFileExtension = ".xml";
+    private static readonly string ParentDirectory = "..";
+    private static readonly string DefaultLocalizationDirectory = "l10n";
+
+    public static string[] ParseLanguages(string languages)
+    {
+        return (languages ?? string.Empty)
+            .Split(LanguageSeparator)
+            .Select(language => language.Trim())
+            .Where(locale => locale.Length > 0)
+            .ToArray();
+    }
+
+    public static IReadOnlyList<string> BuildFiles(
+        OrigamSettings settings,
+        string packageName,
+        Guid packageId
+    )
+    {
+        var locales = ParseLanguages(settings.TranslationBuilderLanguages);
+        var files = new List<string>();
+        foreach (string locale in locales)
+        {
+            string filename =
+                $"{packageName}{FileNameSeparator}{locale}{LocalizationFileExtension}";
+            string outputPath = Path.Combine(
+                settings.ModelSourceControlLocation,
+                ParentDirectory,
+                DefaultLocalizationDirectory,
+                filename
+            );
+            if (!string.IsNullOrEmpty(settings.LocalizationFolder))
+            {
+                outputPath = Path.Combine(settings.LocalizationFolder, filename);
+            }
+            Directory.CreateDirectory(Path.GetDirectoryName(Path.GetFullPath(outputPath)));
+            using var currentTranslations = File.Exists(outputPath)
+                ? new LocalizationCache(outputPath)
+                : null;
+            using var output = new MemoryStream();
+            Build(output, currentTranslations, locale, packageId);
+            using var localizationFile = new FileStream(outputPath, FileMode.Create);
+            output.Seek(0, SeekOrigin.Begin);
+            output.WriteTo(localizationFile);
+            files.Add(filename);
+        }
+        return files;
+    }
+
+    private static void Build(
         Stream stream,
         LocalizationCache currentTranslations,
         string locale,

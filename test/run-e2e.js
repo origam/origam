@@ -26,8 +26,8 @@ env.PUPPETEER_EXECUTABLE_PATH ||= [
 ].find(existsSync);
 env.ORIGAM_E2E_UTILS_PATH ||= [
   join(__dirname, "server_bin/origam-utils.dll"),
-  join(__dirname, "../backend/Origam.Server/bin/Debug/net8.0/origam-utils.dll"),
-  join(__dirname, "../backend/Origam.Server/bin/Release/net8.0/origam-utils.dll"),
+  join(__dirname, "../backend/Origam.Server/bin/Debug/net10.0/origam-utils.dll"),
+  join(__dirname, "../backend/Origam.Server/bin/Release/net10.0/origam-utils.dll"),
 ].find(existsSync);
 
 let exitCode = 0;

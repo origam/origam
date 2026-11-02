@@ -39,7 +39,7 @@ const newSubmenuItems = [
   'Dropdown Action',
 ];
 
-test.describe('Entity context menu New submenu (real backend)', () => {
+test.describe('Entity context menu (real backend)', () => {
   test.beforeEach(async ({ request }) => {
     await resetBackend(request);
   });
@@ -60,6 +60,28 @@ test.describe('Entity context menu New submenu (real backend)', () => {
 
     for (const caption of newSubmenuItems) {
       await expect(newSubmenu.getByRole('menuitem', { name: caption, exact: true })).toBeVisible();
+    }
+  });
+
+  test('an ancestor entity shows a context menu with all items disabled', async ({ page }) => {
+    await page.goto('/');
+
+    await page.getByTestId('tree-toggle-Data').click();
+    await page.getByTestId('tree-toggle-Entities').click();
+    await page.getByTestId('tree-toggle-Dimensions').click();
+    await page.getByTestId('tree-toggle-Dimension1').click();
+    await page.getByTestId('tree-toggle-_Ancestors').click();
+    await page.getByTestId('tree-node-IDimension').first().click({ button: 'right' });
+
+    const menu = page.getByRole('menu');
+    await expect(menu).toBeVisible();
+    const items = menu.getByRole('menuitem', { includeHidden: true });
+    await expect(items).not.toHaveCount(0);
+    for (const item of await items.all()) {
+      await expect(item).toHaveAttribute('aria-disabled', 'true');
+    }
+    for (const action of ['edit', 'delete', 'documentation', 'references', 'dependencies']) {
+      await expect(menu.getByTestId(`tree-menu-${action}`)).toHaveCount(0);
     }
   });
 });

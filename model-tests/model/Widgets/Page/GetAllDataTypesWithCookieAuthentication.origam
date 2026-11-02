@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ap="http://schemas.origam.com/Origam.Schema.GuiModel.AbstractPage/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:xdp="http://schemas.origam.com/Origam.Schema.GuiModel.XsltDataPage/6.2.0">
+  <xdp:Page
+    asi:abstract="false"
+    xdp:allowCustomFilters="false"
+    ap:allowDelete="false"
+    ap:allowPut="false"
+    xdp:dataStructure="AllDataTypesSingleEntity#AllDataTypesSingleEntity/a1f20c05-3854-408b-8c89-5663bfa3335d"
+    xdp:disableConstraintForInputValidation="false"
+    x:id="a2562498-9974-478a-a193-1dca0a76c892"
+    ap:mimeType="application/json"
+    asi:name="GetAllDataTypesWithCookieAuthentication"
+    xdp:omitJsonMainElement="false"
+    xdp:omitJsonRootElement="false"
+    xdp:processGetReadRowLevelRules="false"
+    ap:roles="*"
+    xdp:sortSet="Default#AllDataTypesSingleEntity/Default/15faf27b-2849-4f5c-a1cb-3486a964b59f"
+    ap:url="api/private/allDataTypesCookie" />
+</x:file>

@@ -61,6 +61,8 @@ export interface IArchitectApi {
 
   getModelCheckResult(): Promise<IModelCheckResult>;
 
+  rebuildLocalizationFiles(): Promise<string[]>;
+
   openTab(schemaItemId: string): Promise<IApiTabData>;
 
   closeTab(tabId: string): Promise<void>;
@@ -75,6 +77,8 @@ export interface IArchitectApi {
     schemaItemId: string | undefined,
     changes: IPropertyChange[],
   ): Promise<IUpdatePropertiesResult>;
+
+  getCollectionMembers(schemaItemId: string, propertyName: string): Promise<ICollectionMember[]>;
 
   deleteSchemaItem(schemaItemId: string): Promise<void>;
 
@@ -667,9 +671,23 @@ export interface IPackageReferenceCandidate {
 }
 
 export type PropertyType =
-  'boolean' | 'enum' | 'string' | 'integer' | 'float' | 'looukup' | 'untyped' | 'fieldBinding';
+  | 'boolean'
+  | 'enum'
+  | 'string'
+  | 'integer'
+  | 'float'
+  | 'looukup'
+  | 'untyped'
+  | 'fieldBinding'
+  | 'color'
+  | 'collection';
 
-export type PropertyValue = boolean | number | string | string[] | null;
+export type PropertyValue = boolean | number | string | string[] | ICollectionMember[] | null;
+
+export interface ICollectionMember {
+  name: string;
+  properties: IApiEditorProperty[];
+}
 
 export interface IDeploymentScriptsGeneratorModuleData {
   possibleDeploymentVersions: IDeploymentVersion[];

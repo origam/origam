@@ -81,6 +81,48 @@ test.describe('Folder management (real backend)', () => {
     await expect(page.getByTestId('tree-node-E2EKeep')).toBeVisible();
   });
 
+  for (const answer of ['Yes', 'No']) {
+    test(`object deletion confirmation: ${answer}`, async ({ page }) => {
+      await activateProvider(page);
+      await page.getByTestId('tree-node-' + PROVIDER).click({ button: 'right' });
+      await page.getByTestId('tree-menu-new').getByText('New').click();
+      await page
+        .getByTestId('tree-menu-new-Origam.Schema.EntityModel.DataStructure')
+        .getByText('Data Structure')
+        .click();
+      await page.getByRole('textbox', { name: 'NewDataStructure' }).fill('E2EDeleteObject');
+      await page.getByTestId('save-button').click();
+      await expect(page.getByTestId('save-button-disabled')).toBeVisible();
+
+      const deleteRequests: string[] = [];
+      page.on('request', request => {
+        if (request.url().includes('/Model/DeleteSchemaItem')) {
+          deleteRequests.push(request.url());
+        }
+      });
+
+      await page.getByTestId('tree-node-E2EDeleteObject').click({ button: 'right' });
+      await page.getByTestId('tree-menu-delete').click();
+      await expect(
+        page.getByText('Do you really want to delete "E2EDeleteObject"? This cannot be undone.'),
+      ).toBeVisible();
+      await expect(page.getByRole('button', { name: 'Cancel', exact: true })).toHaveCount(0);
+      expect(deleteRequests).toHaveLength(0);
+      await page.getByRole('button', { name: answer, exact: true }).click();
+      await expect(page.getByRole('button', { name: 'Yes', exact: true })).toHaveCount(0);
+
+      if (answer === 'Yes') {
+        await expect(page.getByTestId('tree-node-E2EDeleteObject')).toHaveCount(0);
+        await expect(page.getByTestId('tab-E2EDeleteObject')).toHaveCount(0);
+        expect(deleteRequests).toHaveLength(1);
+      } else {
+        await expect(page.getByTestId('tree-node-E2EDeleteObject')).toBeVisible();
+        await expect(page.getByTestId('tab-E2EDeleteObject')).toBeVisible();
+        expect(deleteRequests).toHaveLength(0);
+      }
+    });
+  }
+
   test('deletes a folder together with its contents and closes their tabs', async ({ page }) => {
     await activateProvider(page);
     await createFolder(page, PROVIDER, 'E2EWithItem');

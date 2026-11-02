@@ -79,6 +79,7 @@
     <Compile Include="HttpToolsTests.cs" />
     <Compile Include="IOToolsTests.cs" />
     <Compile Include="OrigamSettingsReaderTests.cs" />
+    <Compile Include="ConfigurationManagerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

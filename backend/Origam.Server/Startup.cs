@@ -95,7 +95,10 @@ public class Startup
 
     public void ConfigureServices(IServiceCollection services)
     {
+        // Legacy services still use HttpWebRequest and its process-wide TLS configuration.
+#pragma warning disable SYSLIB0014
         ServicePointManager.SecurityProtocol = startUpConfiguration.SecurityProtocol;
+#pragma warning restore SYSLIB0014
         services.AddSingleton(startUpConfiguration);
         services.AddOpenApiDocumentation(startUpConfiguration);
         services.Configure<KestrelServerOptions>(options =>
@@ -134,7 +137,6 @@ public class Startup
         services.AddSingleton<SessionObjects, SessionObjects>();
 
         services.AddSingleton<IPasswordHasher<IOrigamUser>, CorePasswordHasher>();
-        services.AddScoped<SignInManager<IOrigamUser>>();
         services.AddScoped<IUserClaimsPrincipalFactory<IOrigamUser>, ClaimsFactory>();
         services.AddScoped<CoreUserManager<IOrigamUser>, CoreUserManager<IOrigamUser>>();
         services.AddTransient<IUserStore<IOrigamUser>, UserStore>();
@@ -143,7 +145,8 @@ public class Startup
         services.AddLocalization();
 
         services
-            .AddIdentity<IOrigamUser, Role>()
+            .AddIdentityCore<IOrigamUser>()
+            .AddSignInManager()
             .AddDefaultTokenProviders()
             .AddErrorDescriber<MultiLanguageIdentityErrorDescriber>();
 
@@ -250,7 +253,9 @@ public class Startup
                 options.AllowPasswordFlow();
                 options.AllowRefreshTokenFlow();
                 options.AllowClientCredentialsFlow();
-                options.SetAccessTokenLifetime(TimeSpan.FromHours(1));
+                options.SetAccessTokenLifetime(
+                    TimeSpan.FromMinutes(openIddictConfig.AccessTokenExpirationMinutes)
+                );
                 options.SetRefreshTokenLifetime(TimeSpan.FromDays(30));
                 options
                     .UseAspNetCore()
@@ -277,12 +282,14 @@ public class Startup
                 });
             });
 
-        services.AddAuthentication(options =>
-        {
-            options.DefaultAuthenticateScheme = IdentityConstants.ApplicationScheme; // cookie
-            options.DefaultSignInScheme = IdentityConstants.ApplicationScheme; // cookie
-            options.DefaultChallengeScheme = IdentityConstants.ApplicationScheme; // cookie
-        });
+        services
+            .AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = IdentityConstants.ApplicationScheme; // cookie
+                options.DefaultSignInScheme = IdentityConstants.ApplicationScheme; // cookie
+                options.DefaultChallengeScheme = IdentityConstants.ApplicationScheme; // cookie
+            })
+            .AddIdentityCookies();
 
         services.AddAuthorization(options =>
         {
@@ -324,16 +331,8 @@ public class Startup
         ConfigureAuthentication(services);
 
         services.Configure<RequestLocalizationOptions>(options =>
-        {
-            options.DefaultRequestCulture = languageConfig.DefaultCulture;
-            options.SupportedCultures = languageConfig.AllowedCultures;
-            options.SupportedUICultures = languageConfig.AllowedCultures;
-            options.RequestCultureProviders.Clear();
-            options.RequestCultureProviders.Insert(
-                index: 0,
-                new OrigamCookieRequestCultureProvider(languageConfig)
-            );
-        });
+            OrigamRequestLocalization.Apply(options, languageConfig)
+        );
 
         foreach (var controllerDllName in startUpConfiguration.ExtensionDlls)
         {
@@ -568,7 +567,7 @@ public class Startup
                     | ForwardedHeaders.XForwardedHost
                     | ForwardedHeaders.XForwardedFor,
             };
-            forwardedHeadersOptions.KnownNetworks.Clear();
+            forwardedHeadersOptions.KnownIPNetworks.Clear();
             forwardedHeadersOptions.KnownProxies.Clear();
             app.UseForwardedHeaders(forwardedHeadersOptions);
         }
@@ -576,10 +575,14 @@ public class Startup
         var localizationOptions = app
             .ApplicationServices.GetService<IOptions<RequestLocalizationOptions>>()
             .Value;
+        // must stay above UseUserApi: the user api middleware relies on the culture resolved here
         app.UseRequestLocalization(localizationOptions);
 
         app.UseMiddleware<FatalErrorMiddleware>();
         app.UseMiddleware<OrigamErrorHandlingMiddleware>();
+
+        app.UseRouting();
+        app.UseCors("OrigamCorsPolicy");
 
         app.UseOpenApiDocumentation(
             startUpConfiguration.OpenApiDocumentationEnabled,
@@ -588,8 +591,6 @@ public class Startup
         app.UseUserApi(startUpConfiguration, openIddictConfig);
         app.UseWorkQueueApi();
 
-        app.UseRouting();
-        app.UseCors("OrigamCorsPolicy");
         app.UseAuthentication();
         app.UseAuthorization();
 

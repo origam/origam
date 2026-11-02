@@ -22,6 +22,7 @@ import { ComponentType, parseComponentType } from '@editors/designerEditor/commo
 import { AsCheckBox } from '@editors/designerEditor/common/designerComponents/AsCheckBox';
 import { AsForm } from '@editors/designerEditor/common/designerComponents/AsForm';
 import { AsPanel } from '@editors/designerEditor/common/designerComponents/AsPanel';
+import { AsTextBox } from '@editors/designerEditor/common/designerComponents/AsTextBox';
 import { Component } from '@editors/designerEditor/common/designerComponents/Component';
 import { FormPanel } from '@editors/designerEditor/common/designerComponents/FormPanel';
 import { SplitPanel } from '@editors/designerEditor/common/designerComponents/SplitPanel';
@@ -289,7 +290,7 @@ export async function controlToComponent(
 
     case ComponentType.AsTextBox:
     case ComponentType.TextArea:
-      return new Component({
+      return new AsTextBox({
         id: control.id,
         parent: parent,
         data: {

@@ -3,7 +3,7 @@
 FROM mcr.microsoft.com/powershell:nanoserver-ltsc2022 AS powershell
 
 # Stage 2 - Final image
-FROM mcr.microsoft.com/dotnet/aspnet:8.0-nanoserver-ltsc2022
+FROM mcr.microsoft.com/dotnet/aspnet:10.0-nanoserver-ltsc2022
 
 COPY --from=powershell ["C:/Program Files/PowerShell/", "C:/Program Files/PowerShell/"]
 

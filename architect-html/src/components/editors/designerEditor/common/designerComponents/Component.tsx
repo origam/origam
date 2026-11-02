@@ -21,10 +21,19 @@ import { IComponentData } from '@editors/designerEditor/common/ComponentType';
 import S from '@editors/designerEditor/common/designerComponents/Components.module.scss';
 import { LabelPosition, parseLabelPosition } from '@editors/designerEditor/common/LabelPosition';
 import { controlLayer } from '@editors/designerEditor/common/Layers';
+import { Bounds } from '@editors/designerEditor/common/Snapping';
 import { EditorProperty } from '@editors/gridEditor/EditorProperty';
 import { action, observable } from 'mobx';
 import { Observer } from 'mobx-react-lite';
 import { ReactElement } from 'react';
+
+const captionHeight = 20;
+const lineHeight = 18;
+export const lineBaseline = 13;
+
+export function getCenteredLineBaseline(top: number, height: number) {
+  return top + Math.round((height - lineHeight) / 2) + lineBaseline;
+}
 
 export class Component {
   id: string;
@@ -112,6 +121,16 @@ export class Component {
     return 0;
   }
 
+  get contentBounds(): Bounds {
+    return {
+      left: this.absoluteLeft + this.childOffsetLeft,
+      top: this.absoluteTop + this.childOffsetTop,
+      right: this.absoluteRight,
+      bottom: this.absoluteBottom,
+      baseline: null,
+    };
+  }
+
   get absoluteBottom(): number {
     return this.absoluteTop + this.height;
   }
@@ -140,6 +159,14 @@ export class Component {
     this.getProperty('CaptionLength')!.value = value;
   }
 
+  get tabIndex(): number {
+    return Number(this.get('TabIndex') ?? 0);
+  }
+
+  set tabIndex(value: number) {
+    this.getProperty('TabIndex')!.value = value;
+  }
+
   private _labelPosition: LabelPosition;
   get labelPosition(): LabelPosition {
     return this._labelPosition;
@@ -151,6 +178,11 @@ export class Component {
 
   get zIndex(): number {
     return controlLayer;
+  }
+
+  // A caption that does not fit slides under the controls next to it.
+  get labelZIndex(): number {
+    return this.zIndex - 1;
   }
 
   get isReadOnly(): boolean {
@@ -197,38 +229,40 @@ export class Component {
 
   getLabelStyle() {
     switch (this.labelPosition) {
+      // The web client has no Bottom caption and renders it on the left.
       case LabelPosition.Left:
+      case LabelPosition.Bottom:
         return {
           left: `${this.absoluteLeft - this.labelWidth}px`,
           top: `${this.absoluteTop}px`,
-          width: `${this.labelWidth}px`,
-          height: `${this.height}px`,
         };
       case LabelPosition.Right:
         return {
-          left: `${this.absoluteLeft + this.width + 10}px`,
+          left: `${this.absoluteLeft + this.width + 4}px`,
           top: `${this.absoluteTop}px`,
-          width: `${this.labelWidth}px`,
-          height: `${this.height}px`,
-        };
-      case LabelPosition.Bottom:
-        return {
-          left: `${this.absoluteLeft}px`,
-          top: `${this.absoluteTop + this.height}px`,
-          width: `${this.width}px`,
-          height: `${this.labelWidth}px`,
         };
       case LabelPosition.Top:
         return {
           left: `${this.absoluteLeft}px`,
-          top: `${this.absoluteTop + -20}px`,
-          width: `${this.width}px`,
-          height: `${this.labelWidth}px`,
+          top: `${this.absoluteTop - captionHeight}px`,
         };
       case null:
       case undefined:
       case LabelPosition.None:
         return { display: 'none' };
+    }
+  }
+
+  get textBaseline(): number | null {
+    switch (this.labelPosition) {
+      case LabelPosition.Left:
+      case LabelPosition.Right:
+      case LabelPosition.Bottom:
+        return getCenteredLineBaseline(this.absoluteTop, captionHeight);
+      case LabelPosition.Top:
+        return getCenteredLineBaseline(this.absoluteTop - captionHeight, captionHeight);
+      default:
+        return null;
     }
   }
 

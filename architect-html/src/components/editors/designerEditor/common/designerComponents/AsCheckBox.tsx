@@ -17,7 +17,10 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Component } from '@editors/designerEditor/common/designerComponents/Component';
+import {
+  Component,
+  getCenteredLineBaseline,
+} from '@editors/designerEditor/common/designerComponents/Component';
 import S from '@editors/designerEditor/common/designerComponents/Components.module.scss';
 import { ReactElement } from 'react';
 
@@ -30,11 +33,17 @@ export class AsCheckBox extends Component {
     return false;
   }
 
+  get textBaseline(): number | null {
+    return getCenteredLineBaseline(this.absoluteTop, this.height);
+  }
+
   getDesignerRepresentation(): ReactElement | null {
     return (
-      <div className={S.designSurfaceEditorContainer}>
-        <div className={S.designSurfaceCheckbox}></div>
-        <div>{this.properties.find(x => x.name === 'Text')?.value}</div>
+      <div className={S.checkBox}>
+        <div className={S.checkBoxEditor}>
+          <div className={S.designSurfaceCheckbox}></div>
+        </div>
+        <div className={S.checkBoxCaption}>{this.get('Text')}</div>
       </div>
     );
   }

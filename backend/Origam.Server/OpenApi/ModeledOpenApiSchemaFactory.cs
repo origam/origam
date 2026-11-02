@@ -307,7 +307,7 @@ public class ModeledOpenApiSchemaFactory
                 {
                     Type = JsonSchemaType.String,
                     Description = Resources.ModeledApiFilterExpressionDescription,
-                    Example = $"[\"{exampleColumn}\",\"eq\",null]",
+                    Examples = new List<JsonNode> { $"[\"{exampleColumn}\",\"eq\",null]" },
                 },
                 ["filterLookups"] = new OpenApiSchema
                 {

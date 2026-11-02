@@ -26,6 +26,16 @@ import {
 import { ComponentType, IComponentData } from '@editors/designerEditor/common/ComponentType';
 import { Component } from '@editors/designerEditor/common/designerComponents/Component';
 import { toComponentRecursive } from '@editors/designerEditor/common/designerComponents/ControlToComponent';
+import {
+  allEdges,
+  Bounds,
+  Edge,
+  findSnapLines,
+  findSnapOffset,
+  noSnapTargets,
+  SnapLine,
+  SnapTargets,
+} from '@editors/designerEditor/common/Snapping';
 import { EditorProperty } from '@editors/gridEditor/EditorProperty';
 import { FlowHandlerInput } from '@errors/runInFlowWithHandler';
 import { action, observable } from 'mobx';
@@ -42,6 +52,10 @@ export class DesignSurfaceState implements IComponentProvider {
   @observable public accessor selectedComponent: Component | null = null;
   @observable accessor dragState: DragState = idleDragState();
   @observable accessor resizeState: ResizeState = idleResizeState();
+  @observable.ref accessor snapLines: SnapLine[] = [];
+  @observable accessor isTabOrderMode = false;
+  @observable private accessor tabOrderedIds: string[] = [];
+  private snapTargetsCache: { container: Component | null; targets: SnapTargets } | null = null;
   panel: Component = null as any; // will be assigned in loadComponents
   panelId: string | undefined;
   getVerbs: (component: Component) => IDesignerVerb[] = () => [];
@@ -92,19 +106,38 @@ export class DesignSurfaceState implements IComponentProvider {
 
   @action
   restorePointerStates() {
+    this.snapLines = [];
     if (this.dragState.component) {
       const draggedId = this.dragState.component.id;
       this.dragState.component = this.components.find(x => x.id === draggedId) ?? null;
       if (this.dragState.didDrag) {
-        this.updateDragging(this.dragState.lastX, this.dragState.lastY);
+        this.updateDragging(
+          this.dragState.lastX,
+          this.dragState.lastY,
+          this.dragState.isSnapEnabled,
+        );
       }
     }
     if (this.resizeState.component) {
       const resizedId = this.resizeState.component.id;
       this.resizeState.component = this.components.find(x => x.id === resizedId) ?? null;
       if (this.resizeState.didResize) {
-        this.updateResizing(this.resizeState.lastX, this.resizeState.lastY);
+        this.updateResizing(
+          this.resizeState.lastX,
+          this.resizeState.lastY,
+          this.resizeState.isSnapEnabled,
+        );
       }
+    }
+  }
+
+  @action
+  setSnapEnabled(isSnapEnabled: boolean) {
+    if (this.dragState.didDrag) {
+      this.updateDragging(this.dragState.lastX, this.dragState.lastY, isSnapEnabled);
+    }
+    if (this.resizeState.didResize) {
+      this.updateResizing(this.resizeState.lastX, this.resizeState.lastY, isSnapEnabled);
     }
   }
 
@@ -142,8 +175,71 @@ export class DesignSurfaceState implements IComponentProvider {
   }
 
   @action
-  updateDragging(mouseX: number, mouseY: number) {
-    if (!this.dragState.component) return;
+  toggleTabOrderMode() {
+    this.isTabOrderMode = !this.isTabOrderMode;
+    this.tabOrderedIds = [];
+    this.selectComponent(null);
+  }
+
+  showsTabOrder(component: Component) {
+    return (
+      component.id !== this.panelId &&
+      component.data.type !== ComponentType.TabPage &&
+      !!component.getProperty('TabIndex')
+    );
+  }
+
+  isTabOrderFixed(component: Component) {
+    return component.parent?.data.type === ComponentType.SplitPanel;
+  }
+
+  isTabOrderAssigned(component: Component) {
+    return this.tabOrderedIds.includes(component.id);
+  }
+
+  tabOrderLabel(component: Component) {
+    const tabIndices: number[] = [];
+    for (let current: Component | null = component; current; current = current.parent) {
+      if (this.showsTabOrder(current)) {
+        tabIndices.unshift(current.tabIndex);
+      }
+    }
+    return tabIndices.join('.');
+  }
+
+  *assignTabIndex(component: Component, continueFrom: boolean): Generator<Promise<any>, void, any> {
+    const parent = component.parent;
+    if (!parent || this.isTabOrderFixed(component) || !this.showsTabOrder(component)) {
+      return;
+    }
+    const siblings = this.getChildren(parent)
+      .filter(sibling => this.showsTabOrder(sibling))
+      .sort((siblingA, siblingB) => siblingA.tabIndex - siblingB.tabIndex);
+    const assigned = continueFrom
+      ? siblings.slice(0, siblings.indexOf(component) + 1)
+      : [
+          ...siblings.filter(sibling => sibling !== component && this.isTabOrderAssigned(sibling)),
+          component,
+        ];
+    const ordered = [...assigned, ...siblings.filter(sibling => !assigned.includes(sibling))];
+    this.tabOrderedIds = [
+      ...this.tabOrderedIds.filter(id => !siblings.some(sibling => sibling.id === id)),
+      ...assigned.map(sibling => sibling.id),
+    ];
+    let isChanged = false;
+    ordered.forEach((sibling, index) => {
+      isChanged ||= sibling.tabIndex !== index;
+      sibling.tabIndex = index;
+    });
+    if (isChanged) {
+      yield* this.updateEditor();
+    }
+  }
+
+  @action
+  updateDragging(mouseX: number, mouseY: number, isSnapEnabled: boolean) {
+    const component = this.dragState.component;
+    if (!component) return;
 
     const dx = Math.round(mouseX - this.dragState.startX);
     const dy = Math.round(mouseY - this.dragState.startY);
@@ -157,10 +253,41 @@ export class DesignSurfaceState implements IComponentProvider {
     this.dragState.didDrag = true;
     this.dragState.lastX = mouseX;
     this.dragState.lastY = mouseY;
-    this.updatePosition(
-      this.dragState.component,
-      this.dragState.originalLeft + dx,
-      this.dragState.originalTop + dy,
+    this.dragState.isSnapEnabled = isSnapEnabled;
+    const left = this.dragState.originalLeft + dx;
+    const top = this.dragState.originalTop + dy;
+    const container = this.canChangeParent(component)
+      ? this.findComponentAt(mouseX, mouseY, component)
+      : component.parent;
+    const targets = isSnapEnabled ? this.getSnapTargets(component, container) : noSnapTargets;
+    const offset = findSnapOffset(boundsAt(component, left, top), targets, allEdges);
+    this.updatePosition(component, left + offset.x, top + offset.y);
+    this.snapLines = findSnapLines(boundsOf(component), targets, allEdges);
+  }
+
+  private getSnapTargets(component: Component, container: Component | null): SnapTargets {
+    let cache = this.snapTargetsCache;
+    if (!cache || cache.container !== container) {
+      cache = { container, targets: this.collectSnapTargets(component, container) };
+      this.snapTargetsCache = cache;
+    }
+    return cache.targets;
+  }
+
+  private collectSnapTargets(component: Component, container: Component | null): SnapTargets {
+    if (!container) {
+      return noSnapTargets;
+    }
+    const siblings = this.getChildren(container).filter(
+      child => child.id !== component.id && child.isActive,
+    );
+    return { container: container.contentBounds, siblings: siblings.map(boundsOf) };
+  }
+
+  private canChangeParent(component: Component) {
+    return (
+      component.data.type !== ComponentType.GroupBox &&
+      component.data.type !== ComponentType.AsPanel
     );
   }
 
@@ -170,6 +297,7 @@ export class DesignSurfaceState implements IComponentProvider {
       return;
     }
     this.selectComponent(component);
+    this.snapTargetsCache = null;
     this.dragState = {
       component,
       startX: mouseX,
@@ -179,6 +307,7 @@ export class DesignSurfaceState implements IComponentProvider {
       originalLeft: component.absoluteLeft,
       originalTop: component.absoluteTop,
       didDrag: false,
+      isSnapEnabled: true,
     };
   }
 
@@ -187,14 +316,12 @@ export class DesignSurfaceState implements IComponentProvider {
     const draggingComponent = this.dragState.component;
     const didDrag = this.dragState.didDrag;
     this.dragState = idleDragState();
+    this.snapLines = [];
     if (!draggingComponent || !didDrag) {
       return;
     }
 
-    if (
-      draggingComponent.data.type !== ComponentType.GroupBox &&
-      draggingComponent.data.type !== ComponentType.AsPanel
-    ) {
+    if (this.canChangeParent(draggingComponent)) {
       const targetParent = this.findComponentAt(mouseX, mouseY, draggingComponent);
       const previousParent = draggingComponent.parent;
       if (targetParent && draggingComponent.parent != targetParent) {
@@ -274,6 +401,7 @@ export class DesignSurfaceState implements IComponentProvider {
   @action
   startResizing(component: Component, handle: ResizeHandle, mouseX: number, mouseY: number) {
     this.selectComponent(component);
+    this.snapTargetsCache = null;
     this.resizeState = {
       component,
       handle,
@@ -286,83 +414,58 @@ export class DesignSurfaceState implements IComponentProvider {
       originalLeft: component.absoluteLeft,
       originalTop: component.absoluteTop,
       didResize: false,
+      isSnapEnabled: true,
     };
   }
 
   @action
-  updateResizing(mouseX: number, mouseY: number) {
+  updateResizing(mouseX: number, mouseY: number, isSnapEnabled: boolean) {
     if (!this.resizeState.component || !this.resizeState.handle) return;
 
     const component = this.resizeState.component;
-    const deltaX = Math.round(mouseX - this.resizeState.startX);
-    const deltaY = Math.round(mouseY - this.resizeState.startY);
+    let deltaX = Math.round(mouseX - this.resizeState.startX);
+    let deltaY = Math.round(mouseY - this.resizeState.startY);
     if (!this.resizeState.didResize && deltaX === 0 && deltaY === 0) {
       return;
     }
     this.resizeState.didResize = true;
     this.resizeState.lastX = mouseX;
     this.resizeState.lastY = mouseY;
+    this.resizeState.isSnapEnabled = isSnapEnabled;
     const { originalWidth, originalHeight, originalLeft, originalTop } = this.resizeState;
+    const edges = resizedEdges[this.resizeState.handle];
+    const targets = isSnapEnabled
+      ? this.getSnapTargets(component, component.parent)
+      : noSnapTargets;
+    const offset = findSnapOffset(
+      {
+        left: originalLeft + (edges.includes('left') ? deltaX : 0),
+        top: originalTop + (edges.includes('top') ? deltaY : 0),
+        right: originalLeft + originalWidth + (edges.includes('right') ? deltaX : 0),
+        bottom: originalTop + originalHeight + (edges.includes('bottom') ? deltaY : 0),
+        baseline: null,
+      },
+      targets,
+      edges,
+    );
+    deltaX += offset.x;
+    deltaY += offset.y;
 
-    switch (this.resizeState.handle) {
-      case 'right':
-        component.width = Math.max(minComponentHeight, originalWidth + deltaX);
-        break;
-      case 'bottom':
-        component.height = Math.max(minComponentHeight, originalHeight + deltaY);
-        break;
-      case 'left': {
-        const newWidth = originalWidth - deltaX;
-        if (newWidth >= minComponentWidth) {
-          component.width = newWidth;
-          component.absoluteLeft = originalLeft + deltaX;
-        }
-        break;
-      }
-      case 'top': {
-        const newHeight = originalHeight - deltaY;
-        if (newHeight >= minComponentHeight) {
-          component.height = newHeight;
-          component.absoluteTop = originalTop + deltaY;
-        }
-        break;
-      }
-      case 'topLeft': {
-        const newHeightTL = originalHeight - deltaY;
-        const newWidthTL = originalWidth - deltaX;
-        if (newHeightTL >= minComponentHeight) {
-          component.height = newHeightTL;
-          component.absoluteTop = originalTop + deltaY;
-        }
-        if (newWidthTL >= minComponentWidth) {
-          component.width = newWidthTL;
-          component.absoluteLeft = originalLeft + deltaX;
-        }
-        break;
-      }
-      case 'topRight': {
-        const newHeightTR = originalHeight - deltaY;
-        if (newHeightTR >= minComponentHeight) {
-          component.height = newHeightTR;
-          component.absoluteTop = originalTop + deltaY;
-        }
-        component.width = Math.max(minComponentWidth, originalWidth + deltaX);
-        break;
-      }
-      case 'bottomLeft': {
-        const newWidthBL = originalWidth - deltaX;
-        if (newWidthBL >= minComponentWidth) {
-          component.width = newWidthBL;
-          component.absoluteLeft = originalLeft + deltaX;
-        }
-        component.height = Math.max(minComponentHeight, originalHeight + deltaY);
-        break;
-      }
-      case 'bottomRight':
-        component.width = Math.max(minComponentWidth, originalWidth + deltaX);
-        component.height = Math.max(minComponentHeight, originalHeight + deltaY);
-        break;
+    if (edges.includes('left')) {
+      component.width = Math.max(minComponentWidth, originalWidth - deltaX);
+      component.absoluteLeft = originalLeft + originalWidth - component.width;
     }
+    if (edges.includes('right')) {
+      component.width = Math.max(minComponentWidth, originalWidth + deltaX);
+    }
+    if (edges.includes('top')) {
+      component.height = Math.max(minComponentHeight, originalHeight - deltaY);
+      component.absoluteTop = originalTop + originalHeight - component.height;
+    }
+    if (edges.includes('bottom')) {
+      component.height = Math.max(minComponentHeight, originalHeight + deltaY);
+    }
+    this.snapLines = findSnapLines(boundsOf(component), targets, edges);
   }
 
   @action
@@ -370,6 +473,7 @@ export class DesignSurfaceState implements IComponentProvider {
     const resizedComponent = this.resizeState.component;
     const didResize = this.resizeState.didResize;
     this.resizeState = idleResizeState();
+    this.snapLines = [];
     if (!resizedComponent || !didResize) {
       return;
     }
@@ -408,6 +512,7 @@ interface DragState {
   originalLeft: number;
   originalTop: number;
   didDrag: boolean;
+  isSnapEnabled: boolean;
 }
 
 interface ResizeState {
@@ -422,6 +527,7 @@ interface ResizeState {
   originalLeft: number;
   originalTop: number;
   didResize: boolean;
+  isSnapEnabled: boolean;
 }
 
 function idleDragState(): DragState {
@@ -434,6 +540,7 @@ function idleDragState(): DragState {
     originalLeft: 0,
     originalTop: 0,
     didDrag: false,
+    isSnapEnabled: true,
   };
 }
 
@@ -450,6 +557,22 @@ function idleResizeState(): ResizeState {
     originalLeft: 0,
     originalTop: 0,
     didResize: false,
+    isSnapEnabled: true,
+  };
+}
+
+function boundsOf(component: Component): Bounds {
+  return boundsAt(component, component.absoluteLeft, component.absoluteTop);
+}
+
+function boundsAt(component: Component, left: number, top: number): Bounds {
+  const baseline = component.textBaseline;
+  return {
+    left,
+    top,
+    right: left + component.width,
+    bottom: top + component.height,
+    baseline: baseline === null ? null : baseline - component.absoluteTop + top,
   };
 }
 
@@ -460,3 +583,14 @@ const minComponentWidth = 20;
 
 export type ResizeHandle =
   'top' | 'right' | 'bottom' | 'left' | 'topLeft' | 'topRight' | 'bottomRight' | 'bottomLeft';
+
+const resizedEdges: Record<ResizeHandle, Edge[]> = {
+  top: ['top'],
+  right: ['right'],
+  bottom: ['bottom'],
+  left: ['left'],
+  topLeft: ['top', 'left'],
+  topRight: ['top', 'right'],
+  bottomRight: ['bottom', 'right'],
+  bottomLeft: ['bottom', 'left'],
+};

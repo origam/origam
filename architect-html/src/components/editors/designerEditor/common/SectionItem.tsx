@@ -34,7 +34,7 @@ export const SectionItem: React.FC<{
             className={SD.componentLabel}
             style={{
               ...component.getLabelStyle(),
-              zIndex: component.zIndex,
+              zIndex: component.labelZIndex,
             }}
           >
             {component.data.identifier}

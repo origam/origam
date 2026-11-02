@@ -43,10 +43,12 @@ public class Workbench
     private readonly CancellationTokenSource backgroundInitializationCancellationTokenSource =
         new();
     private SchemaService schema;
+    private readonly OrigamSettings _settings;
 
-    public Workbench(SchemaService schema)
+    public Workbench(SchemaService schema, OrigamSettings settings)
     {
         this.schema = schema;
+        _settings = settings;
     }
 
     public bool PopulateEmptyDatabaseOnLoad { get; set; } = true;
@@ -97,11 +99,6 @@ public class Workbench
 
     public void Connect()
     {
-        if (!LoadConfiguration())
-        {
-            return;
-        }
-
         InitPersistenceService();
         InitializeConnectedServices();
         RunBackgroundInitializationTasks();
@@ -111,25 +108,6 @@ public class Workbench
     {
         IPersistenceService persistence = OrigamEngine.OrigamEngine.CreatePersistenceService();
         ServiceManager.Services.AddService(persistence);
-    }
-
-    private bool LoadConfiguration()
-    {
-        string origamSettingsPath = Path.Combine(
-            AppDomain.CurrentDomain.BaseDirectory,
-            path2: "OrigamSettings.config"
-        );
-        OrigamSettingsCollection configurations = ConfigurationManager.GetAllUserHomeConfigurations(
-            origamSettingsPath
-        );
-        var configuration = configurations.Cast<OrigamSettings>().FirstOrDefault();
-        if (configuration != null)
-        {
-            ConfigurationManager.SetActiveConfiguration(configuration);
-            return true;
-        }
-
-        throw new Exception("Configuration not found");
     }
 
     private void InitializeConnectedServices()
@@ -147,8 +125,7 @@ public class Workbench
         ServiceManager.Services.AddService(new AttachmentService());
         ServiceManager.Services.AddService(new RuleEngineService());
 
-        var settings = ConfigurationManager.GetActiveConfiguration();
-        ServiceManager.Services.AddService(new DatabaseProfileService(settings));
+        ServiceManager.Services.AddService(new DatabaseProfileService(_settings));
     }
 
     public void RunBackgroundInitializationTasks()

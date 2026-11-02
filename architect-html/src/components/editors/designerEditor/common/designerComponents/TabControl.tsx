@@ -22,6 +22,7 @@ import { ComponentType, IComponentData } from '@editors/designerEditor/common/Co
 import { Component } from '@editors/designerEditor/common/designerComponents/Component';
 import S from '@editors/designerEditor/common/designerComponents/Components.module.scss';
 import { screenLayer } from '@editors/designerEditor/common/Layers';
+import { Bounds } from '@editors/designerEditor/common/Snapping';
 import { DesignerStateContext } from '@editors/designerEditor/screenEditor/ScreenEditor';
 import { EditorProperty } from '@editors/gridEditor/EditorProperty';
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
@@ -29,6 +30,8 @@ import { action, observable } from 'mobx';
 import { Observer, observer } from 'mobx-react-lite';
 import { ReactElement, useContext } from 'react';
 import { TriggerEvent, useContextMenu } from '@origam/react-contexify';
+
+const tabPageFrame = 5;
 
 export class TabControl extends Component {
   @observable private accessor tabs: TabPage[] = [];
@@ -215,11 +218,20 @@ export class TabPage extends Component {
   }
 
   get childOffsetLeft() {
-    return 5;
+    return tabPageFrame;
   }
 
   get childOffsetTop() {
     return 20;
+  }
+
+  get contentBounds(): Bounds {
+    const bounds = super.contentBounds;
+    return {
+      ...bounds,
+      right: bounds.right - tabPageFrame,
+      bottom: bounds.bottom - tabPageFrame,
+    };
   }
 
   set isActive(value: boolean) {

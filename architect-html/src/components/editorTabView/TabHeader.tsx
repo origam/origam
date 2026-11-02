@@ -83,7 +83,14 @@ export const TabHeader = observer(({ tab }: { tab: ITabState }) => {
         )}
       </div>
 
-      <div className={S.close} onClick={() => onClose(tab)} data-test-id={`tab-close-${tab.label}`}>
+      <div
+        className={S.close}
+        onClick={event => {
+          event.stopPropagation();
+          onClose(tab);
+        }}
+        data-test-id={`tab-close-${tab.label}`}
+      >
         <VscClose />
       </div>
 

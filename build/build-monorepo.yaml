@@ -34,14 +34,19 @@ jobs:
   - job: build_desktop_applications
     displayName: Build Architect
     pool:
-      vmImage: windows-2022
+      vmImage: windows-2025
     steps:
      - checkout: origam
        fetchDepth: 1
-     - task: NuGetToolInstaller@0
-       displayName: 'Use NuGet 5.8'
+     - task: UseDotNet@2
+       displayName: Use .NET 10 SDK
        inputs:
-         versionSpec: 5.8
+         packageType: sdk
+         version: 10.0.x
+     - task: NuGetToolInstaller@0
+       displayName: 'Use NuGet 7'
+       inputs:
+         versionSpec: 7.x
      - task: Cache@2
        displayName: 'NuGet Cache'
        inputs:
@@ -146,14 +151,19 @@ jobs:
   - job: build_server_applications
     displayName: Build Server Applications
     pool:
-      vmImage: windows-2022
+      vmImage: windows-2025
     steps:
      - checkout: origam
        fetchDepth: 1
-     - task: NuGetToolInstaller@0
-       displayName: 'Use NuGet 5.8'
+     - task: UseDotNet@2
+       displayName: Use .NET 10 SDK
        inputs:
-         versionSpec: 5.8
+         packageType: sdk
+         version: 10.0.x
+     - task: NuGetToolInstaller@0
+       displayName: 'Use NuGet 7'
+       inputs:
+         versionSpec: 7.x
      - task: Cache@2
        displayName: 'NuGet Cache'
        inputs:
@@ -185,23 +195,31 @@ jobs:
         (Get-Content "$(Agent.BuildDirectory)\s\backend\Origam.Server\Controller\AboutController.cs") -replace "CommitId Placeholder to be changed at build time", "$(ORIGAM_ORIGAM_COMMIT_ID)" | Set-Content "$(Agent.BuildDirectory)\s\backend\Origam.Server\Controller\AboutController.cs"
         (Get-Content "$(Agent.BuildDirectory)\s\backend\Origam.Server\Identity\Views\Shared\_Layout.cshtml") -replace "0.0.0.0", "$(VERSION_NUMBER)" | Set-Content "$(Agent.BuildDirectory)\s\backend\Origam.Server\Identity\Views\Shared\_Layout.cshtml"
        displayName: 'Build Number'
+     - powershell: |
+         $vswhere = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
+         $msbuildPath = & $vswhere -latest -requires Microsoft.Component.MSBuild -find MSBuild\**\Bin\amd64\MSBuild.exe | Select-Object -First 1
+         if (-not $msbuildPath) {
+           throw "MSBuild was not found."
+         }
+         Write-Host "##vso[task.setvariable variable=MSBuildPath]$msbuildPath"
+       displayName: Locate MSBuild
      - script: |
-        "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Current\Bin\amd64\msbuild.exe" $(Agent.BuildDirectory)\s\backend\Origam.sln /p:Configuration="Release Server" /t:Server\Origam_Server:Publish -v:m
+        "$(MSBuildPath)" $(Agent.BuildDirectory)\s\backend\Origam.sln /p:Configuration="Release Server" /t:Server\Origam_Server:Publish -v:m
        displayName: 'Build Server'
      - script: |
-        "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Current\Bin\amd64\msbuild.exe" $(Agent.BuildDirectory)\s\backend\Origam.sln /p:Configuration="Release Server" /t:OrigamScheduler -v:m
+        "$(MSBuildPath)" $(Agent.BuildDirectory)\s\backend\Origam.sln /p:Configuration="Release Server" /t:OrigamScheduler -v:m
        displayName: 'Build Scheduler'
      - script: |
-        "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Current\Bin\amd64\msbuild.exe" $(Agent.BuildDirectory)\s\backend\Origam.sln /p:Configuration="Release Architect Server" /t:Architect\Origam_Architect_Server:Publish -v:m
+        "$(MSBuildPath)" $(Agent.BuildDirectory)\s\backend\Origam.sln /p:Configuration="Release Architect Server" /t:Architect\Origam_Architect_Server:Publish -v:m
        displayName: 'Build Architect Server'
      - script: |
-        "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Current\Bin\amd64\msbuild.exe" $(Agent.BuildDirectory)\s\backend\Origam.sln /p:Configuration="Release Server" /t:Origam_Composer:Publish -v:m
+        "$(MSBuildPath)" $(Agent.BuildDirectory)\s\backend\Origam.sln /p:Configuration="Release Server" /t:Origam_Composer:Publish -v:m
        displayName: 'Build Composer'
               
      - task: CopyFiles@2
        displayName: 'Copy Server to: $(build.artifactstagingdirectory)\origam-server'
        inputs:
-         SourceFolder: '$(Agent.BuildDirectory)\s\backend\Origam.Server\bin\Release\net8.0\publish\'
+         SourceFolder: '$(Agent.BuildDirectory)\s\backend\Origam.Server\bin\Release\net10.0\publish\'
          Contents: |
            **\*.*
            !*.config
@@ -216,7 +234,7 @@ jobs:
      - task: CopyFiles@2
        displayName: 'Copy Scheduler to: $(build.artifactstagingdirectory)\scheduler'
        inputs:
-         SourceFolder: '$(Agent.BuildDirectory)\s\backend\OrigamScheduler\bin\Release\net8.0\'
+         SourceFolder: '$(Agent.BuildDirectory)\s\backend\OrigamScheduler\bin\Release\net10.0\'
          Contents: |
            **\*.*
            !*.config
@@ -231,7 +249,7 @@ jobs:
      - task: CopyFiles@2
        displayName: 'Copy Architect Server to: $(build.artifactstagingdirectory)\origam-architect-server'
        inputs:
-         SourceFolder: '$(Agent.BuildDirectory)\s\backend\Origam.Architect.Server\bin\Release\net8.0\publish\'
+         SourceFolder: '$(Agent.BuildDirectory)\s\backend\Origam.Architect.Server\bin\Release\net10.0\publish\'
          Contents: |
            **\*.*
            !*.config
@@ -246,7 +264,7 @@ jobs:
      - task: CopyFiles@2
        displayName: 'Copy Composer to: $(build.artifactstagingdirectory)\origam-composer'
        inputs:
-         SourceFolder: '$(Agent.BuildDirectory)\s\backend\Origam.Composer\bin\Release\net8.0\publish\'
+         SourceFolder: '$(Agent.BuildDirectory)\s\backend\Origam.Composer\bin\Release\net10.0\publish\'
          Contents: |
            **\*.*
            !*.config

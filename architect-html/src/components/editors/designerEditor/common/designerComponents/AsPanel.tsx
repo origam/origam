@@ -19,12 +19,24 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { Component } from '@editors/designerEditor/common/designerComponents/Component';
 import S from '@editors/designerEditor/common/designerComponents/Components.module.scss';
+import { NavigationPanel } from '@editors/designerEditor/common/designerComponents/NavigationPanel';
 import { sectionLayer } from '@editors/designerEditor/common/Layers';
+import { Bounds } from '@editors/designerEditor/common/Snapping';
 import { ReactElement } from 'react';
+
+const rowNavigationMinWidth = 640;
+const navigationPanelHeight = 20;
 
 export class AsPanel extends Component {
   get canHaveChildren(): boolean {
     return true;
+  }
+
+  get contentBounds(): Bounds {
+    const bounds = super.contentBounds;
+    return this.get('HideNavigationPanel') === false
+      ? { ...bounds, top: bounds.top + navigationPanelHeight }
+      : bounds;
   }
 
   get zIndex(): number {
@@ -32,6 +44,19 @@ export class AsPanel extends Component {
   }
 
   getDesignerRepresentation(): ReactElement | null {
-    return <div className={S.panel}></div>;
+    const showNewButton = this.get('ShowNewButton') === true;
+    return (
+      <div className={S.panel}>
+        {this.get('HideNavigationPanel') === false && (
+          <NavigationPanel
+            title={this.get('PanelTitle') ?? ''}
+            showNewButton={showNewButton}
+            showDeleteButton={this.get('ShowDeleteButton') === true}
+            showCopyButton={showNewButton && this.get('HideCopyButton') !== true}
+            showRowNavigation={this.width >= rowNavigationMinWidth}
+          />
+        )}
+      </div>
+    );
   }
 }

@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.Google;
@@ -56,9 +57,14 @@ public class OpenIddictConfig
     public AzureAdLogin AzureAdLogin { get; }
     public bool CookieSlidingExpiration { get; }
     public int CookieExpirationMinutes { get; }
+    public int AccessTokenExpirationMinutes { get; }
     public string AuthenticationPostProcessor { get; }
     public string AccessTokenIssuer { get; }
-    public AuthenticationMethod PrivateApiAuthentication { get; }
+    public AuthenticationMethod PrivateApiAuthenticationMethod { get; }
+    public IReadOnlyDictionary<
+        string,
+        AuthenticationMethod
+    > PrivateApiAdditionalAuthenticationMethods { get; }
     public ClientApplicationTemplates ClientApplicationTemplates { get; set; }
 
     public OpenIddictConfig(IConfiguration configuration)
@@ -68,14 +74,32 @@ public class OpenIddictConfig
             key: "CookieSlidingExpiration",
             defaultValue: true
         );
-        PrivateApiAuthentication = openIddictSection.GetValue(
+        PrivateApiAuthenticationMethod = openIddictSection.GetValue(
             key: "PrivateApiAuthentication",
             AuthenticationMethod.Cookie
         );
+        PrivateApiAdditionalAuthenticationMethods = openIddictSection
+            .GetSection("PrivateApiAdditionalAuthenticationMethods")
+            .GetChildren()
+            .ToDictionary(
+                endpoint => endpoint.Key,
+                endpoint => ParseAdditionalAuthenticationMethod(endpoint.Key, endpoint.Value),
+                StringComparer.Ordinal
+            );
+        foreach (var endpoint in PrivateApiAdditionalAuthenticationMethods)
+        {
+            // PathString also validates that endpoint paths start with '/'.
+            _ = new Microsoft.AspNetCore.Http.PathString(endpoint.Key);
+        }
         CookieExpirationMinutes = openIddictSection.GetValue(
             key: "CookieExpirationMinutes",
             defaultValue: 60
         );
+        AccessTokenExpirationMinutes = openIddictSection.GetValue(
+            key: "AccessTokenExpirationMinutes",
+            defaultValue: 60
+        );
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(AccessTokenExpirationMinutes);
         GoogleLogin = ConfigureGoogleLogin(openIddictSection);
         MicrosoftLogin = ConfigureMicrosoftLogin(openIddictSection);
         AzureAdLogin = ConfigureAzureAdLogin(openIddictSection);
@@ -91,6 +115,42 @@ public class OpenIddictConfig
             defaultValue: ""
         );
         AccessTokenIssuer = openIddictSection.GetValue(key: "AccessTokenIssuer", defaultValue: "");
+    }
+
+    public IEnumerable<AuthenticationMethod> GetPrivateApiAuthenticationMethods(string path)
+    {
+        yield return PrivateApiAuthenticationMethod;
+        if (
+            PrivateApiAdditionalAuthenticationMethods.TryGetValue(path, out var additionalMethod)
+            && additionalMethod != PrivateApiAuthenticationMethod
+        )
+        {
+            yield return additionalMethod;
+        }
+    }
+
+    private static AuthenticationMethod ParseAdditionalAuthenticationMethod(
+        string endpointPath,
+        string value
+    )
+    {
+        if (
+            !Enum.TryParse(value, ignoreCase: true, out AuthenticationMethod method)
+            || !Enum.IsDefined(method)
+        )
+        {
+            throw new ArgumentOutOfRangeException(
+                nameof(PrivateApiAdditionalAuthenticationMethods),
+                value,
+                string.Format(
+                    Resources.ErrorInvalidAdditionalAuthenticationMethod,
+                    value,
+                    endpointPath,
+                    string.Join(separator: ", ", Enum.GetNames<AuthenticationMethod>())
+                )
+            );
+        }
+        return method;
     }
 
     private ServerClient ConfigureServerClient(IConfigurationSection identityServerSection)

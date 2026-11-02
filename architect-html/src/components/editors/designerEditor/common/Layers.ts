@@ -23,3 +23,5 @@ export const screenLayer = 5;
 export const sectionLayer = 5;
 // zIndex of the individual controls
 export const controlLayer = 100;
+export const snapLineLayer = 500;
+export const tabOrderLayer = 1000;

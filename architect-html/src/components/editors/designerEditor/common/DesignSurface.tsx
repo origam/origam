@@ -23,8 +23,11 @@ import { Component } from '@editors/designerEditor/common/designerComponents/Com
 import S from '@editors/designerEditor/common/DesignerSurface.module.scss';
 import { ResizeHandle } from '@editors/designerEditor/common/DesignSurfaceState';
 import { IDesignerEditorState } from '@editors/designerEditor/common/IDesignerEditorState';
+import { snapLineLayer, tabOrderLayer } from '@editors/designerEditor/common/Layers';
+import { SnapLine } from '@editors/designerEditor/common/Snapping';
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
 import { isTypingTarget } from '@/utils/keyShortcuts';
+import cn from 'classnames';
 import { observer } from 'mobx-react-lite';
 import React, { useContext, useEffect, useRef } from 'react';
 import { Item, Menu } from '@origam/react-contexify';
@@ -71,7 +74,7 @@ export const DesignSurface: React.FC<{
 
   const onDrop = (e: React.DragEvent) => {
     e.preventDefault();
-    if (!surfaceState.draggedComponentData || !surfaceRef.current) {
+    if (!surfaceState.draggedComponentData || !surfaceRef.current || surfaceState.isTabOrderMode) {
       return;
     }
     const dropPoint = toSurfacePoint(e);
@@ -83,14 +86,21 @@ export const DesignSurface: React.FC<{
       if (!surfaceRef.current) return;
       const point = toSurfacePoint(e);
       if (surfaceState.isResizing) {
-        surfaceState.updateResizing(point.x, point.y);
+        surfaceState.updateResizing(point.x, point.y, !e.altKey);
       } else if (surfaceState.isDragging) {
-        surfaceState.updateDragging(point.x, point.y);
+        surfaceState.updateDragging(point.x, point.y, !e.altKey);
+      }
+    };
+    const handleAltKey = (e: KeyboardEvent) => {
+      if (e.key === 'Alt') {
+        surfaceState.setSnapEnabled(!e.altKey);
       }
     };
     const handleMouseUp = (e: MouseEvent) => {
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('mouseup', handleMouseUp);
+      window.removeEventListener('keydown', handleAltKey);
+      window.removeEventListener('keyup', handleAltKey);
       if (!surfaceRef.current) return;
       if (surfaceState.dragState.didDrag || surfaceState.resizeState.didResize) {
         ignoreNextSurfaceClick.current = true;
@@ -101,10 +111,12 @@ export const DesignSurface: React.FC<{
     };
     window.addEventListener('mousemove', handleMouseMove);
     window.addEventListener('mouseup', handleMouseUp);
+    window.addEventListener('keydown', handleAltKey);
+    window.addEventListener('keyup', handleAltKey);
   };
 
   const handleComponentMouseDown = (e: React.MouseEvent, component: Component) => {
-    if (e.button !== 0 || !surfaceRef.current) return;
+    if (e.button !== 0 || !surfaceRef.current || surfaceState.isTabOrderMode) return;
 
     // Prevent dragging when clicking resize handles
     if ((e.target as HTMLElement).classList.contains(S.resizeHandle)) {
@@ -118,6 +130,12 @@ export const DesignSurface: React.FC<{
 
   const handleComponentClick = (event: React.MouseEvent, component: Component) => {
     event.stopPropagation();
+    if (surfaceState.isTabOrderMode) {
+      if (!(event as any).clickedComponent) {
+        run({ generator: surfaceState.assignTabIndex(component, event.ctrlKey || event.metaKey) });
+      }
+      return;
+    }
     const componentToSelect = (event as any).clickedComponent
       ? (event as any).clickedComponent
       : component;
@@ -129,6 +147,17 @@ export const DesignSurface: React.FC<{
       return;
     }
     surfaceState.selectComponent(null);
+  };
+
+  const getComponentCursor = (component: Component) => {
+    if (surfaceState.draggingComponentId === component.id) {
+      return 'move';
+    }
+    const isTabOrderFixed =
+      surfaceState.isTabOrderMode &&
+      surfaceState.showsTabOrder(component) &&
+      surfaceState.isTabOrderFixed(component);
+    return isTabOrderFixed ? 'not-allowed' : 'default';
   };
 
   const handleResizeStart = (e: React.MouseEvent, component: Component, handle: ResizeHandle) => {
@@ -157,7 +186,7 @@ export const DesignSurface: React.FC<{
               className={S.componentLabel}
               style={{
                 ...component.getLabelStyle(),
-                zIndex: component.zIndex,
+                zIndex: component.labelZIndex,
               }}
             >
               {component.data.identifier}
@@ -173,7 +202,7 @@ export const DesignSurface: React.FC<{
                 top: `${component.absoluteTop}px`,
                 width: `${component.width}px`,
                 height: `${component.height}px`,
-                cursor: surfaceState.draggingComponentId === component.id ? 'move' : 'default',
+                cursor: getComponentCursor(component),
                 zIndex: component.zIndex,
               }}
               onMouseDown={e => handleComponentMouseDown(e, component)}
@@ -218,8 +247,36 @@ export const DesignSurface: React.FC<{
                   />
                 ))}
             </div>
+            {surfaceState.isTabOrderMode && surfaceState.showsTabOrder(component) && (
+              <div
+                data-test-id={`tab-order-badge-${component.id}`}
+                className={cn(S.tabOrderBadge, {
+                  [S.fixed]: surfaceState.isTabOrderFixed(component),
+                  [S.assigned]: surfaceState.isTabOrderAssigned(component),
+                })}
+                style={{
+                  left: `${component.absoluteLeft}px`,
+                  top: `${component.absoluteTop}px`,
+                  zIndex: tabOrderLayer,
+                }}
+              >
+                {surfaceState.tabOrderLabel(component)}
+              </div>
+            )}
           </React.Fragment>
         ))}
+      {surfaceState.snapLines.map((line, index) => (
+        <div
+          key={index}
+          data-test-id="snap-line"
+          data-orientation={line.orientation}
+          data-kind={line.kind}
+          className={cn(S.snapLine, S[line.orientation], {
+            [S.baseline]: line.kind === 'baseline',
+          })}
+          style={getSnapLineStyle(line)}
+        />
+      ))}
       <Menu id={'TAB_LABEL_MENU'} animation="fade">
         <Item
           disabled={({ props }) => props.deleteDisabled}
@@ -232,3 +289,9 @@ export const DesignSurface: React.FC<{
     </div>
   );
 });
+
+function getSnapLineStyle(line: SnapLine): React.CSSProperties {
+  return line.orientation === 'vertical'
+    ? { left: line.position, top: line.from, height: line.to - line.from, zIndex: snapLineLayer }
+    : { left: line.from, top: line.position, width: line.to - line.from, zIndex: snapLineLayer };
+}

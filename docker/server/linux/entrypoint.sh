@@ -27,7 +27,8 @@ if [ "$container_mode" = "server" ]; then
   fi
   cd /home/origam/server_bin
   ./configureServer.sh
-  export ASPNETCORE_URLS="http://+:8080"
+  # nginx terminates TLS; keep the public URLs available for account emails.
+  export Kestrel__Endpoints__Http__Url="http://+:8080"
   exec dotnet Origam.Server.dll
 elif [ "$container_mode" = "scheduler" ]; then
   cd /home/origam/scheduler_bin

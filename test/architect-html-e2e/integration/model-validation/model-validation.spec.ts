@@ -31,8 +31,15 @@ import { resetBackend, restoreModelFiles } from '@support/resetBackend';
 // Reading the whole model twice takes a while on a cold run.
 const VALIDATION_TIMEOUT = 90_000;
 
+async function openMenu(page: Page) {
+  if (!(await page.getByTestId('topbar-check-model').isVisible())) {
+    await page.getByTestId('topbar-menu').click();
+  }
+}
+
 async function runValidation(page: Page) {
   await page.goto('/');
+  await openMenu(page);
   const validateButton = page.getByTestId('topbar-check-model');
   await expect(validateButton).toBeVisible();
   await validateButton.click();
@@ -40,6 +47,7 @@ async function runValidation(page: Page) {
   await expect(page.getByTestId('model-check-results')).toBeVisible({
     timeout: VALIDATION_TIMEOUT,
   });
+  await openMenu(page);
 }
 
 function fileSection(page: Page, caption: string) {
@@ -85,7 +93,7 @@ test.describe('Model validation', () => {
     const section = fileSection(page, 'Invalid References Between Origam Files');
     await expect(section).toContainText(instanceId);
     await expect(section).toContainText(missingId);
-    await expect(section).toContainText('1.0.3.origam');
+    await expect(section).toContainText('ArrayTest.origam');
   });
 
   test('reports a file that no model element references', async ({ page }) => {
@@ -163,6 +171,7 @@ test.describe('Model validation', () => {
     );
     await page.goto('/');
     await lastResultLoaded;
+    await openMenu(page);
 
     await expect(page.getByTestId('topbar-check-model')).toBeVisible();
     await expect(page.getByTestId('topbar-check-model-badge')).toHaveCount(0);
@@ -176,6 +185,7 @@ test.describe('Model validation', () => {
     await page.reload();
 
     await expect(fileSection(page, 'not referenced by any model element')).toBeVisible();
+    await openMenu(page);
     await expect(page.getByTestId('topbar-check-model-badge')).toHaveText('1');
   });
 
@@ -187,6 +197,7 @@ test.describe('Model validation', () => {
     await page.reload();
 
     // The badge appears together with the restore, so the tab would be open by now.
+    await openMenu(page);
     await expect(page.getByTestId('topbar-check-model-badge')).toBeVisible();
     await expect(page.getByTestId('model-check-results')).toHaveCount(0);
   });

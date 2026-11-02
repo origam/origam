@@ -67,7 +67,8 @@ public class ModeledOpenApiDocumentGeneratorCompositionTests
             new ModeledOpenApiExampleFactory(
                 documentationService: null,
                 NullLogger<ModeledOpenApiExampleFactory>.Instance
-            )
+            ),
+            new OpenIddictConfig(configuration)
         );
         var generator = new ModeledOpenApiDocumentGenerator(
             new OpenIddictConfig(configuration),

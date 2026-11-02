@@ -27,6 +27,7 @@ export function askYesNoQuestion(
   dialogStack: IDialogStackState,
   title: string,
   question: string,
+  { showCancel = true }: { showCancel?: boolean } = {},
 ): Promise<YesNoResult> {
   return new Promise(
     action((resolve: (value: YesNoResult) => void) => {
@@ -46,10 +47,14 @@ export function askYesNoQuestion(
             closeDialog();
             resolve(YesNoResult.No);
           }}
-          onCancelClick={() => {
-            closeDialog();
-            resolve(YesNoResult.Cancel);
-          }}
+          onCancelClick={
+            showCancel
+              ? () => {
+                  closeDialog();
+                  resolve(YesNoResult.Cancel);
+                }
+              : undefined
+          }
         />,
       );
     }),

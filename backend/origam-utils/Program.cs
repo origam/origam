@@ -371,26 +371,19 @@ public class Program
 
     private static int NormalizeFileFormat()
     {
-        OrigamSettingsCollection configurations;
+        OrigamSettings configuration;
         try
         {
-            configurations = ConfigurationManager.GetAllConfigurations();
-            if (configurations.Count != 1)
-            {
-                Console.WriteLine(
-                    "OrigamSettings.config doesn't contain exactly one configuration."
-                );
-                return -1;
-            }
+            configuration = ConfigurationManager.GetConfiguration();
         }
-        catch
+        catch (Exception exception)
         {
-            Console.WriteLine("Failed to load OrigamSettings.config");
+            Console.WriteLine(exception.Message);
             return -1;
         }
         Directory
             .EnumerateFiles(
-                configurations[0].ModelSourceControlLocation,
+                configuration.ModelSourceControlLocation,
                 searchPattern: "*.origam",
                 SearchOption.AllDirectories
             )

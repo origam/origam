@@ -35,7 +35,7 @@ const BACKEND_URLS_ARG = 'https://localhost:7099;http://localhost:5003';
 // custom setups override it, or override the whole command via ARCHITECT_SERVER_CMD.
 const SERVER_DIR =
   process.env.ARCHITECT_SERVER_DIR ??
-  path.join(repoRoot, 'backend/Origam.Architect.Server/bin/Debug/net8.0');
+  path.join(repoRoot, 'backend/Origam.Architect.Server/bin/Debug/net10.0');
 // Absolute path with native separators — cmd won't run a relative/forward-slash
 // exe path, and cwd is not on PATH. The server reads OrigamSettings.config from
 // next to its own exe, so cwd doesn't affect config loading.
