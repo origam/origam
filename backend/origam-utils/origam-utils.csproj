@@ -69,6 +69,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\Origam.Common\Origam.Common.csproj">
       <Project>{3c49f590-14ac-464d-b0f9-8738576249a9}</Project>
       <Name>Origam.Common</Name>
