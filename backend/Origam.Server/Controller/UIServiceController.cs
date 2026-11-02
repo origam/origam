@@ -106,11 +106,9 @@ public class UIServiceController : AbstractController
     [HttpGet("[action]")]
     public IActionResult DefaultLocalizationCookie()
     {
-        var cultureProvider = localizationOptions
-            .RequestCultureProviders.OfType<OrigamCookieRequestCultureProvider>()
-            .First();
-        string localizationCookie = cultureProvider.MakeCookieValue(
-            localizationOptions.DefaultRequestCulture
+        string localizationCookie = OrigamRequestLocalization.MakeLocalizationCookieValue(
+            localizationOptions,
+            HttpContext
         );
         return Ok(localizationCookie);
     }
