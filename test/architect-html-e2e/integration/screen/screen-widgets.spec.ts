@@ -291,6 +291,8 @@ test.describe('Screen editor widgets (real backend)', () => {
       y: 60,
     });
     await editor.select(section);
+    await editor.chooseProperty('DataMember', MASTER_DATA_MEMBER);
+    await expect(editor.warnings).toHaveCount(0);
     const preview = editor.component(section);
     const gridButton = preview.getByTestId('navigation-panel-grid');
     const detailButton = preview.getByTestId('navigation-panel-form');
