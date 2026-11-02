@@ -30,3 +30,5 @@ RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \
 # Corepack prompts before downloading the packageManager-pinned version; that
 # hangs non-interactive contexts (postCreateCommand, tasks), so silence it.
 ENV COREPACK_ENABLE_DOWNLOAD_PROMPT=0
+
+WORKDIR /workspaces/origam
