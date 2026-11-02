@@ -63,9 +63,7 @@ public class LanguageConfig
                 $"The default culture \"{defaultCulture}\" is not among the allowed cultures in the \"LanguageConfig\" section."
             );
         }
-        AcceptLanguageHeaderEnabled = languageSection.GetValue<bool>(
-            "UseAcceptLanguageHeader"
-        );
+        AcceptLanguageHeaderEnabled = languageSection.GetValue<bool>("UseAcceptLanguageHeader");
         SupportedCultures = CultureItems
             .Select(item => new CultureInfo(item.CultureName))
             .ToArray();
