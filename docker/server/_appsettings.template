@@ -69,7 +69,7 @@
 	"BehindProxy":  "true",
     "LanguageConfig":{
         "Default": "en-US",
-        "AcceptLanguage": "false",
+        "FallbackToAcceptLanguageHeader": "false",
         "Allowed":[
             {
                 "Culture": "en-US",

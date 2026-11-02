@@ -28,8 +28,6 @@ namespace Origam.Server.Middleware;
 
 public class UserApiMiddleware
 {
-    // must accept next: UseMiddleware resolves this ctor with it, a parameterless ctor fails at
-    // pipeline build
     public UserApiMiddleware(RequestDelegate next) { }
 
     public Task Invoke(HttpContext context, IWebHostEnvironment environment)
