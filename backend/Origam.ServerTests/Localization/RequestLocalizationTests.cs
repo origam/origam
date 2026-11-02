@@ -66,6 +66,10 @@ public class RequestLocalizationTests
                 options.RequestCultureProviders[0],
                 Is.TypeOf<OrigamCookieRequestCultureProvider>()
             );
+            Assert.That(
+                options.RequestCultureProviders[1],
+                Is.TypeOf<OrigamAcceptLanguageRequestCultureProvider>()
+            );
             Assert.That(requestCulture.Culture.Name, Is.EqualTo("en"));
         });
     }
@@ -87,22 +91,79 @@ public class RequestLocalizationTests
     }
 
     [Test]
-    public async Task MatchingCultureResolvesAParentLanguage()
+    public async Task UnconfiguredRegionOfAnAllowedLanguageResolvesToThatCulture()
     {
         RequestLocalizationOptions options = CreateOptions(
-            TestLanguageConfig.Create(acceptLanguageEnabled: true, matchingCultures: "de")
+            TestLanguageConfig.Create(acceptLanguageEnabled: true)
         );
 
-        RequestCulture requestCulture = await Resolve(options, acceptLanguage: "de-DE");
+        RequestCulture requestCulture = await Resolve(options, acceptLanguage: "fr-CA");
 
-        Assert.That(requestCulture.Culture.Name, Is.EqualTo("de"));
+        // the header names a culture nobody configured, so a configured culture of the same language
+        // is resolved instead of the header's own culture
+        Assert.That(requestCulture.Culture.Name, Is.EqualTo("fr-CH"));
+    }
+
+    [Test]
+    public async Task AcceptLanguageEntriesWithoutAConfiguredLanguageAreSkipped()
+    {
+        RequestLocalizationOptions options = CreateOptions(
+            TestLanguageConfig.Create(acceptLanguageEnabled: true)
+        );
+
+        RequestCulture requestCulture = await Resolve(
+            options,
+            acceptLanguage: "pl-PL;q=0.9, fr-CA;q=0.5"
+        );
+
+        Assert.That(requestCulture.Culture.Name, Is.EqualTo("fr-CH"));
+    }
+
+    [Test]
+    public async Task AcceptLanguageQualityOrderIsPreserved()
+    {
+        RequestLocalizationOptions options = CreateOptions(
+            TestLanguageConfig.Create(acceptLanguageEnabled: true)
+        );
+
+        RequestCulture frenchFirst = await Resolve(
+            options,
+            acceptLanguage: "fr-CA;q=0.9, en-US;q=0.5"
+        );
+        RequestCulture englishFirst = await Resolve(
+            options,
+            acceptLanguage: "en-US;q=0.9, fr-CA;q=0.5"
+        );
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(frenchFirst.Culture.Name, Is.EqualTo("fr-CH"));
+            Assert.That(englishFirst.Culture.Name, Is.EqualTo("en"));
+        });
+    }
+
+    [Test]
+    public async Task UnparsableAcceptLanguageValueFallsBackToTheDefaultCulture()
+    {
+        RequestLocalizationOptions options = CreateOptions(
+            TestLanguageConfig.Create(acceptLanguageEnabled: true)
+        );
+
+        RequestCulture range = await Resolve(options, acceptLanguage: "*");
+        RequestCulture garbage = await Resolve(options, acceptLanguage: "garbage");
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(range.Culture.Name, Is.EqualTo("de-CH"));
+            Assert.That(garbage.Culture.Name, Is.EqualTo("de-CH"));
+        });
     }
 
     [Test]
     public async Task UnsupportedHeaderLanguageFallsBackToTheDefaultCulture()
     {
         RequestLocalizationOptions options = CreateOptions(
-            TestLanguageConfig.Create(acceptLanguageEnabled: true, matchingCultures: "fr")
+            TestLanguageConfig.Create(acceptLanguageEnabled: true)
         );
 
         RequestCulture requestCulture = await Resolve(options, acceptLanguage: "it-IT,it;q=0.9");
@@ -146,10 +207,10 @@ public class RequestLocalizationTests
     public async Task ResolvedCultureIsAppliedInsideTheRequestPipeline()
     {
         RequestLocalizationOptions options = CreateOptions(
-            TestLanguageConfig.Create(acceptLanguageEnabled: true, matchingCultures: "de")
+            TestLanguageConfig.Create(acceptLanguageEnabled: true)
         );
         var context = new DefaultHttpContext();
-        context.Request.Headers.AcceptLanguage = "de-DE";
+        context.Request.Headers.AcceptLanguage = "fr-CA";
         string currentCultures = null;
         var middleware = new RequestLocalizationMiddleware(
             _ =>
@@ -165,33 +226,7 @@ public class RequestLocalizationTests
         await middleware.Invoke(context);
 
         // the framework applies the resolved culture downstream of UseRequestLocalization
-        Assert.That(currentCultures, Is.EqualTo("de/de"));
-    }
-
-    [Test]
-    public void CookieCultureIsTheClosestItemOfTheResolvedCulture()
-    {
-        LanguageConfig languageConfig = TestLanguageConfig.Create(
-            acceptLanguageEnabled: true,
-            matchingCultures: "fr"
-        );
-
-        Assert.Multiple(() =>
-        {
-            // a matching-only culture carries no item, so the item whose settings apply is used
-            Assert.That(
-                OrigamRequestLocalization
-                    .ResolveCultureForCookie(languageConfig, new RequestCulture("fr"))
-                    .Culture.Name,
-                Is.EqualTo("fr-CH")
-            );
-            Assert.That(
-                OrigamRequestLocalization
-                    .ResolveCultureForCookie(languageConfig, new RequestCulture("it-IT"))
-                    .Culture.Name,
-                Is.EqualTo("de-CH")
-            );
-        });
+        Assert.That(currentCultures, Is.EqualTo("fr-CH/fr-CH"));
     }
 
     [Test]
@@ -229,30 +264,23 @@ public class RequestLocalizationTests
     [Test]
     public void LocalizationCookieFollowsTheResolvedCulture()
     {
-        LanguageConfig languageConfig = TestLanguageConfig.Create(
-            acceptLanguageEnabled: true,
-            matchingCultures: "fr"
+        RequestLocalizationOptions options = CreateOptions(
+            TestLanguageConfig.Create(acceptLanguageEnabled: true)
         );
-        RequestLocalizationOptions options = CreateOptions(languageConfig);
         var context = new DefaultHttpContext();
         context.Features.Set<IRequestCultureFeature>(
-            new RequestCultureFeature(new RequestCulture("fr"), provider: null)
+            new RequestCultureFeature(new RequestCulture("fr-FR"), provider: null)
         );
 
         Assert.Multiple(() =>
         {
             Assert.That(
-                OrigamRequestLocalization.MakeLocalizationCookieValue(
-                    options,
-                    languageConfig,
-                    context
-                ),
-                Does.StartWith("c=fr-CH|")
+                OrigamRequestLocalization.MakeLocalizationCookieValue(options, context),
+                Does.StartWith("c=fr-FR|")
             );
             Assert.That(
                 OrigamRequestLocalization.MakeLocalizationCookieValue(
                     options,
-                    languageConfig,
                     new DefaultHttpContext()
                 ),
                 Does.StartWith("c=de-CH|")

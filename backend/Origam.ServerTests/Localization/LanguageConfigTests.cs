@@ -31,53 +31,29 @@ namespace Origam.ServerTests.Localization;
 public class LanguageConfigTests
 {
     [Test]
-    public void AcceptLanguageIsDisabledByDefault()
+    public void AcceptLanguageIsDisabledWhenTheKeyIsMissing()
     {
-        LanguageConfig languageConfig = TestLanguageConfig.CreateWithoutAcceptLanguageSection();
+        LanguageConfig languageConfig = TestLanguageConfig.CreateWithoutAcceptLanguageKey();
 
-        Assert.Multiple(() =>
-        {
-            Assert.That(languageConfig.AcceptLanguageHeaderEnabled, Is.False);
-            Assert.That(
-                languageConfig.SupportedCultures.Select(culture => culture.Name),
-                Is.EquivalentTo(new[] { "de-CH", "fr-CH", "en", "fr-FR" })
-            );
-        });
+        Assert.That(languageConfig.AcceptLanguageHeaderEnabled, Is.False);
     }
 
     [Test]
-    public void MatchingCulturesBecomeSupportedButAreNotOffered()
+    public void SupportedCulturesFollowTheConfiguredCultures()
     {
-        LanguageConfig languageConfig = TestLanguageConfig.Create(
-            acceptLanguageEnabled: true,
-            matchingCultures: "fr"
-        );
+        LanguageConfig languageConfig = TestLanguageConfig.Create(acceptLanguageEnabled: true);
 
         Assert.Multiple(() =>
         {
             Assert.That(
                 languageConfig.SupportedCultures.Select(culture => culture.Name),
-                Is.EquivalentTo(new[] { "de-CH", "fr-CH", "en", "fr-FR", "fr" })
+                Is.EquivalentTo(new[] { "de-CH", "fr-CH", "en", "fr-FR" })
             );
             Assert.That(
                 languageConfig.CultureItems.Select(item => item.CultureName),
                 Is.EquivalentTo(new[] { "de-CH", "fr-CH", "en", "fr-FR" })
             );
         });
-    }
-
-    [Test]
-    public void MatchingCulturesDoNotApplyWhenDisabled()
-    {
-        LanguageConfig languageConfig = TestLanguageConfig.Create(
-            acceptLanguageEnabled: false,
-            matchingCultures: "fr"
-        );
-
-        Assert.That(
-            languageConfig.SupportedCultures.Select(culture => culture.Name),
-            Has.No.Member("fr")
-        );
     }
 
     [Test]
@@ -117,10 +93,7 @@ public class LanguageConfigTests
     [Test]
     public void CultureItemIsMatchedByLanguage()
     {
-        LanguageConfig languageConfig = TestLanguageConfig.Create(
-            acceptLanguageEnabled: true,
-            matchingCultures: "fr"
-        );
+        LanguageConfig languageConfig = TestLanguageConfig.Create(acceptLanguageEnabled: false);
 
         Assert.Multiple(() =>
         {
@@ -137,38 +110,40 @@ public class LanguageConfigTests
         Assert.Multiple(() =>
         {
             Assert.That(languageConfig.FindCultureItem("it-IT").CultureName, Is.EqualTo("de-CH"));
-            Assert.That(languageConfig.TryFindCultureItem("it-IT"), Is.Null);
+            Assert.That(languageConfig.FindCultureItem(null).CultureName, Is.EqualTo("de-CH"));
+        });
+    }
+
+    [Test]
+    public void UnparsableCultureNameIsNotMatched()
+    {
+        LanguageConfig languageConfig = TestLanguageConfig.Create(acceptLanguageEnabled: true);
+
+        Assert.Multiple(() =>
+        {
+            // an Accept-Language header may carry a range instead of a culture
+            Assert.That(languageConfig.TryFindCultureItem("*"), Is.Null);
+            Assert.That(languageConfig.TryFindCultureItem("not a culture"), Is.Null);
+            Assert.That(languageConfig.FindCultureItem("*").CultureName, Is.EqualTo("de-CH"));
         });
     }
 }
 
 internal static class TestLanguageConfig
 {
-    public static LanguageConfig Create(
-        bool acceptLanguageEnabled,
-        params string[] matchingCultures
-    )
+    public static LanguageConfig Create(bool acceptLanguageEnabled)
     {
         List<KeyValuePair<string, string>> settings = CultureSettings();
         settings.Add(
             new KeyValuePair<string, string>(
-                "LanguageConfig:AcceptLanguage:Enabled",
+                "LanguageConfig:AcceptLanguage",
                 acceptLanguageEnabled ? "true" : "false"
             )
         );
-        for (int i = 0; i < matchingCultures.Length; i++)
-        {
-            settings.Add(
-                new KeyValuePair<string, string>(
-                    $"LanguageConfig:AcceptLanguage:MatchingCultures:{i}",
-                    matchingCultures[i]
-                )
-            );
-        }
         return Build(settings);
     }
 
-    public static LanguageConfig CreateWithoutAcceptLanguageSection()
+    public static LanguageConfig CreateWithoutAcceptLanguageKey()
     {
         return Build(CultureSettings());
     }

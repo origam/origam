@@ -65,7 +65,6 @@ public class UIServiceController : AbstractController
     private readonly ClientFilteringConfig clientFilteringConfig;
     private readonly IDataLookupService lookupService;
     private readonly RequestLocalizationOptions localizationOptions;
-    private readonly LanguageConfig languageConfig;
     private readonly CustomAssetsConfig customAssetsConfig;
     private readonly HtmlClientConfig htmlClientConfig;
     private readonly ChatConfig chatConfig;
@@ -79,7 +78,6 @@ public class UIServiceController : AbstractController
         IOptions<ClientFilteringConfig> filteringConfig,
         IOptions<HtmlClientConfig> htmlClientConfigOptions,
         IOptions<ChatConfig> chatConfigOptions,
-        LanguageConfig languageConfig,
         IWebHostEnvironment environment
     )
         : base(log, sessionObjects, environment)
@@ -87,7 +85,6 @@ public class UIServiceController : AbstractController
         this.localizer = localizer;
         this.clientFilteringConfig = filteringConfig.Value;
         this.localizationOptions = localizationOptions.Value;
-        this.languageConfig = languageConfig;
         customAssetsConfig = customAssetsOptions.Value;
         htmlClientConfig = htmlClientConfigOptions.Value;
         lookupService = ServiceManager.Services.GetService<IDataLookupService>();
@@ -111,7 +108,6 @@ public class UIServiceController : AbstractController
     {
         string localizationCookie = OrigamRequestLocalization.MakeLocalizationCookieValue(
             localizationOptions,
-            languageConfig,
             HttpContext
         );
         return Ok(localizationCookie);

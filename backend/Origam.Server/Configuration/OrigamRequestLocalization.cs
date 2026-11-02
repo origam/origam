@@ -39,26 +39,16 @@ public static class OrigamRequestLocalization
         options.RequestCultureProviders.Add(new OrigamCookieRequestCultureProvider(languageConfig));
         if (languageConfig.AcceptLanguageHeaderEnabled)
         {
-            options.RequestCultureProviders.Add(new AcceptLanguageHeaderRequestCultureProvider());
+            options.RequestCultureProviders.Add(
+                new OrigamAcceptLanguageRequestCultureProvider(languageConfig)
+            );
         }
     }
 
     // the client persists this cookie as its language, so it must carry the culture the request
-    // resolved and, for a matching-only culture, the item whose settings apply to it
-    public static RequestCulture ResolveCultureForCookie(
-        LanguageConfig languageConfig,
-        RequestCulture resolvedCulture
-    )
-    {
-        CultureItem cultureItem = languageConfig.TryFindCultureItem(resolvedCulture.Culture.Name);
-        return cultureItem == null
-            ? languageConfig.DefaultCulture
-            : new RequestCulture(cultureItem.CultureName);
-    }
-
+    // resolved, not the configured default
     public static string MakeLocalizationCookieValue(
         RequestLocalizationOptions options,
-        LanguageConfig languageConfig,
         HttpContext httpContext
     )
     {
@@ -68,8 +58,6 @@ public static class OrigamRequestLocalization
         RequestCulture resolvedCulture =
             httpContext.Features.Get<IRequestCultureFeature>()?.RequestCulture
             ?? options.DefaultRequestCulture;
-        return cultureProvider.MakeCookieValue(
-            ResolveCultureForCookie(languageConfig, resolvedCulture)
-        );
+        return cultureProvider.MakeCookieValue(resolvedCulture);
     }
 }

@@ -34,7 +34,7 @@ public class LanguageConfig
 {
     public RequestCulture DefaultCulture { get; }
 
-    // allowed cultures plus the matching ones; only CultureItems may be offered
+    // the configured cultures are the only ones a request may resolve to and the only ones offered
     public CultureInfo[] SupportedCultures { get; }
     public CultureItem[] CultureItems { get; }
     public bool AcceptLanguageHeaderEnabled { get; }
@@ -63,27 +63,9 @@ public class LanguageConfig
                 $"The default culture \"{defaultCulture}\" is not among the allowed cultures in the \"LanguageConfig\" section."
             );
         }
-        CultureInfo[] allowedCultures = CultureItems
+        AcceptLanguageHeaderEnabled = languageSection.GetValue<bool>("AcceptLanguage");
+        SupportedCultures = CultureItems
             .Select(item => new CultureInfo(item.CultureName))
-            .ToArray();
-
-        IConfigurationSection acceptLanguageSection = languageSection.GetSection("AcceptLanguage");
-        AcceptLanguageHeaderEnabled = acceptLanguageSection.GetValue<bool>("Enabled");
-        // the section takes effect only when enabled, a leftover MatchingCultures must not widen the
-        // supported cultures
-        CultureInfo[] matchingCultures = AcceptLanguageHeaderEnabled
-            ? ReadMatchingCultures(acceptLanguageSection)
-            : Array.Empty<CultureInfo>();
-        SupportedCultures = allowedCultures.Concat(matchingCultures).Distinct().ToArray();
-    }
-
-    private static CultureInfo[] ReadMatchingCultures(IConfigurationSection acceptLanguageSection)
-    {
-        return (
-            acceptLanguageSection.GetSection("MatchingCultures").Get<string[]>()
-            ?? Array.Empty<string>()
-        )
-            .Select(cultureName => new CultureInfo(cultureName))
             .ToArray();
     }
 
@@ -93,11 +75,19 @@ public class LanguageConfig
             ?? CultureItems.FirstOrDefault(item => item.CultureName == DefaultCulture.Culture.Name);
     }
 
-    // a matching-only culture ("fr" for a "fr-FR" browser) has no item of its own, so the first item
-    // of the same language is used
+    // the requested culture may be one nobody configured ("fr-CA") or no culture at all ("*" in an
+    // Accept-Language header), so the exact name is tried first and then the language
     public CultureItem TryFindCultureItem(string cultureName)
     {
-        CultureInfo culture = new CultureInfo(cultureName ?? string.Empty);
+        CultureInfo culture;
+        try
+        {
+            culture = new CultureInfo(cultureName ?? string.Empty);
+        }
+        catch (CultureNotFoundException)
+        {
+            return null;
+        }
         return CultureItems.FirstOrDefault(item => item.CultureName == culture.Name)
             ?? CultureItems.FirstOrDefault(item =>
                 new CultureInfo(item.CultureName).TwoLetterISOLanguageName
