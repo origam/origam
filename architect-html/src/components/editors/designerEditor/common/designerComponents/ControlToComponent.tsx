@@ -47,7 +47,7 @@ export async function controlToComponent(
   control: IApiControl,
   parent: Component | null,
   getChildren?: (component: Component) => Component[],
-  loadComponent?: (componentId: string) => Promise<ReactElement>,
+  loadComponent?: (componentId: string, properties: EditorProperty[]) => Promise<ReactElement>,
 ): Promise<Component> {
   const properties = control.properties.map(prop => new EditorProperty(prop));
   const componentType = parseComponentType(control.type);
@@ -190,7 +190,7 @@ export async function controlToComponent(
       if (!loadComponent) {
         throw new Error('loadComponent parameter is missing');
       }
-      const reactElement = await loadComponent(control.id);
+      const reactElement = await loadComponent(control.id, properties);
       return new FormPanel({
         id: control.id,
         parent: parent,
@@ -310,7 +310,7 @@ export async function toComponentRecursive(
   parent: Component | null,
   allComponents: Component[],
   getChildren?: (component: Component) => Component[],
-  loadComponent?: (componentId: string) => Promise<ReactElement>,
+  loadComponent?: (componentId: string, properties: EditorProperty[]) => Promise<ReactElement>,
 ): Promise<Component[]> {
   const newComponent = await controlToComponent(control, parent, getChildren, loadComponent);
   for (const childControl of control.children) {

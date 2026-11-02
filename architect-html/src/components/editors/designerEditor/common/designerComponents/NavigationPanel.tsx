@@ -36,6 +36,7 @@ export const NavigationPanel = (props: {
   showDeleteButton: boolean;
   showCopyButton: boolean;
   showRowNavigation: boolean;
+  gridVisible: boolean;
 }) => (
   <div className={S.navigationPanel} data-test-id="navigation-panel">
     <div className={S.navigationPanelTitle}>{props.title}</div>
@@ -84,19 +85,19 @@ export const NavigationPanel = (props: {
       </div>
     )}
     <div className={S.navigationPanelGroup}>
-      <Icon name="form" isActive={true}>
-        <rect width="8" height="8" />
-        <rect x="12" width="8" height="8" />
-        <rect y="12" width="8" height="8" />
-        <rect x="12" y="12" width="8" height="8" />
-      </Icon>
-      <Icon name="grid">
+      <Icon name="grid" isActive={props.gridVisible}>
         <rect width="20" height="20" />
         <line x1="0" y1="4" x2="20" y2="4" />
         <line x1="0" y1="8" x2="20" y2="8" />
         <line x1="0" y1="12" x2="20" y2="12" />
         <line x1="0" y1="16" x2="20" y2="16" />
         <line x1="7" y1="0" x2="7" y2="20" />
+      </Icon>
+      <Icon name="form" isActive={!props.gridVisible}>
+        <rect width="8" height="8" />
+        <rect x="12" width="8" height="8" />
+        <rect y="12" width="8" height="8" />
+        <rect x="12" y="12" width="8" height="8" />
       </Icon>
     </div>
     <div className={S.navigationPanelGroup}>

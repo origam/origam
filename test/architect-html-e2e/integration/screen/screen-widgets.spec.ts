@@ -284,6 +284,38 @@ test.describe('Screen editor widgets (real backend)', () => {
     await expect(page.locator('#root')).not.toContainText('prepareNewValue_');
   });
 
+  test('section view icons follow GridVisible in the properties panel', async ({ page }) => {
+    await editor.openNew();
+    const section = await editor.drop('Screen Sections', MASTER_SECTION, editor.surface, {
+      x: 60,
+      y: 60,
+    });
+    await editor.select(section);
+    await editor.chooseProperty('DataMember', MASTER_DATA_MEMBER);
+    await expect(editor.warnings).toHaveCount(0);
+    const preview = editor.component(section);
+    const gridButton = preview.getByTestId('navigation-panel-grid');
+    const detailButton = preview.getByTestId('navigation-panel-form');
+    const gridVisible = page.getByTestId('property-checkbox-GridVisible');
+    const activeColor = 'rgb(76, 132, 255)';
+
+    for (const visible of [true, false, true]) {
+      const updated = page.waitForResponse(response =>
+        response.url().includes('/ScreenEditor/Update'),
+      );
+      await gridVisible.setChecked(visible);
+      expect((await updated).ok()).toBeTruthy();
+      await expect(visible ? gridButton : detailButton).toHaveCSS('stroke', activeColor);
+      await expect(visible ? detailButton : gridButton).not.toHaveCSS('stroke', activeColor);
+    }
+
+    await editor.save();
+    await page.reload();
+    await closeAiPanel(page);
+    await expect(gridButton).toHaveCSS('stroke', activeColor);
+    await expect(detailButton).not.toHaveCSS('stroke', activeColor);
+  });
+
   test('each tab page keeps the widget dropped on it', async () => {
     await editor.openNew();
     const tabControl = await editor.drop('Widgets', 'TabControl', editor.surface, {
