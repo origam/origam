@@ -912,12 +912,14 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
                 <Item id="create-data-structure" onClick={openCreateDataStructureWizard}>
                   {T('Create Data Structure', 'tree_node_create_data_structure')}
                 </Item>
-                <Item
-                  id="create-l10n-child-entity"
-                  onClick={openCreateLocalizationChildEntityWizard}
-                >
-                  {T('Create Localization Child Entity', 'tree_node_create_l10n_child_entity')}
-                </Item>
+                {node.canCreateLocalizationChildEntity && (
+                  <Item
+                    id="create-l10n-child-entity"
+                    onClick={openCreateLocalizationChildEntityWizard}
+                  >
+                    {T('Create Localization Child Entity', 'tree_node_create_l10n_child_entity')}
+                  </Item>
+                )}
               </Submenu>
             )}
             {node.isScreen && (
