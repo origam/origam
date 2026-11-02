@@ -20,9 +20,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Origam.Server.Configuration;
 using Origam.Server.OpenApi;
@@ -41,7 +41,7 @@ public class Program
 
         try
         {
-            var host = CreateWebHostBuilder(args).Build();
+            using var host = CreateHostBuilder(args).Build();
             using (var scope = host.Services.CreateScope())
             {
                 var provider = scope.ServiceProvider;
@@ -75,10 +75,9 @@ public class Program
         }
     }
 
-    public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
-        WebHost
-            .CreateDefaultBuilder(args)
-            .UseStartup<Startup>()
+    public static IHostBuilder CreateHostBuilder(string[] args) =>
+        Host.CreateDefaultBuilder(args)
+            .ConfigureWebHostDefaults(webBuilder => webBuilder.UseStartup<Startup>())
             .ConfigureLogging(
                 (hostingContext, logging) =>
                 {

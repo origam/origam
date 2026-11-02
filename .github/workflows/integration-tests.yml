@@ -170,6 +170,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v7
 
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: '10.0.x'
+
       - name: setup-msbuild
         uses: microsoft/setup-msbuild@v3
 
@@ -202,6 +207,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v7
 
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: '10.0.x'
+
       - name: setup-msbuild
         uses: microsoft/setup-msbuild@v3
 
@@ -225,7 +235,7 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: htmlserverbuild
-          path: "backend/Origam.Server/bin/Release/net8.0/publish"
+          path: "backend/Origam.Server/bin/Release/net10.0/publish"
           retention-days: 1
           if-no-files-found: error
 
@@ -233,7 +243,7 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: workflowbuild
-          path: "backend/Origam.WorkflowTests/bin/Release/net8.0"
+          path: "backend/Origam.WorkflowTests/bin/Release/net10.0"
           retention-days: 1
           if-no-files-found: error
 

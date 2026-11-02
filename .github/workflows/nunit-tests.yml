@@ -9,7 +9,7 @@ on:
 jobs:
   buildArchitect:
     name: BuildArchitect
-    runs-on: windows-2022
+    runs-on: windows-2025
     permissions:
       id-token: write
       contents: read
@@ -24,6 +24,11 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v7
            
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v6
+      with:
+        dotnet-version: '10.0.x'
+
     - name: Setup msbuild
       uses: microsoft/setup-msbuild@v3
 
@@ -50,7 +55,7 @@ jobs:
 
   buildServer:
     name: BuildServer
-    runs-on: windows-2022
+    runs-on: windows-2025
 
     strategy:
       fail-fast: false
@@ -60,6 +65,11 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v7
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v6
+      with:
+        dotnet-version: '10.0.x'
 
     - name: Setup msbuild
       uses: microsoft/setup-msbuild@v3
@@ -97,16 +107,10 @@ jobs:
         language: ['csharp']
 
     steps:
-    - name: Specify dotnet version to use
-      # We really want to specify the version the tests run on.
-      # The latest dotnet version is already installed that is why we can run "dotnet" now.
-      run: |
-        dotnet new globaljson --sdk-version 8.0.401
-        
     - name: Install dotnet
       uses: actions/setup-dotnet@v6
       with:
-        global-json-file: global.json
+        dotnet-version: '10.0.x'
         
     - name: Download testing artefact
       uses: actions/download-artifact@v8
@@ -146,14 +150,10 @@ jobs:
         language: ['csharp']
 
     steps:
-    - name: Specify dotnet version to use
-      run: |
-        dotnet new globaljson --sdk-version 8.0.401
-
     - name: Install dotnet
       uses: actions/setup-dotnet@v6
       with:
-        global-json-file: global.json
+        dotnet-version: '10.0.x'
 
     - name: Download testing artefact
       uses: actions/download-artifact@v8
@@ -163,7 +163,7 @@ jobs:
 
     - name: Run Server NUnit tests
       run: |
-       dotnet test --logger "trx;logfilename=server-test-results.trx" backend/Origam.ServerTests/bin/Release/net8.0/Origam.ServerTests.dll
+       dotnet test --logger "trx;logfilename=server-test-results.trx" backend/Origam.ServerTests/bin/Release/net10.0/Origam.ServerTests.dll
 
     - name: Produce Server NUnit test report
       uses: dorny/test-reporter@v3

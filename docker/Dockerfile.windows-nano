@@ -2,7 +2,7 @@
 FROM mcr.microsoft.com/powershell:nanoserver-ltsc2022 AS powershell
 
 # Final image
-FROM mcr.microsoft.com/dotnet/aspnet:8.0-nanoserver-ltsc2022
+FROM mcr.microsoft.com/dotnet/aspnet:10.0-nanoserver-ltsc2022
 
 # Copy PowerShell from the powershell stage, should work better that installing it...
 ARG src="C:/Program Files/PowerShell/"

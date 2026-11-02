@@ -95,7 +95,10 @@ public class Startup
 
     public void ConfigureServices(IServiceCollection services)
     {
+        // Legacy services still use HttpWebRequest and its process-wide TLS configuration.
+#pragma warning disable SYSLIB0014
         ServicePointManager.SecurityProtocol = startUpConfiguration.SecurityProtocol;
+#pragma warning restore SYSLIB0014
         services.AddSingleton(startUpConfiguration);
         services.AddOpenApiDocumentation(startUpConfiguration);
         services.Configure<KestrelServerOptions>(options =>
@@ -134,7 +137,6 @@ public class Startup
         services.AddSingleton<SessionObjects, SessionObjects>();
 
         services.AddSingleton<IPasswordHasher<IOrigamUser>, CorePasswordHasher>();
-        services.AddScoped<SignInManager<IOrigamUser>>();
         services.AddScoped<IUserClaimsPrincipalFactory<IOrigamUser>, ClaimsFactory>();
         services.AddScoped<CoreUserManager<IOrigamUser>, CoreUserManager<IOrigamUser>>();
         services.AddTransient<IUserStore<IOrigamUser>, UserStore>();
@@ -143,7 +145,8 @@ public class Startup
         services.AddLocalization();
 
         services
-            .AddIdentity<IOrigamUser, Role>()
+            .AddIdentityCore<IOrigamUser>()
+            .AddSignInManager()
             .AddDefaultTokenProviders()
             .AddErrorDescriber<MultiLanguageIdentityErrorDescriber>();
 
@@ -279,12 +282,14 @@ public class Startup
                 });
             });
 
-        services.AddAuthentication(options =>
-        {
-            options.DefaultAuthenticateScheme = IdentityConstants.ApplicationScheme; // cookie
-            options.DefaultSignInScheme = IdentityConstants.ApplicationScheme; // cookie
-            options.DefaultChallengeScheme = IdentityConstants.ApplicationScheme; // cookie
-        });
+        services
+            .AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = IdentityConstants.ApplicationScheme; // cookie
+                options.DefaultSignInScheme = IdentityConstants.ApplicationScheme; // cookie
+                options.DefaultChallengeScheme = IdentityConstants.ApplicationScheme; // cookie
+            })
+            .AddIdentityCookies();
 
         services.AddAuthorization(options =>
         {
@@ -570,7 +575,7 @@ public class Startup
                     | ForwardedHeaders.XForwardedHost
                     | ForwardedHeaders.XForwardedFor,
             };
-            forwardedHeadersOptions.KnownNetworks.Clear();
+            forwardedHeadersOptions.KnownIPNetworks.Clear();
             forwardedHeadersOptions.KnownProxies.Clear();
             app.UseForwardedHeaders(forwardedHeadersOptions);
         }

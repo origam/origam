@@ -21,7 +21,7 @@ and some space left after you finish installing.
 Install [SQL Server](https://www.microsoft.com/en-us/sql-server/sql-server-downloads)  and [SQL Server Management Studio ](https://docs.microsoft.com/en-us/sql/ssms/download-sql-server-management-studio-ssms?view=sql-server-ver15) to work with the database.
 
 #### C# IDE
-Install [Visual Studio](https://visualstudio.microsoft.com/downloads/). 
+Install [Visual Studio 2026](https://visualstudio.microsoft.com/downloads/) and [.NET SDK 10.0.403 or later](https://dotnet.microsoft.com/download/dotnet/10.0).
 Select **ASP.NET and web development** and **.NET desktop development** during the installation process.
 
 #### Node.js
@@ -181,11 +181,11 @@ C:\Users\<userName>\AppData\Roaming\ORIGAM\0.0\OrigamSettings.config
 ```
 to
 ```
-backend\Origam.Server\bin\Debug\net8.0
+backend\Origam.Server\bin\Debug\net10.0
 ```
 Then we have to configure logging by adding the **log4net.config** to the same folder
 ```
-backend\Origam.Server\bin\Debug\net8.0\log4net.config
+backend\Origam.Server\bin\Debug\net10.0\log4net.config
 ```
 You can customize the file however you want. Here is a basic logging setup
 ```xml

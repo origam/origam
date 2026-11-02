@@ -40,3 +40,5 @@ RuntimeModelConfiguration.json
 /backend/Origam.AI.Agent.Tests/benchmark-report.html
 AGENTS.local.md
 http-client.env.json
+# Optional repository-local .NET SDK installation.
+backend/.dotnet/
