@@ -64,7 +64,7 @@ public class LanguageConfig
             );
         }
         AcceptLanguageHeaderEnabled = languageSection.GetValue<bool>(
-            "FallbackToAcceptLanguageHeader"
+            "UseAcceptLanguageHeader"
         );
         SupportedCultures = CultureItems
             .Select(item => new CultureInfo(item.CultureName))

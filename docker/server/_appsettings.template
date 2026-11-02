@@ -69,7 +69,7 @@
 	"BehindProxy":  "true",
     "LanguageConfig":{
         "Default": "en-US",
-        "FallbackToAcceptLanguageHeader": "false",
+        "UseAcceptLanguageHeader": "false",
         "Allowed":[
             {
                 "Culture": "en-US",
@@ -93,7 +93,7 @@
 	"Logging": {
 		"LogLevel": {
 		  "Default":     "Warning",
-		  "Microsoft.*": "Warning" 
+		  "Microsoft.*": "Warning"
 		}
     },
 	"Kestrel": {}

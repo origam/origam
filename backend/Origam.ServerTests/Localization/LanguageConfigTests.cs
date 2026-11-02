@@ -136,7 +136,7 @@ internal static class TestLanguageConfig
         List<KeyValuePair<string, string>> settings = CultureSettings();
         settings.Add(
             new KeyValuePair<string, string>(
-                "LanguageConfig:FallbackToAcceptLanguageHeader",
+                "LanguageConfig:UseAcceptLanguageHeader",
                 acceptLanguageEnabled ? "true" : "false"
             )
         );
