@@ -412,16 +412,36 @@ test.describe('Screen section widgets (real backend)', () => {
     });
   });
 
-  test('navigation panel follows the panel settings', async () => {
+  test('navigation panel follows the panel settings', async ({ page }) => {
     await editor.openNew('AllDataTypes');
     const navigationPanel = editor.navigationPanel;
     const addButton = navigationPanel.getByTestId('navigation-panel-add');
     const copyButton = navigationPanel.getByTestId('navigation-panel-copy');
     const deleteButton = navigationPanel.getByTestId('navigation-panel-delete');
+    const gridButton = navigationPanel.getByTestId('navigation-panel-grid');
+    const detailButton = navigationPanel.getByTestId('navigation-panel-form');
+    const activeColor = 'rgb(76, 132, 255)';
     await expect(addButton).toHaveCount(0);
     await expect(deleteButton).toHaveCount(0);
+    await expect(detailButton).toHaveCSS('stroke', activeColor);
+    await expect(gridButton).not.toHaveCSS('stroke', activeColor);
+    expect(
+      await navigationPanel
+        .locator('[data-test-id="navigation-panel-grid"], [data-test-id="navigation-panel-form"]')
+        .evaluateAll(icons => icons.map(icon => icon.getAttribute('data-test-id'))),
+    ).toEqual(['navigation-panel-grid', 'navigation-panel-form']);
 
     await editor.selectPanel();
+    await editor.checkProperty('GridVisible');
+    await expect(gridButton).toHaveCSS('stroke', activeColor);
+    await expect(detailButton).not.toHaveCSS('stroke', activeColor);
+    const updated = page.waitForResponse(response =>
+      response.url().includes('/SectionEditor/Update'),
+    );
+    await page.getByTestId('property-checkbox-GridVisible').uncheck();
+    expect((await updated).ok()).toBeTruthy();
+    await expect(detailButton).toHaveCSS('stroke', activeColor);
+    await expect(gridButton).not.toHaveCSS('stroke', activeColor);
     await editor.setProperty('PanelTitle', 'Orders');
     await expect(navigationPanel).toContainText('Orders');
     await editor.checkProperty('ShowNewButton');

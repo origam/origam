@@ -31,7 +31,7 @@ import { DesignerEditorState } from '@editors/designerEditor/common/DesignerEdit
 import { IDesignerVerb } from '@editors/designerEditor/common/IComponentProvider';
 import { SectionItem } from '@editors/designerEditor/common/SectionItem';
 import { ScreenToolboxState } from '@editors/designerEditor/screenEditor/ScreenToolboxState';
-import { toChanges } from '@editors/gridEditor/EditorProperty';
+import { EditorProperty, toChanges } from '@editors/gridEditor/EditorProperty';
 import { FlowHandlerInput } from '@errors/runInFlowWithHandler';
 import { CancellablePromise } from 'mobx/dist/api/flow';
 import { ReactElement } from 'react';
@@ -205,10 +205,20 @@ export class ScreenEditorState extends DesignerEditorState {
   }
 }
 
-function getSectionLoader(architectApi: IArchitectApi, editorNodeId: string): any {
-  return async function loadSection(sectionId: string): Promise<ReactElement> {
+function getSectionLoader(architectApi: IArchitectApi, editorNodeId: string) {
+  return async function loadSection(
+    sectionId: string,
+    properties: EditorProperty[],
+  ): Promise<ReactElement> {
     const sectionControls = await architectApi.loadSections(editorNodeId, [sectionId]);
     const sectionComponents = await toComponentRecursive(sectionControls[sectionId], null, []);
+    const sectionRoot = sectionComponents.find(component => component.parent === null)!;
+    const gridVisible = properties.find(property => property.name === 'GridVisible');
+    if (gridVisible) {
+      sectionRoot.properties = sectionRoot.properties.map(property =>
+        property.name === 'GridVisible' ? gridVisible : property,
+      );
+    }
     return <SectionItem components={sectionComponents} />;
   };
 }

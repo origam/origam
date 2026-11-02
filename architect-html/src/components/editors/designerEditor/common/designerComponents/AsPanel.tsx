@@ -54,6 +54,7 @@ export class AsPanel extends Component {
             showDeleteButton={this.get('ShowDeleteButton') === true}
             showCopyButton={showNewButton && this.get('HideCopyButton') !== true}
             showRowNavigation={this.width >= rowNavigationMinWidth}
+            gridVisible={this.get('GridVisible') === true}
           />
         )}
       </div>

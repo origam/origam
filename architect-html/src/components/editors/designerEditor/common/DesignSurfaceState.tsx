@@ -80,7 +80,10 @@ export class DesignSurfaceState implements IComponentProvider {
     editorData: IDesignerEditorData,
     private updateEditor: () => Generator<Promise<any>, void, any>,
     runGeneratorHandled: (args: FlowHandlerInput) => CancellablePromise<any>,
-    private loadComponent?: (componentId: string) => Promise<ReactElement>,
+    private loadComponent?: (
+      componentId: string,
+      properties: EditorProperty[],
+    ) => Promise<ReactElement>,
   ) {
     if (editorData.rootControl) {
       this.panelId = editorData.rootControl.id;

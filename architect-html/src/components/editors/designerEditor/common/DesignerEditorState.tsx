@@ -24,6 +24,7 @@ import { Component } from '@editors/designerEditor/common/designerComponents/Com
 import { DesignSurfaceState } from '@editors/designerEditor/common/DesignSurfaceState';
 import { IDesignerEditorState } from '@editors/designerEditor/common/IDesignerEditorState';
 import { ToolboxState } from '@editors/designerEditor/common/ToolboxState';
+import { EditorProperty } from '@editors/gridEditor/EditorProperty';
 import { FlowHandlerInput } from '@errors/runInFlowWithHandler';
 import { observable } from 'mobx';
 import { CancellablePromise } from 'mobx/dist/api/flow';
@@ -58,7 +59,7 @@ export abstract class DesignerEditorState implements IDesignerEditorState {
     protected architectApi: IArchitectApi,
     private modelTreeState: ModelTreeState,
     runGeneratorHandled: (args: FlowHandlerInput) => CancellablePromise<any>,
-    loadComponent?: (componentId: string) => Promise<ReactElement>,
+    loadComponent?: (componentId: string, properties: EditorProperty[]) => Promise<ReactElement>,
   ) {
     this.isDirty = isDirty;
     this.warnings = editorData.warnings ?? [];

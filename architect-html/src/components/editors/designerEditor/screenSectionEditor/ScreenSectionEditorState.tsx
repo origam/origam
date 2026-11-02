@@ -132,6 +132,7 @@ export class ScreenSectionEditorState extends DesignerEditorState {
     });
     this.sectionToolbox.fields = updateResult.data.fields;
     this.warnings = updateResult.data.warnings ?? [];
+    yield* this.surface.loadComponents(updateResult.data.rootControl);
   }
 
   private resendRunningUpdate() {
