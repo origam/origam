@@ -387,4 +387,7 @@
     <data name="Localization_NoLanguages" xml:space="preserve">
         <value>Configure TranslationBuilderLanguages before rebuilding localization files.</value>
     </data>
+    <data name="Property_NotCollection" xml:space="preserve">
+        <value>{0} is not a collection property.</value>
+    </data>
 </root>

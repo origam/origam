@@ -78,6 +78,8 @@ export interface IArchitectApi {
     changes: IPropertyChange[],
   ): Promise<IUpdatePropertiesResult>;
 
+  getCollectionMembers(schemaItemId: string, propertyName: string): Promise<ICollectionMember[]>;
+
   deleteSchemaItem(schemaItemId: string): Promise<void>;
 
   getMenuItems(node: INodeLoadData): Promise<IMenuItemInfo[]>;
@@ -677,9 +679,15 @@ export type PropertyType =
   | 'looukup'
   | 'untyped'
   | 'fieldBinding'
-  | 'color';
+  | 'color'
+  | 'collection';
 
-export type PropertyValue = boolean | number | string | string[] | null;
+export type PropertyValue = boolean | number | string | string[] | ICollectionMember[] | null;
+
+export interface ICollectionMember {
+  name: string;
+  properties: IApiEditorProperty[];
+}
 
 export interface IDeploymentScriptsGeneratorModuleData {
   possibleDeploymentVersions: IDeploymentVersion[];

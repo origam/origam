@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using System.Collections;
 using System.ComponentModel;
 using System.Reflection;
 using Origam.Extensions;
@@ -35,9 +36,28 @@ public static class PropertyUtils
         return browsableAttribute?.Browsable ?? true;
     }
 
+    public static IEnumerable<PropertyInfo> GetVisibleProperties(Type type)
+    {
+        PropertyInfo[] properties = type.GetProperties();
+        return properties.Where(property =>
+            !properties.Any(other =>
+                other.Name == property.Name
+                && other.DeclaringType.IsSubclassOf(property.DeclaringType)
+            )
+        );
+    }
+
     public static bool IsUntyped(PropertyInfo property)
     {
         return property.PropertyType == typeof(object);
+    }
+
+    public static bool IsCollection(PropertyInfo property)
+    {
+        Type type = property.PropertyType;
+        return type != typeof(string)
+            && type != typeof(byte[])
+            && typeof(IEnumerable).IsAssignableFrom(type);
     }
 
     public static TypeConverter CreateConverter(PropertyInfo property)
