@@ -2,7 +2,7 @@
 # frontend runs separately via DockerfileVite.dev. No nginx/TLS — the Vite dev
 # server proxies straight to :8080 (see docker/dev/README.md).
 
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:10.0-noble AS build
 
 WORKDIR /src
 
@@ -11,7 +11,7 @@ COPY backend/ /src/backend/
 RUN --mount=type=cache,target=/root/.nuget/packages \
     dotnet restore backend/Origam.sln
 
-# net472 projects can't compile on the Linux SDK, so build only the net8.0
+# net472 projects can't compile on the Linux SDK, so build only the net10.0
 # server + scheduler targets.
 RUN dotnet build backend/Origam.Server/Origam.Server.csproj \
     /p:Configuration="Release Server" -v:minimal && \
@@ -28,7 +28,7 @@ RUN dotnet publish backend/OrigamScheduler/OrigamScheduler.csproj \
     /p:Configuration="Release Server" \
     -o /out/scheduler
 
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
+FROM mcr.microsoft.com/dotnet/aspnet:10.0-noble AS runtime
 
 WORKDIR /tmp
 

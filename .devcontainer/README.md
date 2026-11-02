@@ -5,7 +5,7 @@ dev container — the backends **and** the Vite frontends run inside it (started
 on demand). Reopen in VS Code/Cursor to debug the .NET backends with
 breakpoints.
 
-Builds the **net8.0 subset** of Origam (Server, Architect.Server, Scheduler). The
+Builds the **net10.0 subset** of Origam (Server, Architect.Server, Scheduler). The
 net472 projects (the WinForms architect, Gui.Win) don't build on Linux. The C#
 extension will warn about them on load — cosmetic, ignorable.
 
@@ -61,7 +61,7 @@ into `bin/` before launch:
 Server console logging runs at Information with request lines and single-line
 timestamps. The shared default is `.devcontainer/server-appsettings.Development.json`,
 staged into the server's bin as `appsettings.Development.json`; edit the bin copy
-at `backend/Origam.Server/bin/Debug/net8.0/appsettings.Development.json`
+at `backend/Origam.Server/bin/Debug/net10.0/appsettings.Development.json`
 (a deleted `bin/` restores the default).
 
 Run the backends without debugging:
@@ -95,7 +95,7 @@ by `postCreateCommand`. Install or upgrade packages inside the container:
 ### Origam AI (architect)
 
 Edit `Ai:ApiKey` in the architect bin's `appsettings.Development.json`
-(`backend/Origam.Architect.Server/bin/Debug Architect Server/net8.0/`), staged
+(`backend/Origam.Architect.Server/bin/Debug Architect Server/net10.0/`), staged
 from `.devcontainer/architect-appsettings.Development.json`.
 
 ### Chat (optional)

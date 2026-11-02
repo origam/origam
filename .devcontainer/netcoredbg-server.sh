@@ -12,17 +12,17 @@ PORT="${PORT:-47000}"
 
 case "$TARGET" in
   architect)
-    BIN="/workspaces/origam/backend/Origam.Architect.Server/bin/Debug Architect Server/net8.0"
+    BIN="/workspaces/origam/backend/Origam.Architect.Server/bin/Debug Architect Server/net10.0"
     DLL="Origam.Architect.Server.dll"
     export ASPNETCORE_ENVIRONMENT=Development
-    export ASPNETCORE_URLS="http://+:8081"
+    export Kestrel__Endpoints__Http__Url="http://+:8081"
     BUILD_HINT="bash .devcontainer/debug-build-architect.sh"
     ;;
   server)
-    BIN="/workspaces/origam/backend/Origam.Server/bin/Debug/net8.0"
+    BIN="/workspaces/origam/backend/Origam.Server/bin/Debug/net10.0"
     DLL="Origam.Server.dll"
     export ASPNETCORE_ENVIRONMENT=Development
-    export ASPNETCORE_URLS="http://+:8080"
+    export Kestrel__Endpoints__Http__Url="http://+:8080"
     # Must match the browser-facing origin or login 401s (ID2088).
     export OpenIddictConfig__AccessTokenIssuer="${OpenIddictConfig__AccessTokenIssuer:-https://localhost:5173}"
     BUILD_HINT="bash .devcontainer/debug-build-server.sh"

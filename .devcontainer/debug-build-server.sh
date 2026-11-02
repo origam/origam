@@ -10,7 +10,7 @@ dotnet build Origam.Server/Origam.Server.csproj /p:Configuration="$CONFIG" -v:mi
 
 # The Server csproj flattens OutputPath to bin\<first word of Configuration>\,
 # so "Debug Server" lands in bin/Debug/, not bin/Debug Server/.
-BIN="Origam.Server/bin/${CONFIG%% *}/net8.0"
+BIN="Origam.Server/bin/${CONFIG%% *}/net10.0"
 
 # EnableChat=true builds chat-html and stages it where ChatConfig:PathToChatApp
 # points (mirrors the published image, which ships a prebuilt chat in

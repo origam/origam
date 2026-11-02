@@ -25,5 +25,7 @@ cd /home/origam/server_bin
 # dev the SPA runs in Vite, so create the dir empty.
 mkdir -p /home/origam/server_bin/clients/origam
 
-export ASPNETCORE_URLS="http://+:8080"
+# The staged appsettings.json carries a urls value that outranks ASPNETCORE_URLS,
+# and the app reads it for mail links, so binding goes through the Kestrel endpoint.
+export Kestrel__Endpoints__Http__Url="http://+:8080"
 exec dotnet Origam.Server.dll

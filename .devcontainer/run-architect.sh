@@ -19,7 +19,7 @@ dotnet build Origam.Architect.Server/Origam.Architect.Server.csproj \
 
 # Run from bin: content root = cwd, where the app reads appsettings.json /
 # log4net.config; OrigamSettings.config sits next to the DLL.
-BIN="Origam.Architect.Server/bin/$CONFIG/net8.0"
+BIN="Origam.Architect.Server/bin/$CONFIG/net10.0"
 
 # Model settings: the shared main-stack template + fill helper.
 cp ../docker/server/_OrigamSettings.template "$BIN/OrigamSettings.config"
@@ -37,5 +37,5 @@ mkdir -p /home/origam/ClientApplication
 
 cd "$BIN"
 export ASPNETCORE_ENVIRONMENT=Development
-export ASPNETCORE_URLS="http://+:8081"
+export Kestrel__Endpoints__Http__Url="http://+:8081"
 exec dotnet Origam.Architect.Server.dll

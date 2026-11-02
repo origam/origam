@@ -12,7 +12,7 @@ cd /workspaces/origam/backend
 CONFIG="Debug Server"
 dotnet build OrigamScheduler/OrigamScheduler.csproj /p:Configuration="$CONFIG" -v:minimal
 
-BIN="OrigamScheduler/bin/Debug/net8.0"
+BIN="OrigamScheduler/bin/Debug/net10.0"
 
 # Stage from the project's own templates + the shared main-stack
 # _OrigamSettings.template (same as the published image's configureScheduler.sh).

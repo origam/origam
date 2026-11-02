@@ -25,5 +25,5 @@ fill_origam_settings_config OrigamSettings.config "${DatabaseType}"
 # dev the SPA runs in Vite, so create it empty.
 mkdir -p /home/origam/ClientApplication
 
-export ASPNETCORE_URLS="http://+:8081"
+export Kestrel__Endpoints__Http__Url="http://+:8081"
 exec dotnet Origam.Architect.Server.dll

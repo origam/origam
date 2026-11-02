@@ -2,7 +2,7 @@
 # The architect-html frontend runs separately via DockerfileVite.dev
 # (both services are defined in docker-compose.yml under the `architect` profile).
 
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:10.0-noble AS build
 
 WORKDIR /src
 
@@ -19,9 +19,9 @@ RUN dotnet build backend/Origam.Architect.Server/Origam.Architect.Server.csproj 
 # Server graph publishes fine). The build output is already a complete layout
 # with satellites, so stage it with plain cp.
 RUN mkdir -p /out \
- && cp -r "backend/Origam.Architect.Server/bin/Release Architect Server/net8.0" /out/architect
+ && cp -r "backend/Origam.Architect.Server/bin/Release Architect Server/net10.0" /out/architect
 
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
+FROM mcr.microsoft.com/dotnet/aspnet:10.0-noble AS runtime
 
 WORKDIR /tmp
 

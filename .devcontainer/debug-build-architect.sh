@@ -12,7 +12,7 @@ CONFIG="Debug Architect Server"
 dotnet build Origam.Architect.Server/Origam.Architect.Server.csproj \
     /p:Configuration="$CONFIG" -v:minimal
 
-BIN="Origam.Architect.Server/bin/$CONFIG/net8.0"
+BIN="Origam.Architect.Server/bin/$CONFIG/net10.0"
 
 # Model settings: the shared main-stack template + fill helper (upstream ships
 # no OrigamSettings template for the architect — its HOWTOSTART has you hand-

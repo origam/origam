@@ -1,6 +1,6 @@
-# Devcontainer for ORIGAM full-stack dev/debug on Linux (net8.0 subset only).
+# Devcontainer for ORIGAM full-stack dev/debug on Linux (net10.0 subset only).
 
-FROM mcr.microsoft.com/dotnet/sdk:8.0
+FROM mcr.microsoft.com/dotnet/sdk:10.0-noble
 
 # libgdiplus for System.Drawing (reporting).
 RUN apt-get update \
@@ -14,10 +14,9 @@ RUN apt-get update \
  && apt-get -y purge autoconf automake libtool \
  && apt-get -y autoremove && rm -rf /var/lib/apt/lists/*
 
-# netcoredbg (Samsung, MIT) — OSS DAP debugger. Pinned to 3.1.3: 3.2.0+ needs
-# glibc 2.38 but sdk:8.0 (Debian bookworm) has 2.36.
+# netcoredbg (Samsung, MIT) — OSS DAP debugger.
 RUN ARCH=$(dpkg --print-architecture) \
- && curl -fsSL "https://github.com/Samsung/netcoredbg/releases/download/3.1.3-1062/netcoredbg-linux-${ARCH}.tar.gz" \
+ && curl -fsSL "https://github.com/Samsung/netcoredbg/releases/download/3.2.0-1092/netcoredbg-linux-${ARCH}.tar.gz" \
     | tar -xz -C /opt \
  && ln -s /opt/netcoredbg/netcoredbg /usr/local/bin/netcoredbg
 

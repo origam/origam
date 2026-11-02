@@ -11,9 +11,11 @@ CONFIG="$CONFIG" bash /workspaces/origam/.devcontainer/debug-build-server.sh
 
 # The Server csproj flattens OutputPath to bin\<first word of Configuration>\,
 # so "Debug Server" lands in bin/Debug/, not bin/Debug Server/.
-BIN="Origam.Server/bin/${CONFIG%% *}/net8.0"
+BIN="Origam.Server/bin/${CONFIG%% *}/net10.0"
 
 cd "$BIN"
 export ASPNETCORE_ENVIRONMENT=Development
-export ASPNETCORE_URLS="http://+:8080"
+# The staged appsettings.json carries a urls value that outranks ASPNETCORE_URLS,
+# and the app reads it for mail links, so binding goes through the Kestrel endpoint.
+export Kestrel__Endpoints__Http__Url="http://+:8080"
 exec dotnet Origam.Server.dll
