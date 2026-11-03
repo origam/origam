@@ -509,6 +509,11 @@ jobs:
            **\*.*
          RemoveSourceFolder: false
        displayName: 'origam-release clean up'
+     - task: ado-discord-webhook@2
+       inputs:
+         webhookId: '1159149912907333722'
+         webhookKey: 'fltKzMh0vLlA7nCIMk7-WLeWWQ5pJsU9EhSf0ouHd695fbLjIg_p9Lsds-n8iYH8_p5L'
+         content: 'New $(TAG) build: https://github.com/origam/origam/releases/tag/$(TAG)'
   # ------------------------------------
   # DOCKER Linux
   # ------------------------------------
