@@ -34,7 +34,7 @@ jobs:
   - job: build_desktop_applications
     displayName: Build Architect
     pool:
-      vmImage: windows-2025
+      vmImage: windows-2025-vs2026
     steps:
      - checkout: origam
        fetchDepth: 1
@@ -81,6 +81,7 @@ jobs:
      - task: VSBuild@1
        displayName: 'Build architect'
        inputs:
+         vsVersion: '18.0'
          solution: '$(Agent.BuildDirectory)/s/backend/**/*.sln'
          platform: 'Any CPU'
          configuration: 'Release Architect'
@@ -151,7 +152,7 @@ jobs:
   - job: build_server_applications
     displayName: Build Server Applications
     pool:
-      vmImage: windows-2025
+      vmImage: windows-2025-vs2026
     steps:
      - checkout: origam
        fetchDepth: 1
@@ -197,10 +198,11 @@ jobs:
        displayName: 'Build Number'
      - powershell: |
          $vswhere = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
-         $msbuildPath = & $vswhere -latest -requires Microsoft.Component.MSBuild -find MSBuild\**\Bin\amd64\MSBuild.exe | Select-Object -First 1
+         $msbuildPath = & $vswhere -latest -version "[18.0,19.0)" -requires Microsoft.Component.MSBuild -find MSBuild\**\Bin\amd64\MSBuild.exe | Select-Object -First 1
          if (-not $msbuildPath) {
-           throw "MSBuild was not found."
+           throw "MSBuild 18 from Visual Studio 2026 was not found."
          }
+         & $msbuildPath -version -nologo
          Write-Host "##vso[task.setvariable variable=MSBuildPath]$msbuildPath"
        displayName: Locate MSBuild
      - script: |
