@@ -16,6 +16,7 @@
     "ValueLengthLimit": 4194304
   },
   "UserConfig": {
+    "PortalBaseUrl": "https://localhost",
     "FromAddress": "admin@localhost",
     "NewUserRoleId": "",
     "UserUnlockNotificationSubject": "User Account Unlocked",
