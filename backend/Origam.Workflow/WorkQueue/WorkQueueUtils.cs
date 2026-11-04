@@ -25,7 +25,7 @@ using Origam.DA;
 using Origam.Schema.WorkflowModel;
 using Origam.Schema.WorkflowModel.WorkQueue;
 using Origam.Workbench.Services;
-using core = Origam.Workbench.Services.CoreServices;
+using Core = Origam.Workbench.Services.CoreServices;
 
 namespace Origam.Workflow.WorkQueue;
 
@@ -183,7 +183,7 @@ public class WorkQueueUtils
             parameters.Add(new QueryParameter("_pageNumber", pageNumber));
         }
 
-        DataSet dataSet = core.DataService.Instance.LoadData(
+        DataSet dataSet = Core.DataService.Instance.LoadData(
             queueClass.WorkQueueStructureId,
             queueClass.WorkQueueStructureUserListMethodId,
             Guid.Empty,
@@ -237,7 +237,7 @@ public class WorkQueueUtils
         }
         try
         {
-            core.DataService.Instance.StoreData(
+            Core.DataService.Instance.StoreData(
                 queueClass.WorkQueueStructureId,
                 selectedRows.DataSet,
                 true,

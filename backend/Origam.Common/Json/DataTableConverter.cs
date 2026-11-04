@@ -22,11 +22,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System.Data;
 using Newtonsoft.Json.Serialization;
 using Origam.Service.Core;
-using newton = Newtonsoft.Json.Converters;
+using NewtonsoftConverters = Newtonsoft.Json.Converters;
 
 namespace Origam.JSON;
 
-class DataTableConverter : newton.DataTableConverter
+class DataTableConverter : NewtonsoftConverters.DataTableConverter
 {
     public override void WriteJson(
         Newtonsoft.Json.JsonWriter writer,

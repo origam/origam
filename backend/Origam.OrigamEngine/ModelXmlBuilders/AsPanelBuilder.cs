@@ -29,7 +29,7 @@ using Origam.Gui;
 using Origam.Schema;
 using Origam.Schema.GuiModel;
 using Origam.Workbench.Services;
-using core = Origam.Workbench.Services.CoreServices;
+using Core = Origam.Workbench.Services.CoreServices;
 
 namespace Origam.OrigamEngine.ModelXmlBuilders;
 
@@ -261,7 +261,7 @@ public class AsPanelBuilder
             parentNode.SetAttribute("TextLocationMember", renderData.MapTextLocationMember);
             parentNode.SetAttribute("TextRotationMember", renderData.MapTextRotationMember);
             // MapViewLayers
-            DataSet layers = core.DataService.Instance.LoadData(
+            DataSet layers = Core.DataService.Instance.LoadData(
                 new Guid("29aa47ff-98f6-4dba-8e02-ab5ebad08162"),
                 new Guid("d0556499-6859-4459-a239-04bd6359a862"),
                 Guid.Empty,
