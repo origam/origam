@@ -1,1 +1,0 @@
-powershell ./build-msi.ps1 -PRODUCT_VERSION 100.1.0.1 -PRODUCT_NUMBER 100.1.0.1-Test
