@@ -35,7 +35,7 @@
       asi:abstract="false"
       adec:allowNulls="true"
       adec:autoIncrement="false"
-      adec:dataType="String"
+      adec:dataType="Memo"
       adec:excludeFromAllFields="false"
       x:id="3fcd2200-651d-4327-b3ed-5899c0fe0684"
       adec:isPrimaryKey="false"
