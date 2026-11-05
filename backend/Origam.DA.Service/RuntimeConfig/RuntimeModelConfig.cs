@@ -1,4 +1,4 @@
-﻿#region license
+#region license
 /*
 Copyright 2005 - 2021 Advantage Solutions, s. r. o.
 
@@ -151,7 +151,7 @@ public class RuntimeModelConfig : IRuntimeModelConfig
                 )
             );
         }
-#if !ORIGAM_CLIENT
+#if !ORIGAM_SERVER
         if (xmlMemberAttributeInfo != null)
         {
             return;

@@ -42,7 +42,7 @@ public abstract class AbstractXsltEngine : IXsltEngine
 {
     private ITracingService _tracingService =
         ServiceManager.Services.GetService(typeof(ITracingService)) as ITracingService;
-#if ORIGAM_CLIENT
+#if ORIGAM_SERVER
     private readonly object _lock = new object();
 #endif
     #region Constructors
@@ -125,7 +125,7 @@ public abstract class AbstractXsltEngine : IXsltEngine
     )
     {
         object xsltEngine;
-#if ORIGAM_CLIENT
+#if ORIGAM_SERVER
         if (IsTransformationCached(transformationId))
         {
             xsltEngine = GetCachedTransformation(transformationId);
@@ -161,7 +161,7 @@ public abstract class AbstractXsltEngine : IXsltEngine
                 retransformationParameters,
                 transactionId
             );
-#if ORIGAM_CLIENT
+#if ORIGAM_SERVER
             lock (_lock)
             {
                 PutTransformationToCache(transformationId, xsltEngine);
@@ -196,7 +196,7 @@ public abstract class AbstractXsltEngine : IXsltEngine
     )
     {
         object xsltEngine;
-#if ORIGAM_CLIENT
+#if ORIGAM_SERVER
         if (IsTransformationCached(transformationId))
         {
             xsltEngine = GetCachedTransformation(transformationId);
@@ -227,7 +227,7 @@ public abstract class AbstractXsltEngine : IXsltEngine
                 );
             }
             xsltEngine = GetTransform(xsl, Guid.Empty, new Hashtable(), transactionId);
-#if ORIGAM_CLIENT
+#if ORIGAM_SERVER
             lock (_lock)
             {
                 PutTransformationToCache(transformationId, xsltEngine);
