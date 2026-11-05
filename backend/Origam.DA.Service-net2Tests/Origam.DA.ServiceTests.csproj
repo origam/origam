@@ -10,6 +10,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="InstanceWriterTests.cs" />
+    <Compile Include="MsSqlDataServiceTests.cs" />
     <Compile Include="MetaModelUpgraderTests\MetaModelUpgraderTests.cs" />
     <Compile Include="MetaModelUpgraderTests\ClassUpgradeTestBase.cs" />
     <Compile Include="MetaModelUpgraderTests\TestClasses\TestBaseClass.cs" />

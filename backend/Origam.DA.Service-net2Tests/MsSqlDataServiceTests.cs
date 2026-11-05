@@ -19,16 +19,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using System;
 using System.Data;
 using Moq;
 using NUnit.Framework;
 using Origam.DA.Service;
 
-namespace Origam.ServerTests;
-
-// This test class would be better placed at Origam.DA.ServiceTests. But the Origam.DA.ServiceTests
-// project runs on net472 and is therefore not executed as a part of the server tests.
-// That is why the class is here we should move it once we get rid of net472.
+namespace Origam.DA.ServiceTests;
 
 [TestFixture]
 public class MsSqlDataServiceTests
