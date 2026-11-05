@@ -115,9 +115,12 @@ public class MailServiceTests
     {
         var document = new Mock<IDataDocument>();
         document.SetupGet(x => x.DataSet).Returns(data);
-        var service = new NetStandardMailService(null, 25, pickupDirectory);
+        var service = new NetStandardMailService(server: null, port: 25, pickupDirectory);
 
-        Assert.That(service.SendMail(document.Object, null, 25), Is.EqualTo(data.Mail.Count));
+        Assert.That(
+            service.SendMail(document.Object, server: null, port: 25),
+            Is.EqualTo(data.Mail.Count)
+        );
     }
 
     private static MailData CreateMailData(string? replyTo)
