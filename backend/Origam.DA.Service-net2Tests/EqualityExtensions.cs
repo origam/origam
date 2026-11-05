@@ -22,11 +22,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.InteropServices;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
 
@@ -92,47 +89,6 @@ internal static class EqualityExtensions
         );
     }
 
-    [DllImport("msvcrt.dll")]
-    private static extern int memcmp(IntPtr b1, IntPtr b2, long count);
-
-    private static bool IsEqualTo(this Bitmap b1, object obj)
-    {
-        Bitmap b2 = obj as Bitmap;
-        if ((b1 == null) != (b2 == null))
-        {
-            return false;
-        }
-
-        if (b1.Size != b2.Size)
-        {
-            return false;
-        }
-
-        BitmapData bd1 = b1.LockBits(
-            new Rectangle(new Point(0, 0), b1.Size),
-            ImageLockMode.ReadOnly,
-            PixelFormat.Format32bppArgb
-        );
-        BitmapData bd2 = b2.LockBits(
-            new Rectangle(new Point(0, 0), b2.Size),
-            ImageLockMode.ReadOnly,
-            PixelFormat.Format32bppArgb
-        );
-        try
-        {
-            IntPtr bd1scan0 = bd1.Scan0;
-            IntPtr bd2scan0 = bd2.Scan0;
-            int stride = bd1.Stride;
-            int len = stride * b1.Height;
-            return memcmp(bd1scan0, bd2scan0, len) == 0;
-        }
-        finally
-        {
-            b1.UnlockBits(bd1);
-            b2.UnlockBits(bd2);
-        }
-    }
-
     private static bool IsEqualTo(this SchemaItemAncestor ancestor, object testObject)
     {
         if (!(testObject is SchemaItemAncestor testAncestor))
@@ -176,10 +132,6 @@ internal static class EqualityExtensions
             case ICollection collectionFromDb:
             {
                 return collectionFromDb.IsEqualTo(testObject);
-            }
-            case Bitmap dbBitmap:
-            {
-                return dbBitmap.IsEqualTo(testObject);
             }
             case ISchemaItemFactory _:
             {

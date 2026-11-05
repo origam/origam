@@ -25,9 +25,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Drawing;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Web;
@@ -526,21 +529,6 @@ public class XsltTests
         + "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
         + "AAAAAAAAAAAAAAAA==";
 
-    private const string resizedImage1Linux =
-        "iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAABGdBTUEAALGPC/xhBQ"
-        + "AAAAFzUkdCAK7OHOkAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAA"
-        + "BdwnLpRPAAAACFJREFUCJlj/P///38GKPj///9/JgY0gCHAgqyFgYGBAQAVfgv+xs48"
-        + "NQAAAABJRU5ErkJgggAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-        + "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-        + "AAAAAAAA==";
-    private const string resizedImage2Linux =
-        "iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAABGdBTUEAALGPC/xhBQ"
-        + "AAAAFzUkdCAK7OHOkAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAA"
-        + "BdwnLpRPAAAACFJREFUCJlj/P//PwMDAwMDw////5kYkAAKhwWujIGBAQAx+wkBrIw4"
-        + "XAAAAABJRU5ErkJgggAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-        + "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-        + "AAAAAAAA==";
-
     // white square 6x6, png format.
     private byte[] image =
     {
@@ -679,28 +667,36 @@ public class XsltTests
     [TestCase("AS:ResizeImage('{0}', '4', '4')", resizedImage1)]
     [TestCase("AS:ResizeImage('{0}', '4', '4', 'true', 'png')", resizedImage2)]
     [Platform(Include = "Win")]
+    [SupportedOSPlatform("windows")]
     public void ShouldConvertImage(string xsltCallTemplate, string expectedResult)
     {
         string xsltCall = string.Format(xsltCallTemplate, Convert.ToBase64String(image));
-        object xPathResult = RunInXpath(xsltCall);
-        Assert.That(xPathResult, Is.EqualTo(expectedResult));
+        string xPathResult = (string)RunInXpath(xsltCall);
         string xsltResult = RunInXslt(xsltCall);
-        Assert.That(xsltResult, Is.EqualTo(expectedResult));
-    }
+        Assert.That(xsltResult, Is.EqualTo(xPathResult));
 
-    [TestCase("AS:ResizeImage('{0}', '4', '4')", resizedImage1Linux)]
-    [TestCase("AS:ResizeImage('{0}', '4', '4', 'true', 'png')", resizedImage2Linux)]
-    [Platform(Include = "Linux")]
-    public void ShouldConvertImageLinux(string xsltCallTemplate, string expectedResult)
-    {
-        string xsltCall = string.Format(xsltCallTemplate, Convert.ToBase64String(image));
-        object xPathResult = RunInXpath(xsltCall);
-        string xsltResult = RunInXslt(xsltCall);
-        Assert.That(xPathResult, Is.EqualTo(expectedResult));
-        Assert.That(xsltResult, Is.EqualTo(expectedResult));
+        using var expectedStream = new MemoryStream(Convert.FromBase64String(expectedResult));
+        using var actualStream = new MemoryStream(Convert.FromBase64String(xPathResult));
+        using var expected = new Bitmap(expectedStream);
+        using var actual = new Bitmap(actualStream);
+        Assert.That(actual.Size, Is.EqualTo(expected.Size));
+        for (int y = 0; y < expected.Height; y++)
+        {
+            for (int x = 0; x < expected.Width; x++)
+            {
+                Color expectedPixel = expected.GetPixel(x, y);
+                Color actualPixel = actual.GetPixel(x, y);
+                // GDI+ versions can round interpolated color components differently.
+                Assert.That(actualPixel.R, Is.EqualTo(expectedPixel.R).Within(1));
+                Assert.That(actualPixel.G, Is.EqualTo(expectedPixel.G).Within(1));
+                Assert.That(actualPixel.B, Is.EqualTo(expectedPixel.B).Within(1));
+                Assert.That(actualPixel.A, Is.EqualTo(expectedPixel.A).Within(1));
+            }
+        }
     }
 
     [Test]
+    [Platform(Include = "Win")]
     public void ShouldGetImageDimensions()
     {
         string xsltCall = $"AS:GetImageDimensions('{Convert.ToBase64String(image)}')";
