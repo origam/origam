@@ -51,7 +51,8 @@ public class Program
 
                 OrigamUtils.ConnectOrigamRuntime(
                     loggerFactory,
-                    startUpConfiguration.ReloadModelWhenFilesChangesDetected
+                    startUpConfiguration.ReloadModelWhenFilesChangesDetected,
+                    provider.GetRequiredService<IHostApplicationLifetime>().StopApplication
                 );
                 if (startUpConfiguration.OpenApiDocumentationEnabled)
                 {
