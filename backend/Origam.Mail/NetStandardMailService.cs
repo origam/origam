@@ -156,6 +156,10 @@ public class NetStandardMailService : AbstractMailService
         foreach (MailData.MailRow mailrow in mailData.Mail.Rows)
         {
             MailMessage m = new MailMessage();
+            if (!mailrow.IsReplyToNull() && !string.IsNullOrWhiteSpace(mailrow.ReplyTo))
+            {
+                m.ReplyToList.Add(new MailAddress(mailrow.ReplyTo));
+            }
             //put mail header info
             m.Subject = mailrow.Subject;
             m.BodyEncoding = Encoding.UTF8;
