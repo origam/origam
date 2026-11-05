@@ -32,9 +32,7 @@ class MailService : IMailService
     private readonly AccountMailSender mailSender;
     private readonly LanguageConfig languageConfig;
 
-    public MailService(
-        IOptions<UserConfig> userConfig,
-        LanguageConfig languageConfig)
+    public MailService(IOptions<UserConfig> userConfig, LanguageConfig languageConfig)
     {
         this.languageConfig = languageConfig;
         string baseUrl =
