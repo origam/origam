@@ -21,7 +21,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Threading;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Origam.Security.Common;
 using Origam.Server.Configuration;
@@ -30,14 +29,12 @@ namespace Origam.Server.Authorization;
 
 class MailService : IMailService
 {
-    private AccountMailSender mailSender;
-    private LanguageConfig languageConfig;
+    private readonly AccountMailSender mailSender;
+    private readonly LanguageConfig languageConfig;
 
     public MailService(
         IOptions<UserConfig> userConfig,
-        LanguageConfig languageConfig,
-        IConfiguration configuration
-    )
+        LanguageConfig languageConfig)
     {
         this.languageConfig = languageConfig;
         string baseUrl =
