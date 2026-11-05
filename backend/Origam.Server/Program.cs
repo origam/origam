@@ -52,6 +52,10 @@ public class Program
                 OrigamUtils.ConnectOrigamRuntime(
                     loggerFactory,
                     startUpConfiguration.ReloadModelWhenFilesChangesDetected,
+                    // TODO: The new Architect has no server restart action yet. Complete this path
+                    // when adding it, including hosting-specific restart handling (e.g. Docker).
+                    // The old implementation relied on IIS AppDomain recycling; this callback
+                    // only stops the host and does not start the application again.
                     provider.GetRequiredService<IHostApplicationLifetime>().StopApplication
                 );
                 if (startUpConfiguration.OpenApiDocumentationEnabled)
