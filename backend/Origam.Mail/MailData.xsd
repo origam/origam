@@ -69,7 +69,7 @@
             <xs:attribute name="Selected" msprop:AllowNulls="False" msprop:OnCopyAction="Copy" msprop:OrigamDataType="Boolean" msprop:Id="de0d5266-6200-4775-87aa-e151815fb23c" type="xs:boolean" msdata:DefaultValue="false" use="required" />
             <xs:attribute name="CC" msprop:OnCopyAction="Copy" msprop:OrigamDataType="Memo" msprop:Id="877e02f2-2eda-4599-b403-9dacf4465680" type="xs:string" />
             <xs:attribute name="BCC" msprop:OnCopyAction="Copy" msprop:OrigamDataType="Memo" msprop:Id="166af7fd-850d-4c30-a587-375843902756" type="xs:string"/>
-            <xs:attribute name="ReplyTo" msprop:OnCopyAction="Copy" msprop:OrigamDataType="String" msprop:Id="3fcd2200-651d-4327-b3ed-5899c0fe0684" type="xs:string" />
+            <xs:attribute name="ReplyTo" msprop:OnCopyAction="Copy" msprop:OrigamDataType="Memo" msprop:Id="3fcd2200-651d-4327-b3ed-5899c0fe0684" type="xs:string" />
           </xs:complexType>
         </xs:element>
       </xs:choice>
