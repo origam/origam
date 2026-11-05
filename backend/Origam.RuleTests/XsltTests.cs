@@ -31,6 +31,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
+using System.Security.Principal;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Web;
@@ -55,6 +56,7 @@ namespace Origam.RuleTests;
 [TestFixture]
 public class XsltTests
 {
+    private IPrincipal originalPrincipal;
     private Mock<IBusinessServicesService> businessServiceMock;
     private Mock<IParameterService> parameterServiceMock;
     private Mock<IDataLookupService> lookupServiceMock;
@@ -94,6 +96,11 @@ public class XsltTests
     [SetUp]
     public void Init()
     {
+        originalPrincipal = Thread.CurrentPrincipal;
+        Thread.CurrentPrincipal = new GenericPrincipal(
+            new GenericIdentity(string.Empty),
+            Array.Empty<string>()
+        );
         lookupServiceMock = new Mock<IDataLookupService>();
         businessServiceMock = new Mock<IBusinessServicesService>();
         stateMachineServiceMock = new Mock<IStateMachineService>();
@@ -146,6 +153,12 @@ public class XsltTests
                 null
             )
             .ToList();
+    }
+
+    [TearDown]
+    public void RestorePrincipal()
+    {
+        Thread.CurrentPrincipal = originalPrincipal;
     }
 
     private object RunInXpath(string xsltCall, XmlDocument document = null)
@@ -828,7 +841,7 @@ public class XsltTests
     public void ShouldAddTime(string xsltCall, string expectedResultWithoutTimeZone)
     {
         var dateTime = DateTime.Parse("2022-07-13");
-        TimeSpan offset = TimeZone.CurrentTimeZone.GetUtcOffset(dateTime);
+        TimeSpan offset = TimeZoneInfo.Local.GetUtcOffset(dateTime);
         string expectedResult = expectedResultWithoutTimeZone + $"+{offset:hh}:00";
         object xPathResult = RunInXpath(xsltCall);
         Assert.That(xPathResult, Is.EqualTo(expectedResult));
@@ -1288,7 +1301,7 @@ public class XsltTests
     public void ShouldListDays()
     {
         var dateTime = DateTime.Parse("2022-01-01");
-        TimeSpan offset = TimeZone.CurrentTimeZone.GetUtcOffset(dateTime);
+        TimeSpan offset = TimeZoneInfo.Local.GetUtcOffset(dateTime);
         string xsltCall = "AS:ListDays('2022-01-01', '2022-01-03')";
         string expectedResultXpath =
             "<list>"
@@ -1331,7 +1344,7 @@ public class XsltTests
         string xsltCall = $"AS:AddWorkingDays('2022-01-02', '2', '{calendarId}')";
 
         var expectedDate = DateTime.Parse("2022-01-04");
-        TimeSpan offset = TimeZone.CurrentTimeZone.GetUtcOffset(expectedDate);
+        TimeSpan offset = TimeZoneInfo.Local.GetUtcOffset(expectedDate);
         string expectedResult = $"2022-01-04T00:00:00.0000000+{offset:hh}:00";
 
         var agentMock = new Mock<IServiceAgent>();

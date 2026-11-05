@@ -51,7 +51,7 @@ public class ScreenCondition : AbstractSchemaItem
         set
         {
             ScreenId = value?.Id ?? Guid.Empty;
-            if (ScreenId != null && ScreenId != Guid.Empty)
+            if (ScreenId != Guid.Empty)
             {
                 var formControl = (FormControlSet)
                     PersistenceProvider.RetrieveInstance(
