@@ -33,6 +33,22 @@ public class PasswordHasherTests
 {
     private const string Password = "TestPassword123!";
 
+    [TestCase("AAABAgMEBQYHCAkKCwwNDg9q5AksKVPZcoGiTCv3CAyps71JdHCeQRVwzQep5mJeRw==")]
+    [TestCase("eC77GdWsJ2lv0IGMgO3gFEswv+0=|AAECAwQFBgcICQoLDA0ODw==")]
+    public void ShouldVerifyExistingLegacyHashAfterFrameworkMigration(string hash)
+    {
+        var sut = new CorePasswordHasher();
+
+        Assert.That(
+            sut.VerifyHashedPassword(user: null!, hash, Password),
+            Is.EqualTo(PasswordVerificationResult.SuccessRehashNeeded)
+        );
+        Assert.That(
+            sut.VerifyHashedPassword(user: null!, hash, "WrongPassword"),
+            Is.EqualTo(PasswordVerificationResult.Failed)
+        );
+    }
+
     [Test]
     public void ShouldVerifyCurrentHash()
     {
