@@ -1,0 +1,166 @@
+# Origam Local Development Environment
+
+Builds and runs the Origam backend from source alongside a database (SQL Server
+by default, PostgreSQL optional) and a Vite dev server for `frontend-html`.
+The compose file lives at the **repository root** (`docker-compose.yml`);
+this directory holds the supporting files (entrypoints, env overrides, log4net
+config).
+
+## Quick Start
+
+```bash
+# From the repository root:
+cp -n docker/dev/.env.example docker/dev/.env   # set the DB password (gitignored)
+docker compose --env-file docker/dev/.env up -d
+
+# First run builds the backend image (a few minutes). Subsequent starts reuse
+# the built image and are fast.
+
+# Frontend (the app):    https://localhost:5173  (accept the self-signed cert)
+# Backend API / Swagger: http://localhost:8080
+# SQL Server:            localhost:1433          (sa — password in docker/dev/.env)
+```
+
+The DB password is required (no default is baked in). `up` reads it from
+`docker/dev/.env` via `--env-file`; `ps`/`logs`/`config`/`build` run without it.
+`docker/dev/.env.example` documents the variables; other settings have defaults.
+
+## Services
+
+| Service           | Image                                       | Port  | Notes                                           |
+|-------------------|---------------------------------------------|-------|-------------------------------------------------|
+| database          | mcr.microsoft.com/mssql/server:2022-latest  | 1433  | SQL Server; healthchecked for dependents        |
+| db-init           | (same image, one-shot)                      | —     | Creates the `origam-dev` DB if absent; exits    |
+| server            | built, `<project>-server`                   | 8080  | .NET backend, built from `backend/`             |
+| frontend          | built, `<project>-frontend`                 | 5173  | Vite dev server for `frontend-html` (HMR)       |
+| architect         | built, `<project>-architect`                | 8081  | Modeler API; opt-in (`--profile architect`)     |
+| architect-frontend| built, `<project>-architect-frontend`       | 5174  | Vite dev server for `architect-html`; opt-in    |
+
+The server runs the published `Origam.Server.dll` (no nginx in dev). The Vite
+dev server proxies API/auth paths (`/internalApi`, `/connect`, `/Account`, …)
+to `http://server:8080`. `<project>` in the image column is the compose project:
+the checkout's directory name unless `-p` names it (see Several checkouts).
+
+## Several checkouts
+
+Compose names the project, and with it the containers, the volumes and the built
+images, after the directory. A second checkout in a directory of the same name
+(`.../origam` again) therefore collides with the first: one database volume, and
+`docker compose down` in one stops the other. Give each one its own name on the
+command line:
+
+```bash
+docker compose --env-file docker/dev/.env -p origam-2026-2 up -d
+```
+
+Use the same `-p` for the commands that address that stack later (`down`, `logs`,
+`ps`, `exec`, `build`); the images are built as `origam-2026-2-server` and so on.
+Remap the host ports in `docker/dev/.env` too when both run at once; the
+PostgreSQL port has its own `POSTGRES_PORT`.
+
+## Model
+
+The bundled demo model (`model-tests/model`) is mounted by default. It is the
+Origam demo project — used for automated testing, so it has lots of features to
+poke at.
+
+To point the stack at your own model, use a compose override (do **not** edit
+`docker-compose.yml` directly — it is committed):
+
+```bash
+cp -n docker-compose.override.yml.example docker-compose.override.yml
+# edit the model path and OrigamSettings__DefaultSchemaExtensionId (your root package id)
+docker compose --env-file docker/dev/.env up
+```
+
+`docker-compose.override.yml` is gitignored; `docker compose up` auto-merges it
+on top of the committed `docker-compose.yml`. Verify the merged config with
+`docker compose config`.
+
+The example also re-points the architect profile. Both backends upgrade older
+model files to the current meta-model in place on first load — branch the model
+checkout before pointing the stack at it.
+
+`MSSQL_SA_PASSWORD` (and `POSTGRES_PASSWORD` for the postgres stack) are required in
+`docker/dev/.env`; a model swap needs the override file above because it also
+changes the bind mount.
+
+## Login
+
+The database starts empty (no users). Create the initial admin via the app's
+built-in bootstrap endpoint: open
+`https://localhost:5173/Account/RegisterInitialUser` and fill the form. It
+creates a super-user, signs you in, and locks itself after one use.
+
+## Rebuilding after source changes
+
+- **Frontend:** no rebuild needed — Vite hot-reloads on save.
+- **Backend (C#):** `docker compose build server` then `docker compose --env-file docker/dev/.env up -d`.
+
+## Databases
+
+SQL Server is the default. To use PostgreSQL instead:
+
+```bash
+docker compose --env-file docker/dev/.env -f docker-compose.yml -f docker-compose.postgres.yml up -d
+# Frontend: https://localhost:5173
+# Postgres: localhost:5432  (origam — password in docker/dev/.env, port POSTGRES_PORT)
+```
+
+The postgres file overrides the `database` service (and neutralizes `db-init`,
+which postgres doesn't need) and points the backend at it; no other changes
+needed. The model deploys onto a fresh Postgres DB on
+first boot. The postgres file also sets DatabaseType and the connection
+string for architect, so the profile runs on Postgres too.
+
+## HTML Architect (optional)
+
+The modeler (Origam.Architect.Server + a Vite dev server for
+`architect-html`) is off by default; start it with a profile:
+
+```bash
+docker compose --env-file docker/dev/.env --profile architect up -d
+# Architect UI:  http://localhost:5174
+# Architect API: http://localhost:8081
+```
+
+It builds from source like `server`: after C# changes, `docker compose build
+architect` then `docker compose --env-file docker/dev/.env --profile architect
+up -d` recreates the container. It shares
+the database and model with the runtime server, and waits for that server to
+report healthy; the architect does not deploy the schema itself.
+
+Origam AI runs inside the Architect. Its settings come from this stack's env
+file, not from a tracked one: `AI_ENDPOINT` (default
+`https://api.openai.com/v1`), `AI_MODEL` (no default, set the id your provider
+offers) and `AI_API_KEY` in `docker/dev/.env`. Recreate the container to apply
+them:
+
+```bash
+docker compose --env-file docker/dev/.env --profile architect up -d architect
+```
+
+`restart` keeps the old environment. The chat panel's own notice names
+`appsettings.json`, which these variables override, so the key goes here.
+Without a key the panel says so; an empty or wrong model only shows up as a
+failed first message.
+
+## Useful Commands
+
+```bash
+docker compose logs -f server        # follow backend logs
+docker compose logs -f frontend      # follow Vite logs
+docker compose down                  # stop the stack
+# `down` does not stop the architect (profile service); use
+# `docker compose --profile architect down`
+docker compose down -v               # stop and WIPE the database volume
+docker compose exec server bash      # shell into the server container
+```
+
+## Troubleshooting
+
+- **`up` fails with a compose "dependency failed" error or the database never gets healthy:** you ran `docker compose up` without the password, so MSSQL can't start. Copy (`cp -n`) `docker/dev/.env.example` to `docker/dev/.env` and start with `--env-file docker/dev/.env` (see Quick Start).
+- **Port conflicts:** host ports are overridable in `docker/dev/.env` (`MSSQL_PORT`, `SERVER_PORT`, `FRONTEND_PORT`, `ARCHITECT_PORT`, `ARCHITECT_FRONTEND_PORT`, `POSTGRES_PORT`); `FRONTEND_PORT` also retunes OIDC so login works on the new port.
+- **Model not loading:** check the mount (`docker compose exec server ls -la
+  /home/origam/projectData/model`) and the server logs. A mismatched
+  `OrigamSettings__DefaultSchemaExtensionId` is the usual cause.

@@ -1,0 +1,30 @@
+// For format details, see https://aka.ms/devcontainer.json
+{
+  "name": "ORIGAM",
+  "dockerComposeFile": [
+    "docker-compose.yml"
+    // PostgreSQL instead of SQL Server: uncomment the next line and set
+    // POSTGRES_PASSWORD in .devcontainer/.env (see README). The referenced
+    // file is tracked, so validation passes in either state.
+    // , "docker-compose.postgres.yml"
+  ],
+  "service": "devcontainer",
+  "workspaceFolder": "/workspaces/origam",
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-dotnettools.csharp"
+      ],
+      "settings": {
+        // All ports are published by compose (backends, frontends, DAP). VS Code
+        // auto-forwarding is redundant and can leave a dead listener squatting
+        // the port — off entirely.
+        "remote.autoForwardPorts": false,
+        "remote.restoreForwardedPorts": false
+      }
+    }
+  },
+
+  "postCreateCommand": "dotnet restore /workspaces/origam/backend/Origam.sln && cd /workspaces/origam/frontend-html && yarn install --immutable && cd ../architect-html && yarn install --immutable && cd ../chat-html && yarn install --immutable"
+}
