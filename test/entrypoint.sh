@@ -62,6 +62,36 @@ filter_test_output() {
     '
 }
 
+create_token_certificates() {
+  # Generate disposable credentials for this test container without changing the server environment.
+  local certificate_directory
+  certificate_directory=$(mktemp -d) || return 1
+  (
+    umask 077
+    for purpose in signing encryption; do
+      key_usage=digitalSignature
+      if [[ "$purpose" == encryption ]]; then
+        key_usage=keyEncipherment
+      fi
+      openssl req -x509 -newkey rsa:4096 -sha256 -days 2 -noenc \
+        -subj "/CN=Origam Integration Test $purpose" \
+        -addext "keyUsage=critical,$key_usage" \
+        -keyout "$certificate_directory/$purpose.key" \
+        -out "$certificate_directory/$purpose.crt" > /dev/null 2>&1 || exit 1
+      openssl pkcs12 -export -passout pass: \
+        -inkey "$certificate_directory/$purpose.key" \
+        -in "$certificate_directory/$purpose.crt" \
+        -out "$certificate_directory/$purpose.pfx" || exit 1
+      rm "$certificate_directory/$purpose.key" "$certificate_directory/$purpose.crt" || exit 1
+    done
+  ) || return 1
+  # Keep the same test-only keys when restarting the server between authentication modes.
+  export OpenIddictConfig__SigningCertificatePath="$certificate_directory/signing.pfx"
+  export OpenIddictConfig__EncryptionCertificatePath="$certificate_directory/encryption.pfx"
+  export OpenIddictConfig__SigningCertificatePassword=""
+  export OpenIddictConfig__EncryptionCertificatePassword=""
+}
+
 start_server() {
   if [ -z "${OrigamSettings__ModelSourceControlLocation}" ]; then
     export OrigamSettings__ModelSourceControlLocation="/home/origam/projectData/model"
@@ -77,6 +107,7 @@ start_server() {
   sudo /etc/init.d/nginx start
   cd /home/origam/server_bin
   ./configureServer.sh
+  create_token_certificates || { print_error "Failed to create test token certificates"; exit 1; }
   # nginx terminates TLS; keep the public URLs available for account emails.
   export Kestrel__Endpoints__Http__Url="http://+:8080"
   env 'OpenIddictConfig__PrivateApiAdditionalAuthenticationMethods__/api/private/allDataTypesCookie=Cookie' \
