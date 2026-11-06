@@ -411,6 +411,15 @@ namespace Origam.Server {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Configure both OpenIddictConfig:SigningCertificatePath and OpenIddictConfig:EncryptionCertificatePath with PFX files containing private keys. Automatic development certificates are only available in the Development environment when neither path is configured..
+        /// </summary>
+        public static string ErrorMissingTokenCertificates {
+            get {
+                return ResourceManager.GetString("ErrorMissingTokenCertificates", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Invalid authentication method &apos;{0}&apos; for endpoint &apos;{1}&apos;. Valid values are: {2}..
         /// </summary>
         public static string ErrorInvalidAdditionalAuthenticationMethod {

@@ -44,6 +44,12 @@
     "AccessTokenExpirationMinutes": 60,
     "AccessTokenIssuer": "https://localhost:44357",
     "CookieSlidingExpiration": true,
+    // Required outside Development. Paths are relative to the server content root or absolute.
+    // Both PFX files must contain their private keys. Supply passwords through environment variables.
+    // "SigningCertificatePath": "certificates/signing.pfx",
+    // "EncryptionCertificatePath": "certificates/encryption.pfx",
+    // "SigningCertificatePassword": "",
+    // "EncryptionCertificatePassword": "",
     // uncomment following section to enable Google Login
     /*
     "GoogleLogin": {

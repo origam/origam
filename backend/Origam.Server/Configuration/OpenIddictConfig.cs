@@ -60,6 +60,10 @@ public class OpenIddictConfig
     public int AccessTokenExpirationMinutes { get; }
     public string AuthenticationPostProcessor { get; }
     public string AccessTokenIssuer { get; }
+    public string SigningCertificatePath { get; }
+    public string SigningCertificatePassword { get; }
+    public string EncryptionCertificatePath { get; }
+    public string EncryptionCertificatePassword { get; }
     public AuthenticationMethod PrivateApiAuthenticationMethod { get; }
     public IReadOnlyDictionary<
         string,
@@ -70,6 +74,14 @@ public class OpenIddictConfig
     public OpenIddictConfig(IConfiguration configuration)
     {
         var openIddictSection = configuration.GetSectionOrThrow("OpenIddictConfig");
+        SigningCertificatePath = openIddictSection.GetValue<string>("SigningCertificatePath");
+        SigningCertificatePassword = openIddictSection.GetValue<string>(
+            "SigningCertificatePassword"
+        );
+        EncryptionCertificatePath = openIddictSection.GetValue<string>("EncryptionCertificatePath");
+        EncryptionCertificatePassword = openIddictSection.GetValue<string>(
+            "EncryptionCertificatePassword"
+        );
         CookieSlidingExpiration = openIddictSection.GetValue(
             key: "CookieSlidingExpiration",
             defaultValue: true
