@@ -22,9 +22,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-#if !NETSTANDARD
-using Origam.Git;
-#endif
 
 namespace Origam.DA.ObjectPersistence;
 
@@ -108,9 +105,6 @@ public class AbstractPersistent : IPersistent
             OnDeleted(EventArgs.Empty);
             PersistenceProvider.OnTransactionEnded(this);
         }
-#if !NETSTANDARD
-        GitManager.PersistPath(Files);
-#endif
         if (isNew)
         {
             OnChanged(EventArgs.Empty);

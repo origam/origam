@@ -181,7 +181,6 @@ public class Reflector
     public static Type ResolveTypeFromAssembly(string classname, string assemblyName)
     {
         var classType = Type.GetType(classname + "," + assemblyName);
-#if NETSTANDARD
         if (classType == null)
         {
             // try to load assembly to default application context
@@ -202,7 +201,6 @@ public class Reflector
                 });
             }
         }
-#endif
         return classType;
     }
 

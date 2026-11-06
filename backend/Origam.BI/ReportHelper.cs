@@ -29,7 +29,7 @@ using Origam.Schema.EntityModel;
 using Origam.Schema.GuiModel;
 using Origam.Service.Core;
 using Origam.Workbench.Services;
-using core = Origam.Workbench.Services.CoreServices;
+using Core = Origam.Workbench.Services.CoreServices;
 
 namespace Origam.BI;
 
@@ -260,7 +260,7 @@ public static class ReportHelper
                     }
                 }
                 return DataDocumentFactory.New(
-                    core.DataService.Instance.LoadData(
+                    Core.DataService.Instance.LoadData(
                         report.DataStructure?.Id ?? Guid.Empty,
                         report.Method?.Id ?? Guid.Empty,
                         defaultSetId: Guid.Empty,

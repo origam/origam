@@ -22,11 +22,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Data;
 using Newtonsoft.Json.Serialization;
-using newton = Newtonsoft.Json.Converters;
+using NewtonsoftConverters = Newtonsoft.Json.Converters;
 
 namespace Origam.JSON;
 
-class DataSetConverter : newton.DataSetConverter
+class DataSetConverter : NewtonsoftConverters.DataSetConverter
 {
     private readonly bool omitRootElement;
     private readonly bool omitMainElement;

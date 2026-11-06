@@ -33,6 +33,26 @@ public class PasswordHasherTests
 {
     private const string Password = "TestPassword123!";
 
+    // Legacy PBKDF2-HMAC-SHA1 (1000 iterations): Base64(0x00 + salt + 32-byte subkey).
+    // Uses the Password constant and a 16-byte salt containing 0x00 through 0x0F.
+    [TestCase("AAABAgMEBQYHCAkKCwwNDg9q5AksKVPZcoGiTCv3CAyps71JdHCeQRVwzQep5mJeRw==")]
+    // Legacy .NET Membership: Base64(SHA1(salt + UTF-16LE(Password))) + "|" + Base64(salt).
+    // Uses the same password and salt as the PBKDF2 case.
+    [TestCase("eC77GdWsJ2lv0IGMgO3gFEswv+0=|AAECAwQFBgcICQoLDA0ODw==")]
+    public void ShouldVerifyExistingLegacyHashAfterFrameworkMigration(string hash)
+    {
+        var sut = new CorePasswordHasher();
+
+        Assert.That(
+            sut.VerifyHashedPassword(user: null!, hash, Password),
+            Is.EqualTo(PasswordVerificationResult.SuccessRehashNeeded)
+        );
+        Assert.That(
+            sut.VerifyHashedPassword(user: null!, hash, "WrongPassword"),
+            Is.EqualTo(PasswordVerificationResult.Failed)
+        );
+    }
+
     [Test]
     public void ShouldVerifyCurrentHash()
     {

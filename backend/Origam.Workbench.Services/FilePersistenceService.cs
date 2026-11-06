@@ -1,4 +1,4 @@
-﻿#region license
+#region license
 /*
 Copyright 2005 - 2021 Advantage Solutions, s. r. o.
 
@@ -28,9 +28,6 @@ using Origam.DA.ObjectPersistence;
 using Origam.DA.Service;
 using Origam.DA.Service.MetaModelUpgrade;
 using Origam.Schema;
-#if !NETSTANDARD
-using Origam.Git;
-#endif
 
 namespace Origam.Workbench.Services;
 
@@ -128,16 +125,10 @@ public class FilePersistenceService : IPersistenceService
         if (string.IsNullOrWhiteSpace(pathCandidate))
         {
             string configFileName = "RuntimeModelConfiguration.json";
-#if !NETSTANDARD
-            IgnoreFileTools.TryAdd(topDirectory.FullName, configFileName);
-#endif
             return Path.Combine(topDirectory.FullName, configFileName);
         }
         if (!Path.IsPathRooted(pathCandidate))
         {
-#if !NETSTANDARD
-            IgnoreFileTools.TryAdd(topDirectory.FullName, pathCandidate);
-#endif
             return Path.Combine(topDirectory.FullName, pathCandidate);
         }
         return pathCandidate;
