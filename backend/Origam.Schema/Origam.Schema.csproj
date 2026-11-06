@@ -52,6 +52,7 @@
     <DebugType>full</DebugType>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="System.Security.Permissions" Version="10.0.14" />
     <ProjectReference Include="..\Origam.Common\Origam.Common.csproj" />
     <ProjectReference Include="..\Origam.DA.Common\Origam.DA.Common.csproj" />
     <ProjectReference Include="..\Origam.UI.Common\Origam.UI.Common.csproj" />
