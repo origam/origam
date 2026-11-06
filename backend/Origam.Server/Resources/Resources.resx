@@ -441,4 +441,13 @@
   <data name="ModeledApiUnsupportedPageTypeSummary" xml:space="preserve">
     <value>Unsupported page type: {0}</value>
   </data>
+  <data name="ErrorInvalidAdditionalAuthenticationMethod" xml:space="preserve">
+    <value>Invalid authentication method '{0}' for endpoint '{1}'. Valid values are: {2}.</value>
+  </data>
+  <data name="PortalBaseUrlNotConfigured" xml:space="preserve">
+    <value>PortalBaseUrl is not configured.</value>
+  </data>
+  <data name="ErrorMissingTokenCertificates" xml:space="preserve">
+    <value>Configure both OpenIddictConfig:SigningCertificatePath and OpenIddictConfig:EncryptionCertificatePath with PFX files containing private keys. Automatic development certificates are only available in the Development environment when neither path is configured.</value>
+  </data>
 </root>

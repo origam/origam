@@ -81,9 +81,11 @@ public class Startup
     private readonly UserLockoutConfig lockoutConfig;
     private readonly LanguageConfig languageConfig;
     private readonly ChatConfig chatConfig;
+    private readonly IWebHostEnvironment environment;
 
-    public Startup(IConfiguration configuration)
+    public Startup(IConfiguration configuration, IWebHostEnvironment environment)
     {
+        this.environment = environment;
         Configuration = configuration;
         startUpConfiguration = new StartUpConfiguration(configuration);
         passwordConfiguration = new PasswordConfiguration(configuration);
@@ -257,7 +259,11 @@ public class Startup
                     .EnableAuthorizationEndpointPassthrough()
                     .EnableTokenEndpointPassthrough()
                     .EnableEndSessionEndpointPassthrough();
-                options.AddDevelopmentEncryptionCertificate().AddDevelopmentSigningCertificate();
+                OpenIddictCertificateConfiguration.Configure(
+                    options,
+                    openIddictConfig,
+                    environment
+                );
                 options.RegisterScopes(
                     Scopes.OpenId,
                     Scopes.Profile,

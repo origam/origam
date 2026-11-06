@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.Google;
@@ -58,12 +59,28 @@ public class OpenIddictConfig
     public int CookieExpirationMinutes { get; }
     public string AuthenticationPostProcessor { get; }
     public string AccessTokenIssuer { get; }
+    public string SigningCertificatePath { get; }
+    public string SigningCertificatePassword { get; }
+    public string EncryptionCertificatePath { get; }
+    public string EncryptionCertificatePassword { get; }
     public AuthenticationMethod PrivateApiAuthentication { get; }
+    public IReadOnlyDictionary<
+        string,
+        AuthenticationMethod
+    > PrivateApiAdditionalAuthenticationMethods { get; }
     public ClientApplicationTemplates ClientApplicationTemplates { get; set; }
 
     public OpenIddictConfig(IConfiguration configuration)
     {
         var openIddictSection = configuration.GetSectionOrThrow("OpenIddictConfig");
+        SigningCertificatePath = openIddictSection.GetValue<string>("SigningCertificatePath");
+        SigningCertificatePassword = openIddictSection.GetValue<string>(
+            "SigningCertificatePassword"
+        );
+        EncryptionCertificatePath = openIddictSection.GetValue<string>("EncryptionCertificatePath");
+        EncryptionCertificatePassword = openIddictSection.GetValue<string>(
+            "EncryptionCertificatePassword"
+        );
         CookieSlidingExpiration = openIddictSection.GetValue(
             key: "CookieSlidingExpiration",
             defaultValue: true
