@@ -20,10 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Linq;
 using System.Threading;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Origam.Security.Common;
 using Origam.Server.Configuration;
@@ -32,22 +29,15 @@ namespace Origam.Server.Authorization;
 
 class MailService : IMailService
 {
-    private AccountMailSender mailSender;
-    private LanguageConfig languageConfig;
+    private readonly AccountMailSender mailSender;
+    private readonly LanguageConfig languageConfig;
 
-    public MailService(
-        IOptions<UserConfig> userConfig,
-        LanguageConfig languageConfig,
-        IConfiguration configuration
-    )
+    public MailService(IOptions<UserConfig> userConfig, LanguageConfig languageConfig)
     {
         this.languageConfig = languageConfig;
         string baseUrl =
-            configuration[WebHostDefaults.ServerUrlsKey]
-                ?.Replace(oldValue: ";", newValue: ",")
-                ?.Split(",")
-                ?.FirstOrDefault(url => url.StartsWith("https"))
-            ?? throw new ArgumentException("Could not find server's https url");
+            userConfig.Value.PortalBaseUrl
+            ?? throw new ArgumentException(Resources.PortalBaseUrlNotConfigured);
         mailSender = new AccountMailSender(
             portalBaseUrl: baseUrl,
             registerNewUserFilename: userConfig.Value.UserRegistrationMailBodyFileName,

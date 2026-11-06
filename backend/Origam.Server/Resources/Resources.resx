@@ -444,4 +444,7 @@
   <data name="ErrorInvalidAdditionalAuthenticationMethod" xml:space="preserve">
     <value>Invalid authentication method '{0}' for endpoint '{1}'. Valid values are: {2}.</value>
   </data>
+  <data name="PortalBaseUrlNotConfigured" xml:space="preserve">
+    <value>PortalBaseUrl is not configured.</value>
+  </data>
 </root>

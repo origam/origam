@@ -1005,6 +1005,15 @@ namespace Origam.Server {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to PortalBaseUrl is not configured..
+        /// </summary>
+        public static string PortalBaseUrlNotConfigured {
+            get {
+                return ResourceManager.GetString("PortalBaseUrlNotConfigured", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Taskflow Error.
         /// </summary>
         public static string WorkflowErrorTitle {
