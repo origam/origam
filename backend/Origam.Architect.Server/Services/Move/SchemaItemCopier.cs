@@ -29,21 +29,13 @@ public class SchemaItemCopier(
     SchemaService schemaService,
     ModelTransactionRunner transactionRunner,
     IDocumentationService documentationService,
-    PanelControlFactory panelControlFactory,
-    CrossPackageMoveValidator packageValidator
+    PanelControlFactory panelControlFactory
 )
 {
     public ISchemaItem Copy(ISchemaItem original, MoveDecision decision)
     {
         ISchemaItemProvider rootProvider = original.RootProvider;
-        // The root provider has no package of its own.
-        Package targetPackage = decision.ResolveTargetPackage(
-            MovePreconditions.RequireActivePackage(schemaService)
-        );
-        if (targetPackage.Id != original.SchemaExtensionId)
-        {
-            packageValidator.CheckCopyOrThrow(original, targetPackage);
-        }
+        Package activePackage = MovePreconditions.RequireActivePackage(schemaService);
         // Clone() puts a top level clone straight into RootProvider.ChildItems.
         var clone = (ISchemaItem)original.Clone();
         bool wasTopLevel = clone.ParentItem == null;
@@ -52,10 +44,10 @@ public class SchemaItemCopier(
             return transactionRunner.Run(() =>
             {
                 decision.ApplyTo(clone);
-                clone.SetExtensionRecursive(targetPackage);
+                clone.SetExtensionRecursive(activePackage);
                 clone.Name = GetUniqueName(clone);
                 PersistClone(clone);
-                CreatePanelControl(clone, targetPackage);
+                CreatePanelControl(clone, activePackage);
                 if (wasTopLevel && decision.Kind == MoveDestination.ParentItem)
                 {
                     rootProvider?.ClearCache();
@@ -71,11 +63,11 @@ public class SchemaItemCopier(
     }
 
     // PanelControl finds the wrapper by the set's own id, so a clone has none.
-    private void CreatePanelControl(ISchemaItem clone, Package targetPackage)
+    private void CreatePanelControl(ISchemaItem clone, Package package)
     {
         if (clone is PanelControlSet { PanelControl: null } panelControlSet)
         {
-            panelControlFactory.Create(panelControlSet, targetPackage.Id);
+            panelControlFactory.Create(panelControlSet, package.Id);
         }
     }
 

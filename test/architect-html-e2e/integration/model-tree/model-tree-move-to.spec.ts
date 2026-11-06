@@ -46,7 +46,9 @@ test.describe('Model tree move to dialog (real backend)', () => {
     await activatePackage(request, PACKAGE);
   });
 
-  test('Move to moves a constant into a group of another package', async ({ page }) => {
+  test('Move to moves a constant into a group of another package and keeps its package', async ({
+    page,
+  }) => {
     await openConstants(page);
     await openMoveToDialog(page, 'UngroupedConstant');
 
@@ -57,11 +59,14 @@ test.describe('Model tree move to dialog (real backend)', () => {
     await expect(page.getByTestId('move-to-dialog')).toHaveCount(0);
     await expectTreeSettled(page, 'UngroupedConstant');
 
-    await expectModelFile('Root/DataConstant/Attachments/UngroupedConstant.origam', true);
+    await expectModelFile(`${CONSTANTS_DIR}/Attachments/UngroupedConstant.origam`, true);
+    await expectModelFile('Root/DataConstant/Attachments/UngroupedConstant.origam', false);
     await expectModelFile(`${CONSTANTS_DIR}/UngroupedConstant.origam`, false);
   });
 
-  test('Move to copies a constant into a group of another package', async ({ page }) => {
+  test('Move to copies a constant into a group of another package as an item of the active one', async ({
+    page,
+  }) => {
     await openConstants(page);
     await openMoveToDialog(page, 'UngroupedConstant');
 
@@ -69,7 +74,8 @@ test.describe('Model tree move to dialog (real backend)', () => {
     await selectOption(page, 'move-to-target', FOREIGN_GROUP);
     await expectMoveSucceeds(page, () => page.getByTestId('move-to-button-copy').click());
 
-    await expectModelFile('Root/DataConstant/Attachments/Copy of UngroupedConstant.origam', true);
+    await expectModelFile(`${CONSTANTS_DIR}/Attachments/Copy of UngroupedConstant.origam`, true);
+    await expectModelFile('Root/DataConstant/Attachments/Copy of UngroupedConstant.origam', false);
     await expectModelFile(`${CONSTANTS_DIR}/UngroupedConstant.origam`, true);
   });
 
