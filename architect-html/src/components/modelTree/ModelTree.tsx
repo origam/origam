@@ -1221,6 +1221,7 @@ const ModelTree = observer(() => {
       ref={treeRef}
       className={S.root}
       tabIndex={0}
+      data-test-id="model-tree"
       onMouseDown={() => treeRef.current?.focus({ preventScroll: true })}
       // An outside file dropped on empty space must not navigate away.
       onDragOver={e => {
@@ -1232,12 +1233,14 @@ const ModelTree = observer(() => {
       }}
       onDrop={e => e.preventDefault()}
     >
-      {modelTreeState.activePackageName && (
-        <div className={S.packageName}>{modelTreeState.activePackageName}</div>
-      )}
-      {modelTreeState.modelNodes.map(node => (
-        <ModelTreeNode key={node.id + node.nodeText} node={node} level={0} />
-      ))}
+      <div className={S.content}>
+        {modelTreeState.activePackageName && (
+          <div className={S.packageName}>{modelTreeState.activePackageName}</div>
+        )}
+        {modelTreeState.modelNodes.map(node => (
+          <ModelTreeNode key={node.id + node.nodeText} node={node} level={0} />
+        ))}
+      </div>
     </div>
   );
 });
