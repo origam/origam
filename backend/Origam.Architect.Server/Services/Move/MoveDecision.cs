@@ -51,16 +51,6 @@ public class MoveDecision
     public static MoveDecision ToParentItem(ISchemaItem targetItem) =>
         new() { Kind = MoveDestination.ParentItem, TargetItem = targetItem };
 
-    public Package ResolveTargetPackage(Package fallback)
-    {
-        return Kind switch
-        {
-            MoveDestination.Group => Group.Package,
-            MoveDestination.ParentItem => TargetItem.Package,
-            _ => fallback,
-        };
-    }
-
     public void ApplyTo(ISchemaItem item)
     {
         switch (Kind)

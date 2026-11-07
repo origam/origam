@@ -460,15 +460,6 @@ namespace Origam.Architect.Server {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to '{0}' cannot be moved, the package it belongs to is not loaded..
-        /// </summary>
-        internal static string Move_SourcePackageNotFound {
-            get {
-                return ResourceManager.GetString("Move_SourcePackageNotFound", resourceCulture);
-            }
-        }
-
-        /// <summary>
         ///   Looks up a localized string similar to Only items from the active package can be moved. '{0}' belongs to package '{1}' and can only be copied..
         /// </summary>
         internal static string Move_NotInActivePackage {
@@ -528,33 +519,6 @@ namespace Origam.Architect.Server {
         internal static string Move_NotAllowed {
             get {
                 return ResourceManager.GetString("Move_NotAllowed", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to '{0}' cannot be moved to package '{1}' because it depends on items in packages the target package does not reference: {2}.
-        /// </summary>
-        internal static string Move_DependenciesOutsideTargetPackage {
-            get {
-                return ResourceManager.GetString("Move_DependenciesOutsideTargetPackage", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to '{0}' cannot be moved to package '{1}' because items that use it would not be able to reach it: {2}.
-        /// </summary>
-        internal static string Move_UsagesCannotReachTargetPackage {
-            get {
-                return ResourceManager.GetString("Move_UsagesCannotReachTargetPackage", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to '{0}' cannot be moved to package '{1}' because the model reference index is not available. Reload the model and try again..
-        /// </summary>
-        internal static string Move_UsagesNotChecked {
-            get {
-                return ResourceManager.GetString("Move_UsagesNotChecked", resourceCulture);
             }
         }
 

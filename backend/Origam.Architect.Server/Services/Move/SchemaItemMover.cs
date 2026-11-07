@@ -20,14 +20,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using Origam.Schema;
-using Origam.Schema.GuiModel;
 
 namespace Origam.Architect.Server.Services.Move;
 
-public class SchemaItemMover(
-    ModelTransactionRunner transactionRunner,
-    CrossPackageMoveValidator packageValidator
-)
+public class SchemaItemMover(ModelTransactionRunner transactionRunner)
 {
     public ISchemaItem Move(ISchemaItem item, MoveDecision decision)
     {
@@ -35,31 +31,12 @@ public class SchemaItemMover(
         ISchemaItem oldParent = item.ParentItem;
         SchemaItemGroup oldGroup = GetGroupOrThrow(item);
         bool oldIsAbstract = item.IsAbstract;
-        Package oldPackage =
-            item.Package
-            ?? throw new UserOrigamException(
-                string.Format(Strings.Move_SourcePackageNotFound, item.Name)
-            );
-        Package targetPackage = decision.ResolveTargetPackage(oldPackage);
-        bool crossPackage = targetPackage != null && targetPackage.Id != oldPackage.Id;
-        if (crossPackage)
-        {
-            packageValidator.CheckMoveOrThrow(item, targetPackage);
-        }
         try
         {
             transactionRunner.Run(() =>
             {
                 decision.ApplyTo(item);
-                if (crossPackage)
-                {
-                    SetPackageRecursive(item, targetPackage);
-                }
                 item.Persist();
-                if (crossPackage)
-                {
-                    PersistPanelControl(item);
-                }
             });
         }
         catch
@@ -68,10 +45,6 @@ public class SchemaItemMover(
             item.ParentItem = oldParent;
             item.Group = oldGroup;
             item.IsAbstract = oldIsAbstract;
-            if (crossPackage)
-            {
-                SetPackageRecursive(item, oldPackage);
-            }
             decision.ClearAffectedCaches(rootProvider, oldParent);
             throw;
         }
@@ -99,21 +72,5 @@ public class SchemaItemMover(
                 exception
             );
         }
-    }
-
-    private static void SetPackageRecursive(ISchemaItem item, Package package)
-    {
-        item.SetExtensionRecursive(package);
-        GetPanelControl(item)?.SetExtensionRecursive(package);
-    }
-
-    private static void PersistPanelControl(ISchemaItem item)
-    {
-        GetPanelControl(item)?.Persist();
-    }
-
-    private static ISchemaItem GetPanelControl(ISchemaItem item)
-    {
-        return item is PanelControlSet panelControlSet ? panelControlSet.PanelControl : null;
     }
 }

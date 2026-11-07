@@ -20,10 +20,15 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import { expect, test, type APIRequestContext } from '@playwright/test';
 import { activatePackage } from '@support/activatePackage';
 import { expectModelFile } from '@support/modelTree';
-import { resetBackend } from '@support/resetBackend';
+import { readModelFile, resetBackend } from '@support/resetBackend';
 
 const PACKAGE = 'AutomaticTests';
 const CONSTANTS_DIR = 'AutomaticTests/DataConstant';
+const FIELD_PACKAGE = 'Widgets';
+const FIELD_NAME = 'asi:name="Boolean1"';
+const FIELD_ENTITY_FILE = 'Widgets/DataEntity/Widgets/AllDataTypes.origam';
+const FOREIGN_ENTITY_FILE = 'Root/DataEntity/Synchronization/OrigamSyncSystem.origam';
+const FOREIGN_ENTITY_EXTENSION_FILE = 'Widgets/DataEntity/Synchronization/OrigamSyncSystem.origam';
 
 interface NodeRef {
   id: string;
@@ -45,6 +50,9 @@ const FOREIGN_GROUP = ref('9e00cfe2-ad80-40f2-aeb2-321dcc57325e', 'Attachments')
 const SCREEN_SECTION = ref('263a4b50-3920-4445-84c7-4df5b3065d74', 'DimensionEntityRelation');
 const SECTION_GROUP = ref('d3087181-fe7b-48dd-85b9-97a4f17f3b6d', 'Dimensions');
 const SECTIONS_PROVIDER = 'Origam.Schema.GuiModel.PanelSchemaItemProvider';
+const FIELD = ref('f5997d8d-384f-4a20-9dc3-490bdc05f791', 'Boolean1');
+const FIELD_ENTITY = ref('7a2338f2-7290-4cec-b0ad-2c0ee6386885', 'AllDataTypes');
+const FOREIGN_ENTITY = ref('fe4b0866-624b-43b4-8975-5dcbd769e0d1', 'OrigamSyncSystem');
 
 test.describe('Model tree move rules (real backend)', () => {
   test.describe.configure({ mode: 'default', timeout: 45_000 });
@@ -144,19 +152,21 @@ test.describe('Model tree move rules (real backend)', () => {
     );
   });
 
-  test('Moving a constant into a group of another package repackages it', async ({ request }) => {
+  test('Moving a constant into a group of another package keeps its package', async ({
+    request,
+  }) => {
     const response = await request.post('/Model/MoveNode', {
       data: { source: UNGROUPED_CONSTANT, target: FOREIGN_GROUP, isCopy: false },
     });
 
     expect(response.ok(), await response.text()).toBeTruthy();
-    await expectModelFile('Root/DataConstant/Attachments/UngroupedConstant.origam', true);
+    await expectModelFile(`${CONSTANTS_DIR}/Attachments/UngroupedConstant.origam`, true);
+    await expectModelFile(`${CONSTANTS_DIR}/Attachments/.origamGroupReference`, true);
     await expectModelFile(`${CONSTANTS_DIR}/UngroupedConstant.origam`, false);
-    // The group belongs to Root, the source package must not grow a copy of it.
-    await expectModelFile(`${CONSTANTS_DIR}/Attachments`, false);
+    await expectModelFile('Root/DataConstant/Attachments/UngroupedConstant.origam', false);
   });
 
-  test('Copying a constant into a group of another package writes it there', async ({
+  test('Copying a constant into a group of another package writes it into the active one', async ({
     request,
   }) => {
     const response = await request.post('/Model/MoveNode', {
@@ -164,8 +174,31 @@ test.describe('Model tree move rules (real backend)', () => {
     });
 
     expect(response.ok(), await response.text()).toBeTruthy();
-    await expectModelFile('Root/DataConstant/Attachments/Copy of UngroupedConstant.origam', true);
+    await expectModelFile(`${CONSTANTS_DIR}/Attachments/Copy of UngroupedConstant.origam`, true);
+    await expectModelFile('Root/DataConstant/Attachments/Copy of UngroupedConstant.origam', false);
     await expectModelFile(`${CONSTANTS_DIR}/UngroupedConstant.origam`, true);
+  });
+
+  test('A field moved into an entity of another package keeps its package and moves back', async ({
+    request,
+  }) => {
+    await activatePackage(request, FIELD_PACKAGE);
+
+    await moveNode(request, FIELD, FOREIGN_ENTITY);
+    await expectModelFile(FOREIGN_ENTITY_EXTENSION_FILE, true);
+    expect(readModelFile(FOREIGN_ENTITY_EXTENSION_FILE)).toContain(FIELD_NAME);
+    expect(readModelFile(FOREIGN_ENTITY_FILE)).not.toContain(FIELD_NAME);
+    expect(readModelFile(FIELD_ENTITY_FILE)).not.toContain(FIELD_NAME);
+
+    const { targets, isSourceInActivePackage } = await getMoveTargets(request, FIELD);
+    expect(isSourceInActivePackage).toBe(true);
+    expect(targets.size).toBeGreaterThan(0);
+    const verdicts = await getMoveVerdicts(request, FIELD, [FIELD_ENTITY]);
+    expect(verdicts.get(key(FIELD_ENTITY))).toEqual({ canMove: true, canCopy: true });
+
+    await moveNode(request, FIELD, FIELD_ENTITY);
+    expect(readModelFile(FIELD_ENTITY_FILE)).toContain(FIELD_NAME);
+    expect(readModelFile(FOREIGN_ENTITY_FILE)).not.toContain(FIELD_NAME);
   });
 
   test('Move targets of a constant are the provider and the constant groups', async ({
@@ -224,11 +257,11 @@ test.describe('Model tree move rules (real backend)', () => {
 
     expect(response.ok(), await response.text()).toBeTruthy();
     await expectModelFile(
-      'Root/PanelControlSet/Dimensions/Copy of DimensionEntityRelation.origam',
+      'AutomaticTests/PanelControlSet/Dimensions/Copy of DimensionEntityRelation.origam',
       true,
     );
     // Without its own ControlItem the copy cannot be placed on a screen.
-    await expectModelFile('Root/Control/Copy of DimensionEntityRelation.origam', true);
+    await expectModelFile('AutomaticTests/Control/Copy of DimensionEntityRelation.origam', true);
   });
 
   test('A repeated copy gets a numbered name', async ({ request }) => {
@@ -242,6 +275,13 @@ test.describe('Model tree move rules (real backend)', () => {
     );
   });
 });
+
+async function moveNode(request: APIRequestContext, source: NodeRef, target: NodeRef) {
+  const response = await request.post('/Model/MoveNode', {
+    data: { source, target, isCopy: false },
+  });
+  expect(response.ok(), await response.text()).toBeTruthy();
+}
 
 async function copyIntoGroup(request: APIRequestContext): Promise<string> {
   const response = await request.post('/Model/MoveNode', {
