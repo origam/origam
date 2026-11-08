@@ -277,6 +277,22 @@ public class ModelController(
     }
 
     [HttpPost("GetMoveTargets")]
+    [EndpointDescription(
+        "List the places a model item can be moved or copied to - the list the Architect's "
+            + "'Move to...' dialog shows. Pass source = {id: <id of the item>} and nothing else. "
+            + "isSourceInActivePackage false means the item belongs to another package and can "
+            + "only be COPIED, never moved. Each target has id (pass it unchanged as target.id to "
+            + "POST /Model/MoveNode), nodeText, path (where it sits in the tree), packageName (the "
+            + "package that owns that folder; empty for the top folder of the type, which no "
+            + "package owns), isInActivePackage, isCurrentLocation (the item is there now - 'the "
+            + "same folder' means this target; remember it in case the user wants the item moved "
+            + "back), canMove and canCopy. A top level item such as an entity, a constant or a "
+            + "screen can go to the top folder of its type or to a folder of that type in any "
+            + "loaded package; an item that can change its parent, such as a field, a filter, a "
+            + "menu item or a workflow step, lists the possible parent items instead. Skip this "
+            + "call when you already know the target id, for example the entity id from MODEL "
+            + "INDEX that a field should move to."
+    )]
     public ActionResult<MoveTargetsResult> GetMoveTargets(
         [Required] [FromBody] MoveTargetsModel input
     )
@@ -285,6 +301,32 @@ public class ModelController(
     }
 
     [HttpPost("MoveNode")]
+    [EndpointDescription(
+        "Move or copy one model item to another place in the model tree, like drag and drop, "
+            + "cut and paste or copy and paste in the Architect. source = {id: <the item>}, "
+            + "target = {id: <where it goes>}: a target id from POST /Model/GetMoveTargets, a "
+            + "folder id, a top level folder id (a type name, not a GUID) or a parent item id "
+            + "such as the entity a field should move to. Do not pass nodeText or "
+            + "isNonPersistentItem. A folder of another package is a normal target for both a "
+            + "move and a copy: the folder only decides where the item appears in the tree. "
+            + "isCopy false MOVES the item: only its place changes, its id stays the same, "
+            + "everything that references it keeps working, and the package that owns it stays "
+            + "the same. Only items of the active package can be moved. isCopy true COPIES the "
+            + "item: the copy gets a new id, it belongs to the ACTIVE package wherever it is "
+            + "placed, it is renamed to 'Copy of <name>' when the name is already taken there, "
+            + "and the original stays untouched. The change is saved to disk at once, there is "
+            + "no separate persist step. Folders themselves cannot be moved or copied, and no "
+            + "call changes the package that owns an item - never imitate that by copying and "
+            + "deleting, tell the user instead. On success returns {node, sourceLocation, "
+            + "parentNodeIds}: node.origamId is the moved item's unchanged id or the new copy's "
+            + "id, node.nodeText its name; sourceLocation is where the item was before a move, or "
+            + "where the original stays for a copy, with id, nodeText, path and packageName "
+            + "(empty for the top folder of the type). When you report a move, give both places "
+            + "by their path, and pass sourceLocation.id as target.id when the user wants the "
+            + "move undone. An error response carries the reason the model refused, for example "
+            + "that the item belongs to another package and can only be copied; when the user "
+            + "asked for a move, tell them so and ask before making a copy instead."
+    )]
     public ActionResult<MoveNodeResult> MoveNode([Required] [FromBody] MoveNodeModel input)
     {
         return Ok(moveService.Move(input.Source, input.Target, input.IsCopy));

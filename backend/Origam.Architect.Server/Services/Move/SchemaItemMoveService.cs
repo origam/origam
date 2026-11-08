@@ -100,12 +100,14 @@ public class SchemaItemMoveService(
         }
 
         var original = (ISchemaItem)source;
+        MoveLocationResult sourceLocation = targetFinder.DescribeLocation(original);
         ISchemaItem result = isCopy
             ? copier.Copy(original, decision)
             : mover.Move(original, decision);
         return new MoveNodeResult
         {
             Node = treeNodeFactory.Create(result),
+            SourceLocation = sourceLocation,
             ParentNodeIds = GetParentNodeIdsOrEmpty(result),
         };
     }

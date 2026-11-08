@@ -33,4 +33,21 @@ public static class MovePreconditions
         return schemaService.ActiveExtension
             ?? throw new UserOrigamException(Strings.Move_NoActivePackage);
     }
+
+    // The Group getter throws a plain Exception when the group is gone from the model.
+    public static SchemaItemGroup RequireReadableGroup(ISchemaItem item)
+    {
+        try
+        {
+            return item.Group;
+        }
+        catch (Exception exception)
+        {
+            throw new UserOrigamException(
+                string.Format(Strings.Move_SourceGroupNotFound, item.Name),
+                exception.Message,
+                exception
+            );
+        }
+    }
 }

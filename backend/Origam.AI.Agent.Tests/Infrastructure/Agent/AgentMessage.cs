@@ -19,6 +19,16 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using System.Text.Json.Serialization;
+
 namespace Origam.AI.Agent.Tests.Infrastructure.Agent;
 
-public sealed record AgentMessage(string Id, string Role, string Content);
+public sealed record AgentMessage(
+    string Id,
+    string Role,
+    string Content,
+    [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        IReadOnlyList<AgentToolCall>? ToolCalls = null,
+    [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        string? ToolCallId = null
+);

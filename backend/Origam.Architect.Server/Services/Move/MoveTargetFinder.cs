@@ -84,6 +84,31 @@ public class MoveTargetFinder(SchemaService schemaService, MoveRuleEvaluator rul
         return result;
     }
 
+    public MoveLocationResult DescribeLocation(ISchemaItem item)
+    {
+        if (item.RootProvider is not AbstractSchemaItemProvider provider)
+        {
+            return null;
+        }
+
+        IBrowserNode2 location =
+            (IBrowserNode2)item.ParentItem
+            ?? (IBrowserNode2)MovePreconditions.RequireReadableGroup(item)
+            ?? provider;
+        Guid? packageId = GetOwningPackageId(location);
+        return new MoveLocationResult
+        {
+            Id = location.NodeId,
+            NodeText = TreeNode.ToNodeText(location),
+            Path = GetTargetLocation(location, provider).Path,
+            PackageName =
+                schemaService
+                    .LoadedPackages.FirstOrDefault(package => package.Id == packageId)
+                    ?.Name
+                ?? string.Empty,
+        };
+    }
+
     private static IEnumerable<IBrowserNode2> GetMoveCandidates(
         ISchemaItem item,
         AbstractSchemaItemProvider provider
@@ -152,12 +177,7 @@ public class MoveTargetFinder(SchemaService schemaService, MoveRuleEvaluator rul
         Guid activePackageId
     )
     {
-        Guid packageId = candidate switch
-        {
-            SchemaItemGroup group => group.SchemaExtensionId,
-            ISchemaItem schemaItem => schemaItem.SchemaExtensionId,
-            _ => activePackageId,
-        };
+        Guid packageId = GetOwningPackageId(candidate) ?? activePackageId;
         (string path, int depth) = GetTargetLocation(candidate, provider);
         return new MoveTargetResult
         {
@@ -171,6 +191,16 @@ public class MoveTargetFinder(SchemaService schemaService, MoveRuleEvaluator rul
             IsCurrentLocation = MoveRuleEvaluator.IsCurrentLocation(item, candidate),
             CanMove = canMove,
             CanCopy = canCopy,
+        };
+    }
+
+    private static Guid? GetOwningPackageId(IBrowserNode2 node)
+    {
+        return node switch
+        {
+            SchemaItemGroup group => group.SchemaExtensionId,
+            ISchemaItem schemaItem => schemaItem.SchemaExtensionId,
+            _ => null,
         };
     }
 

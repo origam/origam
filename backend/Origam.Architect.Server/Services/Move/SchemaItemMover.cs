@@ -29,7 +29,7 @@ public class SchemaItemMover(ModelTransactionRunner transactionRunner)
     {
         ISchemaItemProvider rootProvider = item.RootProvider;
         ISchemaItem oldParent = item.ParentItem;
-        SchemaItemGroup oldGroup = GetGroupOrThrow(item);
+        SchemaItemGroup oldGroup = MovePreconditions.RequireReadableGroup(item);
         bool oldIsAbstract = item.IsAbstract;
         try
         {
@@ -55,22 +55,5 @@ public class SchemaItemMover(ModelTransactionRunner transactionRunner)
         }
 
         return item;
-    }
-
-    // The Group getter throws a plain Exception when the group is gone from the model.
-    private static SchemaItemGroup GetGroupOrThrow(ISchemaItem item)
-    {
-        try
-        {
-            return item.Group;
-        }
-        catch (Exception exception)
-        {
-            throw new UserOrigamException(
-                string.Format(Strings.Move_SourceGroupNotFound, item.Name),
-                exception.Message,
-                exception
-            );
-        }
     }
 }

@@ -37,6 +37,8 @@ public sealed class ModelSandbox
     private static readonly TimeSpan StaleSandboxAge = TimeSpan.FromHours(6);
     private static readonly TimeSpan DeleteRetryDelay = TimeSpan.FromMilliseconds(300);
 
+    public static DirectoryInfo? CurrentModelDirectory { get; private set; }
+
     private string settingsPath = string.Empty;
     private string settingsBackupPath = string.Empty;
     private bool settingsWereBorrowed;
@@ -82,6 +84,7 @@ public sealed class ModelSandbox
             Path.Combine(sandboxRunDirectory.FullName, path2: "model")
         );
         CopyDirectory(sourceModel, sandboxModel);
+        CurrentModelDirectory = sandboxModel;
 
         if (string.Equals(sourceSettingsPath, settingsPath, StringComparison.OrdinalIgnoreCase))
         {
@@ -114,6 +117,7 @@ public sealed class ModelSandbox
             processExitHandler = null;
         }
         RestoreSettings();
+        CurrentModelDirectory = null;
 
         if (sandboxRunDirectory is null)
         {

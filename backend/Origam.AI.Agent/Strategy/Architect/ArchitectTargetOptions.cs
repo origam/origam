@@ -59,6 +59,7 @@ public static class ArchitectTargetOptions
             PathsNeverExposedAsTools = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
             {
                 "/Model/GetSchemaItemInfos",
+                "/Model/GetMoveVerdicts",
                 "/ScreenEditor/GetSections",
             },
             SectionDescriptions = new Dictionary<string, string>(StringComparer.Ordinal)

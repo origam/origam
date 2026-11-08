@@ -31,6 +31,7 @@ public class MoveVerdictResult
 public class MoveNodeResult
 {
     public TreeNode Node { get; set; }
+    public MoveLocationResult SourceLocation { get; set; }
     public List<string> ParentNodeIds { get; set; }
 }
 
