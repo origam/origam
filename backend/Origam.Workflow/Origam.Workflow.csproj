@@ -45,6 +45,7 @@
     <Compile Remove="WorkQueue\WorkQueueData.cs" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="MimeKit" Version="4.18.2" />
     <PackageReference Include="Origam-sms">
       <Version>1.0.2</Version>
     </PackageReference>
