@@ -95,6 +95,27 @@ test.describe('Model tree move to dialog (real backend)', () => {
     await expectModelFile('Root/DataConstant/Attachments/UngroupedConstant.origam', false);
   });
 
+  test('An open editor shows the new package and file right after a move', async ({ page }) => {
+    await openConstants(page);
+    await page.getByTestId('tree-node-UngroupedConstant').dblclick();
+    const infoSection = page.getByRole('button', { name: 'Info', exact: true }).filter({
+      visible: true,
+    });
+    await infoSection.click();
+    await expect(infoSection).toHaveAttribute('aria-expanded', 'true');
+    await expect(visibleProperty(page, 'PackageName')).toHaveValue(PACKAGE);
+
+    await openMoveToDialog(page, 'UngroupedConstant');
+    await awaitMoveTargets(page, () => selectOption(page, 'move-to-package', 'Root'));
+    await selectOption(page, 'move-to-target', 'Attachments');
+    await expectMoveSucceeds(page, () => page.getByTestId('move-to-button-move').click());
+
+    await expect(visibleProperty(page, 'PackageName')).toHaveValue('Root');
+    await expect(visibleProperty(page, 'RelativeFilePath')).toHaveValue(
+      filePath('Root/DataConstant/Attachments/UngroupedConstant.origam'),
+    );
+  });
+
   test('Move to refuses a package that misses a dependency', async ({ page, request }) => {
     await activatePackage(request, 'Widgets');
     await page.goto('/');
@@ -205,6 +226,10 @@ async function selectOption(page: Page, testId: string, optionText: string): Pro
   const exactText = new RegExp(`^\\s*${optionText.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*$`);
   await dropdownOptions(page).filter({ hasText: exactText }).first().click();
   await expect(input).toHaveValue(exactText);
+}
+
+function visibleProperty(page: Page, propertyName: string) {
+  return page.getByTestId(`property-input-${propertyName}`).filter({ visible: true });
 }
 
 function filePath(relativePath: string): RegExp {

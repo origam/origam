@@ -242,7 +242,8 @@ export class TreeTransferState {
 
     this.isBusy = true;
     try {
-      if (!isCopy && !(yield* this.confirmUnsavedChanges(source, sourceRef))) {
+      const movedIds = source ? this.collectSubtreeIds(source) : [sourceRef.id];
+      if (!isCopy && !(yield* this.confirmUnsavedChanges(movedIds, sourceRef))) {
         return false;
       }
 
@@ -254,6 +255,9 @@ export class TreeTransferState {
       });
 
       yield* this.refreshAfterMove(source, targetNode, result);
+      if (!isCopy) {
+        yield* this.rootStore.editorTabViewState.reloadEditorsForOrigamIds(movedIds)();
+      }
       return true;
     } finally {
       this.isBusy = false;
@@ -262,10 +266,9 @@ export class TreeTransferState {
 
   // Persist cascades to child items.
   private *confirmUnsavedChanges(
-    source: TreeNode | null,
+    movedIds: string[],
     sourceRef: INodeLoadData,
   ): Generator<Promise<any>, boolean, any> {
-    const movedIds = source ? this.collectSubtreeIds(source) : [sourceRef.id];
     const dirtyEditors = this.rootStore.editorTabViewState.editorsContainers.filter(
       editor => editor.state.isDirty && movedIds.some(id => editor.state.tabId.includes(id)),
     );

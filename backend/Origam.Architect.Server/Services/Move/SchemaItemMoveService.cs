@@ -35,7 +35,8 @@ public class SchemaItemMoveService(
     MoveTargetFinder targetFinder,
     SchemaItemMover mover,
     SchemaItemCopier copier,
-    TreeNodeFactory treeNodeFactory
+    TreeNodeFactory treeNodeFactory,
+    TabService tabService
 )
 {
     public List<MoveVerdictResult> GetMoveVerdicts(
@@ -114,9 +115,15 @@ public class SchemaItemMoveService(
         var original = (ISchemaItem)source;
         MoveLocationResult sourceLocation = targetFinder.DescribeLocation(original);
         Package sourcePackage = original.Package;
+        ISchemaItem sourceRoot = original.RootItem;
         ISchemaItem result = isCopy
             ? copier.Copy(original, decision)
             : mover.Move(original, decision);
+        if (!isCopy)
+        {
+            tabService.InvalidateTabsInRoot(sourceRoot, changedByTabId: null);
+            tabService.InvalidateTabsInRoot(result.RootItem, changedByTabId: null);
+        }
         return new MoveNodeResult
         {
             Node = treeNodeFactory.Create(result),
