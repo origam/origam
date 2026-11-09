@@ -1,0 +1,29 @@
+# Docker build context hygiene — keeps `docker build` from sending churn.
+# (Build context is already small; this is preventive.)
+
+# Build artifacts
+**/bin/
+**/obj/
+**/node_modules/
+**/dist/
+**/.vite/
+
+# Test artifacts / data
+model-tests/**/TestResults/
+**/*.TestResults/
+
+# Logs
+**/logs/
+**/*.log
+
+# IDE / OS
+.vs/
+.idea/
+**/.DS_Store
+
+# Docker dev-local files (gitignored anyway, but keep out of context)
+docker/dev/.env
+docker-compose.override.yml
+
+# Git
+.git/

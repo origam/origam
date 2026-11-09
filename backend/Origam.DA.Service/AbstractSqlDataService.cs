@@ -131,6 +131,10 @@ internal class DataLoader
             }
             catch (Exception ex)
             {
+                if (ex is SqlException sqlEx && sqlEx.Number == 208)
+                {
+                    throw new Origam.DA.DatabaseTableNotFoundException(Entity.Name, sqlEx);
+                }
                 HandleException(
                     exception: ex,
                     commandText: dbDataAdapter.SelectCommand.CommandText,
