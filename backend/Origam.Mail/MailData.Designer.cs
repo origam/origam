@@ -320,6 +320,8 @@ namespace Origam.Mail {
             private global::System.Data.DataColumn columnCC;
             
             private global::System.Data.DataColumn columnBCC;
+
+            private global::System.Data.DataColumn columnReplyTo;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
@@ -466,6 +468,14 @@ namespace Origam.Mail {
                     return this.columnBCC;
                 }
             }
+
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            public global::System.Data.DataColumn ReplyToColumn {
+                get {
+                    return this.columnReplyTo;
+                }
+            }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
@@ -566,6 +576,7 @@ namespace Origam.Mail {
                 this.columnSelected = base.Columns["Selected"];
                 this.columnCC = base.Columns["CC"];
                 this.columnBCC = base.Columns["BCC"];
+                this.columnReplyTo = base.Columns["ReplyTo"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -601,6 +612,8 @@ namespace Origam.Mail {
                 base.Columns.Add(this.columnCC);
                 this.columnBCC = new global::System.Data.DataColumn("BCC", typeof(string), null, global::System.Data.MappingType.Attribute);
                 base.Columns.Add(this.columnBCC);
+                this.columnReplyTo = new global::System.Data.DataColumn("ReplyTo", typeof(string), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnReplyTo);
                 this.Constraints.Add(new global::System.Data.UniqueConstraint("PK_Id", new global::System.Data.DataColumn[] {
                                 this.columnId}, true));
                 this.columnDateSent.AllowDBNull = false;
@@ -634,6 +647,7 @@ namespace Origam.Mail {
                 this.columnSelected.DefaultValue = ((bool)(false));
                 this.columnCC.Namespace = "";
                 this.columnBCC.Namespace = "";
+                this.columnReplyTo.Namespace = "";
                 this.Locale = new global::System.Globalization.CultureInfo("cs-CZ");
             }
             
@@ -1409,6 +1423,22 @@ namespace Origam.Mail {
                     this[this.tableMail.BCCColumn] = value;
                 }
             }
+
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            public string ReplyTo {
+                get {
+                    try {
+                        return ((string)(this[this.tableMail.ReplyToColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'ReplyTo\' in table \'Mail\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableMail.ReplyToColumn] = value;
+                }
+            }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
@@ -1523,11 +1553,23 @@ namespace Origam.Mail {
             public bool IsBCCNull() {
                 return this.IsNull(this.tableMail.BCCColumn);
             }
+
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            public bool IsReplyToNull() {
+                return this.IsNull(this.tableMail.ReplyToColumn);
+            }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
             public void SetBCCNull() {
                 this[this.tableMail.BCCColumn] = global::System.Convert.DBNull;
+            }
+
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            public void SetReplyToNull() {
+                this[this.tableMail.ReplyToColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
