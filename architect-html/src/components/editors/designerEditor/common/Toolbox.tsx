@@ -46,6 +46,11 @@ const Toolbox = observer(
       [toolboxState.dataSources],
     );
 
+    const packageName =
+      rootStore.packagesState.packages.find(
+        modelPackage => modelPackage.id === toolboxState.schemaExtensionId,
+      )?.name ?? toolboxState.schemaExtensionId;
+
     return (
       <div data-test-id="toolbox" className={S.toolbox}>
         <div className={S.inputs}>
@@ -78,7 +83,7 @@ const Toolbox = observer(
           </div>
           <div className={S.inputContainer}>
             <div>{T('Package', 'tool_box_package')}</div>
-            <input disabled={true} type="text" value={toolboxState.schemaExtensionId} />
+            <input disabled={true} type="text" value={packageName} />
           </div>
         </div>
         <TabView width={260} state={toolboxState.tabViewState} items={tabViewItems} />
