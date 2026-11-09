@@ -43,7 +43,7 @@
         <value>'{0}' has not been saved yet. Save it before moving or copying it.</value>
     </data>
     <data name="Move_NotInActivePackage" xml:space="preserve">
-        <value>Only items from the active package can be moved. '{0}' belongs to package '{1}' and can only be copied.</value>
+        <value>Only items of the active package can be moved within their package. '{0}' belongs to package '{1}'.</value>
     </data>
     <data name="Move_TargetIsSource" xml:space="preserve">
         <value>An item cannot be dropped onto itself.</value>
@@ -65,6 +65,27 @@
     </data>
     <data name="Move_SourceGroupNotFound" xml:space="preserve">
         <value>'{0}' cannot be moved, the group it belongs to could not be loaded.</value>
+    </data>
+    <data name="Move_OnlyIntoActivePackage" xml:space="preserve">
+        <value>'{0}' belongs to package '{1}', so it can only be moved into the active package '{2}'.</value>
+    </data>
+    <data name="Move_PackageNotAvailable" xml:space="preserve">
+        <value>'{0}' cannot be moved into package '{1}'. Choose the active package or a package it includes.</value>
+    </data>
+    <data name="Move_TargetOutsidePackage" xml:space="preserve">
+        <value>'{0}' cannot be placed in '{1}', package '{2}' does not include package '{3}'.</value>
+    </data>
+    <data name="Move_PackageMissingDependencies" xml:space="preserve">
+        <value>'{0}' cannot belong to package '{1}', it uses items from packages that '{1}' does not include: {2}.</value>
+    </data>
+    <data name="Move_PackageUsedOutside" xml:space="preserve">
+        <value>'{0}' cannot belong to package '{1}', it is used from packages that do not include '{1}': {2}.</value>
+    </data>
+    <data name="Move_ItemInPackage" xml:space="preserve">
+        <value>{0} ({1})</value>
+    </data>
+    <data name="Move_ReferenceIndexNotReady" xml:space="preserve">
+        <value>The model is still being indexed. Try again in a moment.</value>
     </data>
     <data name="XsltValidationSuccess" xml:space="preserve">
         <value>XSLT is valid.</value>

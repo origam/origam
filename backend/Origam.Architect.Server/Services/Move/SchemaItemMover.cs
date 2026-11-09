@@ -31,12 +31,29 @@ public class SchemaItemMover(ModelTransactionRunner transactionRunner)
         ISchemaItem oldParent = item.ParentItem;
         SchemaItemGroup oldGroup = MovePreconditions.RequireReadableGroup(item);
         bool oldIsAbstract = item.IsAbstract;
+        Guid oldPackageId = item.SchemaExtensionId;
+        List<ISchemaItem> repackagedItems =
+            decision.NewPackage == null
+                ? []
+                : PackageChangeChecker.CollectItemsChangingPackage(item);
         try
         {
             transactionRunner.Run(() =>
             {
                 decision.ApplyTo(item);
+                foreach (ISchemaItem repackaged in repackagedItems)
+                {
+                    repackaged.SchemaExtensionId = decision.NewPackage.Id;
+                }
                 item.Persist();
+                foreach (
+                    ISchemaItem otherRoot in repackagedItems.Where(repackaged =>
+                        repackaged != item && repackaged.ParentItem == null
+                    )
+                )
+                {
+                    otherRoot.Persist();
+                }
             });
         }
         catch
@@ -45,6 +62,10 @@ public class SchemaItemMover(ModelTransactionRunner transactionRunner)
             item.ParentItem = oldParent;
             item.Group = oldGroup;
             item.IsAbstract = oldIsAbstract;
+            foreach (ISchemaItem repackaged in repackagedItems)
+            {
+                repackaged.SchemaExtensionId = oldPackageId;
+            }
             decision.ClearAffectedCaches(rootProvider, oldParent);
             throw;
         }

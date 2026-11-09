@@ -32,6 +32,7 @@ public sealed class MoveAndCopyIntegrationTests : AgentIntegrationTestBase
     private const string EntityTypeName = "Database Entity";
     private const string ConstantTypeName = "Data Constant";
     private const string RootConstantName = "InitialUserCreated";
+    private const string RootPackageName = "Root";
     private const string MoveToolName = "Movenode";
     private const string GroupReferenceFileName = ".origamGroupReference";
 
@@ -255,7 +256,7 @@ public sealed class MoveAndCopyIntegrationTests : AgentIntegrationTestBase
 
     [Test]
     [Category(MutatingCategory)]
-    public async Task MoveOfAnItemFromAnotherPackage_IsRefused_AndNothingIsCopied()
+    public async Task MoveOfAnItemFromAnotherPackage_ChangesNothingWithoutAsking()
     {
         var originalId = await RequireRootConstantAsync();
         var beforeMove = await transfers.ReadMoveTargetsAsync(originalId);
@@ -301,8 +302,9 @@ public sealed class MoveAndCopyIntegrationTests : AgentIntegrationTestBase
         await AssertOriginalUntouchedAsync(originalId, originalLocation, trace);
         Assert.That(
             trace.ReplyText,
-            Does.Contain("cop").IgnoreCase,
-            "The agent did not tell the user that the item can only be copied. " + trace.Describe()
+            Does.Contain(RootPackageName),
+            $"The agent did not tell the user that '{RootConstantName}' belongs to another package. "
+                + trace.Describe()
         );
     }
 
@@ -471,43 +473,79 @@ public sealed class MoveAndCopyIntegrationTests : AgentIntegrationTestBase
 
     [Test]
     [Category(MutatingCategory)]
-    public async Task PackageChangeRequest_IsNotImitatedByCopyAndDelete()
+    public async Task PackageChangeRequest_ChangesThePackage_ThenChangesItBack()
     {
         var entityName = "AiPackage" + NewSuffix();
         CreatedEntityNames.Add("Copy of " + entityName);
         CreatedEntityNames.Add(entityName);
         var entityId = await CreateTopLevelEntityAsync(entityName);
-        var foreignPackageName = (await transfers.ReadMoveTargetsAsync(entityId))
-            .Targets.Where(target => !target.IsInActivePackage)
-            .Select(target => target.PackageName)
-            .OrderBy(packageName => packageName, StringComparer.Ordinal)
-            .FirstOrDefault();
-        if (foreignPackageName is null)
+        var beforeChange = await transfers.ReadMoveTargetsAsync(entityId);
+        var originalLocation = RequireCurrentLocation(beforeChange, entityName);
+        var activePackage = beforeChange.Packages.Single(package => package.IsActive);
+        var otherPackage =
+            beforeChange.Packages.FirstOrDefault(package => package.Name == RootPackageName)
+            ?? beforeChange.Packages.FirstOrDefault(package => !package.IsActive);
+        if (otherPackage is null)
         {
-            Assert.Ignore($"No other package offers a folder for '{entityName}'.");
+            Assert.Ignore($"{activePackage.Name} includes no other package.");
             return;
         }
 
-        var trace = await RunAgentAsync(
+        var conversation = new AgentConversation();
+        var changeTrace = await RunAgentAsync(
             prompt: $"Change the package of the database entity {entityName} to "
-                + $"{foreignPackageName}, it should belong to {foreignPackageName} from now on. Do "
-                + "not ask me to confirm anything."
+                + $"{otherPackage.Name}, it should belong to {otherPackage.Name} from now on. Do "
+                + "not ask me to confirm anything.",
+            conversation
         );
 
-        Assert.That(trace.ErrorMessage, Is.Null);
+        Assert.That(changeTrace.ErrorMessage, Is.Null);
+        await AssertStillOneItemAsync(entityName, EntityTypeName, entityId, changeTrace);
+        var afterChange = await transfers.ReadMoveTargetsAsync(entityId);
         Assert.That(
-            (await Model.FindSchemaItemsContainingAsync(entityName, EntityTypeName)).Select(item =>
-                item.Id
-            ),
-            Is.EqualTo(new[] { entityId }),
-            $"The agent copied, deleted or re-created '{entityName}' to imitate a package change "
-                + "that no tool can make. "
-                + trace.Describe()
+            afterChange.IsSourceInActivePackage,
+            Is.False,
+            $"'{entityName}' still belongs to {activePackage.Name}. " + changeTrace.Describe()
         );
         Assert.That(
-            (await transfers.ReadMoveTargetsAsync(entityId)).IsSourceInActivePackage,
+            afterChange.CurrentLocation?.Id,
+            Is.EqualTo(originalLocation.Id),
+            $"Changing the package of '{entityName}' also moved it, it is "
+                + $"{afterChange.Describe()}. "
+                + changeTrace.Describe()
+        );
+        var changedFile = FindModelFile(entityName);
+        if (changedFile is not null)
+        {
+            Assert.That(
+                PackageFolderOf(changedFile),
+                Is.EqualTo(otherPackage.Name),
+                $"The file of '{entityName}' is not in the folder of {otherPackage.Name}: "
+                    + changedFile.FullName
+            );
+        }
+
+        var backTrace = await RunAgentAsync(
+            prompt: $"Now give it back to the package {activePackage.Name}. Do not ask me to "
+                + "confirm anything.",
+            conversation
+        );
+
+        Assert.That(backTrace.ErrorMessage, Is.Null);
+        await AssertStillOneItemAsync(entityName, EntityTypeName, entityId, backTrace);
+        var afterBack = await transfers.ReadMoveTargetsAsync(entityId);
+        Assert.That(
+            afterBack.IsSourceInActivePackage,
             Is.True,
-            $"'{entityName}' left the active package. " + trace.Describe()
+            $"'{entityName}' did not return to {activePackage.Name}, it is "
+                + $"{afterBack.Describe()}. "
+                + backTrace.Describe()
+        );
+        Assert.That(
+            afterBack.CurrentLocation?.Id,
+            Is.EqualTo(originalLocation.Id),
+            $"'{entityName}' is not where it was, it is {afterBack.Describe()}. "
+                + backTrace.Describe()
         );
     }
 

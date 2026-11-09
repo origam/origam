@@ -22,6 +22,7 @@ import { activatePackage } from '@support/activatePackage';
 import {
   awaitMoveTargets,
   awaitMoveVerdicts,
+  expectBoxSettled,
   expectModelFile,
   expectMoveSucceeds,
   expectTreeSettled,
@@ -34,8 +35,8 @@ import { resetBackend } from '@support/resetBackend';
 const PACKAGE = 'AutomaticTests';
 const CONSTANTS_DIR = 'AutomaticTests/DataConstant';
 // A group of constants living in Root, which AutomaticTests references.
-const FOREIGN_GROUP = 'Attachments';
-const CONSTANT_GROUP = 'AutomaticTests';
+const FOREIGN_GROUP = 'Attachments (Root)';
+const CONSTANT_GROUP = 'AutomaticTests (AutomaticTests)';
 
 test.describe('Model tree move to dialog (real backend)', () => {
   test.describe.configure({ mode: 'default', timeout: 45_000 });
@@ -52,8 +53,10 @@ test.describe('Model tree move to dialog (real backend)', () => {
     await openConstants(page);
     await openMoveToDialog(page, 'UngroupedConstant');
 
-    await selectOption(page, 'move-to-package', 'Root');
     await selectOption(page, 'move-to-target', FOREIGN_GROUP);
+    await expect(page.getByTestId('move-to-file-path')).toHaveText(
+      filePath(`${CONSTANTS_DIR}/Attachments/UngroupedConstant.origam`),
+    );
     await expectMoveSucceeds(page, () => page.getByTestId('move-to-button-move').click());
 
     await expect(page.getByTestId('move-to-dialog')).toHaveCount(0);
@@ -64,13 +67,55 @@ test.describe('Model tree move to dialog (real backend)', () => {
     await expectModelFile(`${CONSTANTS_DIR}/UngroupedConstant.origam`, false);
   });
 
+  test('Move to gives a constant to another package and takes it back', async ({ page }) => {
+    await openConstants(page);
+    await openMoveToDialog(page, 'UngroupedConstant');
+
+    await awaitMoveTargets(page, () => selectOption(page, 'move-to-package', 'Root'));
+    await expect(page.getByTestId('move-to-copy-note')).toBeVisible();
+    await selectOption(page, 'move-to-target', 'Attachments');
+    await expect(page.getByTestId('move-to-file-path')).toHaveText(
+      filePath('Root/DataConstant/Attachments/UngroupedConstant.origam'),
+    );
+    await expectMoveSucceeds(page, () => page.getByTestId('move-to-button-move').click());
+    await expectTreeSettled(page, 'UngroupedConstant');
+    await expectModelFile('Root/DataConstant/Attachments/UngroupedConstant.origam', true);
+    await expectModelFile(`${CONSTANTS_DIR}/UngroupedConstant.origam`, false);
+
+    const movedNode = page.getByTestId('tree-node-UngroupedConstant');
+    await expect(movedNode.locator('xpath=../..')).toHaveClass(/highlighted/);
+    await expectBoxSettled(movedNode);
+    await openMoveToDialog(page, 'UngroupedConstant');
+    await expect(page.getByTestId('move-to-package-refusal')).toBeVisible();
+    await awaitMoveTargets(page, () => selectOption(page, 'move-to-package', PACKAGE));
+    await selectOption(page, 'move-to-target', 'Constants');
+    await expectMoveSucceeds(page, () => page.getByTestId('move-to-button-move').click());
+    await expectTreeSettled(page, 'UngroupedConstant');
+    await expectModelFile(`${CONSTANTS_DIR}/UngroupedConstant.origam`, true);
+    await expectModelFile('Root/DataConstant/Attachments/UngroupedConstant.origam', false);
+  });
+
+  test('Move to refuses a package that misses a dependency', async ({ page, request }) => {
+    await activatePackage(request, 'Widgets');
+    await page.goto('/');
+    await page.getByTestId('tree-toggle-Data').click();
+    await page.getByTestId('tree-toggle-Entities').click();
+    await page.getByTestId('tree-toggle-Widgets').click();
+    await openMoveToDialog(page, 'AllDataTypes');
+
+    await awaitMoveTargets(page, () => selectOption(page, 'move-to-package', 'Root'));
+    await expect(page.getByTestId('move-to-package-refusal')).toContainText(
+      "'AllDataTypes' cannot belong to package 'Root'",
+    );
+    await expect(page.getByTestId('move-to-button-move')).toBeDisabled();
+  });
+
   test('Move to copies a constant into a group of another package as an item of the active one', async ({
     page,
   }) => {
     await openConstants(page);
     await openMoveToDialog(page, 'UngroupedConstant');
 
-    await selectOption(page, 'move-to-package', 'Root');
     await selectOption(page, 'move-to-target', FOREIGN_GROUP);
     await expectMoveSucceeds(page, () => page.getByTestId('move-to-button-copy').click());
 
@@ -94,7 +139,7 @@ test.describe('Model tree move to dialog (real backend)', () => {
     await openMoveToDialog(page, 'InitialUserCreated');
 
     await selectOption(page, 'move-to-target', CONSTANT_GROUP);
-    await expect(page.getByTestId('move-to-copy-only')).toBeVisible();
+    await expect(page.getByTestId('move-to-package-refusal')).toBeVisible();
     await expect(page.getByTestId('move-to-button-move')).toBeDisabled();
     await expect(page.getByTestId('move-to-button-copy')).toBeEnabled();
   });
@@ -102,11 +147,10 @@ test.describe('Model tree move to dialog (real backend)', () => {
   test('The target list is filtered while typing', async ({ page }) => {
     await openConstants(page);
     await openMoveToDialog(page, 'UngroupedConstant');
-    await selectOption(page, 'move-to-package', 'Root');
 
     const input = page.getByTestId('move-to-target').locator('input');
     await input.click();
-    await input.fill(FOREIGN_GROUP);
+    await input.fill('AutomaticTestsGroup');
     await expect(dropdownOptions(page)).toHaveCount(1);
 
     await input.fill('nothing matches this');
@@ -158,9 +202,11 @@ async function selectOption(page: Page, testId: string, optionText: string): Pro
   await input.click();
   await input.fill(optionText);
   // Nested options are indented.
-  await dropdownOptions(page)
-    .filter({ hasText: new RegExp(`^\\s*${optionText}\\s*$`) })
-    .first()
-    .click();
-  await expect(input).toHaveValue(new RegExp(`^\\s*${optionText}\\s*$`));
+  const exactText = new RegExp(`^\\s*${optionText.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*$`);
+  await dropdownOptions(page).filter({ hasText: exactText }).first().click();
+  await expect(input).toHaveValue(exactText);
+}
+
+function filePath(relativePath: string): RegExp {
+  return new RegExp(`^${relativePath.split('/').join('[\\\\/]').replace(/\./g, '\\.')}$`);
 }

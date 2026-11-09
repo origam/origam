@@ -28,12 +28,13 @@ namespace Origam.Architect.Server.Services.Move;
 
 public class MoveTargetFinder(SchemaService schemaService, MoveRuleEvaluator ruleEvaluator)
 {
-    public MoveTargetsResult Find(IBrowserNode2 source)
+    public MoveTargetsResult Find(IBrowserNode2 source, Guid? packageId)
     {
         Package activePackage = MovePreconditions.RequireActivePackage(schemaService);
-        var result = new MoveTargetsResult { Targets = [] };
+        var result = new MoveTargetsResult { Targets = [], Packages = [] };
         if (
             source is not ISchemaItem item
+            || !item.IsPersisted
             // RootProvider is only set when the item is reached through a provider.
             || item.RootProvider is not AbstractSchemaItemProvider provider
         )
@@ -46,6 +47,31 @@ public class MoveTargetFinder(SchemaService schemaService, MoveRuleEvaluator rul
             package => package.Id,
             package => package.Name
         );
+        List<Package> packageChoices = result.IsSourceInActivePackage
+            ? activePackage.IncludedPackages.Prepend(activePackage).ToList()
+            : [item.Package, activePackage];
+        Guid chosenPackageId = packageId ?? item.SchemaExtensionId;
+        Package chosenPackage =
+            packageChoices.FirstOrDefault(choice => choice.Id == chosenPackageId)
+            ?? throw new UserOrigamException(
+                string.Format(
+                    Strings.Move_PackageNotAvailable,
+                    item.Name,
+                    packageNames.GetValueOrDefault(chosenPackageId, chosenPackageId.ToString())
+                )
+            );
+        result.Packages = packageChoices
+            .OrderBy(choice => choice.Name)
+            .Select(choice => new MovePackageResult
+            {
+                Id = choice.Id,
+                Name = choice.Name,
+                IsActive = choice.Id == activePackage.Id,
+            })
+            .ToList();
+        result.PackageId = chosenPackage.Id;
+        result.PackageRefusal = ruleEvaluator.CheckPackage(item, isCopy: false, chosenPackage);
+
         int examined = 0;
         foreach (IBrowserNode2 candidate in GetMoveCandidates(item, provider))
         {
@@ -56,8 +82,19 @@ public class MoveTargetFinder(SchemaService schemaService, MoveRuleEvaluator rul
             }
             examined++;
 
-            (bool canMove, bool canCopy) = ruleEvaluator.EvaluateBothModes(item, candidate);
-            if (!canMove && !canCopy)
+            MoveDecision move = ruleEvaluator.EvaluatePlacement(
+                item,
+                candidate,
+                isCopy: false,
+                chosenPackage
+            );
+            MoveDecision copy = ruleEvaluator.EvaluatePlacement(
+                item,
+                candidate,
+                isCopy: true,
+                package: null
+            );
+            if (!move.IsAllowed && !copy.IsAllowed)
             {
                 continue;
             }
@@ -68,17 +105,20 @@ public class MoveTargetFinder(SchemaService schemaService, MoveRuleEvaluator rul
                 break;
             }
 
-            result.Targets.Add(
-                ToMoveTarget(
-                    item,
-                    candidate,
-                    provider,
-                    canMove,
-                    canCopy,
-                    packageNames,
-                    activePackage.Id
-                )
+            bool canMove = result.PackageRefusal == null && move.IsAllowed;
+            MoveTargetResult target = ToMoveTarget(
+                item,
+                candidate,
+                provider,
+                canMove,
+                copy.IsAllowed,
+                packageNames,
+                activePackage.Id
             );
+            target.MoveRefusal =
+                canMove || result.PackageRefusal != null ? null : move.ErrorMessage;
+            target.FilePath = canMove ? GetFilePath(item, candidate, chosenPackage) : null;
+            result.Targets.Add(target);
         }
 
         return result;
@@ -95,7 +135,7 @@ public class MoveTargetFinder(SchemaService schemaService, MoveRuleEvaluator rul
             (IBrowserNode2)item.ParentItem
             ?? (IBrowserNode2)MovePreconditions.RequireReadableGroup(item)
             ?? provider;
-        Guid? packageId = GetOwningPackageId(location);
+        Guid? packageId = MoveRuleEvaluator.GetOwningPackageId(location);
         return new MoveLocationResult
         {
             Id = location.NodeId,
@@ -177,7 +217,7 @@ public class MoveTargetFinder(SchemaService schemaService, MoveRuleEvaluator rul
         Guid activePackageId
     )
     {
-        Guid packageId = GetOwningPackageId(candidate) ?? activePackageId;
+        Guid packageId = MoveRuleEvaluator.GetOwningPackageId(candidate) ?? activePackageId;
         (string path, int depth) = GetTargetLocation(candidate, provider);
         return new MoveTargetResult
         {
@@ -194,14 +234,21 @@ public class MoveTargetFinder(SchemaService schemaService, MoveRuleEvaluator rul
         };
     }
 
-    private static Guid? GetOwningPackageId(IBrowserNode2 node)
+    private static string GetFilePath(ISchemaItem item, IBrowserNode2 target, Package package)
     {
-        return node switch
+        ISchemaItem rootItem = target is ISchemaItem parent ? parent.RootItem : item;
+        SchemaItemGroup group = target switch
         {
-            SchemaItemGroup group => group.SchemaExtensionId,
-            ISchemaItem schemaItem => schemaItem.SchemaExtensionId,
+            SchemaItemGroup targetGroup => targetGroup,
+            ISchemaItem => rootItem.Group,
             _ => null,
         };
+        return AbstractSchemaItem.ToRelativeFilePath(
+            package.Name,
+            rootItem.ItemType,
+            group?.Path ?? "",
+            rootItem.Name
+        );
     }
 
     // ISchemaItem.Path skips the group, so path and depth come from one walk.

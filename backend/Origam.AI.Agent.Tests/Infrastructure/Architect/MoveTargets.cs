@@ -21,7 +21,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 namespace Origam.AI.Agent.Tests.Infrastructure.Architect;
 
-public sealed record MoveTargets(bool IsSourceInActivePackage, IReadOnlyList<MoveTarget> Targets)
+public sealed record MoveTargets(
+    bool IsSourceInActivePackage,
+    IReadOnlyList<MoveTarget> Targets,
+    IReadOnlyList<MovePackage> Packages
+)
 {
     public MoveTarget? CurrentLocation =>
         Targets.FirstOrDefault(target => target.IsCurrentLocation);

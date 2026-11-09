@@ -26,9 +26,17 @@ using Origam.Workbench.Services;
 
 namespace Origam.Architect.Server.Services.Move;
 
-public class MoveRuleEvaluator(SchemaService schemaService)
+public class MoveRuleEvaluator(
+    SchemaService schemaService,
+    PackageChangeChecker packageChangeChecker
+)
 {
-    public MoveDecision Evaluate(IBrowserNode2 source, IBrowserNode2 target, bool isCopy)
+    public MoveDecision Evaluate(
+        IBrowserNode2 source,
+        IBrowserNode2 target,
+        bool isCopy,
+        Package package = null
+    )
     {
         if (source is not ISchemaItem item)
         {
@@ -45,13 +53,56 @@ public class MoveRuleEvaluator(SchemaService schemaService)
             return MoveDecision.Rejected(Strings.Move_TargetNotFound);
         }
 
-        if (!isCopy && !schemaService.CanEditItem(item))
+        string packageRefusal = CheckPackage(item, isCopy, package);
+        if (packageRefusal != null)
         {
-            return MoveDecision.Rejected(
-                string.Format(Strings.Move_NotInActivePackage, item.Name, item.PackageName)
+            return MoveDecision.Rejected(packageRefusal);
+        }
+
+        return EvaluatePlacement(item, target, isCopy, package);
+    }
+
+    public string CheckPackage(ISchemaItem item, bool isCopy, Package package)
+    {
+        if (isCopy)
+        {
+            return null;
+        }
+
+        bool isInActivePackage = schemaService.CanEditItem(item);
+        if (!ChangesPackage(item, isCopy, package))
+        {
+            return isInActivePackage
+                ? null
+                : string.Format(Strings.Move_NotInActivePackage, item.Name, item.PackageName);
+        }
+
+        Package activePackage = MovePreconditions.RequireActivePackage(schemaService);
+        if (!isInActivePackage && package.Id != activePackage.Id)
+        {
+            return string.Format(
+                Strings.Move_OnlyIntoActivePackage,
+                item.Name,
+                item.PackageName,
+                activePackage.Name
             );
         }
 
+        if (package.Id != activePackage.Id && !Includes(activePackage, package.Id))
+        {
+            return string.Format(Strings.Move_PackageNotAvailable, item.Name, package.Name);
+        }
+
+        return packageChangeChecker.Check(item, package);
+    }
+
+    public MoveDecision EvaluatePlacement(
+        ISchemaItem item,
+        IBrowserNode2 target,
+        bool isCopy,
+        Package package
+    )
+    {
         int? selfDepth = GetAncestorDepth(target, item);
         if (selfDepth == null)
         {
@@ -81,18 +132,65 @@ public class MoveRuleEvaluator(SchemaService schemaService)
         }
 
         MoveDecision decision = EvaluateDestination(item, target);
-        if (decision.IsAllowed && !isCopy && IsCurrentLocation(item, target))
+        if (!decision.IsAllowed || isCopy)
+        {
+            return decision;
+        }
+
+        if (!ChangesPackage(item, isCopy, package))
+        {
+            return IsCurrentLocation(item, target)
+                ? MoveDecision.Rejected(
+                    string.Format(
+                        Strings.Move_TargetIsCurrentLocation,
+                        item.Name,
+                        TreeNode.ToNodeText(target)
+                    )
+                )
+                : decision;
+        }
+
+        Guid? targetPackageId = GetOwningPackageId(target);
+        if (
+            targetPackageId != null
+            && targetPackageId != package.Id
+            && !Includes(package, targetPackageId.Value)
+        )
         {
             return MoveDecision.Rejected(
                 string.Format(
-                    Strings.Move_TargetIsCurrentLocation,
+                    Strings.Move_TargetOutsidePackage,
                     item.Name,
-                    TreeNode.ToNodeText(target)
+                    TreeNode.ToNodeText(target),
+                    package.Name,
+                    schemaService
+                        .LoadedPackages.FirstOrDefault(loaded => loaded.Id == targetPackageId)
+                        ?.Name
                 )
             );
         }
 
-        return decision;
+        return decision.WithNewPackage(package);
+    }
+
+    public static Guid? GetOwningPackageId(IBrowserNode2 node)
+    {
+        return node switch
+        {
+            SchemaItemGroup group => group.SchemaExtensionId,
+            ISchemaItem schemaItem => schemaItem.SchemaExtensionId,
+            _ => null,
+        };
+    }
+
+    private static bool ChangesPackage(ISchemaItem item, bool isCopy, Package package)
+    {
+        return !isCopy && package != null && package.Id != item.SchemaExtensionId;
+    }
+
+    private static bool Includes(Package package, Guid packageId)
+    {
+        return package.IncludedPackages.Any(included => included.Id == packageId);
     }
 
     public (bool CanMove, bool CanCopy) EvaluateBothModes(

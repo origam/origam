@@ -73,16 +73,17 @@ public class SchemaItemMoveService(
         return results;
     }
 
-    public MoveTargetsResult GetMoveTargets(NodeRefModel sourceReference)
+    public MoveTargetsResult GetMoveTargets(NodeRefModel sourceReference, Guid? packageId)
     {
         MovePreconditions.RequireActivePackage(schemaService);
-        return targetFinder.Find(nodeResolver.Resolve(sourceReference));
+        return targetFinder.Find(nodeResolver.Resolve(sourceReference), packageId);
     }
 
     public MoveNodeResult Move(
         NodeRefModel sourceReference,
         NodeRefModel targetReference,
-        bool isCopy
+        bool isCopy,
+        Guid? packageId
     )
     {
         MovePreconditions.RequireActivePackage(schemaService);
@@ -92,8 +93,19 @@ public class SchemaItemMoveService(
         IBrowserNode2 target =
             nodeResolver.Resolve(targetReference)
             ?? throw new UserOrigamException(Strings.Move_TargetNotFound);
+        Package package =
+            isCopy || packageId == null
+                ? null
+                : schemaService.LoadedPackages.FirstOrDefault(loaded => loaded.Id == packageId)
+                    ?? throw new UserOrigamException(
+                        string.Format(
+                            Strings.Move_PackageNotAvailable,
+                            TreeNode.ToNodeText(source),
+                            packageId
+                        )
+                    );
 
-        MoveDecision decision = ruleEvaluator.Evaluate(source, target, isCopy);
+        MoveDecision decision = ruleEvaluator.Evaluate(source, target, isCopy, package);
         if (!decision.IsAllowed)
         {
             throw new UserOrigamException(decision.ErrorMessage);
@@ -101,6 +113,7 @@ public class SchemaItemMoveService(
 
         var original = (ISchemaItem)source;
         MoveLocationResult sourceLocation = targetFinder.DescribeLocation(original);
+        Package sourcePackage = original.Package;
         ISchemaItem result = isCopy
             ? copier.Copy(original, decision)
             : mover.Move(original, decision);
@@ -108,6 +121,12 @@ public class SchemaItemMoveService(
         {
             Node = treeNodeFactory.Create(result),
             SourceLocation = sourceLocation,
+            SourcePackage = new MovePackageResult
+            {
+                Id = sourcePackage.Id,
+                Name = sourcePackage.Name,
+                IsActive = sourcePackage.Id == schemaService.ActiveSchemaExtensionId,
+            },
             ParentNodeIds = GetParentNodeIdsOrEmpty(result),
         };
     }

@@ -114,7 +114,10 @@ export class ArchitectApi implements IArchitectApi {
     return (await this.http.post('/Model/GetMoveVerdicts', args)).data;
   }
 
-  async getMoveTargets(args: { source: INodeLoadData }): Promise<IMoveTargetsResult> {
+  async getMoveTargets(args: {
+    source: INodeLoadData;
+    packageId?: string;
+  }): Promise<IMoveTargetsResult> {
     return (await this.http.post('/Model/GetMoveTargets', args)).data;
   }
 
@@ -122,6 +125,7 @@ export class ArchitectApi implements IArchitectApi {
     source: INodeLoadData;
     target: INodeLoadData;
     isCopy: boolean;
+    packageId?: string;
   }): Promise<IMoveNodeResult> {
     return (await this.http.post('/Model/MoveNode', args)).data;
   }

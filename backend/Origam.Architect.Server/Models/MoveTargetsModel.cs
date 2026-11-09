@@ -27,4 +27,6 @@ public class MoveTargetsModel
 {
     [Required]
     public NodeRefModel Source { get; set; }
+
+    public Guid? PackageId { get; set; }
 }

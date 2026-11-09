@@ -171,6 +171,14 @@ public class ResponseCompactionFilter(NewItemTypeCatalogService catalogService)
             );
             compactedTarget["canMove"] = target.GetBooleanOrNull(propertyName: "canMove");
             compactedTarget["canCopy"] = target.GetBooleanOrNull(propertyName: "canCopy");
+            string? moveRefusal = target.GetStringOrNull(propertyName: "moveRefusal");
+            if (
+                moveRefusal != null
+                && target.GetBooleanOrNull(propertyName: "isCurrentLocation") != true
+            )
+            {
+                compactedTarget["moveRefusal"] = moveRefusal;
+            }
             compactedTargets.Add(compactedTarget);
         }
 
@@ -179,9 +187,19 @@ public class ResponseCompactionFilter(NewItemTypeCatalogService catalogService)
             ["isSourceInActivePackage"] = root.GetBooleanOrNull(
                 propertyName: "isSourceInActivePackage"
             ),
-            ["isTruncated"] = root.GetBooleanOrNull(propertyName: "isTruncated"),
-            ["targets"] = compactedTargets,
         };
+        string? packageRefusal = root.GetStringOrNull(propertyName: "packageRefusal");
+        if (packageRefusal != null)
+        {
+            summary["packageRefusal"] = packageRefusal;
+        }
+        summary["isTruncated"] = root.GetBooleanOrNull(propertyName: "isTruncated");
+        summary["targets"] = compactedTargets;
+        summary["packageId"] = root.GetStringOrNull(propertyName: "packageId");
+        if (root.TryGetProperty(propertyName: "packages", out JsonElement packages))
+        {
+            summary["packages"] = packages;
+        }
         return JsonSerializer.Serialize(summary, JsonOptions);
     }
 
