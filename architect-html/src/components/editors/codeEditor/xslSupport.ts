@@ -137,24 +137,29 @@ export function enableXmlTagAutoClose(editor: monaco.editor.ICodeEditor) {
       lineNumber: change.range.startLineNumber,
       column: change.range.startColumn + 1,
     };
-    const textBefore = getTextBefore(model, position);
-    const openTagMatch = textBefore.match(OpenTagBeforeCursorPattern);
-    if (!openTagMatch) {
-      return;
-    }
-    const closingTag = `</${openTagMatch[1]}>`;
-    editor.pushUndoStop();
-    editor.executeEdits('xml-tag-auto-close', [
-      {
-        range: new monaco.Range(
-          position.lineNumber,
-          position.column,
-          position.lineNumber,
-          position.column,
-        ),
-        text: closingTag,
-      },
-    ]);
-    editor.setPosition(position);
+    queueMicrotask(() => {
+      if (model.getVersionId() !== event.versionId) {
+        return;
+      }
+      const textBefore = getTextBefore(model, position);
+      const openTagMatch = textBefore.match(OpenTagBeforeCursorPattern);
+      if (!openTagMatch) {
+        return;
+      }
+      const closingTag = `</${openTagMatch[1]}>`;
+      editor.pushUndoStop();
+      editor.executeEdits('xml-tag-auto-close', [
+        {
+          range: new monaco.Range(
+            position.lineNumber,
+            position.column,
+            position.lineNumber,
+            position.column,
+          ),
+          text: closingTag,
+        },
+      ]);
+      editor.setPosition(position);
+    });
   });
 }
