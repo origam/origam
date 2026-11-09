@@ -123,6 +123,10 @@ export class XsltEditorState implements ITabViewState, ITabState, IPropertyManag
     return this.gridEditorState.isDirty;
   }
 
+  get validationErrors() {
+    return this.gridEditorState.validationErrors;
+  }
+
   get isActive() {
     return this.gridEditorState.isActive;
   }
