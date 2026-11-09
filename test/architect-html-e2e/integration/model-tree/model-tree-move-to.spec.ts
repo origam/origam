@@ -223,7 +223,7 @@ async function selectOption(page: Page, testId: string, optionText: string): Pro
   await input.click();
   await input.fill(optionText);
   // Nested options are indented.
-  const exactText = new RegExp(`^\\s*${optionText.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*$`);
+  const exactText = new RegExp(`^\\s*${escapeRegExp(optionText)}\\s*$`);
   await dropdownOptions(page).filter({ hasText: exactText }).first().click();
   await expect(input).toHaveValue(exactText);
 }
@@ -233,5 +233,9 @@ function visibleProperty(page: Page, propertyName: string) {
 }
 
 function filePath(relativePath: string): RegExp {
-  return new RegExp(`^${relativePath.split('/').join('[\\\\/]').replace(/\./g, '\\.')}$`);
+  return new RegExp(`^${escapeRegExp(relativePath).split('/').join('[\\\\/]')}$`);
+}
+
+function escapeRegExp(text: string): string {
+  return text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
