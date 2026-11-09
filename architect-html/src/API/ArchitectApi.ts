@@ -42,6 +42,7 @@ import {
   IPackagesInfo,
   IParametersResult,
   IPropertyChange,
+  IRunUpdateScriptActivityResult,
   ISearchResult,
   IScreenEditorItem,
   IScreenEditorModel,
@@ -396,8 +397,8 @@ export class ArchitectApi implements IArchitectApi {
     });
   }
 
-  async runUpdateScriptActivity(schemaItemId: string): Promise<void> {
-    await this.http.post('/DeploymentScripts/Run', { schemaItemId: schemaItemId });
+  async runUpdateScriptActivity(schemaItemId: string): Promise<IRunUpdateScriptActivityResult> {
+    return (await this.http.post('/DeploymentScripts/Run', { schemaItemId: schemaItemId })).data;
   }
 
   async fetchDeploymentScriptsList(platform: string | null): Promise<IDatabaseResultResponse> {

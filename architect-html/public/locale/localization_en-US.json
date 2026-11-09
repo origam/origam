@@ -87,6 +87,7 @@
   "tree_node_deployment_current_tooltip": "The version new deployment scripts are added to.",
   "tree_node_make_version_current": "Make version current",
   "tree_node_run_update_script_activity": "Execute",
+  "tree_node_run_update_script_activity_executed": "Deployment script executed",
   "search_placeholder": "Search",
   "schema_item_results_column_status": "Status",
   "schema_item_results_column_found_in": "Found in",

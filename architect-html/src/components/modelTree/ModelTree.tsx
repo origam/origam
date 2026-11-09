@@ -22,6 +22,7 @@ import {
   CreateFilterType,
   ICreateWizardResult,
   IMoveTargetsResult,
+  IRunUpdateScriptActivityResult,
   ISearchResult,
 } from '@api/IArchitectApi';
 import { Icon } from '@components/icon/Icon';
@@ -399,7 +400,23 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
   }
 
   function runUpdateScriptActivity() {
-    run({ generator: node.runUpdateScriptActivity() });
+    run({
+      generator: function* () {
+        rootStore.progressBarState.isWorking = true;
+        try {
+          const result = (yield rootStore.architectApi.runUpdateScriptActivity(
+            node.origamId,
+          )) as IRunUpdateScriptActivityResult;
+          rootStore.notificationState.pushActionResult({
+            title: T('Deployment script executed', 'tree_node_run_update_script_activity_executed'),
+            subtitle: node.nodeText,
+            details: result.output.trimEnd(),
+          });
+        } finally {
+          rootStore.progressBarState.isWorking = false;
+        }
+      },
+    });
   }
 
   function showCreatedConfirmation(actionLabel: string, results: ISearchResult[]) {

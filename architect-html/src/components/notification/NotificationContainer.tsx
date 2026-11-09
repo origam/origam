@@ -98,6 +98,7 @@ const NotificationCard: React.FC<{ notification: IActionResultNotification }> = 
         <div className={S.body}>
           <div className={S.title}>{notification.title}</div>
           <div className={S.subtitle}>{subtitle}</div>
+          {notification.details && <pre className={S.details}>{notification.details}</pre>}
         </div>
         <button
           className={S.closeBtn}
