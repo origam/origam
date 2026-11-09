@@ -276,7 +276,7 @@ public class DataStructureEntity : AbstractSchemaItem
         get => _useUpsert;
         set => _useUpsert = value;
     }
-#if ORIGAM_CLIENT
+#if ORIGAM_SERVER
     private bool _columnsPopulated = false;
     private List<DataStructureColumn> _columns = new List<DataStructureColumn>();
 #endif
@@ -286,7 +286,7 @@ public class DataStructureEntity : AbstractSchemaItem
     {
         get
         {
-#if ORIGAM_CLIENT
+#if ORIGAM_SERVER
             if (!_columnsPopulated)
             {
                 lock (Lock)

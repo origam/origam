@@ -25,7 +25,7 @@ using Origam.DA;
 using Origam.DA.Service;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
-using core = Origam.Workbench.Services.CoreServices;
+using Core = Origam.Workbench.Services.CoreServices;
 
 namespace Origam.Workbench.Services;
 
@@ -70,7 +70,7 @@ public class AttachmentService : IWorkbenchService, IAttachmentService
         r["RecordCreatedBy"] = profileId;
         r["refParentRecordId"] = recordId;
         data.Tables["Attachment"].Rows.Add(r);
-        core.DataService.Instance.StoreData(
+        Core.DataService.Instance.StoreData(
             new Guid("04a07967-4b59-4c14-8320-e6d073f6f77f"),
             data,
             false,
@@ -84,7 +84,7 @@ public class AttachmentService : IWorkbenchService, IAttachmentService
         IPersistenceService ps =
             ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
         // fetch Attachment by refParentRecordId
-        DataSet attachmentDataSet = core.DataService.Instance.LoadData(
+        DataSet attachmentDataSet = Core.DataService.Instance.LoadData(
             new Guid("04a07967-4b59-4c14-8320-e6d073f6f77f"),
             new Guid("b3624c91-526d-4b2b-a282-6d99e62a1eb5"),
             Guid.Empty,
@@ -100,7 +100,7 @@ public class AttachmentService : IWorkbenchService, IAttachmentService
         }
         // delete the record
         attachmentDataSet.Tables[0].Rows[0].Delete();
-        core.DataService.Instance.StoreData(
+        Core.DataService.Instance.StoreData(
             new Guid("04a07967-4b59-4c14-8320-e6d073f6f77f"),
             attachmentDataSet,
             false,

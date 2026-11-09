@@ -395,7 +395,7 @@ public abstract class AbstractSchemaItem
             _ancestorsPopulated = false;
             _myAncestorsPopulated = false;
             _childItemsPopulated = false;
-#if ORIGAM_CLIENT
+#if ORIGAM_SERVER
             _hasParameterReferencesCached = false;
 #endif
             _parameterReferences.Clear();
@@ -772,7 +772,7 @@ public abstract class AbstractSchemaItem
 
     public ISchemaItem GetChildByName(string name)
     {
-#if ORIGAM_CLIENT
+#if ORIGAM_SERVER
         ISchemaItem result = GetItemFromCache(name);
         if (result != null)
         {
@@ -792,7 +792,7 @@ public abstract class AbstractSchemaItem
 
     public ISchemaItem GetChildById(Guid id)
     {
-#if ORIGAM_CLIENT
+#if ORIGAM_SERVER
         ISchemaItem result = GetItemFromCache(id);
         if (result != null)
         {
@@ -866,7 +866,7 @@ public abstract class AbstractSchemaItem
                     {
                         _childItems.AddRange(this.GetChildItems(anc.Ancestor));
                     }
-#if ORIGAM_CLIENT
+#if ORIGAM_SERVER
                     _childItemsById.Clear();
                     _childItemsByName.Clear();
                     _childItemsByType.Clear();
@@ -952,7 +952,7 @@ public abstract class AbstractSchemaItem
     {
         get
         {
-#if ORIGAM_CLIENT
+#if ORIGAM_SERVER
             if (!_hasParameterReferencesCached)
             {
                 lock (Lock)
@@ -965,7 +965,7 @@ public abstract class AbstractSchemaItem
 #endif
                         _parameterReferences.Clear();
                         GetParameterReferences(this, _parameterReferences);
-#if ORIGAM_CLIENT
+#if ORIGAM_SERVER
                         _hasParameterReferences = (_parameterReferences.Count > 0);
                         _hasParameterReferencesCached = true;
                     }
@@ -975,7 +975,7 @@ public abstract class AbstractSchemaItem
             return _parameterReferences;
         }
     }
-#if ORIGAM_CLIENT
+#if ORIGAM_SERVER
     private bool _hasParameterReferencesCached = false;
 #endif
     private bool _hasParameterReferences = false;
@@ -985,7 +985,7 @@ public abstract class AbstractSchemaItem
     {
         get
         {
-#if ORIGAM_CLIENT
+#if ORIGAM_SERVER
             if (!_hasParameterReferencesCached)
             {
                 lock (Lock)
@@ -997,7 +997,7 @@ public abstract class AbstractSchemaItem
             {
 #endif
                         _hasParameterReferences = ParameterReferences.Count > 0;
-#if ORIGAM_CLIENT
+#if ORIGAM_SERVER
                         _hasParameterReferencesCached = true;
                     }
                 }
@@ -1010,7 +1010,7 @@ public abstract class AbstractSchemaItem
     public List<T> ChildItemsByType<T>(string itemType)
         where T : ISchemaItem
     {
-#if ORIGAM_CLIENT
+#if ORIGAM_SERVER
         // if the number of items is different than cached, we go through the whole collection
         if (_childItemsTypeCacheCount == this.ChildItems.Count)
         {
@@ -1499,7 +1499,7 @@ public abstract class AbstractSchemaItem
             item.Name = itemName;
         }
         ChildItems.Add(item);
-#if ORIGAM_CLIENT
+#if ORIGAM_SERVER
         AddItemToTypeCache(item);
 #endif
         ItemCreated?.Invoke(item);

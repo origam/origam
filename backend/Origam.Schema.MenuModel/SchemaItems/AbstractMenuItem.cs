@@ -25,7 +25,6 @@ using System.ComponentModel;
 using System.Xml.Serialization;
 using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
-using Origam.Extensions;
 
 namespace Origam.Schema.MenuModel;
 
@@ -144,7 +143,7 @@ public abstract class AbstractMenuItem : AbstractSchemaItem, IAuthorizationConte
                 return base.NodeImage;
             }
 
-            return MenuIcon.GraphicsData.ToByteArray();
+            return MenuIcon.GraphicsDataByte;
         }
     }
     #endregion

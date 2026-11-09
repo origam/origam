@@ -1301,12 +1301,6 @@ public class RuleEngine
     private static IOutputPad GetOutputPad()
     {
         IOutputPad outputPad = null;
-#if !NETSTANDARD
-        if (WorkbenchSingleton.Workbench != null)
-        {
-            outputPad = WorkbenchSingleton.Workbench.GetPad(typeof(IOutputPad)) as IOutputPad;
-        }
-#endif
         return outputPad;
     }
 

@@ -1,5 +1,28 @@
 ﻿<Project>
   <PropertyGroup>
+    <Configurations>Debug;Release;Debug Architect Server;Release Architect Server;Debug Server;Release Server</Configurations>
+    <Configuration Condition="'$(Configuration)' == ''">Debug</Configuration>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>portable</DebugType>
+    <DefineConstants>$(DefineConstants);TRACE</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="$(Configuration.StartsWith('Debug'))">
+    <DefineConstants>$(DefineConstants);DEBUG</DefineConstants>
+    <Optimize>false</Optimize>
+    <OutputPath>bin/Debug/</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="$(Configuration.StartsWith('Release'))">
+    <Optimize>true</Optimize>
+    <OutputPath>bin/Release/</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug Server' or '$(Configuration)' == 'Release Server'">
+    <DefineConstants>$(DefineConstants);ORIGAM_SERVER</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup>
+    <!-- Preserve the extended analyzer coverage independently of target frameworks. -->
+    <EnableExtendedAnalysis
+      Condition="'$(MSBuildProjectName)' == 'origam-utils' or '$(MSBuildProjectName)' == 'Origam.AI.Agent' or '$(MSBuildProjectName)' == 'Origam.AI.Agent.Tests' or '$(MSBuildProjectName)' == 'Origam.Architect.Server' or '$(MSBuildProjectName)' == 'Origam.Composer' or '$(MSBuildProjectName)' == 'Origam.Server' or '$(MSBuildProjectName)' == 'Origam.Server.Common' or '$(MSBuildProjectName)' == 'Origam.ServerTests' or '$(MSBuildProjectName)' == 'Origam.WorkflowTests' or '$(MSBuildProjectName)' == 'OrigamScheduler'"
+      >true</EnableExtendedAnalysis>
     <!-- Keep dependency auditing scoped to direct package references. -->
     <NuGetAuditMode Condition="'$(NuGetAuditMode)' == ''">direct</NuGetAuditMode>
     <!-- 
@@ -15,15 +38,6 @@
 -->
     <DisableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Documentation'"
       >true</DisableStrictBuild>
-    <DisableMeziantouAnalyzer
-      Condition="'$(TargetFramework)' == 'netstandard2.0' Or '$(TargetFramework)' == 'net472'"
-      >true</DisableMeziantouAnalyzer>
-    <DisableMeziantouAnalyzer
-      Condition="'$(TargetFrameworks)' != '' And ($(TargetFrameworks.Contains('netstandard2.0')) Or $(TargetFrameworks.Contains('net472')))"
-      >true</DisableMeziantouAnalyzer>
-    <DisableMeziantouAnalyzer
-      Condition="$([System.IO.File]::ReadAllText('$(MSBuildProjectFullPath)').Contains('TargetFrameworkVersion'))"
-      >true</DisableMeziantouAnalyzer>
   </PropertyGroup>
   <Choose>
     <When Condition="'$(DisableStrictBuild)' != 'true'">
@@ -59,14 +73,14 @@
         />
         <PackageReference
           Include="Meziantou.Analyzer"
-          Version="3.0.318"
-          Condition="'$(DisableMeziantouAnalyzer)' != 'true'"
+          Condition="'$(EnableExtendedAnalysis)' == 'true'"
+          Version="3.0.315"
           PrivateAssets="all"
           IncludeAssets="build;analyzers;buildtransitive"
         />
         <EditorConfigFiles
           Include="$(MSBuildThisFileDirectory)origam.globalconfig"
-          Condition="'$(DisableMeziantouAnalyzer)' != 'true'"
+          Condition="'$(EnableExtendedAnalysis)' == 'true'"
         />
         <ProjectReference
           Include="$(MSBuildThisFileDirectory)Origam.Analyzers\Origam.Analyzers.csproj"
@@ -76,7 +90,7 @@
         />
       </ItemGroup>
 
-      <PropertyGroup Condition="'$(Configuration)' == 'Release Server' or '$(Configuration)' == 'Release Architect Server' or '$(Configuration)' == 'Release Architect'">
+      <PropertyGroup Condition="'$(Configuration)' == 'Release Server' or '$(Configuration)' == 'Release Architect Server'">
         <CSharpier_Check>true</CSharpier_Check>
       </PropertyGroup>
     </When>

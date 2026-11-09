@@ -37,7 +37,7 @@ public abstract class AbstractSchemaItemProvider : ISchemaItemProvider
     public abstract string RootItemType { get; }
     #region ISchemaItemProvider Members
     ISchemaItemCollection _childItems;
-#if ! ORIGAM_CLIENT
+#if ! ORIGAM_SERVER
     bool _childItemsPopulated = false;
 #endif
     public virtual ISchemaItemCollection ChildItems
@@ -49,7 +49,7 @@ public abstract class AbstractSchemaItemProvider : ISchemaItemProvider
                 _childItems = SchemaItemCollection.Create(this.PersistenceProvider, this, null);
             }
             ISchemaItemCollection childItems;
-#if ! ORIGAM_CLIENT
+#if ! ORIGAM_SERVER
             // caching does not work properly with model localization
             // so we do it only for architect
             if (_childItemsPopulated)
@@ -60,7 +60,7 @@ public abstract class AbstractSchemaItemProvider : ISchemaItemProvider
             {
 #endif
                 childItems = LoadChildItems();
-#if ! ORIGAM_CLIENT
+#if ! ORIGAM_SERVER
                 _childItems = childItems;
                 _childItemsPopulated = true;
             }
@@ -137,7 +137,7 @@ public abstract class AbstractSchemaItemProvider : ISchemaItemProvider
         get { return _persistenceProvider; }
         set
         {
-#if ! ORIGAM_CLIENT
+#if ! ORIGAM_SERVER
             if (_persistenceProvider != null)
             {
                 _persistenceProvider.InstancePersisted -= _persistenceProvider_InstancePersisted;
@@ -145,7 +145,7 @@ public abstract class AbstractSchemaItemProvider : ISchemaItemProvider
             }
 #endif
             _persistenceProvider = value;
-#if ! ORIGAM_CLIENT
+#if ! ORIGAM_SERVER
             if (_persistenceProvider != null)
             {
                 _persistenceProvider.InstancePersisted += _persistenceProvider_InstancePersisted;
@@ -155,7 +155,7 @@ public abstract class AbstractSchemaItemProvider : ISchemaItemProvider
         }
     }
 
-#if ! ORIGAM_CLIENT
+#if ! ORIGAM_SERVER
     void _persistenceProvider_InstancePersisted(object sender, IPersistent persistedObject)
     {
         ISchemaItem persistedItem = persistedObject as ISchemaItem;
@@ -189,7 +189,7 @@ public abstract class AbstractSchemaItemProvider : ISchemaItemProvider
 
     public void ClearCache()
     {
-#if ! ORIGAM_CLIENT
+#if ! ORIGAM_SERVER
         if (_childItemsPopulated)
         {
             _childItemsPopulated = false;

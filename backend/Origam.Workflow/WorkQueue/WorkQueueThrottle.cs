@@ -25,7 +25,7 @@ using Origam.DA;
 using Origam.DA.Service;
 using Origam.Schema.EntityModel;
 using Origam.Workbench.Services;
-using core = Origam.Workbench.Services.CoreServices;
+using Core = Origam.Workbench.Services.CoreServices;
 
 namespace Origam.Workflow.WorkQueue;
 
@@ -108,7 +108,7 @@ public class WorkQueueThrottle
 
     private void StoreThrottlingState(DataRow row)
     {
-        core.DataService.Instance.StoreData(
+        Core.DataService.Instance.StoreData(
             WorkQueueStateDataStructureId,
             row.Table.DataSet,
             false,
@@ -122,7 +122,7 @@ public class WorkQueueThrottle
         {
             new("WorkQueueState_parWorkQueueId", queueId),
         };
-        DataSet dataSet = core.DataService.Instance.LoadData(
+        DataSet dataSet = Core.DataService.Instance.LoadData(
             dataStructureId: WorkQueueStateDataStructureId,
             methodId: GetByWorkQueueId,
             defaultSetId: Guid.Empty,
