@@ -21,7 +21,7 @@ import * as monaco from 'monaco-editor/editor/editor.api.js';
 
 const XslNamespacePattern =
   /xmlns:([\w.-]+)\s*=\s*["']http:\/\/www\.w3\.org\/1999\/XSL\/Transform["']/;
-const OpenTagBeforeCursorPattern = /<([A-Za-z_][\w:.-]*)(?:\s[^<>]*)?>$/;
+const OpenTagBeforeCursorPattern = /<([A-Za-z_][\w:.-]*)(?:\s(?:[^<>"'/]|"[^"]*"|'[^']*')*)?>$/;
 const TagNameBeforeCursorPattern = /<([\w:.-]*)$/;
 const LookBehindCharacters = 4000;
 
@@ -139,10 +139,11 @@ export function enableXmlTagAutoClose(editor: monaco.editor.ICodeEditor) {
     };
     const textBefore = getTextBefore(model, position);
     const openTagMatch = textBefore.match(OpenTagBeforeCursorPattern);
-    if (!openTagMatch || textBefore.endsWith('/>')) {
+    if (!openTagMatch) {
       return;
     }
     const closingTag = `</${openTagMatch[1]}>`;
+    editor.pushUndoStop();
     editor.executeEdits('xml-tag-auto-close', [
       {
         range: new monaco.Range(

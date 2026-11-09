@@ -111,6 +111,7 @@ const CodeEditor = observer(
               scrollBeyondLastLine: false,
               automaticLayout: true,
               readOnly: readOnly,
+              wordBasedSuggestions: 'off',
             }}
           />
         </div>
