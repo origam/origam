@@ -60,6 +60,7 @@ export const SectionToolbox: React.FC<{
     return (
       <div
         key={field.name}
+        title={field.name}
         draggable
         onClick={action(() => (sectionToolbox.selectedFieldName = field.name))}
         onDragStart={() => onFieldDragStart(field)}
@@ -72,15 +73,17 @@ export const SectionToolbox: React.FC<{
   }
 
   function getControlComponent(type: ComponentType) {
+    const typeName = getComponentTypeKey(type);
     return (
       <div
         key={type}
+        title={typeName}
         draggable
         onDragStart={() => onControlDragStart(type)}
         className={S.toolboxField}
       >
         <div className={S.toolboxFieldIcon}></div>
-        <div>{getComponentTypeKey(type)}</div>
+        <div>{typeName}</div>
       </div>
     );
   }
