@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import { RootStoreContext } from '@/main';
 import S from '@editors/codeEditor/CodeEditor.module.scss';
 import '@editors/codeEditor/monacoSetup';
+import { enableXmlTagAutoClose } from '@editors/codeEditor/xslSupport';
 import Editor, { EditorProps } from '@monaco-editor/react';
 import { observer } from 'mobx-react-lite';
 import * as monacoVim from 'monaco-vim';
@@ -40,6 +41,7 @@ const CodeEditor = observer(
     const editorRef = useRef<any>(null);
     const vimStatusBarRef = useRef<HTMLDivElement | null>(null);
     const vimModeRef = useRef<any>(null);
+    const autoCloseRef = useRef<{ dispose: () => void } | null>(null);
 
     const rootStore = useContext(RootStoreContext);
     const uiState = rootStore.uiState;
@@ -60,6 +62,7 @@ const CodeEditor = observer(
         if (vimModeRef.current) {
           vimModeRef.current.dispose();
         }
+        autoCloseRef.current?.dispose();
       };
     }, []);
 
@@ -85,6 +88,7 @@ const CodeEditor = observer(
 
     const handleEditorDidMount: EditorProps['onMount'] = editor => {
       editorRef.current = editor;
+      autoCloseRef.current = enableXmlTagAutoClose(editor);
       initVim();
     };
 
