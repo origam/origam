@@ -68,7 +68,7 @@ async function horizontalOverflowOf(properties: Locator): Promise<number> {
 }
 
 async function widenSideBar(page: Page, distance: number): Promise<void> {
-  const splitter = await page.getByRole('separator').boundingBox();
+  const splitter = await page.getByRole('separator').last().boundingBox();
   const startX = splitter!.x + splitter!.width / 2;
   const middleY = splitter!.y + splitter!.height / 2;
   await page.mouse.move(startX, middleY);
