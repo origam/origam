@@ -67,6 +67,12 @@ async function horizontalOverflowOf(properties: Locator): Promise<number> {
     .evaluate(scrollArea => scrollArea.scrollWidth - scrollArea.clientWidth);
 }
 
+async function gapToPanelEdgeOf(field: Locator, properties: Locator): Promise<number> {
+  const fieldBox = await field.boundingBox();
+  const propertiesBox = await properties.boundingBox();
+  return Math.round(propertiesBox!.x + propertiesBox!.width - (fieldBox!.x + fieldBox!.width));
+}
+
 async function widenSideBar(page: Page, distance: number): Promise<void> {
   const splitter = await page.getByRole('separator').last().boundingBox();
   const startX = splitter!.x + splitter!.width / 2;
@@ -91,14 +97,14 @@ test.describe('Properties panel width (real backend)', () => {
     const narrowWidth = await widthOf(properties);
     const narrowInputWidth = await widthOf(propertyInput(properties, 'PanelTitle'));
 
-    await widenSideBar(page, 400);
+    await widenSideBar(page, 800);
 
-    await expect.poll(() => panelWidthOf(properties)).toBe(narrowWidth + 400);
-    expect(await widthOf(properties)).toBe(narrowWidth + 400);
+    await expect.poll(() => panelWidthOf(properties)).toBe(narrowWidth + 800);
+    expect(await widthOf(properties)).toBe(narrowWidth + 800);
     expect(await horizontalOverflowOf(properties)).toBe(0);
-    expect(await widthOf(propertyInput(properties, 'PanelTitle'))).toBeGreaterThan(
-      narrowInputWidth + 300,
-    );
+    const panelTitle = propertyInput(properties, 'PanelTitle');
+    expect(await widthOf(panelTitle)).toBeGreaterThan(narrowInputWidth + 700);
+    expect(await gapToPanelEdgeOf(panelTitle, properties)).toBeLessThan(20);
   });
 
   test('the values stay usable in the narrowest side bar', async ({ page, request }) => {

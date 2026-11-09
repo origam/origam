@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 .root {
   flex: 1;
   contain: inline-size;
+  --property-value-max-width: none;
 }
 
 .componentSelect {
