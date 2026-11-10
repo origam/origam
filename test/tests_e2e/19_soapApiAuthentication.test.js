@@ -81,7 +81,9 @@ testsForAuthenticationMethod("Token", "SOAP API in Token mode", () => {
   });
 
   test("Should not load data for an anonymous user", async ({ page }) => {
-    expect((await loadDataOverSoap(page)).status).toBe(401);
+    const response = await loadDataOverSoap(page);
+    expect(response.status).toBe(401);
+    expect(response.body).not.toContain("LoadDataResponse");
   });
 });
 
