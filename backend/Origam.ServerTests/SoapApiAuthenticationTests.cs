@@ -118,17 +118,20 @@ public class SoapApiAuthenticationTests
             .Features.Get<IAuthenticateResultFeature>()
             ?.AuthenticateResult;
         Assert.That(cachedResult?.Principal ?? requestContext.User, Is.SameAs(requestContext.User));
-        if (configuration.SoapInterfaceAuthenticationMethod == AuthenticationMethod.Cookie)
-        {
-            authenticationService.Verify(
-                service =>
-                    service.AuthenticateAsync(
-                        requestContext,
-                        OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme
-                    ),
-                Times.Never
-            );
-        }
+        Assert.That(
+            string.IsNullOrEmpty(requestContext.Response.ContentType),
+            Is.EqualTo(expectedStatus == 401)
+        );
+        authenticationService.Verify(
+            service =>
+                service.AuthenticateAsync(
+                    requestContext,
+                    OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme
+                ),
+            configuration.SoapInterfaceAuthenticationMethod == AuthenticationMethod.Token
+                ? Times.Once()
+                : Times.Never()
+        );
     }
 
     [TestCase("Basic")]
