@@ -119,7 +119,7 @@
   "SoapAPI": {
     "Enabled": "false",
     "RequiresAuthentication": "true",
-    "AuthenticationMethod": "CookieAndToken",
+    "AuthenticationMethod": "Cookie",
     "ExpectAndReturnOldDotNetAssemblyReferences": "true"
   },
   "BehindProxy": "false",

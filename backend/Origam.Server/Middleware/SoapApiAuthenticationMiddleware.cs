@@ -30,24 +30,19 @@ namespace Origam.Server.Middleware;
 
 public class SoapApiAuthenticationMiddleware(
     RequestDelegate next,
-    SoapApiAuthenticationMethod authenticationMethod
+    AuthenticationMethod authenticationMethod
 )
 {
     public async Task Invoke(HttpContext context)
     {
-        if (authenticationMethod != SoapApiAuthenticationMethod.Cookie)
+        if (authenticationMethod == AuthenticationMethod.Token)
         {
             AuthenticateResult result = await context.AuthenticateAsync(
                 OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme
             );
-            if (result.Succeeded)
-            {
-                context.User = result.Principal;
-            }
-            else if (authenticationMethod == SoapApiAuthenticationMethod.Token)
-            {
-                context.User = new ClaimsPrincipal(new ClaimsIdentity());
-            }
+            context.User = result.Succeeded
+                ? result.Principal
+                : new ClaimsPrincipal(new ClaimsIdentity());
         }
         await next(context);
     }
