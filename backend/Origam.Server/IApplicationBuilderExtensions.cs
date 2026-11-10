@@ -239,6 +239,7 @@ public static class IApplicationBuilderExtensions
     public static void UseSoapApi(
         this IApplicationBuilder app,
         bool authenticationRequired,
+        SoapApiAuthenticationMethod authenticationMethod,
         bool expectAndReturnOldDotNetAssemblyReferences
     )
     {
@@ -246,6 +247,7 @@ public static class IApplicationBuilderExtensions
             IsSoapApiRoute,
             apiBranch =>
             {
+                apiBranch.UseMiddleware<SoapApiAuthenticationMiddleware>(authenticationMethod);
                 apiBranch.Use(
                     async (context, next) =>
                     {

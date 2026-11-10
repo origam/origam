@@ -640,6 +640,7 @@ public class Startup
         {
             app.UseSoapApi(
                 startUpConfiguration.SoapInterfaceRequiresAuthentication,
+                startUpConfiguration.SoapInterfaceAuthenticationMethod,
                 startUpConfiguration.ExpectAndReturnOldDotNetAssemblyReferences
             );
         }
