@@ -37,32 +37,29 @@ namespace Origam.ServerTests.Middleware;
 
 public class SoapApiAuthenticationMiddlewareTests
 {
-    [TestCase(null, "true", "valid", null, 200, "Token")]
+    [TestCase(null, "true", "valid", null, 401, null)]
     [TestCase(null, "true", null, "valid", 200, "Cookie")]
-    [TestCase(null, "true", "valid", "valid", 200, "Token")]
-    [TestCase(null, "true", "invalid", "valid", 200, "Cookie")]
-    [TestCase(null, "true", "valid", "invalid", 200, "Token")]
-    [TestCase(null, "true", "invalid", "invalid", 401, null)]
+    [TestCase(null, "true", "valid", "valid", 200, "Cookie")]
     [TestCase(null, "true", null, null, 401, null)]
-    [TestCase("CookieAndToken", "true", "valid", null, 200, "Token")]
-    [TestCase("CookieAndToken", "true", null, "valid", 200, "Cookie")]
-    [TestCase("CookieAndToken", "true", null, null, 401, null)]
     [TestCase("Cookie", "true", "valid", null, 401, null)]
     [TestCase("Cookie", "true", null, "valid", 200, "Cookie")]
     [TestCase("Cookie", "true", "valid", "valid", 200, "Cookie")]
+    [TestCase("Cookie", "true", "invalid", "valid", 200, "Cookie")]
+    [TestCase("Cookie", "true", null, "invalid", 401, null)]
     [TestCase("Cookie", "true", null, null, 401, null)]
     [TestCase("cookie", "true", "valid", null, 401, null)]
     [TestCase("Token", "true", "valid", null, 200, "Token")]
     [TestCase("Token", "true", null, "valid", 401, null)]
     [TestCase("Token", "true", "valid", "valid", 200, "Token")]
     [TestCase("Token", "true", "invalid", "valid", 401, null)]
+    [TestCase("Token", "true", "valid", "invalid", 200, "Token")]
     [TestCase("Token", "true", null, null, 401, null)]
     [TestCase("token", "true", null, "valid", 401, null)]
     [TestCase(null, "false", null, null, 200, null)]
     [TestCase("Cookie", "false", "valid", null, 200, null)]
     [TestCase("Token", "false", null, "valid", 200, null)]
     [TestCase("Token", "false", "valid", null, 200, "Token")]
-    public async Task SoapApiAcceptsOnlyConfiguredAuthenticationMethods(
+    public async Task SoapApiAcceptsOnlyConfiguredAuthenticationMethod(
         string authenticationMethod,
         string requiresAuthentication,
         string token,
@@ -117,7 +114,7 @@ public class SoapApiAuthenticationMiddlewareTests
 
         Assert.That(requestContext.Response.StatusCode, Is.EqualTo(expectedStatus));
         Assert.That(requestContext.User.Identity?.Name, Is.EqualTo(expectedIdentity));
-        if (configuration.SoapInterfaceAuthenticationMethod == SoapApiAuthenticationMethod.Cookie)
+        if (configuration.SoapInterfaceAuthenticationMethod == AuthenticationMethod.Cookie)
         {
             authenticationService.Verify(
                 service =>
