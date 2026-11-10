@@ -33,9 +33,9 @@ using Origam.Server;
 using Origam.Server.Configuration;
 using SoapCore;
 
-namespace Origam.ServerTests.Middleware;
+namespace Origam.ServerTests;
 
-public class SoapApiAuthenticationMiddlewareTests
+public class SoapApiAuthenticationTests
 {
     [TestCase(null, "true", "valid", null, 401, null)]
     [TestCase(null, "true", null, "valid", 200, "Cookie")]
@@ -114,6 +114,10 @@ public class SoapApiAuthenticationMiddlewareTests
 
         Assert.That(requestContext.Response.StatusCode, Is.EqualTo(expectedStatus));
         Assert.That(requestContext.User.Identity?.Name, Is.EqualTo(expectedIdentity));
+        AuthenticateResult cachedResult = requestContext
+            .Features.Get<IAuthenticateResultFeature>()
+            ?.AuthenticateResult;
+        Assert.That(cachedResult?.Principal ?? requestContext.User, Is.SameAs(requestContext.User));
         if (configuration.SoapInterfaceAuthenticationMethod == AuthenticationMethod.Cookie)
         {
             authenticationService.Verify(
@@ -127,11 +131,13 @@ public class SoapApiAuthenticationMiddlewareTests
         }
     }
 
-    [Test]
-    public void UnknownAuthenticationMethodIsRejected()
+    [TestCase("Basic")]
+    [TestCase("CookieAndToken")]
+    [TestCase("")]
+    public void UnknownAuthenticationMethodIsRejected(string authenticationMethod)
     {
         StartUpConfiguration configuration = CreateConfiguration(
-            authenticationMethod: "Basic",
+            authenticationMethod,
             requiresAuthentication: "true"
         );
 

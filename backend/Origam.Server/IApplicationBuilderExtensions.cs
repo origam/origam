@@ -23,11 +23,14 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.FileProviders;
 using MoreLinq.Extensions;
+using OpenIddict.Validation.AspNetCore;
 using Origam.Server.Configuration;
 using Origam.Server.Middleware;
 using Origam.Server.OpenApi;
@@ -246,10 +249,18 @@ public static class IApplicationBuilderExtensions
             IsSoapApiRoute,
             apiBranch =>
             {
-                apiBranch.UseMiddleware<SoapApiAuthenticationMiddleware>(authenticationMethod);
                 apiBranch.Use(
                     async (context, next) =>
                     {
+                        if (authenticationMethod == AuthenticationMethod.Token)
+                        {
+                            AuthenticateResult result = await context.AuthenticateAsync(
+                                OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme
+                            );
+                            context.User = result.Succeeded
+                                ? result.Principal
+                                : new ClaimsPrincipal(new ClaimsIdentity());
+                        }
                         // Authentication middleware doesn't short-circuit the request itself
                         // we must do that here.
                         if (authenticationRequired && !context.User.Identity.IsAuthenticated)
