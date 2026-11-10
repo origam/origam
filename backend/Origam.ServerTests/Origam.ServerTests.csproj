@@ -69,4 +69,26 @@
   <ItemGroup>
     <ProjectReference Include="..\Origam.Server\Origam.Server.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Content
+      Include="..\Origam.Server\TemplateFiles\_appsettings.json"
+      Link="CertificateLogging\server-appsettings.json"
+      CopyToOutputDirectory="PreserveNewest"
+    />
+    <Content
+      Include="..\Origam.Server\TemplateFiles\_log4net.config"
+      Link="CertificateLogging\server-log4net.config"
+      CopyToOutputDirectory="PreserveNewest"
+    />
+    <Content
+      Include="..\..\docker\server\_appsettings.template"
+      Link="CertificateLogging\docker-appsettings.json"
+      CopyToOutputDirectory="PreserveNewest"
+    />
+    <Content
+      Include="..\..\docker\server\log4net.server.config"
+      Link="CertificateLogging\docker-log4net.config"
+      CopyToOutputDirectory="PreserveNewest"
+    />
+  </ItemGroup>
 </Project>

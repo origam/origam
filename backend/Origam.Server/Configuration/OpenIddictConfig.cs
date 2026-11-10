@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Security.Cryptography.X509Certificates;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.MicrosoftAccount;
 using Microsoft.Extensions.Configuration;
@@ -63,6 +64,11 @@ public class OpenIddictConfig
     public string SigningCertificatePassword { get; }
     public string EncryptionCertificatePath { get; }
     public string EncryptionCertificatePassword { get; }
+    public string SigningCertificateThumbprint { get; }
+    public string EncryptionCertificateThumbprint { get; }
+    public StoreLocation CertificateStoreLocation { get; }
+    public StoreName CertificateStoreName { get; }
+    public string FallbackGeneratedCertificateDirectory { get; }
     public AuthenticationMethod PrivateApiAuthentication { get; }
     public IReadOnlyDictionary<
         string,
@@ -80,6 +86,23 @@ public class OpenIddictConfig
         EncryptionCertificatePath = openIddictSection.GetValue<string>("EncryptionCertificatePath");
         EncryptionCertificatePassword = openIddictSection.GetValue<string>(
             "EncryptionCertificatePassword"
+        );
+        SigningCertificateThumbprint = openIddictSection.GetValue<string>(
+            "SigningCertificateThumbprint"
+        );
+        EncryptionCertificateThumbprint = openIddictSection.GetValue<string>(
+            "EncryptionCertificateThumbprint"
+        );
+        CertificateStoreLocation = openIddictSection.GetValue(
+            key: "CertificateStoreLocation",
+            defaultValue: StoreLocation.LocalMachine
+        );
+        CertificateStoreName = openIddictSection.GetValue(
+            key: "CertificateStoreName",
+            defaultValue: StoreName.My
+        );
+        FallbackGeneratedCertificateDirectory = openIddictSection.GetValue<string>(
+            "FallbackGeneratedCertificateDirectory"
         );
         CookieSlidingExpiration = openIddictSection.GetValue(
             key: "CookieSlidingExpiration",

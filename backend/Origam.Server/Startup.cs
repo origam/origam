@@ -82,6 +82,7 @@ public class Startup
     private readonly LanguageConfig languageConfig;
     private readonly ChatConfig chatConfig;
     private readonly IWebHostEnvironment environment;
+    private TokenCertificateStartupInfo tokenCertificateStartupInfo;
 
     public Startup(IConfiguration configuration, IWebHostEnvironment environment)
     {
@@ -259,7 +260,7 @@ public class Startup
                     .EnableAuthorizationEndpointPassthrough()
                     .EnableTokenEndpointPassthrough()
                     .EnableEndSessionEndpointPassthrough();
-                OpenIddictCertificateConfiguration.Configure(
+                tokenCertificateStartupInfo = OpenIddictCertificateConfiguration.Configure(
                     options,
                     openIddictConfig,
                     environment
@@ -554,6 +555,9 @@ public class Startup
     )
     {
         loggerFactory.AddLog4Net();
+        tokenCertificateStartupInfo.Log(
+            loggerFactory.CreateLogger(TokenCertificateStartupInfo.LoggerCategory)
+        );
 
         if (env.IsDevelopment())
         {

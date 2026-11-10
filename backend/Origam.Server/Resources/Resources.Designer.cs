@@ -411,6 +411,69 @@ namespace Origam.Server {
         }
         
         /// <summary>
+        ///   Looks up a localized string describing the supported token certificate sources.
+        /// </summary>
+        public static string ErrorMissingTokenCertificates {
+            get {
+                return ResourceManager.GetString("ErrorMissingTokenCertificates", resourceCulture);
+            }
+        }
+
+        public static string ErrorAmbiguousTokenCertificates {
+            get {
+                return ResourceManager.GetString("ErrorAmbiguousTokenCertificates", resourceCulture);
+            }
+        }
+
+        public static string ErrorIncompleteTokenCertificateDirectory {
+            get {
+                return ResourceManager.GetString("ErrorIncompleteTokenCertificateDirectory", resourceCulture);
+            }
+        }
+
+        public static string ErrorTokenCertificateNotFound {
+            get {
+                return ResourceManager.GetString("ErrorTokenCertificateNotFound", resourceCulture);
+            }
+        }
+
+        public static string ErrorTokenCertificateStoreWindowsOnly {
+            get {
+                return ResourceManager.GetString("ErrorTokenCertificateStoreWindowsOnly", resourceCulture);
+            }
+        }
+
+        public static string TokenCertificatesLoadedFromStore {
+            get {
+                return ResourceManager.GetString("TokenCertificatesLoadedFromStore", resourceCulture);
+            }
+        }
+
+        public static string TokenCertificatesLoadedFromFiles {
+            get {
+                return ResourceManager.GetString("TokenCertificatesLoadedFromFiles", resourceCulture);
+            }
+        }
+
+        public static string TokenCertificatesGeneratedFallback {
+            get {
+                return ResourceManager.GetString("TokenCertificatesGeneratedFallback", resourceCulture);
+            }
+        }
+
+        public static string TokenCertificatesReusedFallback {
+            get {
+                return ResourceManager.GetString("TokenCertificatesReusedFallback", resourceCulture);
+            }
+        }
+
+        public static string TokenCertificatesUsingDevelopment {
+            get {
+                return ResourceManager.GetString("TokenCertificatesUsingDevelopment", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Invalid authentication method &apos;{0}&apos; for endpoint &apos;{1}&apos;. Valid values are: {2}..
         /// </summary>
         public static string ErrorInvalidAdditionalAuthenticationMethod {
