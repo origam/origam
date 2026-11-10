@@ -6,11 +6,11 @@ using System.Reflection;
 using System.Text;
 using System.Xml.Linq;
 using System.Xml.Serialization;
-using MoreLinq.Extensions;
 using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
 using Origam.Extensions;
 using Origam.Schema;
+using static MoreLinq.Extensions.ForEachExtension;
 #region license
 /*
 Copyright 2005 - 2025 Advantage Solutions, s. r. o.

@@ -1,6 +1,6 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <ProjectType>Local</ProjectType>
     <AssemblyKeyContainerName />
     <AssemblyOriginatorKeyFile />
@@ -14,52 +14,6 @@
     <LangVersion>10</LangVersion>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <Platforms>AnyCPU</Platforms>
-  </PropertyGroup>
-  <PropertyGroup>
-    <DefineConstants Condition="'$(TargetFramework)'=='netstandard2.0'"
-      >NETSTANDARD;NETSTANDARD2_0</DefineConstants>
-    <Configurations>Debug Architect Server;Debug Architect;Debug Client;Debug Server;Debug;Release Architect;Release Client;Release Server;Release;Release Architect Server</Configurations>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Client|AnyCPU' ">
-    <DefineConstants>ORIGAM_CLIENT;$(DefineConstants)</DefineConstants>
-    <DebugSymbols>true</DebugSymbols>
-    <Optimize>true</Optimize>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug Client|AnyCPU' ">
-    <DefineConstants>DEBUG;TRACE;ORIGAM_CLIENT;$(DefineConstants)</DefineConstants>
-    <DebugSymbols>true</DebugSymbols>
-    <Optimize>false</Optimize>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Server|AnyCPU' ">
-    <DefineConstants>ORIGAM_CLIENT;ORIGAM_SERVER;$(DefineConstants)</DefineConstants>
-    <DebugSymbols>true</DebugSymbols>
-    <Optimize>true</Optimize>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug Server|AnyCPU' ">
-    <DefineConstants>DEBUG;TRACE;ORIGAM_CLIENT;ORIGAM_SERVER;$(DefineConstants)</DefineConstants>
-    <DebugSymbols>true</DebugSymbols>
-    <Optimize>false</Optimize>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Architect|AnyCPU' ">
-    <DefineConstants>$(DefineConstants)</DefineConstants>
-    <DebugSymbols>true</DebugSymbols>
-    <Optimize>true</Optimize>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug Architect|AnyCPU' ">
-    <DefineConstants>DEBUG;TRACE;$(DefineConstants)</DefineConstants>
-    <DebugSymbols>true</DebugSymbols>
-    <Optimize>false</Optimize>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug Architect Server|AnyCPU'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;</DefineConstants>
-    <LangVersion>10</LangVersion>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release Architect Server|AnyCPU' ">
-    <OutputPath>bin\Release\</OutputPath>
-    <DebugSymbols>true</DebugSymbols>
-    <Optimize>true</Optimize>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\Origam.Common\Origam.Common.csproj" />

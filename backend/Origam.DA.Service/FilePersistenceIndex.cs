@@ -1,4 +1,4 @@
-﻿#region license
+#region license
 /*
 Copyright 2005 - 2021 Advantage Solutions, s. r. o.
 
@@ -203,7 +203,7 @@ public class FilePersistenceIndex : IDisposable
     {
         readWriteLock.RunWriter(() =>
         {
-#if ORIGAM_CLIENT // temporary solution of: https://bitbucket.org/origamsource/origam-source/issues/198/architect-does-not-upgrade-meta-model-if
+#if ORIGAM_SERVER // temporary solution of: https://bitbucket.org/origamsource/origam-source/issues/198/architect-does-not-upgrade-meta-model-if
             if (itemTracker.IsEmpty)
             {
                 trackerLoaderFactory.BinLoader.LoadInto(itemTracker);

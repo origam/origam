@@ -35,7 +35,7 @@ using Origam.Schema.MenuModel;
 using Origam.Schema.WorkflowModel;
 using Origam.Workbench.Services;
 using Origam.Workflow;
-using core = Origam.Workbench.Services.CoreServices;
+using Core = Origam.Workbench.Services.CoreServices;
 
 namespace Origam.OrigamEngine.ModelXmlBuilders;
 
@@ -400,7 +400,7 @@ public class FormXmlBuilder
         IOrigamAuthorizationProvider authorizationProvider =
             SecurityManager.GetAuthorizationProvider();
         var parameterService = ServiceManager.Services.GetService<IParameterService>();
-        DataSet workQueueCommands = core.DataService.Instance.LoadData(
+        DataSet workQueueCommands = Core.DataService.Instance.LoadData(
             dataStructureId: new Guid("1d33b667-ca76-4aaa-a47d-0e404ed6f8a6"),
             methodId: new Guid("421aec03-1eec-43f9-b0bb-17cfc24510a0"),
             defaultSetId: Guid.Empty,

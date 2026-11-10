@@ -2625,15 +2625,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axios@npm:^1.20.0":
-  version: 1.20.0
-  resolution: "axios@npm:1.20.0"
+"axios@npm:^1.21.0":
+  version: 1.21.0
+  resolution: "axios@npm:1.21.0"
   dependencies:
     follow-redirects: "npm:^1.16.0"
     form-data: "npm:^4.0.6"
     https-proxy-agent: "npm:^5.0.1"
     proxy-from-env: "npm:^2.1.0"
-  checksum: 10c0/976088acf532286356f4c2e65df1ef47ba7da3936d83e928d0d64357bbf5370456abd3eb5826c15df322335fcb1fe200d4a84b4fcf20ffccdd63b40d80fa495c
+  checksum: 10c0/adaf1e81762aa7476b95a588f173796e9251a2683c1ffc3e2dfb3ae705c4f629976ef05ded4e7a513832214072058d480fb0bc7e46fe819621909a70f9571ed2
   languageName: node
   linkType: hard
 
@@ -2729,12 +2729,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"baseline-browser-mapping@npm:^2.11.29":
-  version: 2.11.29
-  resolution: "baseline-browser-mapping@npm:2.11.29"
+"baseline-browser-mapping@npm:^2.11.33":
+  version: 2.11.34
+  resolution: "baseline-browser-mapping@npm:2.11.34"
   bin:
     baseline-browser-mapping: dist/cli.cjs
-  checksum: 10c0/da4394fe1fdb3902de73542ce892aa4278ddd345a39eed1568092919a267881268c9e55d4f25ae7ca5fc3ad320f933c880fc7c49a343a195339c96ce5caffec1
+  checksum: 10c0/294a4513440f4cacca2d84032ccff2dd284b429356af0c12574360d1e471ad1ab2383b101261193bec87891f90d2fea29cb75d3e54b2b69a060c6e726c433c58
   languageName: node
   linkType: hard
 
@@ -2796,18 +2796,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"browserslist@npm:^4.29.4":
-  version: 4.29.4
-  resolution: "browserslist@npm:4.29.4"
+"browserslist@npm:^4.29.5":
+  version: 4.29.5
+  resolution: "browserslist@npm:4.29.5"
   dependencies:
-    baseline-browser-mapping: "npm:^2.11.29"
-    caniuse-lite: "npm:^1.0.30001816"
-    electron-to-chromium: "npm:^1.5.459"
-    node-releases: "npm:^2.0.59"
+    baseline-browser-mapping: "npm:^2.11.33"
+    caniuse-lite: "npm:^1.0.30001819"
+    electron-to-chromium: "npm:^1.5.464"
+    node-releases: "npm:^2.0.60"
     update-browserslist-db: "npm:^1.3.4"
   bin:
     browserslist: cli.js
-  checksum: 10c0/e706dfb56f89a78a3b5fef681d9793327779f5d30885606e49c4af788a7f60b92dd8c2ead153d780109e8fcc2529a784491854037b18c8b8700fb464b87f9f93
+  checksum: 10c0/a27b0d1dece626af14cad3e0eca07fc17608b4d306a15cf2b2c5dcb30cadcc118d3da7400866287587feb3531ad8907cffc6592d21198269960a0d381f8349bd
   languageName: node
   linkType: hard
 
@@ -2887,10 +2887,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"caniuse-lite@npm:^1.0.30001816":
-  version: 1.0.30001816
-  resolution: "caniuse-lite@npm:1.0.30001816"
-  checksum: 10c0/5d39f36f73181906fd25d0cd61030308540d38ed1162eb730d4e69dc75ab94434a5977ab08d4721351bd855f99d19eb5fc488c58ec49272484868c0f3bc97243
+"caniuse-lite@npm:^1.0.30001819":
+  version: 1.0.30001820
+  resolution: "caniuse-lite@npm:1.0.30001820"
+  checksum: 10c0/b7752a246ba6b0d4a1cbede0d9beda1790ec5bd1d9270bc61d2c42e19f427cf79ba79cf3e0ae85fa80ef7cfe7fcfd8a3db41e0e3be6db94586379f4d595956d8
   languageName: node
   linkType: hard
 
@@ -3335,10 +3335,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"electron-to-chromium@npm:^1.5.459":
-  version: 1.5.459
-  resolution: "electron-to-chromium@npm:1.5.459"
-  checksum: 10c0/5fd2539dbd55dd7992a43990fa1891c1e8c13f35d6b6a3178044f60351ac4e0b5dc40d6c055fc5009afa776e3baebb72fe3b08cca01f87614d16943b276d8fe9
+"electron-to-chromium@npm:^1.5.464":
+  version: 1.5.468
+  resolution: "electron-to-chromium@npm:1.5.468"
+  checksum: 10c0/30249fc08bd3787661a784f7e8c434fd6294c79999899555f67c121dc0c3ff6e97b649d133dae1b1f2b4e09c82fd75275948e5453b0ca4fc919f606e5706e49a
   languageName: node
   linkType: hard
 
@@ -3738,12 +3738,12 @@ __metadata:
   linkType: hard
 
 "follow-redirects@npm:^1.16.0":
-  version: 1.16.1
-  resolution: "follow-redirects@npm:1.16.1"
+  version: 1.16.2
+  resolution: "follow-redirects@npm:1.16.2"
   peerDependenciesMeta:
     debug:
       optional: true
-  checksum: 10c0/544e24ccb93b7afb5dd5a2199bd556e167b84de2af7c13b2ced08494239677359d7883bae56ae43a9ca98ac5451e75cf4834a5fadd6fa79053b9248fac5447a4
+  checksum: 10c0/ff38c8ceb904e505021057f58d395ea5f2e7c34257032960a76b21df1726395ce753f5678b6ee3b15210a557277c00b2607c67b682ee4dec1f33cb5147e08e90
   languageName: node
   linkType: hard
 
@@ -4121,10 +4121,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"immer@npm:^11.2.7":
-  version: 11.2.7
-  resolution: "immer@npm:11.2.7"
-  checksum: 10c0/732fa47df64054075e48e14cc4a027c3d53a7ef41768fddd11970d5ebf528f11a5952dc36a402e9dde72e97e26a3c7cf3bac8cb6ba209d37bb178dc6637bbbe1
+"immer@npm:^11.2.9":
+  version: 11.2.9
+  resolution: "immer@npm:11.2.9"
+  checksum: 10c0/fe64b10033aba3f89f778f0a28835c31f9ce28283f0b9a85245de3885442aea20ea8cf6bda7bca57f8159ff2c566ada6d9da9285461e120fe1587d335d648551
   languageName: node
   linkType: hard
 
@@ -5623,10 +5623,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"node-releases@npm:^2.0.59":
-  version: 2.0.59
-  resolution: "node-releases@npm:2.0.59"
-  checksum: 10c0/c7fdc6c55b7e5c5fccd6274edf8afc7ab1320d7c01353cde8e60653cfd9488d4d0a5224bb4efd6d77877338f26976ae9dbcf6fb0fad75a37f37b9c22f71c9796
+"node-releases@npm:^2.0.60":
+  version: 2.0.62
+  resolution: "node-releases@npm:2.0.62"
+  checksum: 10c0/9959dd3fa2bd9cc6251ae7adc598f6ba1df676ab2943521ba4872aa3e20d948cf127696adcb80465d903ff334317ace1a5f519e78d15754ed0b7f4f22f794f6b
   languageName: node
   linkType: hard
 
@@ -6226,9 +6226,9 @@ __metadata:
     "@vitejs/plugin-basic-ssl": "npm:^2.3.0"
     "@vitejs/plugin-react": "npm:6.1.2"
     "@xstate/inspect": "npm:^0.8.0"
-    axios: "npm:^1.20.0"
+    axios: "npm:^1.21.0"
     bind-decorator: "npm:^1.0.11"
-    browserslist: "npm:^4.29.4"
+    browserslist: "npm:^4.29.5"
     browserslist-useragent-regexp: "npm:^4.1.4"
     classnames: "npm:^2.5.1"
     draft-js: "npm:^0.11.7"
@@ -6236,7 +6236,7 @@ __metadata:
     esbuild: "npm:^0.28.2"
     html-to-draftjs: "npm:^1.5.0"
     identity-obj-proxy: "npm:^3.0.0"
-    immer: "npm:^11.2.7"
+    immer: "npm:^11.2.9"
     immutable: "npm:^5.1.9"
     jest: "npm:^30.5.2"
     jest-environment-jsdom: "npm:^30.5.2"
@@ -6261,7 +6261,7 @@ __metadata:
     react-inlinesvg: "npm:4.5.x"
     react-measure: "npm:^2.5.2"
     react-virtualized: "npm:^9.22.6"
-    sass: "npm:^1.106.0"
+    sass: "npm:^1.107.0"
     stream-browserify: "npm:^3.0.0"
     string-strip-html: "npm:^13.7.7"
     ts-jest: "npm:^29.4.15"
@@ -6507,9 +6507,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"sass@npm:^1.106.0":
-  version: 1.106.0
-  resolution: "sass@npm:1.106.0"
+"sass@npm:^1.107.0":
+  version: 1.107.0
+  resolution: "sass@npm:1.107.0"
   dependencies:
     "@parcel/watcher": "npm:^2.4.1"
     chokidar: "npm:^5.0.0"
@@ -6520,7 +6520,7 @@ __metadata:
       optional: true
   bin:
     sass: sass.js
-  checksum: 10c0/7d95ce748273038c4c2a61030694ad4bce199ca35af50754d15715ba05ed82eed2fac73dbd0be1fa6215b0ce4dbaaf11a7e10578b74b40abd75da8283052223b
+  checksum: 10c0/5e2a8da603a7cbe4edd904f38db12136e3aba3b673e8acffa98d5b4d1d95d47c83b9f40ecc92686466f0e17e34cfb9c948313e69781392081729d93073f9bbe0
   languageName: node
   linkType: hard
 
