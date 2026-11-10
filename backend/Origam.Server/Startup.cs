@@ -256,7 +256,9 @@ public class Startup
                 options.SetAccessTokenLifetime(
                     TimeSpan.FromMinutes(openIddictConfig.AccessTokenExpirationMinutes)
                 );
-                options.SetRefreshTokenLifetime(TimeSpan.FromDays(30));
+                options.SetRefreshTokenLifetime(
+                    TimeSpan.FromMinutes(openIddictConfig.RefreshTokenExpirationMinutes)
+                );
                 options
                     .UseAspNetCore()
                     .EnableAuthorizationEndpointPassthrough()
