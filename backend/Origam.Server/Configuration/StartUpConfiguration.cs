@@ -61,10 +61,10 @@ public class StartUpConfiguration
         configuration
             .GetSection("SoapAPI")
             .GetValue(key: "RequiresAuthentication", defaultValue: true);
-    public SoapApiAuthenticationMethod SoapInterfaceAuthenticationMethod =>
+    public AuthenticationMethod SoapInterfaceAuthenticationMethod =>
         configuration
             .GetSection("SoapAPI")
-            .GetValue(key: "AuthenticationMethod", SoapApiAuthenticationMethod.CookieAndToken);
+            .GetValue(key: "AuthenticationMethod", AuthenticationMethod.Cookie);
     public bool ExpectAndReturnOldDotNetAssemblyReferences =>
         configuration
             .GetSection("SoapAPI")

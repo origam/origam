@@ -239,7 +239,7 @@ public static class IApplicationBuilderExtensions
     public static void UseSoapApi(
         this IApplicationBuilder app,
         bool authenticationRequired,
-        SoapApiAuthenticationMethod authenticationMethod,
+        AuthenticationMethod authenticationMethod,
         bool expectAndReturnOldDotNetAssemblyReferences
     )
     {
