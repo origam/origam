@@ -3,6 +3,12 @@ const { beforeEachTest, login } = require("./testTools");
 const { getStatusCode, getAccessToken } = require("./tools/userApiTools");
 
 const soapServicePaths = ["/soap/DataService", "/soap/WorkflowService"];
+const allDataTypesDataStructureId = "31791c3b-7265-439e-ac96-ddd57aa82579";
+const loadDataRequest =
+  '<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"' +
+  ' xmlns:a="http://asapenginewebapi.advantages.cz/"><s:Body><a:LoadData>' +
+  `<a:dataStructureId>${allDataTypesDataStructureId}</a:dataStructureId>` +
+  "</a:LoadData></s:Body></s:Envelope>";
 
 test.beforeEach(async ({ page }) => {
   await beforeEachTest(page);
@@ -24,6 +30,20 @@ async function expectStatusOnSoapServices(page, expectedStatus, headers = {}) {
   for (const soapServicePath of soapServicePaths) {
     expect(await getStatusCode(page, soapServicePath, headers)).toBe(expectedStatus);
   }
+}
+
+async function loadDataOverSoap(page, headers = {}) {
+  return await page.evaluate(
+    async ({ requestBody, requestHeaders }) => {
+      const response = await fetch("/soap/DataService", {
+        method: "POST",
+        headers: { "Content-Type": "application/xml", ...requestHeaders },
+        body: requestBody,
+      });
+      return { status: response.status, body: await response.text() };
+    },
+    { requestBody: loadDataRequest, requestHeaders: headers }
+  );
 }
 
 testsForAuthenticationMethod("Token", "SOAP API in Token mode", () => {
@@ -49,6 +69,20 @@ testsForAuthenticationMethod("Token", "SOAP API in Token mode", () => {
     await login(page);
     await expectStatusOnSoapServices(page, 401);
   });
+
+  test("Should load data for a user with a valid access token", async ({ page }) => {
+    const accessToken = await getAccessToken(page);
+    expect(accessToken).toBeTruthy();
+    const response = await loadDataOverSoap(page, {
+      Authorization: `Bearer ${accessToken}`,
+    });
+    expect(response.status).toBe(200);
+    expect(response.body).toContain("LoadDataResponse");
+  });
+
+  test("Should not load data for an anonymous user", async ({ page }) => {
+    expect((await loadDataOverSoap(page)).status).toBe(401);
+  });
 });
 
 testsForAuthenticationMethod("Cookie", "SOAP API in Cookie mode", () => {
@@ -67,5 +101,12 @@ testsForAuthenticationMethod("Cookie", "SOAP API in Cookie mode", () => {
     await expectStatusOnSoapServices(page, 401, {
       Authorization: `Bearer ${accessToken}`,
     });
+  });
+
+  test("Should load data for a logged in user", async ({ page }) => {
+    await login(page);
+    const response = await loadDataOverSoap(page);
+    expect(response.status).toBe(200);
+    expect(response.body).toContain("LoadDataResponse");
   });
 });
