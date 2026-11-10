@@ -448,6 +448,33 @@
     <value>PortalBaseUrl is not configured.</value>
   </data>
   <data name="ErrorMissingTokenCertificates" xml:space="preserve">
-    <value>Configure both OpenIddictConfig:SigningCertificatePath and OpenIddictConfig:EncryptionCertificatePath with PFX files containing private keys. Automatic development certificates are only available in the Development environment when neither path is configured.</value>
+    <value>Configure both OpenIddictConfig:SigningCertificatePath and EncryptionCertificatePath, both SigningCertificateThumbprint and EncryptionCertificateThumbprint, or FallbackGeneratedCertificateDirectory. Automatic development certificates are only available in Development when no certificate source is configured.</value>
+  </data>
+  <data name="ErrorAmbiguousTokenCertificates" xml:space="preserve">
+    <value>Configure either certificate paths or certificate thumbprints in OpenIddictConfig, not both.</value>
+  </data>
+  <data name="ErrorIncompleteTokenCertificateDirectory" xml:space="preserve">
+    <value>The token certificate directory '{0}' must contain both signing.pfx and encryption.pfx. Existing certificates are never replaced automatically.</value>
+  </data>
+  <data name="ErrorTokenCertificateNotFound" xml:space="preserve">
+    <value>Certificate '{0}' was not found in the {1}\{2} certificate store.</value>
+  </data>
+  <data name="ErrorTokenCertificateStoreWindowsOnly" xml:space="preserve">
+    <value>Certificate-store loading is supported only on Windows. Configure PFX file paths on other platforms.</value>
+  </data>
+  <data name="TokenCertificatesLoadedFromStore" xml:space="preserve">
+    <value>OpenIddict token certificates loaded from Windows store {0}\{1}. Signing thumbprint: {2}, expires {3:O}; encryption thumbprint: {4}, expires {5:O}.</value>
+  </data>
+  <data name="TokenCertificatesLoadedFromFiles" xml:space="preserve">
+    <value>OpenIddict token certificates loaded from configured PFX files. Signing: '{0}', thumbprint {1}, expires {2:O}; encryption: '{3}', thumbprint {4}, expires {5:O}.</value>
+  </data>
+  <data name="TokenCertificatesGeneratedFallback" xml:space="preserve">
+    <value>WARNING: Generated new self-signed fallback OpenIddict token certificates. Signing: '{0}', thumbprint {1}, expires {2:O}; encryption: '{3}', thumbprint {4}, expires {5:O}. Persist this directory to retain the keys when replacing the container.</value>
+  </data>
+  <data name="TokenCertificatesReusedFallback" xml:space="preserve">
+    <value>WARNING: Using existing OpenIddict token certificates from the fallback directory. Signing: '{0}', thumbprint {1}, expires {2:O}; encryption: '{3}', thumbprint {4}, expires {5:O}. Persist this directory to retain the keys when replacing the container.</value>
+  </data>
+  <data name="TokenCertificatesUsingDevelopment" xml:space="preserve">
+    <value>WARNING: OpenIddict development token certificates are in use. Configure production certificates before deploying outside Development.</value>
   </data>
 </root>

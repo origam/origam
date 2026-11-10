@@ -12,6 +12,7 @@ COPY --from=powershell ${src} ${target}
 USER ContainerAdministrator
 
 ENV ContainerMode=server
+ENV OpenIddictConfig__FallbackGeneratedCertificateDirectory=C:/home/origam/certificates
 
 # Set PowerShell path
 RUN setx /M PATH "%PATH%;C:\\Program Files\\PowerShell"
