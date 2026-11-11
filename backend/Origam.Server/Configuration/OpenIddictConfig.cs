@@ -83,9 +83,18 @@ public class OpenIddictConfig
         PrivateApiAdditionalAuthenticationMethods = openIddictSection
             .GetSection("PrivateApiAdditionalAuthenticationMethods")
             .GetChildren()
+            .Select(endpoint =>
+            {
+                string path = endpoint["Path"];
+                ArgumentException.ThrowIfNullOrEmpty(path, endpoint.Path + ":Path");
+                return new KeyValuePair<string, AuthenticationMethod>(
+                    path,
+                    ParseAdditionalAuthenticationMethod(path, endpoint["Method"])
+                );
+            })
             .ToDictionary(
                 endpoint => endpoint.Key,
-                endpoint => ParseAdditionalAuthenticationMethod(endpoint.Key, endpoint.Value),
+                endpoint => endpoint.Value,
                 StringComparer.Ordinal
             );
         foreach (var endpoint in PrivateApiAdditionalAuthenticationMethods)
