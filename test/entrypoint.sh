@@ -198,7 +198,8 @@ cd /home/origam/tests_workflow
 fill_origam_settings_for_workflow_tests
 
 dotnet test --logger "trx;logfilename=workflow-integration-test-results.trx" Origam.WorkflowTests.dll | filter_test_output
-if [[ $? -eq 0 ]]; then
+test_exit_code=${PIPESTATUS[0]}
+if [[ $test_exit_code -eq 0 ]]; then
   sudo cp /home/origam/tests_workflow/TestResults/workflow-integration-test-results.trx /home/origam/output/
   echo "Success."
 else
