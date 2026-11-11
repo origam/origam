@@ -91,7 +91,7 @@ const Toolbox = observer(
         data-test-id="toolbox"
         className={S.toolbox}
         style={{
-          width: `min(${rootStore.uiState.designerToolboxWidth}px, 100% - ${MIN_DESIGN_SURFACE_WIDTH}px)`,
+          width: `min(${rootStore.uiState.designerToolboxWidth}px, calc(100% - ${MIN_DESIGN_SURFACE_WIDTH}px))`,
         }}
       >
         <div className={S.inputs}>
