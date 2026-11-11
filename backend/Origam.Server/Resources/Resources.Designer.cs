@@ -409,15 +409,6 @@ namespace Origam.Server {
                 return ResourceManager.GetString("ErrorInForm", resourceCulture);
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized string describing the supported token certificate sources.
-        /// </summary>
-        public static string ErrorMissingTokenCertificates {
-            get {
-                return ResourceManager.GetString("ErrorMissingTokenCertificates", resourceCulture);
-            }
-        }
 
         public static string ErrorAmbiguousTokenCertificates {
             get {
