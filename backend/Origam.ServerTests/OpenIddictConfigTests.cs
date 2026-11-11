@@ -151,14 +151,14 @@ public class OpenIddictConfigTests
         );
     }
 
-    [TestCase("/api/private/project-room/handover/handover-1/view", true)]
-    [TestCase("/api/private/project-room/handover/handover-2/view", true)]
-    [TestCase("/api/private/project-room/handover/handover-1/edit", false)]
-    [TestCase("/api/private/project-room/handover/handover-1/View", false)]
-    [TestCase("/api/private/project-room/handover/handover-1", false)]
-    [TestCase("/api/private/project-room/handover//view", false)]
-    [TestCase("/api/private/project-room/handover/handover-1/view/child", false)]
-    [TestCase("/api/private/project-room/handover/handover-1/view/", false)]
+    [TestCase("/api/private/some-path/test/test-1/view", true)]
+    [TestCase("/api/private/some-path/test/test-2/view", true)]
+    [TestCase("/api/private/some-path/test/test-1/edit", false)]
+    [TestCase("/api/private/some-path/test/test-1/View", false)]
+    [TestCase("/api/private/some-path/test/test-1", false)]
+    [TestCase("/api/private/some-path/test//view", false)]
+    [TestCase("/api/private/some-path/test/test-1/view/child", false)]
+    [TestCase("/api/private/some-path/test/test-1/view/", false)]
     public void ParameterizedExceptionMatchesParameterBeforeFinalLiteralSegment(
         string path,
         bool matches
@@ -167,7 +167,7 @@ public class OpenIddictConfigTests
         var config = CreatePrivateApiConfiguration(
             "Token",
             "Cookie",
-            "/api/private/project-room/handover/{handoverId}/view"
+            "/api/private/some-path/test/{testId}/view"
         );
 
         Assert.That(
