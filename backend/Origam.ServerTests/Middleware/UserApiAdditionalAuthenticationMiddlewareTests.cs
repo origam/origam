@@ -56,6 +56,76 @@ public class UserApiAdditionalAuthenticationMiddlewareTests
     [TestCase("Cookie", "Token", "/api/legacy", null, null, 401, null)]
     [TestCase("Cookie", "Token", "/api/legacy2", "valid", null, 401, null)]
     [TestCase("Cookie", null, "/api/legacy", "valid", null, 401, null)]
+    [TestCase(
+        "Token",
+        "Cookie",
+        "/api/legacy/address-1",
+        null,
+        "valid",
+        204,
+        "Cookie",
+        "/api/legacy/{addressId}"
+    )]
+    [TestCase(
+        "Token",
+        "Cookie",
+        "/api/legacy/address-1",
+        "invalid",
+        "valid",
+        204,
+        "Cookie",
+        "/api/legacy/{addressId}"
+    )]
+    [TestCase(
+        "Token",
+        "Cookie",
+        "/api/legacy/address-1",
+        "valid",
+        "valid",
+        204,
+        "Token",
+        "/api/legacy/{addressId}"
+    )]
+    [TestCase(
+        "Token",
+        "Cookie",
+        "/api/legacy/address-1",
+        null,
+        null,
+        401,
+        null,
+        "/api/legacy/{addressId}"
+    )]
+    [TestCase(
+        "Token",
+        "Cookie",
+        "/api/legacy/address-1/child",
+        null,
+        "valid",
+        401,
+        null,
+        "/api/legacy/{addressId}"
+    )]
+    [TestCase(
+        "Token",
+        "Cookie",
+        "/api/Legacy/address-1",
+        null,
+        "valid",
+        401,
+        null,
+        "/api/legacy/{addressId}"
+    )]
+    [TestCase(
+        "Cookie",
+        "Token",
+        "/api/legacy/address-1",
+        "valid",
+        null,
+        204,
+        "Token",
+        "/api/legacy/{addressId}"
+    )]
     public async Task PipelineAcceptsOnlyConfiguredMethodsAndPreservesDefaultIdentity(
         string defaultMethod,
         string additionalMethod,
@@ -63,7 +133,8 @@ public class UserApiAdditionalAuthenticationMiddlewareTests
         string token,
         string cookie,
         int expectedStatus,
-        string expectedIdentity
+        string expectedIdentity,
+        string endpointPath = "/api/legacy"
     )
     {
         var settings = new Dictionary<string, string>
@@ -73,7 +144,7 @@ public class UserApiAdditionalAuthenticationMiddlewareTests
         };
         if (additionalMethod != null)
         {
-            settings["OpenIddictConfig:PrivateApiAdditionalAuthenticationMethods:/api/legacy"] =
+            settings[$"OpenIddictConfig:PrivateApiAdditionalAuthenticationMethods:{endpointPath}"] =
                 additionalMethod;
         }
         var configuration = new OpenIddictConfig(
@@ -149,7 +220,9 @@ public class UserApiAdditionalAuthenticationMiddlewareTests
         if (
             expectedIdentity == defaultMethod
             || additionalMethod == null
-            || !string.Equals(path, "/api/legacy", StringComparison.Ordinal)
+            || !configuration
+                .GetPrivateApiAuthenticationMethods(path)
+                .Any(method => method != configuration.PrivateApiAuthenticationMethod)
         )
         {
             authenticationService.Verify(

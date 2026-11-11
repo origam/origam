@@ -52,6 +52,8 @@ public static class IdentityServerDefaults
 
 public class OpenIddictConfig
 {
+    private readonly IReadOnlyDictionary<string, string[]> additionalAuthenticationTemplates;
+
     public GoogleLogin GoogleLogin { get; }
     public MicrosoftLogin MicrosoftLogin { get; }
     public AzureAdLogin AzureAdLogin { get; }
@@ -91,6 +93,13 @@ public class OpenIddictConfig
             // PathString also validates that endpoint paths start with '/'.
             _ = new Microsoft.AspNetCore.Http.PathString(endpoint.Key);
         }
+        additionalAuthenticationTemplates = PrivateApiAdditionalAuthenticationMethods
+            .Where(endpoint => endpoint.Key.Split('/').Any(IsPathParameter))
+            .ToDictionary(
+                endpoint => endpoint.Key,
+                endpoint => endpoint.Key.Split('/'),
+                StringComparer.Ordinal
+            );
         CookieExpirationMinutes = openIddictSection.GetValue(
             key: "CookieExpirationMinutes",
             defaultValue: 60
@@ -120,13 +129,63 @@ public class OpenIddictConfig
     public IEnumerable<AuthenticationMethod> GetPrivateApiAuthenticationMethods(string path)
     {
         yield return PrivateApiAuthenticationMethod;
-        if (
-            PrivateApiAdditionalAuthenticationMethods.TryGetValue(path, out var additionalMethod)
-            && additionalMethod != PrivateApiAuthenticationMethod
-        )
+        if (PrivateApiAdditionalAuthenticationMethods.TryGetValue(path, out var additionalMethod))
         {
-            yield return additionalMethod;
+            if (additionalMethod != PrivateApiAuthenticationMethod)
+            {
+                yield return additionalMethod;
+            }
+            yield break;
         }
+        if (additionalAuthenticationTemplates.Count == 0)
+        {
+            yield break;
+        }
+        string[] pathSegments = path.Split('/');
+        foreach (var template in additionalAuthenticationTemplates)
+        {
+            additionalMethod = PrivateApiAdditionalAuthenticationMethods[template.Key];
+            if (
+                additionalMethod != PrivateApiAuthenticationMethod
+                && MatchesPath(template.Value, pathSegments)
+            )
+            {
+                yield return additionalMethod;
+                yield break;
+            }
+        }
+    }
+
+    private static bool MatchesPath(string[] templateSegments, string[] pathSegments)
+    {
+        if (templateSegments.Length != pathSegments.Length)
+        {
+            return false;
+        }
+        for (int i = 0; i < templateSegments.Length; i++)
+        {
+            if (IsPathParameter(templateSegments[i]))
+            {
+                if (pathSegments[i].Length == 0)
+                {
+                    return false;
+                }
+            }
+            else if (!string.Equals(templateSegments[i], pathSegments[i], StringComparison.Ordinal))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private static bool IsPathParameter(string segment)
+    {
+        return segment.Length > 2
+            && segment[0] == '{'
+            && segment[^1] == '}'
+            && segment.IndexOf(value: '{', startIndex: 1) < 0
+            && segment.IndexOf('}') == segment.Length - 1;
     }
 
     private static AuthenticationMethod ParseAdditionalAuthenticationMethod(
