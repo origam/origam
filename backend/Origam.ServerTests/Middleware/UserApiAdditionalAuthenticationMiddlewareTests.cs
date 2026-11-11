@@ -144,7 +144,9 @@ public class UserApiAdditionalAuthenticationMiddlewareTests
         };
         if (additionalMethod != null)
         {
-            settings[$"OpenIddictConfig:PrivateApiAdditionalAuthenticationMethods:{endpointPath}"] =
+            settings["OpenIddictConfig:PrivateApiAdditionalAuthenticationMethods:0:Path"] =
+                endpointPath;
+            settings["OpenIddictConfig:PrivateApiAdditionalAuthenticationMethods:0:Method"] =
                 additionalMethod;
         }
         var configuration = new OpenIddictConfig(
