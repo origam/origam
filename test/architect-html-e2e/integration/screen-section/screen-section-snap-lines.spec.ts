@@ -22,50 +22,32 @@ import { activatePackage } from '@support/activatePackage';
 import { resetBackend } from '@support/resetBackend';
 import { type ApiControl, findControl, propertyValue, SectionEditor } from '@support/sectionEditor';
 
-type Orientation = 'vertical' | 'horizontal';
+interface SnapLine {
+  kind: string;
+  orientation: string;
+  position: number;
+  start: number;
+  length: number;
+}
 
 function value(control: ApiControl, name: string): number {
   return propertyValue(control, name) as number;
 }
 
-async function snapLinePositions(surface: Locator, orientation: Orientation): Promise<number[]> {
-  return surface
-    .locator(`[data-test-id="snap-line"][data-orientation="${orientation}"]`)
-    .evaluateAll(
-      (lines, isVertical) =>
-        lines.map(line => {
-          const rect = line.getBoundingClientRect();
-          return Math.round(isVertical ? rect.left : rect.top);
-        }),
-      orientation === 'vertical',
-    );
-}
-
-async function marginLineSpans(surface: Locator): Promise<{ start: number; length: number }[]> {
-  return surface.locator('[data-test-id="snap-line"][data-kind="margin"]').evaluateAll(lines =>
+async function snapLines(surface: Locator, kind: string): Promise<SnapLine[]> {
+  return surface.locator(`[data-test-id="snap-line"][data-kind="${kind}"]`).evaluateAll(lines =>
     lines.map(line => {
       const rect = line.getBoundingClientRect();
       const isVertical = line.getAttribute('data-orientation') === 'vertical';
       return {
+        kind: line.getAttribute('data-kind')!,
+        orientation: line.getAttribute('data-orientation')!,
+        position: Math.round(isVertical ? rect.left : rect.top),
         start: Math.round(isVertical ? rect.top : rect.left),
         length: Math.round(isVertical ? rect.height : rect.width),
       };
     }),
   );
-}
-
-async function baselinePositions(surface: Locator): Promise<number[]> {
-  return surface
-    .locator('[data-test-id="snap-line"][data-kind="baseline"]')
-    .evaluateAll(lines => lines.map(line => Math.round(line.getBoundingClientRect().top)));
-}
-
-async function textTop(element: Locator): Promise<number> {
-  return element.evaluate(node => {
-    const range = document.createRange();
-    range.selectNodeContents(node);
-    return Math.round(range.getBoundingClientRect().top);
-  });
 }
 
 async function grab(page: Page, target: Locator): Promise<{ x: number; y: number }> {
@@ -113,15 +95,28 @@ test.describe('Screen section snap lines (real backend)', () => {
     return [first, second];
   }
 
+  function rightHandle(control: ApiControl): Locator {
+    return editor.component(control).locator('[class*="__resizeHandle__"][class*="__right__"]');
+  }
+
   test('a widget dragged near the left edge of a neighbour snaps to it', async ({ page }) => {
     const [anchor, moved] = await dropTwoTextBoxes(40);
+    await editor.setProperty('Width', String(value(anchor, 'Width') + 30));
     const anchorBox = (await editor.component(anchor).boundingBox())!;
 
     const start = await grab(page, editor.component(moved));
-    await page.mouse.move(start.x - 35, start.y, { steps: 5 });
+    await page.mouse.move(start.x - 37, start.y, { steps: 5 });
     await expect
-      .poll(() => snapLinePositions(editor.surface, 'vertical'))
-      .toContain(Math.round(anchorBox.x));
+      .poll(() => snapLines(editor.surface, 'alignment'))
+      .toEqual([
+        {
+          kind: 'alignment',
+          orientation: 'vertical',
+          position: Math.round(anchorBox.x),
+          start: Math.round(anchorBox.y),
+          length: value(moved, 'Top') + value(moved, 'Height') - value(anchor, 'Top'),
+        },
+      ]);
 
     const root = await release(page);
     await expect(editor.surface.getByTestId('snap-line')).toHaveCount(0);
@@ -130,7 +125,7 @@ test.describe('Screen section snap lines (real backend)', () => {
     expect(value(result, 'Top')).toBe(value(moved, 'Top'));
   });
 
-  test('a widget dragged near the top edge of a neighbour snaps to it', async ({ page }) => {
+  test('a widget dragged level with a neighbour snaps to its center', async ({ page }) => {
     const [anchor, moved] = await dropTwoTextBoxes(150);
     const anchorBox = (await editor.component(anchor).boundingBox())!;
     const gap = value(moved, 'Top') - value(anchor, 'Top');
@@ -138,24 +133,56 @@ test.describe('Screen section snap lines (real backend)', () => {
     const start = await grab(page, editor.component(moved));
     await page.mouse.move(start.x, start.y - gap + 4, { steps: 5 });
     await expect
-      .poll(() => snapLinePositions(editor.surface, 'horizontal'))
-      .toContain(Math.round(anchorBox.y));
+      .poll(() => snapLines(editor.surface, 'alignment'))
+      .toEqual([
+        {
+          kind: 'alignment',
+          orientation: 'horizontal',
+          position: Math.round(anchorBox.y + value(anchor, 'Height') / 2),
+          start: Math.round(anchorBox.x),
+          length: 150 + value(moved, 'Width'),
+        },
+      ]);
 
     const result = findControl(await release(page), moved.id)!;
     expect(value(result, 'Top')).toBe(value(anchor, 'Top'));
     expect(value(result, 'Left')).toBe(value(anchor, 'Left') + 150);
   });
 
+  test('a widget dragged just below a neighbour snaps to touch it', async ({ page }) => {
+    const anchor = await editor.dropWidget('AsTextBox', 'Text1');
+    const moved = await editor.dropWidget('AsTextBox', 'Text2');
+    const anchorBox = (await editor.component(anchor).boundingBox())!;
+    const anchorBottom = value(anchor, 'Top') + value(anchor, 'Height');
+    const gap = value(moved, 'Top') - anchorBottom;
+
+    const start = await grab(page, editor.component(moved));
+    await page.mouse.move(start.x, start.y - gap + 3, { steps: 5 });
+    await expect
+      .poll(() => snapLines(editor.surface, 'alignment'))
+      .toContainEqual({
+        kind: 'alignment',
+        orientation: 'horizontal',
+        position: Math.round(anchorBox.y + value(anchor, 'Height')),
+        start: Math.round(anchorBox.x),
+        length: value(anchor, 'Width'),
+      });
+
+    const result = findControl(await release(page), moved.id)!;
+    expect(value(result, 'Top')).toBe(anchorBottom);
+    expect(value(result, 'Left')).toBe(value(anchor, 'Left'));
+  });
+
   test('a widget dragged beyond the snap distance stays where it was dropped', async ({ page }) => {
     const [anchor, moved] = await dropTwoTextBoxes(40);
 
     const start = await grab(page, editor.component(moved));
-    await page.mouse.move(start.x - 28, start.y, { steps: 5 });
-    await waitForCenter(editor.component(moved), start.x - 28, start.y);
+    await page.mouse.move(start.x - 35, start.y, { steps: 5 });
+    await waitForCenter(editor.component(moved), start.x - 35, start.y);
     await expect(editor.surface.getByTestId('snap-line')).toHaveCount(0);
 
     const result = findControl(await release(page), moved.id)!;
-    expect(value(result, 'Left')).toBe(value(anchor, 'Left') + 12);
+    expect(value(result, 'Left')).toBe(value(anchor, 'Left') + 5);
   });
 
   test('holding Alt drags a widget without snapping', async ({ page }) => {
@@ -163,34 +190,153 @@ test.describe('Screen section snap lines (real backend)', () => {
 
     const start = await grab(page, editor.component(moved));
     await page.keyboard.down('Alt');
-    await page.mouse.move(start.x - 35, start.y, { steps: 5 });
-    await waitForCenter(editor.component(moved), start.x - 35, start.y);
+    await page.mouse.move(start.x - 37, start.y, { steps: 5 });
+    await waitForCenter(editor.component(moved), start.x - 37, start.y);
     await expect(editor.surface.getByTestId('snap-line')).toHaveCount(0);
 
     const root = await release(page);
     await page.keyboard.up('Alt');
-    expect(value(findControl(root, moved.id)!, 'Left')).toBe(value(anchor, 'Left') + 5);
+    expect(value(findControl(root, moved.id)!, 'Left')).toBe(value(anchor, 'Left') + 3);
   });
 
-  test('resizing a widget snaps its right edge to a neighbour', async ({ page }) => {
+  test('the third widget in a column snaps to the spacing of the first two', async ({ page }) => {
+    const first = await editor.dropWidget('AsTextBox', 'Text1');
+    const second = await editor.dropWidget('AsTextBox', 'Text2');
+    const moved = await editor.dropWidget('AsTextBox', 'Integer1');
+    const height = value(first, 'Height');
+    const spacing = 10;
+    const secondTop = value(first, 'Top') + height + spacing;
+    await editor.select(second);
+    await editor.setProperty('Top', String(secondTop));
+    const firstBox = (await editor.component(first).boundingBox())!;
+    const targetTop = secondTop + height + spacing;
+
+    const start = await grab(page, editor.component(moved));
+    await page.mouse.move(start.x, start.y - value(moved, 'Top') + targetTop + 2, { steps: 5 });
+    const guidePosition = Math.round(firstBox.x + value(first, 'Width'));
+    await expect
+      .poll(() => snapLines(editor.surface, 'spacing'))
+      .toEqual([
+        {
+          kind: 'spacing',
+          orientation: 'vertical',
+          position: guidePosition,
+          start: Math.round(firstBox.y + height),
+          length: spacing,
+        },
+        {
+          kind: 'spacing',
+          orientation: 'vertical',
+          position: guidePosition,
+          start: Math.round(firstBox.y + 2 * height + spacing),
+          length: spacing,
+        },
+      ]);
+
+    const result = findControl(await release(page), moved.id)!;
+    expect(value(result, 'Top')).toBe(targetTop);
+  });
+
+  test('a widget dragged between two neighbours snaps to the middle', async ({ page }) => {
+    const first = await editor.dropWidget('AsTextBox', 'Text1');
+    const second = await editor.dropWidget('AsTextBox', 'Text2');
+    const moved = await editor.dropWidget('AsTextBox', 'Integer1');
+    const width = value(first, 'Width');
+    const spacing = 30;
+    await editor.select(second);
+    await editor.setProperty('Top', String(value(first, 'Top')));
+    await editor.setProperty('Left', String(value(first, 'Left') + 2 * (width + spacing)));
+    const firstBox = (await editor.component(first).boundingBox())!;
+    const targetLeft = value(first, 'Left') + width + spacing;
+
+    const start = await grab(page, editor.component(moved));
+    await page.mouse.move(
+      start.x - value(moved, 'Left') + targetLeft + 2,
+      start.y - value(moved, 'Top') + value(first, 'Top') + 1,
+      { steps: 5 },
+    );
+    const guidePosition = Math.round(firstBox.y + value(first, 'Height'));
+    await expect
+      .poll(() => snapLines(editor.surface, 'spacing'))
+      .toEqual([
+        {
+          kind: 'spacing',
+          orientation: 'horizontal',
+          position: guidePosition,
+          start: Math.round(firstBox.x + width),
+          length: spacing,
+        },
+        {
+          kind: 'spacing',
+          orientation: 'horizontal',
+          position: guidePosition,
+          start: Math.round(firstBox.x + 2 * width + spacing),
+          length: spacing,
+        },
+      ]);
+
+    const result = findControl(await release(page), moved.id)!;
+    expect(value(result, 'Left')).toBe(targetLeft);
+    expect(value(result, 'Top')).toBe(value(first, 'Top'));
+  });
+
+  test('resizing a widget snaps its width to the width of a neighbour', async ({ page }) => {
     const anchor = await editor.dropWidget('AsTextBox', 'Text1');
     const resized = await editor.dropWidget('AsTextBox', 'Text2');
-    expect(value(resized, 'Left')).toBe(value(anchor, 'Left'));
+    const width = value(anchor, 'Width');
     await editor.select(resized);
-    await editor.setProperty('Width', String(value(anchor, 'Width') - 40));
+    await editor.setProperty('Left', String(value(anchor, 'Left') + 20));
+    await editor.setProperty('Width', String(width - 40));
     const anchorBox = (await editor.component(anchor).boundingBox())!;
+    const resizedBox = (await editor.component(resized).boundingBox())!;
 
-    const rightHandle = editor
-      .component(resized)
-      .locator('[class*="__resizeHandle__"][class*="__right__"]');
-    const start = await grab(page, rightHandle);
-    await page.mouse.move(start.x + 35, start.y, { steps: 5 });
+    const start = await grab(page, rightHandle(resized));
+    await page.mouse.move(start.x + 37, start.y, { steps: 5 });
     await expect
-      .poll(() => snapLinePositions(editor.surface, 'vertical'))
-      .toContain(Math.round(anchorBox.x + value(anchor, 'Width')));
+      .poll(() => snapLines(editor.surface, 'size'))
+      .toEqual([
+        {
+          kind: 'size',
+          orientation: 'horizontal',
+          position: Math.round(resizedBox.y + value(resized, 'Height') / 2),
+          start: Math.round(resizedBox.x),
+          length: width,
+        },
+        {
+          kind: 'size',
+          orientation: 'horizontal',
+          position: Math.round(anchorBox.y + value(anchor, 'Height') / 2),
+          start: Math.round(anchorBox.x),
+          length: width,
+        },
+      ]);
 
     const result = findControl(await release(page), resized.id)!;
-    expect(value(result, 'Width')).toBe(value(anchor, 'Width'));
+    expect(value(result, 'Width')).toBe(width);
+    expect(value(result, 'Left')).toBe(value(anchor, 'Left') + 20);
+  });
+
+  test('resizing a widget snaps its right edge to the edge of a neighbour', async ({ page }) => {
+    const [anchor, resized] = await dropTwoTextBoxes(30);
+    const anchorBox = (await editor.component(anchor).boundingBox())!;
+
+    const start = await grab(page, rightHandle(resized));
+    await page.mouse.move(start.x - 27, start.y, { steps: 5 });
+    await expect
+      .poll(() => snapLines(editor.surface, 'alignment'))
+      .toEqual([
+        {
+          kind: 'alignment',
+          orientation: 'vertical',
+          position: Math.round(anchorBox.x + value(anchor, 'Width')),
+          start: Math.round(anchorBox.y),
+          length: value(resized, 'Top') + value(resized, 'Height') - value(anchor, 'Top'),
+        },
+      ]);
+    await expect(editor.surface.locator('[data-kind="size"]')).toHaveCount(0);
+
+    const result = findControl(await release(page), resized.id)!;
+    expect(value(result, 'Width')).toBe(value(anchor, 'Width') - 30);
   });
 
   test('a widget inside a group box does not snap to a widget outside it', async ({ page }) => {
@@ -213,70 +359,5 @@ test.describe('Screen section snap lines (real backend)', () => {
 
     const result = findControl(await release(page), inner.id)!;
     expect(value(result, 'Top')).toBe(value(inner, 'Top') + dy);
-  });
-
-  test('a widget dragged near the spacing below a neighbour snaps to it', async ({ page }) => {
-    const anchor = await editor.dropWidget('AsTextBox', 'Text1');
-    const moved = await editor.dropWidget('AsTextBox', 'Text2');
-    const anchorBox = (await editor.component(anchor).boundingBox())!;
-    const anchorBottom = value(anchor, 'Top') + value(anchor, 'Height');
-    const gap = value(moved, 'Top') - anchorBottom;
-
-    const start = await grab(page, editor.component(moved));
-    await page.mouse.move(start.x, start.y - gap + 10, { steps: 5 });
-    await expect
-      .poll(() => marginLineSpans(editor.surface))
-      .toContainEqual({ start: Math.round(anchorBox.y + value(anchor, 'Height')), length: 6 });
-
-    const result = findControl(await release(page), moved.id)!;
-    expect(value(result, 'Top')).toBe(anchorBottom + 6);
-  });
-
-  test('a widget dragged near the spacing beside a neighbour snaps to it', async ({ page }) => {
-    const [anchor, moved] = await dropTwoTextBoxes(140);
-    const anchorBox = (await editor.component(anchor).boundingBox())!;
-    const anchorWidth = value(anchor, 'Width');
-
-    const start = await grab(page, editor.component(moved));
-    await page.mouse.move(
-      start.x + anchorWidth + 9 - 140,
-      start.y - value(moved, 'Top') + value(anchor, 'Top'),
-      { steps: 5 },
-    );
-    await expect
-      .poll(() => marginLineSpans(editor.surface))
-      .toContainEqual({ start: Math.round(anchorBox.x + anchorWidth), length: 6 });
-
-    const result = findControl(await release(page), moved.id)!;
-    expect(value(result, 'Left')).toBe(value(anchor, 'Left') + anchorWidth + 6);
-    expect(value(result, 'Top')).toBe(value(anchor, 'Top'));
-  });
-
-  test('a label dragged near the baseline of a field caption snaps to it', async ({ page }) => {
-    const field = await editor.dropWidget('AsTextBox', 'Text1', undefined, { x: 150, y: 120 });
-    await editor.select(field);
-    await editor.chooseProperty('CaptionPosition', 'Top');
-    const label = await editor.dropWidget('Label');
-    await editor.select(label);
-    await editor.setProperty('Text', 'Hello');
-    await editor.setProperty('Left', String(value(field, 'Left') + 120));
-    const caption = editor.surface.getByText('Text 1', { exact: true });
-    const labelText = editor.component(label).getByText('Hello', { exact: true });
-    const captionBox = (await caption.boundingBox())!;
-    const misalignment = 4;
-    const dy = (await textTop(caption)) - (await textTop(labelText)) + misalignment;
-
-    const start = await grab(page, editor.component(label));
-    await page.mouse.move(start.x, start.y + dy, { steps: 5 });
-    await expect
-      .poll(async () =>
-        (await baselinePositions(editor.surface)).some(
-          position => position >= captionBox.y && position < captionBox.y + captionBox.height,
-        ),
-      )
-      .toBe(true);
-
-    await release(page);
-    await expect.poll(() => textTop(labelText)).toBe(await textTop(caption));
   });
 });
