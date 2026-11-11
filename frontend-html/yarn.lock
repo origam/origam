@@ -6127,14 +6127,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-inlinesvg@npm:4.5.x":
-  version: 4.5.0
-  resolution: "react-inlinesvg@npm:4.5.0"
+"react-inlinesvg@npm:4.6.x":
+  version: 4.6.0
+  resolution: "react-inlinesvg@npm:4.6.0"
   dependencies:
     react-from-dom: "npm:^0.7.5"
   peerDependencies:
     react: 16.8 - 19
-  checksum: 10c0/af330a33bbb33fe8bea31c16d9c6696214c69b3005e1b3541cf077c6b5f5cceb4ac4d35fa16de6a41fd7f1ee9257d4407f4234ae9e6ebf259ccf4ec2419cf8cb
+  checksum: 10c0/742aec92b99cbf48d2b2ff7b5ddfb4afadca67c7a42a8d021c645669658343b8687cb6417888829b76115422e2288df635e1044bf9e9471c9fb4f2e248db9697
   languageName: node
   linkType: hard
 
@@ -6258,7 +6258,7 @@ __metadata:
     react-dom: "npm:19.2.8"
     react-draft-wysiwyg: "npm:^1.15.0"
     react-highlight-words: "npm:^1.0.0"
-    react-inlinesvg: "npm:4.5.x"
+    react-inlinesvg: "npm:4.6.x"
     react-measure: "npm:^2.5.2"
     react-virtualized: "npm:^9.22.6"
     sass: "npm:^1.107.0"
