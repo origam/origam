@@ -78,7 +78,8 @@ public class TreeNode
 public class TreeNodeFactory(
     SchemaService schemaService,
     GitNodeStatusService gitNodeStatusService,
-    IDeploymentService deploymentService
+    IDeploymentService deploymentService,
+    NodeIconService nodeIconService
 )
 {
     public TreeNode Create(IBrowserNode2 node)
@@ -91,7 +92,7 @@ public class TreeNodeFactory(
             IsNonPersistentItem = node is NonpersistentSchemaItemNode,
             HasChildNodes = node.HasChildNodes,
             DefaultEditor = GetEditorType(node),
-            IconUrl = GetIcon(node),
+            IconUrl = nodeIconService.GetIconUrl(node),
             ItemType = node.GetType().FullName,
             ItemTypeName = node.GetType().SchemaItemDescription()?.Name,
             IsCurrentVersion = (node as Schema.DeploymentModel.DeploymentVersion)?.IsCurrentVersion,
@@ -174,16 +175,6 @@ public class TreeNodeFactory(
             return schemaService.IsItemFromExtension(node);
         }
         return true;
-    }
-
-    private string GetIcon(IBrowserNode2 node)
-    {
-        if (node is SchemaItemGroup or AbstractSchemaItemProvider)
-        {
-            return "/Icons/directory.svg";
-        }
-
-        return null;
     }
 
     private EditorSubType? GetEditorType(IBrowserNode2 node)

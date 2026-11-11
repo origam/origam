@@ -24,7 +24,6 @@ import {
   IMoveTargetsResult,
   ISearchResult,
 } from '@api/IArchitectApi';
-import { Icon } from '@components/icon/Icon';
 import S from '@components/modelTree/ModelTree.module.scss';
 import { MoveToDialog } from '@components/modelTree/MoveToDialog';
 import { TreeNode, toNodeRef } from '@components/modelTree/TreeNode';
@@ -844,9 +843,12 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
             className={labelClassNames}
             data-test-id={`tree-node-${node.nodeText}`}
           >
-            <div className={S.icon}>
-              <Icon src={node.iconUrl ?? '/Icons/generic.svg'} />
-            </div>
+            <img
+              className={S.icon}
+              src={node.iconUrl ?? '/Icons/generic.svg'}
+              alt=""
+              draggable={false}
+            />
             {node.nodeText}
             <DeploymentBadges node={node} />
           </div>

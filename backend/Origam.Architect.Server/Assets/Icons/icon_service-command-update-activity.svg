@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" shape-rendering="crispEdges">
+<g stroke="none">
+<path fill="#1e2037" d="M5 0h1v3h2v2h3v1h-3v2h-2v3h-1v-3h-2v-2h-3v-1h3v-2h2zM2 2h1v1h-1zM8 2h1v1h-1zM4 4v3h3v-3zM2 8h1v1h-1zM8 8h1v1h-1zM12 8h3v1h-1v1h-1v1h-1zM14 10h1v1h-1zM9 12h1v1h-1zM15 12h1v1h-1zM12 15h1v1h-1z"/>
+<path fill="#535353" fill-opacity=".9412" d="M3 2h1v1h-1zM7 2h1v1h-1zM2 3h1v1h-1zM8 3h1v1h-1zM4 4h1v1h-1zM6 4h1v1h-1zM4 6h1v1h-1zM6 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM3 8h1v1h-1zM7 8h1v1h-1zM10 14h1v1h-1zM14 14h1v1h-1z"/>
+<path fill="#656565" fill-opacity=".8784" d="M15 11h1v1h-1zM9 13h1v1h-1zM15 13h1v1h-1zM11 15h1v1h-1zM13 15h1v1h-1z"/>
+<path fill="#707070" fill-opacity=".8157" d="M1 1h1v1h-1zM9 1h1v1h-1zM1 9h1v1h-1zM9 9h1v1h-1z"/>
+<path fill="#717171" fill-opacity=".7882" d="M4 2h1v1h-1zM6 2h1v1h-1zM2 4h1v1h-1zM8 4h1v1h-1zM2 6h1v1h-1zM8 6h1v1h-1zM4 8h1v1h-1zM6 8h1v1h-1z"/>
+<path fill="#787878" fill-opacity=".6902" d="M2 1h1v1h-1zM8 1h1v1h-1zM1 2h1v1h-1zM9 2h1v1h-1zM1 8h1v1h-1zM9 8h1v1h-1zM2 9h1v1h-1zM8 9h1v1h-1z"/>
+<path fill="#7e7e7e" fill-opacity=".651" d="M14 9h1v1h-1z"/>
+<path fill="#818181" fill-opacity=".6275" d="M14 11h1v1h-1z"/>
+<path fill="#8c8c8e" fill-opacity=".4941" d="M13 10h1v1h-1z"/>
+<path fill="#929292" fill-opacity=".4392" d="M1 4h1v1h-1zM9 4h1v1h-1zM1 6h1v1h-1zM9 6h1v1h-1zM4 9h1v1h-1zM6 9h1v1h-1zM15 10h1v1h-1zM9 14h1v1h-1zM15 14h1v1h-1zM10 15h1v1h-1zM14 15h1v1h-1z"/>
+<path fill="#97979a" fill-opacity=".3765" d="M4 1h1v1h-1zM6 1h1v1h-1zM5 4h1v1h-1zM4 5h1v1h-1zM6 5h1v1h-1zM5 6h1v1h-1z"/>
+<path fill="#9f9f9f" fill-opacity=".3137" d="M15 8h1v1h-1zM12 11h1v1h-1z"/>
+<path fill="#a7a7a7" fill-opacity=".251" d="M4 0h1v1h-1zM6 0h1v1h-1zM0 4h1v1h-1zM10 4h1v1h-1zM0 6h1v1h-1zM10 6h1v1h-1zM4 10h1v1h-1zM6 10h1v1h-1zM10 13h1v1h-1zM14 13h1v1h-1zM11 14h1v1h-1zM13 14h1v1h-1z"/>
+<path fill="#b7b7b7" fill-opacity=".1255" d="M14 12h1v1h-1z"/>
+<path fill="#bfbfbf" fill-opacity=".0627" d="M3 1h1v1h-1zM7 1h1v1h-1zM1 3h1v1h-1zM9 3h1v1h-1zM1 7h1v1h-1zM9 7h1v1h-1zM3 9h1v1h-1zM7 9h1v1h-1z"/>
+</g>
+</svg>
