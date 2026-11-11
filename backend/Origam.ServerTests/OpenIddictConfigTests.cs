@@ -131,6 +131,152 @@ public class OpenIddictConfigTests
         );
     }
 
+    [TestCase("/api/legacy/address-1", true)]
+    [TestCase("/api/legacy/address-2", true)]
+    [TestCase("/api/legacy/{addressId}", true)]
+    [TestCase("/api/legacy", false)]
+    [TestCase("/api/legacy/", false)]
+    [TestCase("/api/legacy/address-1/", false)]
+    [TestCase("/api/legacy/address-1/delete", false)]
+    [TestCase("/api/legacy2/address-1", false)]
+    [TestCase("/api/Legacy/address-1", false)]
+    [TestCase("/api/legacy//address-1", false)]
+    public void ParameterizedExceptionMatchesOnlyItsCompletePath(string path, bool matches)
+    {
+        var config = CreatePrivateApiConfiguration("Token", "Cookie", "/api/legacy/{addressId}");
+
+        Assert.That(
+            config.GetPrivateApiAuthenticationMethods(path).Contains(AuthenticationMethod.Cookie),
+            Is.EqualTo(matches)
+        );
+    }
+
+    [TestCase("/api/private/project-room/handover/handover-1/view", true)]
+    [TestCase("/api/private/project-room/handover/handover-2/view", true)]
+    [TestCase("/api/private/project-room/handover/handover-1/edit", false)]
+    [TestCase("/api/private/project-room/handover/handover-1/View", false)]
+    [TestCase("/api/private/project-room/handover/handover-1", false)]
+    [TestCase("/api/private/project-room/handover//view", false)]
+    [TestCase("/api/private/project-room/handover/handover-1/view/child", false)]
+    [TestCase("/api/private/project-room/handover/handover-1/view/", false)]
+    public void ParameterizedExceptionMatchesParameterBeforeFinalLiteralSegment(
+        string path,
+        bool matches
+    )
+    {
+        var config = CreatePrivateApiConfiguration(
+            "Token",
+            "Cookie",
+            "/api/private/project-room/handover/{handoverId}/view"
+        );
+
+        Assert.That(
+            config.GetPrivateApiAuthenticationMethods(path).Contains(AuthenticationMethod.Cookie),
+            Is.EqualTo(matches)
+        );
+    }
+
+    [TestCase("/api/order/order-1/status/status-1", true)]
+    [TestCase("/api/order/order-1/other/status-1", false)]
+    [TestCase("/api/order//status/status-1", false)]
+    [TestCase("/api/order/order-1/status", false)]
+    [TestCase("/api/order/order-1/status/", false)]
+    [TestCase("/api/order/order-1/status/status-1/child", false)]
+    public void ParameterizedExceptionSupportsMultipleParameters(string path, bool matches)
+    {
+        var config = CreatePrivateApiConfiguration(
+            "Token",
+            "Cookie",
+            "/api/order/{orderId}/status/{statusId}"
+        );
+
+        Assert.That(
+            config.GetPrivateApiAuthenticationMethods(path).Contains(AuthenticationMethod.Cookie),
+            Is.EqualTo(matches)
+        );
+    }
+
+    [TestCase("/api/report.v1/items+/item-1", true)]
+    [TestCase("/api/reportXv1/items+/item-1", false)]
+    [TestCase("/api/report.v1/items/item-1", false)]
+    public void ParameterizedExceptionPreservesLiteralCharacters(string path, bool matches)
+    {
+        var config = CreatePrivateApiConfiguration("Token", "Cookie", "/api/report.v1/items+/{id}");
+
+        Assert.That(
+            config.GetPrivateApiAuthenticationMethods(path).Contains(AuthenticationMethod.Cookie),
+            Is.EqualTo(matches)
+        );
+    }
+
+    [TestCase("/api/legacy/{}")]
+    [TestCase("/api/legacy/{id")]
+    [TestCase("/api/legacy/{id}{other}")]
+    [TestCase("/api/legacy/prefix-{id}")]
+    public void OnlyWholeWellFormedParameterSegmentsAreExpanded(string endpoint)
+    {
+        var config = CreatePrivateApiConfiguration("Token", "Cookie", endpoint);
+
+        Assert.That(
+            config.GetPrivateApiAuthenticationMethods("/api/legacy/value"),
+            Is.EqualTo(new[] { AuthenticationMethod.Token })
+        );
+    }
+
+    [Test]
+    public void ExactExceptionTakesPrecedenceOverParameterizedException()
+    {
+        var configuration = new ConfigurationBuilder()
+            .AddInMemoryCollection(
+                new Dictionary<string, string>
+                {
+                    ["OpenIddictConfig:ClientApplicationTemplates:Configured"] = "true",
+                    ["OpenIddictConfig:PrivateApiAuthentication"] = "Token",
+                    [
+                        "OpenIddictConfig:PrivateApiAdditionalAuthenticationMethods:/api/order/{orderId}"
+                    ] = "Cookie",
+                    [
+                        "OpenIddictConfig:PrivateApiAdditionalAuthenticationMethods:/api/order/submit"
+                    ] = "Token",
+                }
+            )
+            .Build();
+        var config = new OpenIddictConfig(configuration);
+
+        Assert.That(
+            config.GetPrivateApiAuthenticationMethods("/api/order/submit"),
+            Is.EqualTo(new[] { AuthenticationMethod.Token })
+        );
+        Assert.That(
+            config.GetPrivateApiAuthenticationMethods("/api/order/order-1"),
+            Is.EqualTo(new[] { AuthenticationMethod.Token, AuthenticationMethod.Cookie })
+        );
+    }
+
+    [TestCase("Token", "Cookie", AuthenticationMethod.Token, AuthenticationMethod.Cookie)]
+    [TestCase("Cookie", "Token", AuthenticationMethod.Cookie, AuthenticationMethod.Token)]
+    [TestCase("Token", "Token", AuthenticationMethod.Token, AuthenticationMethod.Token)]
+    public void ParameterizedExceptionPreservesDefaultAndAvoidsDuplicates(
+        string defaultMethod,
+        string additionalMethod,
+        AuthenticationMethod expectedDefault,
+        AuthenticationMethod expectedAdditional
+    )
+    {
+        var config = CreatePrivateApiConfiguration(
+            defaultMethod,
+            additionalMethod,
+            "/api/legacy/{id}"
+        );
+        var methods = config.GetPrivateApiAuthenticationMethods("/api/legacy/value").ToArray();
+
+        Assert.That(methods[0], Is.EqualTo(expectedDefault));
+        Assert.That(
+            methods,
+            Is.EquivalentTo(new[] { expectedDefault, expectedAdditional }.Distinct())
+        );
+    }
+
     [Test]
     public void ArrayOfAdditionalMethodsIsRejected()
     {
