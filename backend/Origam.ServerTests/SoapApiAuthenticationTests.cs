@@ -37,9 +37,9 @@ namespace Origam.ServerTests;
 
 public class SoapApiAuthenticationTests
 {
-    [TestCase(null, "true", "valid", null, 401, null)]
+    [TestCase(null, "true", "valid", null, 200, "Token")]
     [TestCase(null, "true", null, "valid", 200, "Cookie")]
-    [TestCase(null, "true", "valid", "valid", 200, "Cookie")]
+    [TestCase(null, "true", "valid", "valid", 200, "Token")]
     [TestCase(null, "true", null, null, 401, null)]
     [TestCase("Cookie", "true", "valid", null, 401, null)]
     [TestCase("Cookie", "true", null, "valid", 200, "Cookie")]
@@ -55,6 +55,17 @@ public class SoapApiAuthenticationTests
     [TestCase("Token", "true", "valid", "invalid", 200, "Token")]
     [TestCase("Token", "true", null, null, 401, null)]
     [TestCase("token", "true", null, "valid", 401, null)]
+    [TestCase("CookieAndToken", "true", "valid", null, 200, "Token")]
+    [TestCase("CookieAndToken", "true", null, "valid", 200, "Cookie")]
+    [TestCase("CookieAndToken", "true", "valid", "valid", 200, "Token")]
+    [TestCase("CookieAndToken", "true", "invalid", "valid", 200, "Cookie")]
+    [TestCase("CookieAndToken", "true", "valid", "invalid", 200, "Token")]
+    [TestCase("CookieAndToken", "true", "invalid", "invalid", 401, null)]
+    [TestCase("CookieAndToken", "true", null, null, 401, null)]
+    [TestCase("cookieandtoken", "true", "valid", null, 200, "Token")]
+    [TestCase("CookieAndToken", "false", null, null, 200, null)]
+    [TestCase("CookieAndToken", "false", "valid", null, 200, "Token")]
+    [TestCase("CookieAndToken", "false", null, "valid", 200, "Cookie")]
     [TestCase(null, "false", null, null, 200, null)]
     [TestCase("Cookie", "false", "valid", null, 200, null)]
     [TestCase("Token", "false", null, "valid", 200, null)]
@@ -128,14 +139,14 @@ public class SoapApiAuthenticationTests
                     requestContext,
                     OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme
                 ),
-            configuration.SoapInterfaceAuthenticationMethod == AuthenticationMethod.Token
-                ? Times.Once()
-                : Times.Never()
+            configuration.SoapInterfaceAuthenticationMethod == SoapApiAuthenticationMethod.Cookie
+                ? Times.Never()
+                : Times.Once()
         );
     }
 
     [TestCase("Basic")]
-    [TestCase("CookieAndToken")]
+    [TestCase("Both")]
     [TestCase("")]
     public void UnknownAuthenticationMethodIsRejected(string authenticationMethod)
     {

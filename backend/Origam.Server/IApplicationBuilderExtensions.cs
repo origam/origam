@@ -242,7 +242,7 @@ public static class IApplicationBuilderExtensions
     public static void UseSoapApi(
         this IApplicationBuilder app,
         bool authenticationRequired,
-        AuthenticationMethod authenticationMethod,
+        SoapApiAuthenticationMethod authenticationMethod,
         bool expectAndReturnOldDotNetAssemblyReferences
     )
     {
@@ -253,14 +253,19 @@ public static class IApplicationBuilderExtensions
                 apiBranch.Use(
                     async (context, next) =>
                     {
-                        if (authenticationMethod == AuthenticationMethod.Token)
+                        if (authenticationMethod != SoapApiAuthenticationMethod.Cookie)
                         {
                             AuthenticateResult result = await context.AuthenticateAsync(
                                 OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme
                             );
-                            context.User = result.Succeeded
-                                ? result.Principal
-                                : new ClaimsPrincipal(new ClaimsIdentity());
+                            if (result.Succeeded)
+                            {
+                                context.User = result.Principal;
+                            }
+                            else if (authenticationMethod == SoapApiAuthenticationMethod.Token)
+                            {
+                                context.User = new ClaimsPrincipal(new ClaimsIdentity());
+                            }
                         }
                         // Authentication middleware doesn't short-circuit the request itself
                         // we must do that here.

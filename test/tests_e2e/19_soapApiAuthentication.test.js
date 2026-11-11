@@ -17,7 +17,7 @@ test.beforeEach(async ({ page }) => {
 
 function testsForAuthenticationMethod(authenticationMethod, name, tests) {
   const serverAuthenticationMethod =
-    process.env.SoapAPI__AuthenticationMethod || "Cookie";
+    process.env.SoapAPI__AuthenticationMethod || "CookieAndToken";
   const describeWhenServerMatches =
     process.env.SoapAPI__Enabled === "true" &&
     serverAuthenticationMethod === authenticationMethod
@@ -110,5 +110,53 @@ testsForAuthenticationMethod("Cookie", "SOAP API in Cookie mode", () => {
     const response = await loadDataOverSoap(page);
     expect(response.status).toBe(200);
     expect(response.body).toContain("LoadDataResponse");
+  });
+});
+
+testsForAuthenticationMethod("CookieAndToken", "SOAP API in CookieAndToken mode", () => {
+  test("Should reject an anonymous user", async ({ page }) => {
+    await expectStatusOnSoapServices(page, 401);
+  });
+
+  test("Should serve a user with a valid access token", async ({ page }) => {
+    const accessToken = await getAccessToken(page);
+    expect(accessToken).toBeTruthy();
+    await expectStatusOnSoapServices(page, 200, {
+      Authorization: `Bearer ${accessToken}`,
+    });
+  });
+
+  test("Should reject an invalid access token", async ({ page }) => {
+    await expectStatusOnSoapServices(page, 401, {
+      Authorization: "Bearer invalid-access-token",
+    });
+  });
+
+  test("Should serve a logged in user without an access token", async ({ page }) => {
+    await login(page);
+    await expectStatusOnSoapServices(page, 200);
+  });
+
+  test("Should load data for a user with a valid access token", async ({ page }) => {
+    const accessToken = await getAccessToken(page);
+    expect(accessToken).toBeTruthy();
+    const response = await loadDataOverSoap(page, {
+      Authorization: `Bearer ${accessToken}`,
+    });
+    expect(response.status).toBe(200);
+    expect(response.body).toContain("LoadDataResponse");
+  });
+
+  test("Should load data for a logged in user", async ({ page }) => {
+    await login(page);
+    const response = await loadDataOverSoap(page);
+    expect(response.status).toBe(200);
+    expect(response.body).toContain("LoadDataResponse");
+  });
+
+  test("Should not load data for an anonymous user", async ({ page }) => {
+    const response = await loadDataOverSoap(page);
+    expect(response.status).toBe(401);
+    expect(response.body).not.toContain("LoadDataResponse");
   });
 });
