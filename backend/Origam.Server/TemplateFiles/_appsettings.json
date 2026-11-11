@@ -42,6 +42,7 @@
     "PrivateApiAdditionalAuthenticationMethods": {},
     "CookieExpirationMinutes": 60,
     "AccessTokenExpirationMinutes": 60,
+    "RefreshTokenExpirationMinutes": 20160,
     "AccessTokenIssuer": "https://localhost:44357",
     "CookieSlidingExpiration": true,
     // Configure a pair of PFX paths or Windows certificate thumbprints outside Development.

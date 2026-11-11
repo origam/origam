@@ -24,7 +24,9 @@ import { ToolboxState } from '@editors/designerEditor/common/ToolboxState';
 import { FilterableSelect } from '@editors/propertyEditor/FilterableSelect';
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
 import { observer } from 'mobx-react-lite';
-import { useContext, useMemo } from 'react';
+import { useContext, useMemo, useRef } from 'react';
+
+const MIN_DESIGN_SURFACE_WIDTH = 200;
 
 const Toolbox = observer(
   ({
@@ -36,6 +38,43 @@ const Toolbox = observer(
   }) => {
     const rootStore = useContext(RootStoreContext);
     const run = runInFlowWithHandler(rootStore.errorDialogController);
+    const toolboxRef = useRef<HTMLDivElement>(null);
+    const resizeStartRef = useRef<{ pointerX: number; width: number; maxWidth: number } | null>(
+      null,
+    );
+
+    const startResizing = (event: React.PointerEvent<HTMLDivElement>) => {
+      const toolbox = toolboxRef.current;
+      if (!toolbox?.parentElement) {
+        return;
+      }
+      event.preventDefault();
+      (document.activeElement as HTMLElement | null)?.blur();
+      event.currentTarget.setPointerCapture(event.pointerId);
+      resizeStartRef.current = {
+        pointerX: event.clientX,
+        width: toolbox.offsetWidth,
+        maxWidth: toolbox.parentElement.clientWidth - MIN_DESIGN_SURFACE_WIDTH,
+      };
+      document.body.style.cursor = 'col-resize';
+      document.body.style.userSelect = 'none';
+    };
+
+    const resize = (event: React.PointerEvent<HTMLDivElement>) => {
+      const resizeStart = resizeStartRef.current;
+      if (!resizeStart) {
+        return;
+      }
+      rootStore.uiState.setDesignerToolboxWidth(
+        Math.min(resizeStart.maxWidth, resizeStart.width + event.clientX - resizeStart.pointerX),
+      );
+    };
+
+    const stopResizing = () => {
+      resizeStartRef.current = null;
+      document.body.style.cursor = '';
+      document.body.style.userSelect = '';
+    };
 
     const dataSourceOptions = useMemo(
       () =>
@@ -46,8 +85,20 @@ const Toolbox = observer(
       [toolboxState.dataSources],
     );
 
+    const packageName =
+      rootStore.packagesState.packages.find(
+        modelPackage => modelPackage.id === toolboxState.schemaExtensionId,
+      )?.name ?? toolboxState.schemaExtensionId;
+
     return (
-      <div data-test-id="toolbox" className={S.toolbox}>
+      <div
+        ref={toolboxRef}
+        data-test-id="toolbox"
+        className={S.toolbox}
+        style={{
+          width: `min(${rootStore.uiState.designerToolboxWidth}px, calc(100% - ${MIN_DESIGN_SURFACE_WIDTH}px))`,
+        }}
+      >
         <div className={S.inputs}>
           <div className={S.inputContainer}>
             <div>{T('Data Source', 'tool_box_data_source')}</div>
@@ -78,10 +129,18 @@ const Toolbox = observer(
           </div>
           <div className={S.inputContainer}>
             <div>{T('Package', 'tool_box_package')}</div>
-            <input disabled={true} type="text" value={toolboxState.schemaExtensionId} />
+            <input disabled={true} type="text" value={packageName} />
           </div>
         </div>
-        <TabView width={260} state={toolboxState.tabViewState} items={tabViewItems} />
+        <TabView state={toolboxState.tabViewState} items={tabViewItems} />
+        <div
+          className={S.splitter}
+          role="separator"
+          aria-orientation="vertical"
+          onPointerDown={startResizing}
+          onPointerMove={resize}
+          onLostPointerCapture={stopResizing}
+        />
       </div>
     );
   },

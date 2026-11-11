@@ -35,11 +35,30 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 }
 
 .toolbox {
+  position: relative;
   display: flex;
   flex-direction: column;
-  max-width: 260px;
+  box-sizing: border-box;
   padding-left: 1rem;
   padding-right: 1rem;
+}
+
+.splitter {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 5px;
+  cursor: col-resize;
+  background: var(--background4);
+  transition: background 0.15s ease;
+  user-select: none;
+  touch-action: none;
+
+  &:hover,
+  &:active {
+    background: var(--brand);
+  }
 }
 
 .toolboxFieldIcon {
