@@ -12,7 +12,7 @@ The original Jest/Puppeteer suite is retained separately in `tests_e2e_legacy` f
    `OpenIddictConfig:PrivateApiAuthentication` (`Token` or `Cookie`). This selects the matching
    API tests; configure the server's authentication mode separately.
    The SOAP API tests run only when `SoapAPI__Enabled` is `true`; set `SoapAPI__AuthenticationMethod`
-   to match the running server's `SoapAPI:AuthenticationMethod` (`Cookie` or `Token`).
+   to match the running server's `SoapAPI:AuthenticationMethod` (`CookieAndToken`, the default, `Cookie` or `Token`).
 5. Start the UI for the database you want to test:
 
    | Database | Yarn command | Windows launch script |
