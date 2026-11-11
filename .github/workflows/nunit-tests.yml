@@ -13,7 +13,6 @@ jobs:
     permissions:
       id-token: write
       contents: read
-      checks: write
 
     strategy:
       fail-fast: false
@@ -93,7 +92,6 @@ jobs:
       actions: read
       contents: read
       security-events: write
-      checks: write
 
     strategy:
       fail-fast: false
@@ -119,16 +117,6 @@ jobs:
        find . -name 'mvp.xml.x.dll' -exec sh -c 'f="{}"; mv -- "$f" "$(dirname {})/Mvp.Xml.dll"' \;
        dotnet test --logger "trx;logfilename=architect-test-results.trx" backend/**Tests/bin/Release/net10.0/*Tests.dll
 
-    - name: Produce Architect NUnit test report
-      uses: dorny/test-reporter@v3
-      if: success() || failure()
-      with:
-        name: Architect NUnit Results
-        use-actions-summary: false
-        path: TestResults/architect-test-results.trx
-        reporter: dotnet-trx
-        max-annotations: '0'
-
   serverTests:
     needs: buildServer
     name: Server Tests
@@ -136,7 +124,6 @@ jobs:
     permissions:
       actions: read
       contents: read
-      checks: write
 
     strategy:
       fail-fast: false
@@ -158,16 +145,6 @@ jobs:
     - name: Run Server NUnit tests
       run: |
        dotnet test --logger "trx;logfilename=server-test-results.trx" backend/Origam.ServerTests/bin/Release/net10.0/Origam.ServerTests.dll
-
-    - name: Produce Server NUnit test report
-      uses: dorny/test-reporter@v3
-      if: success() || failure()
-      with:
-        name: Server NUnit Results
-        use-actions-summary: false
-        path: TestResults/server-test-results.trx
-        reporter: dotnet-trx
-        max-annotations: '0'
 
   cleanupArtifacts:
     needs: [tests, serverTests]
