@@ -69,7 +69,7 @@ public class OpenIddictConfig
     public StoreLocation CertificateStoreLocation { get; }
     public StoreName CertificateStoreName { get; }
     public string FallbackGeneratedCertificateDirectory { get; }
-    public AuthenticationMethod PrivateApiAuthentication { get; }
+    public AuthenticationMethod PrivateApiAuthenticationMethod { get; }
     public IReadOnlyDictionary<
         string,
         AuthenticationMethod
@@ -108,8 +108,8 @@ public class OpenIddictConfig
             key: "CookieSlidingExpiration",
             defaultValue: true
         );
-        PrivateApiAuthentication = openIddictSection.GetValue(
-            key: "PrivateApiAuthentication",
+        PrivateApiAuthenticationMethod = openIddictSection.GetValue(
+            key: "PrivateApiAuthenticationMethod",
             AuthenticationMethod.Cookie
         );
         CookieExpirationMinutes = openIddictSection.GetValue(

@@ -340,7 +340,7 @@ public class ModeledOpenApiDocumentGenerationTests
                     new Dictionary<string, string>
                     {
                         ["OpenIddictConfig:ClientApplicationTemplates:Configured"] = "true",
-                        ["OpenIddictConfig:PrivateApiAuthentication"] = "Token",
+                        ["OpenIddictConfig:PrivateApiAuthenticationMethod"] = "Token",
                         ["UserApiOptions:PublicRoutes:0"] = "public",
                         ["UserApiOptions:RestrictedRoutes:0"] = "private",
                     }

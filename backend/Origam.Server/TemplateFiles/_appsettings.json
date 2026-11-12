@@ -37,7 +37,7 @@
     "Html5ClientLogoUrl": "/customAssets/someFile2.png"
   },
   "OpenIddictConfig": {
-    "PrivateApiAuthentication":  "Cookie",
+    "PrivateApiAuthenticationMethod":  "Cookie",
     "CookieExpirationMinutes": 60,
     "AccessTokenIssuer": "https://localhost:44357",
     "CookieSlidingExpiration": true,
