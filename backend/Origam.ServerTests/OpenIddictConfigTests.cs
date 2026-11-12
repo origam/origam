@@ -103,7 +103,7 @@ public class OpenIddictConfigTests
                 {
                   "OpenIddictConfig": {
                     "ClientApplicationTemplates": { "Configured": "true" },
-                    "PrivateApiAuthentication": "Token",
+                    "PrivateApiAuthenticationMethod": "Token",
                     "PrivateApiAdditionalAuthenticationMethods": [
                       { "Path": "/api/order/{orderId}/status/{statusId}", "Method": "cookie" },
                       { "Path": "/api/order/1/status/current", "Method": "Token" },
@@ -149,7 +149,7 @@ public class OpenIddictConfigTests
         string prefix = "OrigamAuthTest_" + Guid.NewGuid().ToString("N") + "__";
         var environment = new Dictionary<string, string>
         {
-            [prefix + "OpenIddictConfig__PrivateApiAuthentication"] = "Token",
+            [prefix + "OpenIddictConfig__PrivateApiAuthenticationMethod"] = "Token",
             [prefix + "OpenIddictConfig__PrivateApiAdditionalAuthenticationMethods__0__Path"] =
                 "/api/order/{orderId}/status/{statusId}",
             [prefix + "OpenIddictConfig__PrivateApiAdditionalAuthenticationMethods__0__Method"] =
@@ -247,7 +247,7 @@ public class OpenIddictConfigTests
         return new Dictionary<string, string>
         {
             ["OpenIddictConfig:ClientApplicationTemplates:Configured"] = "true",
-            ["OpenIddictConfig:PrivateApiAuthentication"] = "Token",
+            ["OpenIddictConfig:PrivateApiAuthenticationMethod"] = "Token",
             ["OpenIddictConfig:PrivateApiAdditionalAuthenticationMethods:0:Path"] = path,
             ["OpenIddictConfig:PrivateApiAdditionalAuthenticationMethods:0:Method"] = method,
         };
@@ -353,7 +353,7 @@ public class OpenIddictConfigTests
                 new Dictionary<string, string>
                 {
                     ["OpenIddictConfig:ClientApplicationTemplates:Configured"] = "true",
-                    ["OpenIddictConfig:PrivateApiAuthentication"] = "Token",
+                    ["OpenIddictConfig:PrivateApiAuthenticationMethod"] = "Token",
                     ["OpenIddictConfig:PrivateApiAdditionalAuthenticationMethods:0:Path"] =
                         "/api/order/{orderId}",
                     ["OpenIddictConfig:PrivateApiAdditionalAuthenticationMethods:0:Method"] =
@@ -407,7 +407,7 @@ public class OpenIddictConfigTests
         var settings = new Dictionary<string, string>
         {
             ["OpenIddictConfig:ClientApplicationTemplates:Configured"] = "true",
-            ["OpenIddictConfig:PrivateApiAuthentication"] = "Token",
+            ["OpenIddictConfig:PrivateApiAuthenticationMethod"] = "Token",
             ["OpenIddictConfig:PrivateApiAdditionalAuthenticationMethods:/api/legacy"] = "Cookie",
         };
 
@@ -538,7 +538,7 @@ public class OpenIddictConfigTests
         };
         if (defaultMethod != null)
         {
-            settings["OpenIddictConfig:PrivateApiAuthentication"] = defaultMethod;
+            settings["OpenIddictConfig:PrivateApiAuthenticationMethod"] = defaultMethod;
         }
         if (additionalMethod != null)
         {
