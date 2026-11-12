@@ -88,6 +88,7 @@ restart_server_with_private_api_authentication() {
   kill "${server_pid}"
   wait "${server_pid}"
   export OpenIddictConfig__PrivateApiAuthentication="$1"
+  export SoapAPI__AuthenticationMethod="$1"
   cd /home/origam/server_bin
   dotnet Origam.Server.dll >> origam-output.txt 2>&1 &
   server_pid=$!
@@ -178,16 +179,16 @@ else
   exit 1
 fi
 
-print_title "Run user API integration tests in Cookie mode"
+print_title "Run user API and SOAP API integration tests in Cookie mode"
 restart_server_with_private_api_authentication Cookie
 cd "$test_directory"
-yarn test:e2e userApi
+yarn test:e2e userApi soapApi
 if [[ $? -eq 0 ]]; then
   sudo cp frontend-integration-test-results.trx "/home/origam/output/frontend-integration-test-results-$test_runner-cookie-mode.trx"
   echo "Success."
 else
   sudo cp frontend-integration-test-results.trx "/home/origam/output/frontend-integration-test-results-$test_runner-cookie-mode.trx"
-  print_error "User API integration tests in Cookie mode failed"
+  print_error "User API and SOAP API integration tests in Cookie mode failed"
   exit 1
 fi
 
