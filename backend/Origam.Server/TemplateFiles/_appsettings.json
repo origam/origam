@@ -45,6 +45,20 @@
     "RefreshTokenExpirationMinutes": 20160,
     "AccessTokenIssuer": "https://localhost:44357",
     "CookieSlidingExpiration": true,
+    // Configure a pair of PFX paths or Windows certificate thumbprints outside Development.
+    // Paths are relative to the server content root or absolute. Certificates must contain private keys.
+    // Supply PFX passwords through environment variables.
+    // "SigningCertificatePath": "certificates/signing.pfx",
+    // "EncryptionCertificatePath": "certificates/encryption.pfx",
+    // "SigningCertificatePassword": "",
+    // "EncryptionCertificatePassword": "",
+    // "SigningCertificateThumbprint": "",
+    // "EncryptionCertificateThumbprint": "",
+    // "CertificateStoreLocation": "LocalMachine",
+    // "CertificateStoreName": "My",
+    // Used only when no paths or thumbprints are configured. Docker images set this automatically.
+    // Reuses signing.pfx/encryption.pfx, or creates both if neither exists. Never replaces existing files.
+    // "FallbackGeneratedCertificateDirectory": "../certificates",
     // uncomment following section to enable Google Login
     /*
     "GoogleLogin": {
@@ -177,6 +191,7 @@
   },
   "Logging": {
 	"LogLevel": {
+	  "Origam.Server.TokenCertificates": "Information",
 	  "Default":     "Warning",
 	  "Microsoft.*": "Warning"
 	}
