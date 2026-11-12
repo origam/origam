@@ -7,7 +7,7 @@ const tokenOnlyPath = "/api/private/link-report";
 
 test.describe("User API with additional cookie authentication", () => {
   test.skip(
-    process.env.OpenIddictConfig__PrivateApiAuthentication === "Cookie",
+    process.env.OpenIddictConfig__PrivateApiAuthenticationMethod === "Cookie",
     "These tests require token mode with cookie authentication enabled for the test endpoint."
   );
 

@@ -87,7 +87,7 @@ start_server() {
 restart_server_with_private_api_authentication() {
   kill "${server_pid}"
   wait "${server_pid}"
-  export OpenIddictConfig__PrivateApiAuthentication="$1"
+  export OpenIddictConfig__PrivateApiAuthenticationMethod="$1"
   export SoapAPI__AuthenticationMethod="$1"
   cd /home/origam/server_bin
   dotnet Origam.Server.dll >> origam-output.txt 2>&1 &
@@ -100,7 +100,7 @@ restart_server_with_private_api_authentication() {
     fi
     sleep 2
   done
-  print_error "Server did not start with PrivateApiAuthentication=$1"
+  print_error "Server did not start with PrivateApiAuthenticationMethod=$1"
   exit 1
 }
 

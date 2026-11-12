@@ -111,7 +111,7 @@ public class OpenIddictConfig
             defaultValue: true
         );
         PrivateApiAuthenticationMethod = openIddictSection.GetValue(
-            key: "PrivateApiAuthentication",
+            key: "PrivateApiAuthenticationMethod",
             AuthenticationMethod.Cookie
         );
         PrivateApiAdditionalAuthenticationMethods = openIddictSection

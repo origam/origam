@@ -103,7 +103,7 @@ public class OpenIddictConfigTests
                 {
                   "OpenIddictConfig": {
                     "ClientApplicationTemplates": { "Configured": "true" },
-                    "PrivateApiAuthentication": "Token",
+                    "PrivateApiAuthenticationMethod": "Token",
                     "PrivateApiAdditionalAuthenticationMethods": {
                       "/api/private/allDataTypesCookie": "Cookie",
                       "/api/private/tokenOnly": "Token"
@@ -137,7 +137,7 @@ public class OpenIddictConfigTests
         var settings = new Dictionary<string, string>
         {
             ["OpenIddictConfig:ClientApplicationTemplates:Configured"] = "true",
-            ["OpenIddictConfig:PrivateApiAuthentication"] = "Token",
+            ["OpenIddictConfig:PrivateApiAuthenticationMethod"] = "Token",
             ["OpenIddictConfig:PrivateApiAdditionalAuthenticationMethods:/api/legacy:0"] = "Cookie",
         };
 
@@ -271,7 +271,7 @@ public class OpenIddictConfigTests
         };
         if (defaultMethod != null)
         {
-            settings["OpenIddictConfig:PrivateApiAuthentication"] = defaultMethod;
+            settings["OpenIddictConfig:PrivateApiAuthenticationMethod"] = defaultMethod;
         }
         if (additionalMethod != null)
         {

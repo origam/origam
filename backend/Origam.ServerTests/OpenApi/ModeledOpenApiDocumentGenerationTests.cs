@@ -184,7 +184,7 @@ public class ModeledOpenApiDocumentGenerationTests
         using JsonDocument document = fixture.Generate(
             new Dictionary<string, string>
             {
-                ["OpenIddictConfig:PrivateApiAuthentication"] = defaultMethod,
+                ["OpenIddictConfig:PrivateApiAuthenticationMethod"] = defaultMethod,
                 ["OpenIddictConfig:PrivateApiAdditionalAuthenticationMethods:/private/legacy"] =
                     additionalMethod,
                 ["OpenIddictConfig:PrivateApiAdditionalAuthenticationMethods:/public/legacy"] =
@@ -420,7 +420,7 @@ public class ModeledOpenApiDocumentGenerationTests
             var settings = new Dictionary<string, string>
             {
                 ["OpenIddictConfig:ClientApplicationTemplates:Configured"] = "true",
-                ["OpenIddictConfig:PrivateApiAuthentication"] = "Token",
+                ["OpenIddictConfig:PrivateApiAuthenticationMethod"] = "Token",
                 ["UserApiOptions:PublicRoutes:0"] = "public",
                 ["UserApiOptions:RestrictedRoutes:0"] = "private",
             };
