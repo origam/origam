@@ -79,7 +79,9 @@ start_server() {
   ./configureServer.sh
   # nginx terminates TLS; keep the public URLs available for account emails.
   export Kestrel__Endpoints__Http__Url="http://+:8080"
-  env 'OpenIddictConfig__PrivateApiAdditionalAuthenticationMethods__/api/private/allDataTypesCookie=Cookie' \
+  env \
+    'OpenIddictConfig__PrivateApiAdditionalAuthenticationMethods__0__Path=/api/private/allDataTypesCookie' \
+    'OpenIddictConfig__PrivateApiAdditionalAuthenticationMethods__0__Method=Cookie' \
     dotnet Origam.Server.dll > origam-output.txt 2>&1 &
   server_pid=$!
 }
