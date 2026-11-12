@@ -91,6 +91,7 @@
     },
 	"Logging": {
 		"LogLevel": {
+		  "Origam.Server.TokenCertificates": "Information",
 		  "Default":     "Warning",
 		  "Microsoft.*": "Warning" 
 		}

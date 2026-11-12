@@ -77,8 +77,10 @@ start_server() {
   sudo /etc/init.d/nginx start
   cd /home/origam/server_bin
   ./configureServer.sh
+  # nginx terminates TLS; keep the public URLs available for account emails.
   export ASPNETCORE_URLS="http://+:8080"
-  dotnet Origam.Server.dll > origam-output.txt 2>&1 &
+  env 'OpenIddictConfig__PrivateApiAdditionalAuthenticationMethods__/api/private/allDataTypesCookie=Cookie' \
+    dotnet Origam.Server.dll > origam-output.txt 2>&1 &
   server_pid=$!
 }
 
