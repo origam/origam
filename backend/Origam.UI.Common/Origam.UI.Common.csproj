@@ -10,6 +10,7 @@
     <ProjectReference Include="..\Origam.Common\Origam.Common.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="log4net" Version="3.5.0" />
     <EmbeddedResource Update="Strings.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Strings.Designer.cs</LastGenOutput>

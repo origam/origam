@@ -31,10 +31,12 @@ const Properties = observer(() => {
   const run = runInFlowWithHandler(rootStore.errorDialogController);
 
   return (
-    <div data-test-id="properties">
+    <div data-test-id="properties" className={S.root}>
       {propertiesState.components.length ? (
         <select
           data-test-id="properties-component-select"
+          className={S.componentSelect}
+          title={propertiesState.getComponentLabel(propertiesState.selectedComponent ?? undefined)}
           value={propertiesState.selectedComponent?.id ?? ''}
           onChange={e => propertiesState.setSelectedComponent(e.target.value)}
         >

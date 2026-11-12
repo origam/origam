@@ -26,7 +26,7 @@ import { ITabViewState } from '@components/tabView/ITabViewState.ts';
 export const TabView: React.FC<{
   items: ITabViewItem[];
   state: ITabViewState;
-  width: number;
+  width?: number;
 }> = observer(({ items, state, width }) => {
   const onLabelClick = action((item: ITabViewItem, index: number) => {
     state.activeTabIndex = index;
@@ -34,7 +34,7 @@ export const TabView: React.FC<{
   });
 
   return (
-    <div className={S.root} style={{ width: width + 'px' }}>
+    <div className={S.root} style={{ width }}>
       <div className={S.content}>
         {items.map((item, i) => (
           <div key={item.label} className={state.activeTabIndex !== i ? S.hidden : S.visible}>
