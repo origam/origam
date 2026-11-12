@@ -299,7 +299,6 @@ jobs:
       id-token: write
       actions: read
       contents: read
-      checks: write
       security-events: write
 
     strategy:
@@ -344,16 +343,6 @@ jobs:
           cd test
           docker compose --env-file envFileMsSql.env -f "docker-compose-mssql.yml" --profile test down
 
-      - name: Produce frontend integration test report
-        uses: dorny/test-reporter@v3
-        if: success() || failure()
-        with:
-          name: Frontend Integration Test Results (MSSQL, ${{ matrix.test-runner }})
-          use-actions-summary: false
-          path: test/output/frontend-integration-test-results*.trx
-          reporter: dotnet-trx
-          max-annotations: '0'
-
       - name: Upload E2E diagnostics
         uses: actions/upload-artifact@v7
         if: success() || failure()
@@ -365,16 +354,6 @@ jobs:
             test/output/legacy-screenshots
           if-no-files-found: ignore
 
-      - name: Produce workflow integration test report
-        uses: dorny/test-reporter@v3
-        if: success() || failure()
-        with:
-          name: Workflow Integration Test Results (MSSQL, ${{ matrix.test-runner }})
-          use-actions-summary: false
-          path: test/output/workflow-integration-test-results.trx
-          reporter: dotnet-trx
-          max-annotations: '0'
-
   integration-tests-postgres:
     needs: [ build-frontend, build-server, build-server-image ]
     name: ${{ matrix.test-runner == 'legacy' && 'integration-tests-pgsql-legacy' || 'integration-tests-pgsql' }}
@@ -385,7 +364,6 @@ jobs:
       id-token: write
       actions: read
       contents: read
-      checks: write
       security-events: write
 
     strategy:
@@ -430,16 +408,6 @@ jobs:
           cd test
           docker compose --env-file envFilePostgres.env -f "docker-compose-postgresql.yml" --profile test down
 
-      - name: Produce frontend integration test report
-        uses: dorny/test-reporter@v3
-        if: success() || failure()
-        with:
-          name: Frontend Integration Test Results (PostgreSQL, ${{ matrix.test-runner }})
-          use-actions-summary: false
-          path: test/output/frontend-integration-test-results*.trx
-          reporter: dotnet-trx
-          max-annotations: '0'
-
       - name: Upload E2E diagnostics
         uses: actions/upload-artifact@v7
         if: success() || failure()
@@ -450,16 +418,6 @@ jobs:
             test/output/test-results
             test/output/legacy-screenshots
           if-no-files-found: ignore
-
-      - name: Produce workflow integration test report
-        uses: dorny/test-reporter@v3
-        if: success() || failure()
-        with:
-          name: Workflow Integration Test Results (PostgreSQL, ${{ matrix.test-runner }})
-          use-actions-summary: false
-          path: test/output/workflow-integration-test-results.trx
-          reporter: dotnet-trx
-          max-annotations: '0'
 
   cleanup-artifacts:
     name: cleanup-artifacts

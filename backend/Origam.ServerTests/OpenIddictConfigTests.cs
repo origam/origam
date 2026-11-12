@@ -205,7 +205,43 @@ public class OpenIddictConfigTests
         );
     }
 
-    private static IConfiguration CreateConfiguration(string configuredMinutes)
+    [TestCase(null, 20_160)]
+    [TestCase("1", 1)]
+    [TestCase("1440", 1440)]
+    [TestCase("2880", 2880)]
+    public void RefreshTokenExpirationDefaultsToFourteenDaysAndCanBeConfigured(
+        string configuredMinutes,
+        int expectedMinutes
+    )
+    {
+        var config = new OpenIddictConfig(
+            CreateConfiguration(refreshTokenExpirationMinutes: configuredMinutes)
+        );
+
+        Assert.That(config.RefreshTokenExpirationMinutes, Is.EqualTo(expectedMinutes));
+        Assert.That(config.AccessTokenExpirationMinutes, Is.EqualTo(60));
+    }
+
+    [TestCase("0")]
+    [TestCase("-1")]
+    public void RefreshTokenExpirationMustBePositive(string configuredMinutes)
+    {
+        var exception = Assert.Throws<ArgumentOutOfRangeException>(() =>
+            new OpenIddictConfig(
+                CreateConfiguration(refreshTokenExpirationMinutes: configuredMinutes)
+            )
+        );
+
+        Assert.That(
+            exception.ParamName,
+            Is.EqualTo(nameof(OpenIddictConfig.RefreshTokenExpirationMinutes))
+        );
+    }
+
+    private static IConfiguration CreateConfiguration(
+        string configuredMinutes = null,
+        string refreshTokenExpirationMinutes = null
+    )
     {
         var settings = new Dictionary<string, string>
         {
@@ -214,6 +250,11 @@ public class OpenIddictConfigTests
         if (configuredMinutes != null)
         {
             settings["OpenIddictConfig:AccessTokenExpirationMinutes"] = configuredMinutes;
+        }
+        if (refreshTokenExpirationMinutes != null)
+        {
+            settings["OpenIddictConfig:RefreshTokenExpirationMinutes"] =
+                refreshTokenExpirationMinutes;
         }
         return new ConfigurationBuilder().AddInMemoryCollection(settings).Build();
     }

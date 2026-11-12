@@ -30,7 +30,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 .root {
   display: block;
   width: 100%;
-  max-width: 40rem;
+  max-width: var(--property-value-max-width, 40rem);
   min-width: 0;
 
   input,

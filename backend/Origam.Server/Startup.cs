@@ -81,9 +81,12 @@ public class Startup
     private readonly UserLockoutConfig lockoutConfig;
     private readonly LanguageConfig languageConfig;
     private readonly ChatConfig chatConfig;
+    private readonly IWebHostEnvironment environment;
+    private TokenCertificateStartupInfo tokenCertificateStartupInfo;
 
-    public Startup(IConfiguration configuration)
+    public Startup(IConfiguration configuration, IWebHostEnvironment environment)
     {
+        this.environment = environment;
         Configuration = configuration;
         startUpConfiguration = new StartUpConfiguration(configuration);
         passwordConfiguration = new PasswordConfiguration(configuration);
@@ -253,16 +256,23 @@ public class Startup
                 options.AllowPasswordFlow();
                 options.AllowRefreshTokenFlow();
                 options.AllowClientCredentialsFlow();
+                options.UseReferenceAccessTokens();
                 options.SetAccessTokenLifetime(
                     TimeSpan.FromMinutes(openIddictConfig.AccessTokenExpirationMinutes)
                 );
-                options.SetRefreshTokenLifetime(TimeSpan.FromDays(30));
+                options.SetRefreshTokenLifetime(
+                    TimeSpan.FromMinutes(openIddictConfig.RefreshTokenExpirationMinutes)
+                );
                 options
                     .UseAspNetCore()
                     .EnableAuthorizationEndpointPassthrough()
                     .EnableTokenEndpointPassthrough()
                     .EnableEndSessionEndpointPassthrough();
-                options.AddDevelopmentEncryptionCertificate().AddDevelopmentSigningCertificate();
+                tokenCertificateStartupInfo = OpenIddictCertificateConfiguration.Configure(
+                    options,
+                    openIddictConfig,
+                    environment
+                );
                 options.RegisterScopes(
                     Scopes.OpenId,
                     Scopes.Profile,
@@ -547,6 +557,9 @@ public class Startup
     )
     {
         loggerFactory.AddLog4Net();
+        tokenCertificateStartupInfo.Log(
+            loggerFactory.CreateLogger(TokenCertificateStartupInfo.LoggerCategory)
+        );
 
         if (env.IsDevelopment())
         {
@@ -640,6 +653,7 @@ public class Startup
         {
             app.UseSoapApi(
                 startUpConfiguration.SoapInterfaceRequiresAuthentication,
+                startUpConfiguration.SoapInterfaceAuthenticationMethod,
                 startUpConfiguration.ExpectAndReturnOldDotNetAssemblyReferences
             );
         }
