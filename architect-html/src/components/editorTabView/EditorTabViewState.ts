@@ -27,6 +27,7 @@ import {
   ISearchResult,
 } from '@api/IArchitectApi';
 import { AgentConnection, getAgentConnection, getCustomInstructions } from '@/ai/AiPromptApi';
+import { T } from '@/main';
 import { EditorData } from '@components/modelTree/EditorData';
 import { TreeNode } from '@components/modelTree/TreeNode';
 import { askYesNoQuestion, YesNoResult } from '@dialogs/DialogUtils';
@@ -402,11 +403,18 @@ export class EditorTabViewState {
 
   closeEditor(editorId: string) {
     return function* (this: EditorTabViewState): Generator<Promise<any>, void, any> {
-      if (this.activeEditorState?.isDirty) {
+      const closingEditor = this.editorsContainers.find(
+        (editor: EditorContainer) => editor.state.tabId === editorId,
+      );
+      if (closingEditor?.state.isDirty) {
         const saveChanges = yield askYesNoQuestion(
           this.rootStore.dialogStack,
-          'Save changes',
-          `Do you want to save ${this.activeEditorState.label}?`,
+          T('Save changes', 'editor_close_save_changes_title'),
+          T(
+            'Do you want to save {0}?',
+            'editor_close_save_changes_question',
+            closingEditor.state.label,
+          ),
         );
         switch (saveChanges) {
           case YesNoResult.No:
@@ -414,14 +422,11 @@ export class EditorTabViewState {
           case YesNoResult.Cancel:
             return;
           case YesNoResult.Yes:
-            yield* this.activeEditorState.save();
+            yield* closingEditor.state.save();
             break;
         }
       }
 
-      const closingEditor = this.editorsContainers.find(
-        (editor: EditorContainer) => editor.state.tabId === editorId,
-      );
       closingEditor?.state.dispose?.();
 
       this.editorsContainers = this.editorsContainers.filter(
