@@ -7,6 +7,8 @@
 
 @port = 44356
 # authCookie only matters if the "RequiresAuthentication" in "SoapAPI" config section is set to "true"
+# and "AuthenticationMethod" is "CookieAndToken" (the default) or "Cookie". When "AuthenticationMethod"
+# is "Token" or "CookieAndToken", the Cookie header can be replaced with "Authorization: Bearer <access token>"
 @authCookie = CfDJ8LVdnbG3moNEiDWHMuco-LdmRLB4pQZHw4sevTuOIvI_NUr5io7HcD1Se8EIGRqjTUWNlzJOa2wcpDX2ylPW2F4F9vgGXnrqrFqjOVoSGAi0ratxaGMl_9VejptlqG-FPRsL8daRAszz6lzMR5htW8lmJwxf7xBmADWrB1lgyq35L8b9D0zFE35-jXcdKptbaIggg0whvXmzt9LYMGV0T38VgjDhB4aXc8D1lnm5tYKJGVEWfjRTQOmRE58peIVEHpk5AFKRAjGTTHWZGLU_M5b0yuLVRkjFekEeWKKUoCFMfYhC7Jlc8J3Y2ySSBmTLq7aaCTd1wKRzgoHMYxSwglg3Fax6bZ4JcsF_RkcuRRCvQQ7_1KE6e47NUpXPpIqC8QKwfd4Cptf2CIoZoLqcIj5E7oH2dfLxpClAzU7ajq-fLKxV4dj7IsaFyAvXyeI478AKYE8fZgDeDpf_XZPyVu2sBzySp9jG79S3ptI5aAMyw0e_7RUbqnloy4nqJYqAjUDTT1FE2Sek29Be9zXv-67QPLQOlFiBZ3TJOAWpgfWpli6qw0lC7F_j0h4Hsln5opk-CtpioZ3c--6Cf15vgqHprP7gD4Rd01ExTLTWJO8OpZ6ymWt5py3vD-leQ6Ncl9a_0hnB-txOydFE1H9fap8
 
 ###
