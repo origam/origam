@@ -6127,14 +6127,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-inlinesvg@npm:4.5.x":
-  version: 4.5.0
-  resolution: "react-inlinesvg@npm:4.5.0"
+"react-inlinesvg@npm:4.6.x":
+  version: 4.6.0
+  resolution: "react-inlinesvg@npm:4.6.0"
   dependencies:
     react-from-dom: "npm:^0.7.5"
   peerDependencies:
     react: 16.8 - 19
-  checksum: 10c0/af330a33bbb33fe8bea31c16d9c6696214c69b3005e1b3541cf077c6b5f5cceb4ac4d35fa16de6a41fd7f1ee9257d4407f4234ae9e6ebf259ccf4ec2419cf8cb
+  checksum: 10c0/742aec92b99cbf48d2b2ff7b5ddfb4afadca67c7a42a8d021c645669658343b8687cb6417888829b76115422e2288df635e1044bf9e9471c9fb4f2e248db9697
   languageName: node
   linkType: hard
 
@@ -6258,7 +6258,7 @@ __metadata:
     react-dom: "npm:19.2.8"
     react-draft-wysiwyg: "npm:^1.15.0"
     react-highlight-words: "npm:^1.0.0"
-    react-inlinesvg: "npm:4.5.x"
+    react-inlinesvg: "npm:4.6.x"
     react-measure: "npm:^2.5.2"
     react-virtualized: "npm:^9.22.6"
     sass: "npm:^1.107.0"
@@ -6270,7 +6270,7 @@ __metadata:
     vite: "npm:^8.3.5"
     vite-tsconfig-paths: "npm:^6.1.1"
     wkt: "npm:^0.1.1"
-    ws: "npm:^8.22.0"
+    ws: "npm:^8.22.1"
     xml-js: "npm:^1.6.11"
     xstate: "npm:^4.38.3"
   languageName: unknown
@@ -7547,7 +7547,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ws@npm:^8.18.0, ws@npm:^8.22.0":
+"ws@npm:^8.18.0":
   version: 8.22.0
   resolution: "ws@npm:8.22.0"
   peerDependencies:
@@ -7559,6 +7559,21 @@ __metadata:
     utf-8-validate:
       optional: true
   checksum: 10c0/7304d14ef38898dd366a528a85e2da389c4eebf30f4ce8a007bd2dce6025f9b619cefe44fe2354f0bad0ec541b1c9a4da06a3f3e046ab56f01fd52d5784ecfb2
+  languageName: node
+  linkType: hard
+
+"ws@npm:^8.22.1":
+  version: 8.22.1
+  resolution: "ws@npm:8.22.1"
+  peerDependencies:
+    bufferutil: ^4.0.1
+    utf-8-validate: ">=5.0.2"
+  peerDependenciesMeta:
+    bufferutil:
+      optional: true
+    utf-8-validate:
+      optional: true
+  checksum: 10c0/858ccc31e56a7549c25d0bfd522b65c64f7bffdc5460eeb4c29517d34728d34de102d2ebf8296160c8b4594fd45ead6a324acd9a1ea0b0b8742bbed4d52d9a51
   languageName: node
   linkType: hard
 

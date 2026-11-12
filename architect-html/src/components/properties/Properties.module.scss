@@ -17,6 +17,16 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
+.root {
+  flex: 1;
+  contain: inline-size;
+  --property-value-max-width: none;
+}
+
+.componentSelect {
+  max-width: 100%;
+}
+
 .editedItemLabel {
 }
 
