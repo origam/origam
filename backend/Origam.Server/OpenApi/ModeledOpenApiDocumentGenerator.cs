@@ -73,7 +73,7 @@ public class ModeledOpenApiDocumentGenerator(
 
     private OpenApiSecurityScheme CreateAuthenticationScheme()
     {
-        if (openIddictConfig.PrivateApiAuthentication == AuthenticationMethod.Token)
+        if (openIddictConfig.PrivateApiAuthenticationMethod == AuthenticationMethod.Token)
         {
             return new OpenApiSecurityScheme
             {
