@@ -95,7 +95,7 @@ public class OpenIddictConfigTests
     }
 
     [Test]
-    public void AdditionalMethodsAreReadFromJsonStrings()
+    public void AdditionalMethodsAreReadFromJsonList()
     {
         using var stream = new MemoryStream(
             Encoding.UTF8.GetBytes(
@@ -104,10 +104,11 @@ public class OpenIddictConfigTests
                   "OpenIddictConfig": {
                     "ClientApplicationTemplates": { "Configured": "true" },
                     "PrivateApiAuthentication": "Token",
-                    "PrivateApiAdditionalAuthenticationMethods": {
-                      "/api/private/allDataTypesCookie": "Cookie",
-                      "/api/private/tokenOnly": "Token"
-                    }
+                    "PrivateApiAdditionalAuthenticationMethods": [
+                      { "Path": "/api/order/{orderId}/status/{statusId}", "Method": "cookie" },
+                      { "Path": "/api/order/1/status/current", "Method": "Token" },
+                      { "Path": "/api/handover/{handoverId}/view", "Method": "Cookie" }
+                    ]
                   }
                 }
                 """
@@ -115,40 +116,306 @@ public class OpenIddictConfigTests
         );
         var config = new OpenIddictConfig(new ConfigurationBuilder().AddJsonStream(stream).Build());
 
-        Assert.That(
-            config.PrivateApiAdditionalAuthenticationMethods,
-            Is.EquivalentTo(
-                new Dictionary<string, AuthenticationMethod>
-                {
-                    ["/api/private/allDataTypesCookie"] = AuthenticationMethod.Cookie,
-                    ["/api/private/tokenOnly"] = AuthenticationMethod.Token,
-                }
-            )
+        Assert.That(config.PrivateApiAdditionalAuthenticationMethods, Has.Count.EqualTo(3));
+        foreach (string path in new[] { "/api/order/1/status/2", "/api/handover/3/view" })
+        {
+            Assert.That(
+                config.GetPrivateApiAuthenticationMethods(path),
+                Is.EqualTo(new[] { AuthenticationMethod.Token, AuthenticationMethod.Cookie })
+            );
+        }
+        foreach (
+            string path in new[]
+            {
+                "/api/order/1/status/current",
+                "/api/order/1/status/2/child",
+                "/api/handover//view",
+                "/api/handover/3/View",
+                "/api/handover/3/view/",
+            }
+        )
+        {
+            Assert.That(
+                config.GetPrivateApiAuthenticationMethods(path),
+                Is.EqualTo(new[] { AuthenticationMethod.Token })
+            );
+        }
+    }
+
+    [Test]
+    [NonParallelizable]
+    public void AdditionalMethodsAreReadFromPortableEnvironmentVariables()
+    {
+        string prefix = "OrigamAuthTest_" + Guid.NewGuid().ToString("N") + "__";
+        var environment = new Dictionary<string, string>
+        {
+            [prefix + "OpenIddictConfig__PrivateApiAuthentication"] = "Token",
+            [prefix + "OpenIddictConfig__PrivateApiAdditionalAuthenticationMethods__0__Path"] =
+                "/api/order/{orderId}/status/{statusId}",
+            [prefix + "OpenIddictConfig__PrivateApiAdditionalAuthenticationMethods__0__Method"] =
+                "Cookie",
+            [prefix + "OpenIddictConfig__PrivateApiAdditionalAuthenticationMethods__1__Path"] =
+                "/api/handover/{handoverId}/view",
+            [prefix + "OpenIddictConfig__PrivateApiAdditionalAuthenticationMethods__1__Method"] =
+                "Cookie",
+        };
+        try
+        {
+            foreach (var variable in environment)
+            {
+                Environment.SetEnvironmentVariable(variable.Key, variable.Value);
+            }
+            var configuration = new ConfigurationBuilder()
+                .AddInMemoryCollection(
+                    new Dictionary<string, string>
+                    {
+                        ["OpenIddictConfig:ClientApplicationTemplates:Configured"] = "true",
+                    }
+                )
+                .AddEnvironmentVariables(prefix)
+                .Build();
+            var config = new OpenIddictConfig(configuration);
+
+            Assert.That(config.PrivateApiAdditionalAuthenticationMethods, Has.Count.EqualTo(2));
+            Assert.That(
+                config.GetPrivateApiAuthenticationMethods("/api/order/123/status/456"),
+                Is.EqualTo(new[] { AuthenticationMethod.Token, AuthenticationMethod.Cookie })
+            );
+            Assert.That(
+                config.GetPrivateApiAuthenticationMethods("/api/handover/123/view"),
+                Is.EqualTo(new[] { AuthenticationMethod.Token, AuthenticationMethod.Cookie })
+            );
+            Assert.That(
+                config.GetPrivateApiAuthenticationMethods("/api/other"),
+                Is.EqualTo(new[] { AuthenticationMethod.Token })
+            );
+        }
+        finally
+        {
+            foreach (string key in environment.Keys)
+            {
+                Environment.SetEnvironmentVariable(key, null);
+            }
+        }
+    }
+
+    [TestCase(null)]
+    [TestCase("Unknown")]
+    [TestCase("42")]
+    [TestCase("")]
+    public void InvalidListMethodIsRejected(string method)
+    {
+        var settings = CreateListSettings("/api/legacy", method);
+        var exception = Assert.Throws<ArgumentOutOfRangeException>(() =>
+            new OpenIddictConfig(new ConfigurationBuilder().AddInMemoryCollection(settings).Build())
         );
-        Assert.That(
-            config.GetPrivateApiAuthenticationMethods("/api/private/allDataTypesCookie"),
-            Is.EqualTo(new[] { AuthenticationMethod.Token, AuthenticationMethod.Cookie })
+
+        Assert.That(exception.Message, Does.Contain("/api/legacy"));
+        Assert.That(exception.Message, Does.Contain("Cookie, Token"));
+    }
+
+    [TestCase(null)]
+    [TestCase("")]
+    [TestCase(" ")]
+    [TestCase("api/legacy")]
+    public void InvalidListPathIsRejected(string path)
+    {
+        Assert.Catch<ArgumentException>(() =>
+            new OpenIddictConfig(
+                new ConfigurationBuilder()
+                    .AddInMemoryCollection(CreateListSettings(path, "Cookie"))
+                    .Build()
+            )
         );
     }
 
     [Test]
-    public void ArrayOfAdditionalMethodsIsRejected()
+    public void DuplicateListPathsAreRejected()
+    {
+        var settings = CreateListSettings("/api/legacy", "Cookie");
+        settings["OpenIddictConfig:PrivateApiAdditionalAuthenticationMethods:1:Path"] =
+            "/api/legacy";
+        settings["OpenIddictConfig:PrivateApiAdditionalAuthenticationMethods:1:Method"] = "Token";
+
+        Assert.Throws<ArgumentException>(() =>
+            new OpenIddictConfig(new ConfigurationBuilder().AddInMemoryCollection(settings).Build())
+        );
+    }
+
+    private static Dictionary<string, string> CreateListSettings(string path, string method)
+    {
+        return new Dictionary<string, string>
+        {
+            ["OpenIddictConfig:ClientApplicationTemplates:Configured"] = "true",
+            ["OpenIddictConfig:PrivateApiAuthentication"] = "Token",
+            ["OpenIddictConfig:PrivateApiAdditionalAuthenticationMethods:0:Path"] = path,
+            ["OpenIddictConfig:PrivateApiAdditionalAuthenticationMethods:0:Method"] = method,
+        };
+    }
+
+    [TestCase("/api/legacy/address-1", true)]
+    [TestCase("/api/legacy/address-2", true)]
+    [TestCase("/api/legacy/{addressId}", true)]
+    [TestCase("/api/legacy", false)]
+    [TestCase("/api/legacy/", false)]
+    [TestCase("/api/legacy/address-1/", false)]
+    [TestCase("/api/legacy/address-1/delete", false)]
+    [TestCase("/api/legacy2/address-1", false)]
+    [TestCase("/api/Legacy/address-1", false)]
+    [TestCase("/api/legacy//address-1", false)]
+    public void ParameterizedExceptionMatchesOnlyItsCompletePath(string path, bool matches)
+    {
+        var config = CreatePrivateApiConfiguration("Token", "Cookie", "/api/legacy/{addressId}");
+
+        Assert.That(
+            config.GetPrivateApiAuthenticationMethods(path).Contains(AuthenticationMethod.Cookie),
+            Is.EqualTo(matches)
+        );
+    }
+
+    [TestCase("/api/private/some-path/test/test-1/view", true)]
+    [TestCase("/api/private/some-path/test/test-2/view", true)]
+    [TestCase("/api/private/some-path/test/test-1/edit", false)]
+    [TestCase("/api/private/some-path/test/test-1/View", false)]
+    [TestCase("/api/private/some-path/test/test-1", false)]
+    [TestCase("/api/private/some-path/test//view", false)]
+    [TestCase("/api/private/some-path/test/test-1/view/child", false)]
+    [TestCase("/api/private/some-path/test/test-1/view/", false)]
+    public void ParameterizedExceptionMatchesParameterBeforeFinalLiteralSegment(
+        string path,
+        bool matches
+    )
+    {
+        var config = CreatePrivateApiConfiguration(
+            "Token",
+            "Cookie",
+            "/api/private/some-path/test/{testId}/view"
+        );
+
+        Assert.That(
+            config.GetPrivateApiAuthenticationMethods(path).Contains(AuthenticationMethod.Cookie),
+            Is.EqualTo(matches)
+        );
+    }
+
+    [TestCase("/api/order/order-1/status/status-1", true)]
+    [TestCase("/api/order/order-1/other/status-1", false)]
+    [TestCase("/api/order//status/status-1", false)]
+    [TestCase("/api/order/order-1/status", false)]
+    [TestCase("/api/order/order-1/status/", false)]
+    [TestCase("/api/order/order-1/status/status-1/child", false)]
+    public void ParameterizedExceptionSupportsMultipleParameters(string path, bool matches)
+    {
+        var config = CreatePrivateApiConfiguration(
+            "Token",
+            "Cookie",
+            "/api/order/{orderId}/status/{statusId}"
+        );
+
+        Assert.That(
+            config.GetPrivateApiAuthenticationMethods(path).Contains(AuthenticationMethod.Cookie),
+            Is.EqualTo(matches)
+        );
+    }
+
+    [TestCase("/api/report.v1/items+/item-1", true)]
+    [TestCase("/api/reportXv1/items+/item-1", false)]
+    [TestCase("/api/report.v1/items/item-1", false)]
+    public void ParameterizedExceptionPreservesLiteralCharacters(string path, bool matches)
+    {
+        var config = CreatePrivateApiConfiguration("Token", "Cookie", "/api/report.v1/items+/{id}");
+
+        Assert.That(
+            config.GetPrivateApiAuthenticationMethods(path).Contains(AuthenticationMethod.Cookie),
+            Is.EqualTo(matches)
+        );
+    }
+
+    [TestCase("/api/legacy/{}")]
+    [TestCase("/api/legacy/{id")]
+    [TestCase("/api/legacy/{id}{other}")]
+    [TestCase("/api/legacy/prefix-{id}")]
+    public void OnlyWholeWellFormedParameterSegmentsAreExpanded(string endpoint)
+    {
+        var config = CreatePrivateApiConfiguration("Token", "Cookie", endpoint);
+
+        Assert.That(
+            config.GetPrivateApiAuthenticationMethods("/api/legacy/value"),
+            Is.EqualTo(new[] { AuthenticationMethod.Token })
+        );
+    }
+
+    [Test]
+    public void ExactExceptionTakesPrecedenceOverParameterizedException()
+    {
+        var configuration = new ConfigurationBuilder()
+            .AddInMemoryCollection(
+                new Dictionary<string, string>
+                {
+                    ["OpenIddictConfig:ClientApplicationTemplates:Configured"] = "true",
+                    ["OpenIddictConfig:PrivateApiAuthentication"] = "Token",
+                    ["OpenIddictConfig:PrivateApiAdditionalAuthenticationMethods:0:Path"] =
+                        "/api/order/{orderId}",
+                    ["OpenIddictConfig:PrivateApiAdditionalAuthenticationMethods:0:Method"] =
+                        "Cookie",
+                    ["OpenIddictConfig:PrivateApiAdditionalAuthenticationMethods:1:Path"] =
+                        "/api/order/submit",
+                    ["OpenIddictConfig:PrivateApiAdditionalAuthenticationMethods:1:Method"] =
+                        "Token",
+                }
+            )
+            .Build();
+        var config = new OpenIddictConfig(configuration);
+
+        Assert.That(
+            config.GetPrivateApiAuthenticationMethods("/api/order/submit"),
+            Is.EqualTo(new[] { AuthenticationMethod.Token })
+        );
+        Assert.That(
+            config.GetPrivateApiAuthenticationMethods("/api/order/order-1"),
+            Is.EqualTo(new[] { AuthenticationMethod.Token, AuthenticationMethod.Cookie })
+        );
+    }
+
+    [TestCase("Token", "Cookie", AuthenticationMethod.Token, AuthenticationMethod.Cookie)]
+    [TestCase("Cookie", "Token", AuthenticationMethod.Cookie, AuthenticationMethod.Token)]
+    [TestCase("Token", "Token", AuthenticationMethod.Token, AuthenticationMethod.Token)]
+    public void ParameterizedExceptionPreservesDefaultAndAvoidsDuplicates(
+        string defaultMethod,
+        string additionalMethod,
+        AuthenticationMethod expectedDefault,
+        AuthenticationMethod expectedAdditional
+    )
+    {
+        var config = CreatePrivateApiConfiguration(
+            defaultMethod,
+            additionalMethod,
+            "/api/legacy/{id}"
+        );
+        var methods = config.GetPrivateApiAuthenticationMethods("/api/legacy/value").ToArray();
+
+        Assert.That(methods[0], Is.EqualTo(expectedDefault));
+        Assert.That(
+            methods,
+            Is.EquivalentTo(new[] { expectedDefault, expectedAdditional }.Distinct())
+        );
+    }
+
+    [Test]
+    public void DictionaryOfAdditionalMethodsIsRejected()
     {
         var settings = new Dictionary<string, string>
         {
             ["OpenIddictConfig:ClientApplicationTemplates:Configured"] = "true",
             ["OpenIddictConfig:PrivateApiAuthentication"] = "Token",
-            ["OpenIddictConfig:PrivateApiAdditionalAuthenticationMethods:/api/legacy:0"] = "Cookie",
+            ["OpenIddictConfig:PrivateApiAdditionalAuthenticationMethods:/api/legacy"] = "Cookie",
         };
 
-        var exception = Assert.Throws<ArgumentOutOfRangeException>(() =>
+        var exception = Assert.Throws<ArgumentNullException>(() =>
             new OpenIddictConfig(new ConfigurationBuilder().AddInMemoryCollection(settings).Build())
         );
 
-        Assert.That(
-            exception.ParamName,
-            Is.EqualTo(nameof(OpenIddictConfig.PrivateApiAdditionalAuthenticationMethods))
-        );
+        Assert.That(exception.ParamName, Does.EndWith(":Path"));
     }
 
     [TestCase("Unknown")]
@@ -275,7 +542,8 @@ public class OpenIddictConfigTests
         }
         if (additionalMethod != null)
         {
-            settings[$"OpenIddictConfig:PrivateApiAdditionalAuthenticationMethods:{path}"] =
+            settings["OpenIddictConfig:PrivateApiAdditionalAuthenticationMethods:0:Path"] = path;
+            settings["OpenIddictConfig:PrivateApiAdditionalAuthenticationMethods:0:Method"] =
                 additionalMethod;
         }
         return new OpenIddictConfig(
