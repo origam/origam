@@ -79,7 +79,9 @@ start_server() {
   ./configureServer.sh
   # nginx terminates TLS; keep the public URLs available for account emails.
   export Kestrel__Endpoints__Http__Url="http://+:8080"
-  env 'OpenIddictConfig__PrivateApiAdditionalAuthenticationMethods__/api/private/allDataTypesCookie=Cookie' \
+  env \
+    'OpenIddictConfig__PrivateApiAdditionalAuthenticationMethods__0__Path=/api/private/allDataTypesCookie' \
+    'OpenIddictConfig__PrivateApiAdditionalAuthenticationMethods__0__Method=Cookie' \
     dotnet Origam.Server.dll > origam-output.txt 2>&1 &
   server_pid=$!
 }
@@ -88,6 +90,7 @@ restart_server_with_private_api_authentication() {
   kill "${server_pid}"
   wait "${server_pid}"
   export OpenIddictConfig__PrivateApiAuthentication="$1"
+  export SoapAPI__AuthenticationMethod="$1"
   cd /home/origam/server_bin
   dotnet Origam.Server.dll >> origam-output.txt 2>&1 &
   server_pid=$!
@@ -178,16 +181,16 @@ else
   exit 1
 fi
 
-print_title "Run user API integration tests in Cookie mode"
+print_title "Run user API and SOAP API integration tests in Cookie mode"
 restart_server_with_private_api_authentication Cookie
 cd "$test_directory"
-yarn test:e2e userApi
+yarn test:e2e userApi soapApi
 if [[ $? -eq 0 ]]; then
   sudo cp frontend-integration-test-results.trx "/home/origam/output/frontend-integration-test-results-$test_runner-cookie-mode.trx"
   echo "Success."
 else
   sudo cp frontend-integration-test-results.trx "/home/origam/output/frontend-integration-test-results-$test_runner-cookie-mode.trx"
-  print_error "User API integration tests in Cookie mode failed"
+  print_error "User API and SOAP API integration tests in Cookie mode failed"
   exit 1
 fi
 
@@ -198,7 +201,8 @@ cd /home/origam/tests_workflow
 fill_origam_settings_for_workflow_tests
 
 dotnet test --logger "trx;logfilename=workflow-integration-test-results.trx" Origam.WorkflowTests.dll | filter_test_output
-if [[ $? -eq 0 ]]; then
+test_exit_code=${PIPESTATUS[0]}
+if [[ $test_exit_code -eq 0 ]]; then
   sudo cp /home/origam/tests_workflow/TestResults/workflow-integration-test-results.trx /home/origam/output/
   echo "Success."
 else
