@@ -133,6 +133,21 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   white-space: nowrap;
 }
 
+.details {
+  margin: 4px 0 0;
+  padding: 6px 8px;
+  max-height: 160px;
+  overflow: auto;
+  border: 1px solid var(--background3);
+  border-radius: 6px;
+  background: var(--background2);
+  color: var(--background8);
+  font-family: 'Consolas', 'SFMono-Regular', 'Menlo', monospace;
+  font-size: 11px;
+  line-height: 1.4;
+  white-space: pre;
+}
+
 .closeBtn {
   grid-column: 3;
   grid-row: 1;

@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 using Origam.Architect.Server.Models.Requests.DeploymentScripts;
+using Origam.Architect.Server.Models.Responses.DeploymentScripts;
 using Origam.Architect.Server.Services;
 using Origam.Schema;
 using Origam.Schema.DeploymentModel;
@@ -49,7 +50,7 @@ public class DeploymentScriptsController(
 
         if (targetVersion is not DeploymentVersion version)
         {
-            throw new Exception("DeploymentVersion is not found.");
+            throw new Exception(Strings.DeploymentScript_VersionNotFound);
         }
 
         deploymentVersionCurrentService.SetVersionCurrent(version);
@@ -67,12 +68,12 @@ public class DeploymentScriptsController(
 
         if (updateScriptActivity is not AbstractUpdateScriptActivity script)
         {
-            throw new Exception("UpdateScriptActivity is not found.");
+            throw new Exception(Strings.DeploymentScript_NotFound);
         }
 
         SecurityManager.SetServerIdentity();
-        deploymentScriptRunner.RunDeploymentScript(script);
+        string output = deploymentScriptRunner.RunDeploymentScript(script);
 
-        return Ok();
+        return Ok(new RunResponseModel { Output = output });
     }
 }
