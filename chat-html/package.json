@@ -46,7 +46,7 @@
     "react-router": "^5.2.0",
     "react-router-dom": "^5.3.0",
     "react-split": "^2.0.13",
-    "react-virtualized": "^9.22.6",
+    "react-virtualized": "^10.0.0",
     "stream-browserify": "^3.0.0",
     "typescript": "^6.0.3",
     "uuid": "^14.0.3",
