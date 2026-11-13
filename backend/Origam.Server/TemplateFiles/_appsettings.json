@@ -39,7 +39,8 @@
   },
   "OpenIddictConfig": {
     "PrivateApiAuthenticationMethod":  "Cookie",
-    "PrivateApiAdditionalAuthenticationMethods": {},
+    // Entries use { "Path": "/api/legacy/{id}", "Method": "Cookie" }.
+    "PrivateApiAdditionalAuthenticationMethods": [],
     "CookieExpirationMinutes": 60,
     "AccessTokenExpirationMinutes": 60,
     "RefreshTokenExpirationMinutes": 20160,

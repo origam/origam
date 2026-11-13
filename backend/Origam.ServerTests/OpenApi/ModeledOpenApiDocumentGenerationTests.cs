@@ -185,9 +185,13 @@ public class ModeledOpenApiDocumentGenerationTests
             new Dictionary<string, string>
             {
                 ["OpenIddictConfig:PrivateApiAuthenticationMethod"] = defaultMethod,
-                ["OpenIddictConfig:PrivateApiAdditionalAuthenticationMethods:/private/legacy"] =
+                ["OpenIddictConfig:PrivateApiAdditionalAuthenticationMethods:0:Path"] =
+                    "/private/legacy",
+                ["OpenIddictConfig:PrivateApiAdditionalAuthenticationMethods:0:Method"] =
                     additionalMethod,
-                ["OpenIddictConfig:PrivateApiAdditionalAuthenticationMethods:/public/legacy"] =
+                ["OpenIddictConfig:PrivateApiAdditionalAuthenticationMethods:1:Path"] =
+                    "/public/legacy",
+                ["OpenIddictConfig:PrivateApiAdditionalAuthenticationMethods:1:Method"] =
                     additionalMethod,
             }
         );
