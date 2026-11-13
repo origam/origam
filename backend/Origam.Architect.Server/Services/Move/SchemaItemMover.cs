@@ -20,45 +20,39 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using Origam.Schema;
-using Origam.Schema.GuiModel;
 
 namespace Origam.Architect.Server.Services.Move;
 
-public class SchemaItemMover(
-    ModelTransactionRunner transactionRunner,
-    CrossPackageMoveValidator packageValidator
-)
+public class SchemaItemMover(ModelTransactionRunner transactionRunner)
 {
     public ISchemaItem Move(ISchemaItem item, MoveDecision decision)
     {
         ISchemaItemProvider rootProvider = item.RootProvider;
         ISchemaItem oldParent = item.ParentItem;
-        SchemaItemGroup oldGroup = GetGroupOrThrow(item);
+        SchemaItemGroup oldGroup = MovePreconditions.RequireReadableGroup(item);
         bool oldIsAbstract = item.IsAbstract;
-        Package oldPackage =
-            item.Package
-            ?? throw new UserOrigamException(
-                string.Format(Strings.Move_SourcePackageNotFound, item.Name)
-            );
-        Package targetPackage = decision.ResolveTargetPackage(oldPackage);
-        bool crossPackage = targetPackage != null && targetPackage.Id != oldPackage.Id;
-        if (crossPackage)
-        {
-            packageValidator.CheckMoveOrThrow(item, targetPackage);
-        }
+        Guid oldPackageId = item.SchemaExtensionId;
+        List<ISchemaItem> repackagedItems =
+            decision.NewPackage == null
+                ? []
+                : PackageChangeChecker.CollectItemsChangingPackage(item);
         try
         {
             transactionRunner.Run(() =>
             {
                 decision.ApplyTo(item);
-                if (crossPackage)
+                foreach (ISchemaItem repackaged in repackagedItems)
                 {
-                    SetPackageRecursive(item, targetPackage);
+                    repackaged.SchemaExtensionId = decision.NewPackage.Id;
                 }
                 item.Persist();
-                if (crossPackage)
+                foreach (
+                    ISchemaItem otherRoot in repackagedItems.Where(repackaged =>
+                        repackaged != item && repackaged.ParentItem == null
+                    )
+                )
                 {
-                    PersistPanelControl(item);
+                    otherRoot.Persist();
                 }
             });
         }
@@ -68,9 +62,9 @@ public class SchemaItemMover(
             item.ParentItem = oldParent;
             item.Group = oldGroup;
             item.IsAbstract = oldIsAbstract;
-            if (crossPackage)
+            foreach (ISchemaItem repackaged in repackagedItems)
             {
-                SetPackageRecursive(item, oldPackage);
+                repackaged.SchemaExtensionId = oldPackageId;
             }
             decision.ClearAffectedCaches(rootProvider, oldParent);
             throw;
@@ -82,38 +76,5 @@ public class SchemaItemMover(
         }
 
         return item;
-    }
-
-    // The Group getter throws a plain Exception when the group is gone from the model.
-    private static SchemaItemGroup GetGroupOrThrow(ISchemaItem item)
-    {
-        try
-        {
-            return item.Group;
-        }
-        catch (Exception exception)
-        {
-            throw new UserOrigamException(
-                string.Format(Strings.Move_SourceGroupNotFound, item.Name),
-                exception.Message,
-                exception
-            );
-        }
-    }
-
-    private static void SetPackageRecursive(ISchemaItem item, Package package)
-    {
-        item.SetExtensionRecursive(package);
-        GetPanelControl(item)?.SetExtensionRecursive(package);
-    }
-
-    private static void PersistPanelControl(ISchemaItem item)
-    {
-        GetPanelControl(item)?.Persist();
-    }
-
-    private static ISchemaItem GetPanelControl(ISchemaItem item)
-    {
-        return item is PanelControlSet panelControlSet ? panelControlSet.PanelControl : null;
     }
 }

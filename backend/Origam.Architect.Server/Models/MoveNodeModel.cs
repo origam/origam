@@ -32,4 +32,6 @@ public class MoveNodeModel
     public NodeRefModel Target { get; set; }
 
     public bool IsCopy { get; set; }
+
+    public Guid? PackageId { get; set; }
 }

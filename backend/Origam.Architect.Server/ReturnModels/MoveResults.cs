@@ -31,6 +31,8 @@ public class MoveVerdictResult
 public class MoveNodeResult
 {
     public TreeNode Node { get; set; }
+    public MoveLocationResult SourceLocation { get; set; }
+    public MovePackageResult SourcePackage { get; set; }
     public List<string> ParentNodeIds { get; set; }
 }
 
@@ -46,11 +48,16 @@ public class MoveTargetResult
     public bool IsCurrentLocation { get; set; }
     public bool CanMove { get; set; }
     public bool CanCopy { get; set; }
+    public string MoveRefusal { get; set; }
+    public string FilePath { get; set; }
 }
 
 public class MoveTargetsResult
 {
     public List<MoveTargetResult> Targets { get; set; }
+    public List<MovePackageResult> Packages { get; set; }
+    public Guid? PackageId { get; set; }
+    public string PackageRefusal { get; set; }
     public bool IsSourceInActivePackage { get; set; }
     public bool IsTruncated { get; set; }
 }

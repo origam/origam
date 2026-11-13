@@ -186,18 +186,20 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
   function openMoveToDialog() {
     run({
       generator: function* () {
+        const source = toNodeRef(node);
         const result = (yield rootStore.architectApi.getMoveTargets({
-          source: toNodeRef(node),
+          source: source,
         })) as IMoveTargetsResult;
         const closeDialog = rootStore.dialogStack.pushDialog(
           '',
           <MoveToDialog
             sourceName={node.nodeText}
-            targets={result.targets}
-            isSourceInActivePackage={result.isSourceInActivePackage}
-            isTruncated={result.isTruncated}
+            initialResult={result}
+            loadTargets={packageId =>
+              rootStore.architectApi.getMoveTargets({ source: source, packageId: packageId })
+            }
             onCancel={() => closeDialog()}
-            onConfirm={(target, isCopy) => {
+            onConfirm={(target, isCopy, packageId) => {
               closeDialog();
               run({
                 generator: () =>
@@ -205,6 +207,7 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
                     node,
                     { id: target.id, nodeText: target.nodeText, isNonPersistentItem: false },
                     isCopy,
+                    packageId,
                   ),
               });
             }}

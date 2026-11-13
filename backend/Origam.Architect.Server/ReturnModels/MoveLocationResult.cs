@@ -19,6 +19,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.AI.Agent.Models.Responses;
+namespace Origam.Architect.Server.ReturnModels;
 
-public sealed record CustomInstructions(string Text);
+public class MoveLocationResult
+{
+    public string Id { get; set; }
+    public string NodeText { get; set; }
+    public string Path { get; set; }
+    public string PackageName { get; set; }
+}

@@ -37,8 +37,19 @@ public class MoveDecision
     public string ErrorMessage { get; init; }
     public SchemaItemGroup Group { get; init; }
     public ISchemaItem TargetItem { get; init; }
+    public Package NewPackage { get; init; }
 
     public bool IsAllowed => Kind != MoveDestination.None;
+
+    public MoveDecision WithNewPackage(Package package) =>
+        new()
+        {
+            Kind = Kind,
+            ErrorMessage = ErrorMessage,
+            Group = Group,
+            TargetItem = TargetItem,
+            NewPackage = package,
+        };
 
     public static MoveDecision Rejected(string message) =>
         new() { Kind = MoveDestination.None, ErrorMessage = message };
@@ -50,16 +61,6 @@ public class MoveDecision
 
     public static MoveDecision ToParentItem(ISchemaItem targetItem) =>
         new() { Kind = MoveDestination.ParentItem, TargetItem = targetItem };
-
-    public Package ResolveTargetPackage(Package fallback)
-    {
-        return Kind switch
-        {
-            MoveDestination.Group => Group.Package,
-            MoveDestination.ParentItem => TargetItem.Package,
-            _ => fallback,
-        };
-    }
 
     public void ApplyTo(ISchemaItem item)
     {
