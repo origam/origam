@@ -28,6 +28,7 @@ using System.Data;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Runtime.Versioning;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
@@ -981,6 +982,7 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
         return res;
     }
 
+    [SupportedOSPlatform("windows")]
     public static string ResizeImage(string inputData, int width, int height)
     {
         byte[] inBytes = System.Convert.FromBase64String(inputData);
@@ -990,6 +992,7 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
         );
     }
 
+    [SupportedOSPlatform("windows")]
     public static string ResizeImage(
         string inputData,
         int width,
@@ -1016,6 +1019,7 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
         );
     }
 
+    [SupportedOSPlatform("windows")]
     public static XPathNodeIterator GetImageDimensions(string inputData)
     {
         byte[] inBytes = Convert.FromBase64String(inputData);

@@ -1,13 +1,8 @@
 # Setting up Development Environment for Origam
 The following is a guide to help you set up Origam development environment. You will need it if you wish to contribute to Origam backend or frontend. It will be quite helpful if you are going to develop your own plugin for Origam too.
 
-If you wish to build and debug the Architect, the Server and the client application you will need 
-Windows. 
+The backend projects target .NET 10. The Architect and application client run in a browser.
 
-If you have Linux or Mac it is recommended to do the development in a 
-virtual Windows machine. You can develop the server and the client application 
-outside of Windows but if you wish to run and debug the Architect you will just need 
- Windows.
 It is also possible to download the compiled server application 
 [here](https://github.com/origam/origam/releases) and just build and debug the 
 client application. 
@@ -22,7 +17,7 @@ Install [SQL Server](https://www.microsoft.com/en-us/sql-server/sql-server-downl
 
 #### C# IDE
 Install [Visual Studio 2026](https://visualstudio.microsoft.com/downloads/) and [.NET SDK 10.0.403 or later](https://dotnet.microsoft.com/download/dotnet/10.0).
-Select **ASP.NET and web development** and **.NET desktop development** during the installation process.
+Select **ASP.NET and web development** during the installation process.
 
 #### Node.js
 Make sure you download at least version 18 of [Node.js](https://nodejs.org/en/).
@@ -55,14 +50,8 @@ Then open the C# solution in Visual Studio. The solution file is at:
 backend\Origam.sln
 ```
 ### Open the Project in Architect
-In Visual Studio set the startup project to  **OrigamArchitect** switch the solution configuration to **Debug Architect** and run the project.
+Follow the [Architect Server setup guide](backend/Origam.Architect.Server/HOWTOSTART.md) and use the **Debug Architect Server** configuration. Create `OrigamSettings.config` in `backend/Origam.Architect.Server/bin/Debug/net10.0`.
 
-Wait for the Architect to start up. You will be presented with the New project wizard pop up, click Cancel to close it. Next to go `File` &rarr; 
-`Connection Configuration...`. There are no configurations as you can see. The status 
-bar at the bottom of the application shows path of the loaded settings file.
-```
-C:\Users\<userName>\AppData\Roaming\ORIGAM\0.0\OrigamSettings.config
-```
 Open the file in a text editor and replace its contents with this
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -92,10 +81,7 @@ Open the file in a text editor and replace its contents with this
   </xmlSerializerSection>
 </OrigamSettings>
 ```
-Make sure you set the correct **ModelSourceControlLocation** in the file. Open the 
-Architect again. You should see the demo projects' packages. Double click the **Automatic Tests**
-package and a **Deployment Scripts Pending** pop up should show up. Click Yes. The database 
-should now contain the generated tables and minimal data so the application can start.
+Set **ModelSourceControlLocation** to your checkout of `model-tests/model`. Start Architect Server and open the demo package in the web Architect, then run its pending deployment scripts to initialize the database.
 
 Now we add a test user into the database. Open **SQL Server Management Studio** go to
 the database **origam-demo** and run the following script
@@ -323,10 +309,10 @@ The development server will start and show you the port number where you can rea
 ### Conclusion 
 We have configured the Origam development environment. Now you can debug all parts of Origam.
 
-To debug the Architect in Visual Studio set the startup project to **OrigamArchitect** and switch the solution configuration to **Debug Architect**. Then run the project.
+To debug the Architect in Visual Studio set the startup project to **Origam.Architect.Server** and switch the solution configuration to **Debug Architect Server**. Then run the project.
 
 If you want to debug the server set the startup project to **Origam.Server** switch the solution configuration to **Debug Server** and run the project.
 
 If you need to debug the front end application in browser run the Origam server (previous paragraph) and start the node development server with `yarn dev`. 
 
-If you want to run web version of OrigamArchitect go to Origam.Architect.Server folder and read HOWTOSTART.md file there.
+See the [Architect Server setup guide](backend/Origam.Architect.Server/HOWTOSTART.md) for the web Architect configuration.

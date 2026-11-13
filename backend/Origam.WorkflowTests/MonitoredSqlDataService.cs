@@ -78,6 +78,21 @@ public class SqlDataServiceMonitor
 
     public void TraceUpdateData(DataSet dataset)
     {
+        if (dataset.Tables["WorkQueueState"] is { } states)
+        {
+            foreach (DataRow row in states.Rows)
+            {
+                if (row.RowState == DataRowState.Modified)
+                {
+                    AddOperation(
+                        new ThrottlingIntervalOperation(
+                            (Guid)row["refWorkQueueId"],
+                            (DateTime)row["ThrottlingIntervalStart"]
+                        )
+                    );
+                }
+            }
+        }
         var deletesWorkQueueEntry =
             dataset is
             {
@@ -124,3 +139,6 @@ public record DeleteWorkQueueEntryOperation(string Name, Dictionary<string, obje
     public Guid RowId => (Guid)Parameters["deletedRowId"];
     public DateTime ExecutedAt => (DateTime)Parameters["executedAt"];
 }
+
+public record ThrottlingIntervalOperation(Guid WorkQueueId, DateTime IntervalStart)
+    : Operation(Name: "UpdateThrottlingInterval", Parameters: new Dictionary<string, object>());

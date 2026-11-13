@@ -22,9 +22,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-#pragma warning disable IDE0005
-using System.Drawing.Design;
-#pragma warning restore IDE0005
 using System.Xml.Serialization;
 using Origam.DA.Common;
 using Origam.Schema.EntityModel;
@@ -61,9 +58,6 @@ public class XPathRule : AbstractRule
 
     #region Properties
     [XmlAttribute("xPath")]
-#if !NETSTANDARD
-    [Editor(typeof(MultiLineTextEditor), typeof(UITypeEditor))]
-#endif
     public string XPath { get; set; } = "";
 
     [DefaultValue(false)]

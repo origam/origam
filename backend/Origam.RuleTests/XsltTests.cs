@@ -25,9 +25,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Drawing;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
+using System.Security.Principal;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Web;
@@ -52,6 +56,7 @@ namespace Origam.RuleTests;
 [TestFixture]
 public class XsltTests
 {
+    private IPrincipal originalPrincipal;
     private Mock<IBusinessServicesService> businessServiceMock;
     private Mock<IParameterService> parameterServiceMock;
     private Mock<IDataLookupService> lookupServiceMock;
@@ -91,6 +96,11 @@ public class XsltTests
     [SetUp]
     public void Init()
     {
+        originalPrincipal = Thread.CurrentPrincipal;
+        Thread.CurrentPrincipal = new GenericPrincipal(
+            new GenericIdentity(string.Empty),
+            Array.Empty<string>()
+        );
         lookupServiceMock = new Mock<IDataLookupService>();
         businessServiceMock = new Mock<IBusinessServicesService>();
         stateMachineServiceMock = new Mock<IStateMachineService>();
@@ -143,6 +153,12 @@ public class XsltTests
                 null
             )
             .ToList();
+    }
+
+    [TearDown]
+    public void RestorePrincipal()
+    {
+        Thread.CurrentPrincipal = originalPrincipal;
     }
 
     private object RunInXpath(string xsltCall, XmlDocument document = null)
@@ -526,21 +542,6 @@ public class XsltTests
         + "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
         + "AAAAAAAAAAAAAAAA==";
 
-    private const string resizedImage1Linux =
-        "iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAABGdBTUEAALGPC/xhBQ"
-        + "AAAAFzUkdCAK7OHOkAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAA"
-        + "BdwnLpRPAAAACFJREFUCJlj/P///38GKPj///9/JgY0gCHAgqyFgYGBAQAVfgv+xs48"
-        + "NQAAAABJRU5ErkJgggAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-        + "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-        + "AAAAAAAA==";
-    private const string resizedImage2Linux =
-        "iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAABGdBTUEAALGPC/xhBQ"
-        + "AAAAFzUkdCAK7OHOkAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAA"
-        + "BdwnLpRPAAAACFJREFUCJlj/P//PwMDAwMDw////5kYkAAKhwWujIGBAQAx+wkBrIw4"
-        + "XAAAAABJRU5ErkJgggAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-        + "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-        + "AAAAAAAA==";
-
     // white square 6x6, png format.
     private byte[] image =
     {
@@ -679,28 +680,36 @@ public class XsltTests
     [TestCase("AS:ResizeImage('{0}', '4', '4')", resizedImage1)]
     [TestCase("AS:ResizeImage('{0}', '4', '4', 'true', 'png')", resizedImage2)]
     [Platform(Include = "Win")]
+    [SupportedOSPlatform("windows")]
     public void ShouldConvertImage(string xsltCallTemplate, string expectedResult)
     {
         string xsltCall = string.Format(xsltCallTemplate, Convert.ToBase64String(image));
-        object xPathResult = RunInXpath(xsltCall);
-        Assert.That(xPathResult, Is.EqualTo(expectedResult));
+        string xPathResult = (string)RunInXpath(xsltCall);
         string xsltResult = RunInXslt(xsltCall);
-        Assert.That(xsltResult, Is.EqualTo(expectedResult));
-    }
+        Assert.That(xsltResult, Is.EqualTo(xPathResult));
 
-    [TestCase("AS:ResizeImage('{0}', '4', '4')", resizedImage1Linux)]
-    [TestCase("AS:ResizeImage('{0}', '4', '4', 'true', 'png')", resizedImage2Linux)]
-    [Platform(Include = "Linux")]
-    public void ShouldConvertImageLinux(string xsltCallTemplate, string expectedResult)
-    {
-        string xsltCall = string.Format(xsltCallTemplate, Convert.ToBase64String(image));
-        object xPathResult = RunInXpath(xsltCall);
-        string xsltResult = RunInXslt(xsltCall);
-        Assert.That(xPathResult, Is.EqualTo(expectedResult));
-        Assert.That(xsltResult, Is.EqualTo(expectedResult));
+        using var expectedStream = new MemoryStream(Convert.FromBase64String(expectedResult));
+        using var actualStream = new MemoryStream(Convert.FromBase64String(xPathResult));
+        using var expected = new Bitmap(expectedStream);
+        using var actual = new Bitmap(actualStream);
+        Assert.That(actual.Size, Is.EqualTo(expected.Size));
+        for (int y = 0; y < expected.Height; y++)
+        {
+            for (int x = 0; x < expected.Width; x++)
+            {
+                Color expectedPixel = expected.GetPixel(x, y);
+                Color actualPixel = actual.GetPixel(x, y);
+                // GDI+ versions can round interpolated color components differently.
+                Assert.That(actualPixel.R, Is.EqualTo(expectedPixel.R).Within(1));
+                Assert.That(actualPixel.G, Is.EqualTo(expectedPixel.G).Within(1));
+                Assert.That(actualPixel.B, Is.EqualTo(expectedPixel.B).Within(1));
+                Assert.That(actualPixel.A, Is.EqualTo(expectedPixel.A).Within(1));
+            }
+        }
     }
 
     [Test]
+    [Platform(Include = "Win")]
     public void ShouldGetImageDimensions()
     {
         string xsltCall = $"AS:GetImageDimensions('{Convert.ToBase64String(image)}')";
@@ -832,7 +841,7 @@ public class XsltTests
     public void ShouldAddTime(string xsltCall, string expectedResultWithoutTimeZone)
     {
         var dateTime = DateTime.Parse("2022-07-13");
-        TimeSpan offset = TimeZone.CurrentTimeZone.GetUtcOffset(dateTime);
+        TimeSpan offset = TimeZoneInfo.Local.GetUtcOffset(dateTime);
         string expectedResult = expectedResultWithoutTimeZone + $"+{offset:hh}:00";
         object xPathResult = RunInXpath(xsltCall);
         Assert.That(xPathResult, Is.EqualTo(expectedResult));
@@ -1292,7 +1301,7 @@ public class XsltTests
     public void ShouldListDays()
     {
         var dateTime = DateTime.Parse("2022-01-01");
-        TimeSpan offset = TimeZone.CurrentTimeZone.GetUtcOffset(dateTime);
+        TimeSpan offset = TimeZoneInfo.Local.GetUtcOffset(dateTime);
         string xsltCall = "AS:ListDays('2022-01-01', '2022-01-03')";
         string expectedResultXpath =
             "<list>"
@@ -1335,7 +1344,7 @@ public class XsltTests
         string xsltCall = $"AS:AddWorkingDays('2022-01-02', '2', '{calendarId}')";
 
         var expectedDate = DateTime.Parse("2022-01-04");
-        TimeSpan offset = TimeZone.CurrentTimeZone.GetUtcOffset(expectedDate);
+        TimeSpan offset = TimeZoneInfo.Local.GetUtcOffset(expectedDate);
         string expectedResult = $"2022-01-04T00:00:00.0000000+{offset:hh}:00";
 
         var agentMock = new Mock<IServiceAgent>();

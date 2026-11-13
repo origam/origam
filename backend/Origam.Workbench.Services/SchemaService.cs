@@ -246,7 +246,7 @@ public class SchemaService : AbstractService, ISchemaService
 
     public void RemoveProvider(ISchemaItemProvider provider)
     {
-#if ! ORIGAM_CLIENT
+#if ! ORIGAM_SERVER
         provider.ClearCache();
 #endif
         provider.PersistenceProvider = null;

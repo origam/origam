@@ -45,6 +45,7 @@ public class OrigamEngine
     private static System.Timers.Timer RestartTimer = new System.Timers.Timer(1000);
     private static DateTime LastRestartRequestDate;
     private static IRuntimeServiceFactory serviceFactory = new RuntimeServiceFactory();
+    private static Action restartApplication;
     #endregion
     #region Constructors
     internal OrigamEngine() { }
@@ -95,6 +96,7 @@ public class OrigamEngine
     public static void UnloadConnectedServices()
     {
         RestartTimer?.Stop();
+        restartApplication = null;
         serviceFactory.UnloadServices();
         DataServiceFactory.ClearDataService();
     }
@@ -108,7 +110,8 @@ public class OrigamEngine
         string configName = "",
         bool runRestartTimer = true,
         bool loadDeploymentScripts = false,
-        IRuntimeServiceFactory customServiceFactory = null
+        IRuntimeServiceFactory customServiceFactory = null,
+        Action onRestartRequested = null
     )
     {
         log.Info("Connecting ORIGAM Runtime.");
@@ -153,6 +156,8 @@ public class OrigamEngine
         if (runRestartTimer)
         {
             LastRestartRequestDate = GetLastRestartRequestDate();
+            restartApplication = onRestartRequested;
+            RestartTimer.Elapsed -= RestartTimer_Elapsed;
             RestartTimer.Elapsed += RestartTimer_Elapsed;
             RestartTimer.Start();
         }
@@ -212,12 +217,11 @@ public class OrigamEngine
     {
         try
         {
-#if ORIGAM_SERVER
-            if (IsRestartPending())
+            if (restartApplication is { } restart && IsRestartPending())
             {
-                AppDomain.Unload(AppDomain.CurrentDomain);
+                RestartTimer.Stop();
+                restart();
             }
-#endif
             RestartTimer.Interval = 1000;
         }
         catch (Exception ex)

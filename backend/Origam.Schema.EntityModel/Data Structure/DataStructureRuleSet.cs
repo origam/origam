@@ -121,14 +121,14 @@ public class DataStructureRuleSet : AbstractSchemaItem
         return result;
     }
 
-#if ORIGAM_CLIENT
+#if ORIGAM_SERVER
     private static Dictionary<string, List<DataStructureRule>> _ruleCache = new();
 #endif
 
     public List<DataStructureRule> Rules(string entityName, Guid fieldId, bool includeOtherEntities)
     {
         List<DataStructureRule> result;
-#if ORIGAM_CLIENT
+#if ORIGAM_SERVER
         string cacheId = Id + entityName + fieldId + includeOtherEntities;
         lock (_lock)
         {
@@ -155,7 +155,7 @@ public class DataStructureRuleSet : AbstractSchemaItem
                     }
                 }
             }
-#if ORIGAM_CLIENT
+#if ORIGAM_SERVER
             _ruleCache.Add(cacheId, result);
         }
 #endif

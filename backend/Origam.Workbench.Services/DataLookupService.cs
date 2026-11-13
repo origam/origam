@@ -441,10 +441,6 @@ public class DataLookupService : IDataLookupService
                 }
                 case QueryType.Value:
                 {
-                    if (dataLookup.ValueDataStructureMethodId == null)
-                    {
-                        log.Warn("DataLookup has no ValueDataStructureMethodId !!");
-                    }
                     return new DataStructureQuery(
                         dataLookup.ValueDataStructureId,
                         dataLookup.ValueDataStructureMethodId,

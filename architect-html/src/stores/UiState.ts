@@ -27,6 +27,7 @@ enum EStorageKeys {
   SIDEBAR_WIDTH = 'sidebarWidth',
   AI_PANEL_WIDTH = 'aiPanelWidth',
   AI_PANEL_VISIBLE = 'aiPanelVisible',
+  DESIGNER_TOOLBOX_WIDTH = 'designerToolboxWidth',
   PROPERTY_SECTION_COLLAPSED = 'propertySectionCollapsed',
   MODEL_CHECK_STATE = 'modelCheckState',
 }
@@ -44,6 +45,10 @@ const SIDEBAR_DEFAULT_WIDTH = 400;
 export const AI_PANEL_MIN_WIDTH = 300;
 export const AI_PANEL_MAX_WIDTH = 800;
 const AI_PANEL_DEFAULT_WIDTH = 380;
+
+const DESIGNER_TOOLBOX_MIN_WIDTH = 200;
+const DESIGNER_TOOLBOX_MAX_WIDTH = 800;
+const DESIGNER_TOOLBOX_DEFAULT_WIDTH = 292;
 
 type TSettings = {
   isVimEnabled: boolean;
@@ -94,6 +99,11 @@ function clampAiPanelWidth(value: number): number {
   return Math.min(AI_PANEL_MAX_WIDTH, Math.max(AI_PANEL_MIN_WIDTH, value));
 }
 
+function clampDesignerToolboxWidth(value: number): number {
+  if (!Number.isFinite(value)) return DESIGNER_TOOLBOX_DEFAULT_WIDTH;
+  return Math.min(DESIGNER_TOOLBOX_MAX_WIDTH, Math.max(DESIGNER_TOOLBOX_MIN_WIDTH, value));
+}
+
 export class UIState {
   @observable accessor expandedNodes: string[] = [];
   @observable accessor settings: TSettings = { ...defaultSettings };
@@ -103,6 +113,7 @@ export class UIState {
   @observable accessor sidebarWidth: number = SIDEBAR_DEFAULT_WIDTH;
   @observable accessor aiPanelWidth: number = AI_PANEL_DEFAULT_WIDTH;
   @observable accessor aiPanelVisible: boolean = true;
+  @observable accessor designerToolboxWidth: number = DESIGNER_TOOLBOX_DEFAULT_WIDTH;
   @observable accessor propertySectionCollapsed: TPropertySectionCollapsed = {};
   @observable accessor modelCheckState: IModelCheckPersistedState = {
     ...defaultModelCheckState,
@@ -133,6 +144,13 @@ export class UIState {
     const rawAiPanelVisible = localStorage.getItem(EStorageKeys.AI_PANEL_VISIBLE);
     if (rawAiPanelVisible !== null) {
       this.aiPanelVisible = rawAiPanelVisible === 'true';
+    }
+
+    const rawDesignerToolboxWidth = localStorage.getItem(EStorageKeys.DESIGNER_TOOLBOX_WIDTH);
+    if (rawDesignerToolboxWidth !== null) {
+      this.designerToolboxWidth = clampDesignerToolboxWidth(
+        Number.parseFloat(rawDesignerToolboxWidth),
+      );
     }
 
     this.propertySectionCollapsed = this.loadStateFromLocalStorage(
@@ -169,6 +187,13 @@ export class UIState {
     const clamped = clampAiPanelWidth(width);
     this.aiPanelWidth = clamped;
     localStorage.setItem(EStorageKeys.AI_PANEL_WIDTH, String(clamped));
+  }
+
+  @action
+  setDesignerToolboxWidth(width: number) {
+    const clamped = clampDesignerToolboxWidth(width);
+    this.designerToolboxWidth = clamped;
+    localStorage.setItem(EStorageKeys.DESIGNER_TOOLBOX_WIDTH, String(clamped));
   }
 
   @action

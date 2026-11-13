@@ -97,7 +97,7 @@ public class HashIndexFile : AbstractIndexFile
     private string GetHash(Stream stream)
     {
         using (BufferedStream bufferedStream = new BufferedStream(stream))
-        using (SHA1Managed sha1 = new SHA1Managed())
+        using (SHA1 sha1 = SHA1.Create())
         {
             byte[] hash = sha1.ComputeHash(bufferedStream);
             StringBuilder output = new StringBuilder(2 * hash.Length);

@@ -13,7 +13,6 @@ jobs:
     permissions:
       id-token: write
       contents: read
-      checks: write
 
     strategy:
       fail-fast: false
@@ -29,21 +28,18 @@ jobs:
       with:
         dotnet-version: '10.0.x'
 
-    - name: Setup msbuild
-      uses: microsoft/setup-msbuild@v3
-
     - name: Setup NuGet
       uses: NuGet/setup-nuget@v4
 
     - name: Restore Packages
       run: |
-       msbuild backend/Origam.sln -t:restore /p:Configuration="Release Architect" -v:m
+       dotnet msbuild backend/Origam.sln -t:restore /p:Configuration="Release Architect Server" -v:m
     - name: Build Architect
       run: |
-       msbuild backend/Origam.sln -warnaserror /p:Configuration="Release Architect" -v:m
+       dotnet msbuild backend/Origam.sln -warnaserror /p:Configuration="Release Architect Server" -v:m
     - name: Build Origam.CommonTests
       run: |
-       msbuild backend/Origam.sln -warnaserror -t:build /p:Configuration="Release Architect" /t:Common\Origam_CommonTests:Publish -v:m
+       dotnet msbuild backend/Origam.sln -warnaserror -t:build /p:Configuration="Release Architect Server" /t:Common\Origam_CommonTests:Publish -v:m
     - name: Upload Architect testing artifact
       uses: actions/upload-artifact@v7
       with:
@@ -71,16 +67,13 @@ jobs:
       with:
         dotnet-version: '10.0.x'
 
-    - name: Setup msbuild
-      uses: microsoft/setup-msbuild@v3
-
     - name: Restore Origam.ServerTests
       run: |
-       msbuild backend/Origam.ServerTests/Origam.ServerTests.csproj -t:restore /p:Configuration="Release Server" -v:m
+       dotnet msbuild backend/Origam.ServerTests/Origam.ServerTests.csproj -t:restore /p:Configuration="Release Server" -v:m
 
     - name: Build Origam.ServerTests
       run: |
-       msbuild backend/Origam.ServerTests/Origam.ServerTests.csproj -warnaserror -t:publish /p:Configuration="Release Server" -v:m
+       dotnet msbuild backend/Origam.ServerTests/Origam.ServerTests.csproj -warnaserror -t:publish /p:Configuration="Release Server" -v:m
 
     - name: Upload Server testing artifact
       uses: actions/upload-artifact@v7
@@ -99,7 +92,6 @@ jobs:
       actions: read
       contents: read
       security-events: write
-      checks: write
 
     strategy:
       fail-fast: false
@@ -123,17 +115,7 @@ jobs:
        echo Linux platform is case sensitive filenames. For this reason it has to be renamed mvp.xml.dll to Mvp.Xml.dll.
        find . -name 'mvp.xml.dll' -exec sh -c 'f="{}"; mv -- "$f" "$(dirname {})/mvp.xml.x.dll"' \;
        find . -name 'mvp.xml.x.dll' -exec sh -c 'f="{}"; mv -- "$f" "$(dirname {})/Mvp.Xml.dll"' \;
-       dotnet test --logger "trx;logfilename=architect-test-results.trx" backend/**Tests/bin/Release/*Tests.dll
-
-    - name: Produce Architect NUnit test report
-      uses: dorny/test-reporter@v3
-      if: success() || failure()
-      with:
-        name: Architect NUnit Results
-        use-actions-summary: false
-        path: TestResults/architect-test-results.trx
-        reporter: dotnet-trx
-        max-annotations: '0'
+       dotnet test --logger "trx;logfilename=architect-test-results.trx" backend/**Tests/bin/Release/net10.0/*Tests.dll
 
   serverTests:
     needs: buildServer
@@ -142,7 +124,6 @@ jobs:
     permissions:
       actions: read
       contents: read
-      checks: write
 
     strategy:
       fail-fast: false
@@ -164,16 +145,6 @@ jobs:
     - name: Run Server NUnit tests
       run: |
        dotnet test --logger "trx;logfilename=server-test-results.trx" backend/Origam.ServerTests/bin/Release/net10.0/Origam.ServerTests.dll
-
-    - name: Produce Server NUnit test report
-      uses: dorny/test-reporter@v3
-      if: success() || failure()
-      with:
-        name: Server NUnit Results
-        use-actions-summary: false
-        path: TestResults/server-test-results.trx
-        reporter: dotnet-trx
-        max-annotations: '0'
 
   cleanupArtifacts:
     needs: [tests, serverTests]
