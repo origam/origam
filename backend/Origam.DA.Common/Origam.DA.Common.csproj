@@ -11,6 +11,7 @@
     <RootNamespace>Origam.DA.Common</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="log4net" Version="3.5.0" />
     <PackageReference Include="morelinq" Version="4.1.0" />
     <PackageReference Include="protobuf-net" Version="3.2.30" />
     <PackageReference Include="SharpZipLib" Version="1.4.2" />

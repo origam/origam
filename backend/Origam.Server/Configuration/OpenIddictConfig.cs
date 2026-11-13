@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Security.Cryptography.X509Certificates;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.MicrosoftAccount;
 using Microsoft.Extensions.Configuration;
@@ -52,14 +53,26 @@ public static class IdentityServerDefaults
 
 public class OpenIddictConfig
 {
+    private readonly IReadOnlyDictionary<string, string[]> additionalAuthenticationTemplates;
+
     public GoogleLogin GoogleLogin { get; }
     public MicrosoftLogin MicrosoftLogin { get; }
     public AzureAdLogin AzureAdLogin { get; }
     public bool CookieSlidingExpiration { get; }
     public int CookieExpirationMinutes { get; }
     public int AccessTokenExpirationMinutes { get; }
+    public int RefreshTokenExpirationMinutes { get; }
     public string AuthenticationPostProcessor { get; }
     public string AccessTokenIssuer { get; }
+    public string SigningCertificatePath { get; }
+    public string SigningCertificatePassword { get; }
+    public string EncryptionCertificatePath { get; }
+    public string EncryptionCertificatePassword { get; }
+    public string SigningCertificateThumbprint { get; }
+    public string EncryptionCertificateThumbprint { get; }
+    public StoreLocation CertificateStoreLocation { get; }
+    public StoreName CertificateStoreName { get; }
+    public string FallbackGeneratedCertificateDirectory { get; }
     public AuthenticationMethod PrivateApiAuthenticationMethod { get; }
     public IReadOnlyDictionary<
         string,
@@ -70,6 +83,31 @@ public class OpenIddictConfig
     public OpenIddictConfig(IConfiguration configuration)
     {
         var openIddictSection = configuration.GetSectionOrThrow("OpenIddictConfig");
+        SigningCertificatePath = openIddictSection.GetValue<string>("SigningCertificatePath");
+        SigningCertificatePassword = openIddictSection.GetValue<string>(
+            "SigningCertificatePassword"
+        );
+        EncryptionCertificatePath = openIddictSection.GetValue<string>("EncryptionCertificatePath");
+        EncryptionCertificatePassword = openIddictSection.GetValue<string>(
+            "EncryptionCertificatePassword"
+        );
+        SigningCertificateThumbprint = openIddictSection.GetValue<string>(
+            "SigningCertificateThumbprint"
+        );
+        EncryptionCertificateThumbprint = openIddictSection.GetValue<string>(
+            "EncryptionCertificateThumbprint"
+        );
+        CertificateStoreLocation = openIddictSection.GetValue(
+            key: "CertificateStoreLocation",
+            defaultValue: StoreLocation.LocalMachine
+        );
+        CertificateStoreName = openIddictSection.GetValue(
+            key: "CertificateStoreName",
+            defaultValue: StoreName.My
+        );
+        FallbackGeneratedCertificateDirectory = openIddictSection.GetValue<string>(
+            "FallbackGeneratedCertificateDirectory"
+        );
         CookieSlidingExpiration = openIddictSection.GetValue(
             key: "CookieSlidingExpiration",
             defaultValue: true
@@ -81,9 +119,18 @@ public class OpenIddictConfig
         PrivateApiAdditionalAuthenticationMethods = openIddictSection
             .GetSection("PrivateApiAdditionalAuthenticationMethods")
             .GetChildren()
+            .Select(endpoint =>
+            {
+                string path = endpoint["Path"];
+                ArgumentException.ThrowIfNullOrEmpty(path, endpoint.Path + ":Path");
+                return new KeyValuePair<string, AuthenticationMethod>(
+                    path,
+                    ParseAdditionalAuthenticationMethod(path, endpoint["Method"])
+                );
+            })
             .ToDictionary(
                 endpoint => endpoint.Key,
-                endpoint => ParseAdditionalAuthenticationMethod(endpoint.Key, endpoint.Value),
+                endpoint => endpoint.Value,
                 StringComparer.Ordinal
             );
         foreach (var endpoint in PrivateApiAdditionalAuthenticationMethods)
@@ -91,6 +138,13 @@ public class OpenIddictConfig
             // PathString also validates that endpoint paths start with '/'.
             _ = new Microsoft.AspNetCore.Http.PathString(endpoint.Key);
         }
+        additionalAuthenticationTemplates = PrivateApiAdditionalAuthenticationMethods
+            .Where(endpoint => endpoint.Key.Split('/').Any(IsPathParameter))
+            .ToDictionary(
+                endpoint => endpoint.Key,
+                endpoint => endpoint.Key.Split('/'),
+                StringComparer.Ordinal
+            );
         CookieExpirationMinutes = openIddictSection.GetValue(
             key: "CookieExpirationMinutes",
             defaultValue: 60
@@ -100,6 +154,11 @@ public class OpenIddictConfig
             defaultValue: 60
         );
         ArgumentOutOfRangeException.ThrowIfNegativeOrZero(AccessTokenExpirationMinutes);
+        RefreshTokenExpirationMinutes = openIddictSection.GetValue(
+            key: "RefreshTokenExpirationMinutes",
+            defaultValue: 20_160 // 14 days
+        );
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(RefreshTokenExpirationMinutes);
         GoogleLogin = ConfigureGoogleLogin(openIddictSection);
         MicrosoftLogin = ConfigureMicrosoftLogin(openIddictSection);
         AzureAdLogin = ConfigureAzureAdLogin(openIddictSection);
@@ -120,13 +179,63 @@ public class OpenIddictConfig
     public IEnumerable<AuthenticationMethod> GetPrivateApiAuthenticationMethods(string path)
     {
         yield return PrivateApiAuthenticationMethod;
-        if (
-            PrivateApiAdditionalAuthenticationMethods.TryGetValue(path, out var additionalMethod)
-            && additionalMethod != PrivateApiAuthenticationMethod
-        )
+        if (PrivateApiAdditionalAuthenticationMethods.TryGetValue(path, out var additionalMethod))
         {
-            yield return additionalMethod;
+            if (additionalMethod != PrivateApiAuthenticationMethod)
+            {
+                yield return additionalMethod;
+            }
+            yield break;
         }
+        if (additionalAuthenticationTemplates.Count == 0)
+        {
+            yield break;
+        }
+        string[] pathSegments = path.Split('/');
+        foreach (var template in additionalAuthenticationTemplates)
+        {
+            additionalMethod = PrivateApiAdditionalAuthenticationMethods[template.Key];
+            if (
+                additionalMethod != PrivateApiAuthenticationMethod
+                && MatchesPath(template.Value, pathSegments)
+            )
+            {
+                yield return additionalMethod;
+                yield break;
+            }
+        }
+    }
+
+    private static bool MatchesPath(string[] templateSegments, string[] pathSegments)
+    {
+        if (templateSegments.Length != pathSegments.Length)
+        {
+            return false;
+        }
+        for (int i = 0; i < templateSegments.Length; i++)
+        {
+            if (IsPathParameter(templateSegments[i]))
+            {
+                if (pathSegments[i].Length == 0)
+                {
+                    return false;
+                }
+            }
+            else if (!string.Equals(templateSegments[i], pathSegments[i], StringComparison.Ordinal))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private static bool IsPathParameter(string segment)
+    {
+        return segment.Length > 2
+            && segment[0] == '{'
+            && segment[^1] == '}'
+            && segment.IndexOf(value: '{', startIndex: 1) < 0
+            && segment.IndexOf('}') == segment.Length - 1;
     }
 
     private static AuthenticationMethod ParseAdditionalAuthenticationMethod(
