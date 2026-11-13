@@ -16,7 +16,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="CSharpFunctionalExtensions" Version="2.20.4" />
-    <PackageReference Include="morelinq" Version="4.1.0" />
+    <PackageReference Include="morelinq" Version="4.4.0" />
     <PackageReference Include="Npgsql" Version="10.0.3" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="7.1.1" />
   </ItemGroup>
