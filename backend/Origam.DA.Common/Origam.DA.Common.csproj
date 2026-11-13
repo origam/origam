@@ -12,10 +12,10 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="log4net" Version="3.5.0" />
-    <PackageReference Include="morelinq" Version="4.1.0" />
+    <PackageReference Include="morelinq" Version="4.4.0" />
     <PackageReference Include="protobuf-net" Version="3.2.30" />
     <PackageReference Include="SharpZipLib" Version="1.4.2" />
-    <PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.0" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="7.1.1" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Origam.Common\Origam.Common.csproj" />
