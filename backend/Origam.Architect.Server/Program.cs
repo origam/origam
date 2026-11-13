@@ -19,7 +19,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using System.Reflection;
 using System.Text.Json.Serialization;
 using Microsoft.Extensions.FileProviders;
 using Origam.AI.Agent;
@@ -62,6 +61,7 @@ public class Program
         builder.Services.AddSingleton(settings);
         builder.Services.AddSingleton(deploymentService);
         builder.Services.AddSingleton<GitNodeStatusService>();
+        builder.Services.AddSingleton<NodeIconService>();
         builder.Services.AddSingleton<ModelTransactionRunner>();
         builder.Services.AddSingleton<TreeNodeFactory>();
         builder.Services.AddSingleton<EditorPropertyFactory>();
@@ -148,14 +148,11 @@ public class Program
         app.UseMiddleware<OrigamErrorHandlingMiddleware>();
         app.UseMiddleware<ServerIdentityMiddleware>();
         app.UseStaticFiles();
-        string assemblyPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         app.UseStaticFiles(
             new StaticFileOptions
             {
-                FileProvider = new PhysicalFileProvider(
-                    Path.Combine(assemblyPath, path2: "Assets", path3: "Icons")
-                ),
-                RequestPath = "/Icons",
+                FileProvider = new PhysicalFileProvider(NodeIconService.IconsDirectory),
+                RequestPath = NodeIconService.RequestPath,
             }
         );
         app.UseSpaStaticFiles();
