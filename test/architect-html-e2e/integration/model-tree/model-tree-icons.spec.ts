@@ -17,20 +17,46 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { expect, test, type Page } from '@playwright/test';
+import { expect, test, type Locator, type Page } from '@playwright/test';
 import { closeAiPanel } from '@support/aiPanel';
 import { resetBackend } from '@support/resetBackend';
 
 const ICON_SIZE = 16;
+const OWN_PICTURE = /^data:image\/png;base64,/;
 
-async function expectNodeIcon(page: Page, nodeText: string, iconUrl: string): Promise<void> {
-  const icon = page.getByTestId(`tree-node-${nodeText}`).locator('img');
+async function expectIcon(icon: Locator, iconUrl: string | RegExp): Promise<void> {
   await expect(icon).toHaveAttribute('src', iconUrl);
   await expect
     .poll(() => icon.evaluate((image: HTMLImageElement) => image.naturalWidth))
     .toBe(ICON_SIZE);
   await expect(icon).toHaveCSS('width', `${ICON_SIZE}px`);
   await expect(icon).toHaveCSS('height', `${ICON_SIZE}px`);
+}
+
+async function expectNodeIcon(
+  page: Page,
+  nodeText: string,
+  iconUrl: string | RegExp,
+): Promise<void> {
+  await expectIcon(page.getByTestId(`tree-node-${nodeText}`).locator('img'), iconUrl);
+}
+
+async function iconPixel(page: Page, nodeText: string, x: number, y: number): Promise<number[]> {
+  return page
+    .getByTestId(`tree-node-${nodeText}`)
+    .locator('img')
+    .evaluate(
+      async (image: HTMLImageElement, [pixelX, pixelY]) => {
+        await image.decode();
+        const canvas = document.createElement('canvas');
+        canvas.width = image.naturalWidth;
+        canvas.height = image.naturalHeight;
+        const context = canvas.getContext('2d') as CanvasRenderingContext2D;
+        context.drawImage(image, 0, 0);
+        return Array.from(context.getImageData(pixelX, pixelY, 1, 1).data);
+      },
+      [x, y],
+    );
 }
 
 test.describe('Model tree node icons (real backend)', () => {
@@ -48,5 +74,29 @@ test.describe('Model tree node icons (real backend)', () => {
     await expectNodeIcon(page, 'Constants', '/Icons/icon_06_constants.svg');
     await expectNodeIcon(page, '_boolean', '/Icons/37_folder-3.svg');
     await expectNodeIcon(page, 'InitialUserCreated', '/Icons/icon_data-constant.svg');
+  });
+
+  test('image nodes show their own picture as the desktop drew it', async ({ page }) => {
+    await page.goto('/');
+    await closeAiPanel(page);
+    await page.getByTestId('tree-toggle-User Interface').click();
+    await page.getByTestId('tree-toggle-Images').click();
+
+    await expectNodeIcon(page, 'ScheduleFolder.png', OWN_PICTURE);
+    expect((await iconPixel(page, 'ScheduleFolder.png', 0, 0))[3]).toBe(0);
+    expect(await iconPixel(page, 'ScheduleFolder.png', 8, 8)).toEqual([254, 252, 242, 255]);
+    await expectNodeIcon(page, 'Home.png', OWN_PICTURE);
+    expect(await iconPixel(page, 'Home.png', 6, 0)).toEqual([178, 109, 43, 255]);
+    await expectNodeIcon(page, 'Report.png', '/Icons/icon_image.svg');
+  });
+
+  test('the package name shows the package icon', async ({ page }) => {
+    await page.goto('/');
+    await closeAiPanel(page);
+
+    await expectIcon(
+      page.getByTestId('tree-package-name').locator('img'),
+      '/Icons/09_packages-1.svg',
+    );
   });
 });

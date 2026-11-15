@@ -41,6 +41,13 @@ public class NodeIconService
 
     public string GetIconUrl(IBrowserNode node)
     {
+        if (
+            node is IBrowserNode2 { NodeImage: { Length: > 0 } picture }
+            && BitmapPictureConverter.ToPng(picture) is { } png
+        )
+        {
+            return $"data:image/png;base64,{Convert.ToBase64String(png)}";
+        }
         string iconName = Path.GetFileNameWithoutExtension(node.Icon);
         if (iconName == null || !iconNames.Contains(iconName))
         {
