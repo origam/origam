@@ -58,10 +58,6 @@ export class ErrorDialogController {
     return this.errorStack.map(errItem => {
       console.error(errItem.error);
 
-      const handlePlainText = () =>
-        _.get(errItem.error, 'response.headers.content-type', '').startsWith('text/plain') &&
-        errItem.error.response.data;
-
       const handleMessageField = () => {
         if (!errItem.error.response?.data) {
           return '';
@@ -81,11 +77,7 @@ export class ErrorDialogController {
 
       const handleRuntimeException = () => '' + errItem.error;
 
-      let errorMessage = handlePlainText() || handleMessageField() || handleRuntimeException();
-
-      if (errItem.error?.request?.status === 500 || errItem.error?.request?.status === 409) {
-        errorMessage = 'Server error occurred. Please check server log for more details.';
-      }
+      const errorMessage = handleMessageField() || handleRuntimeException();
 
       return {
         message: errorMessage,
