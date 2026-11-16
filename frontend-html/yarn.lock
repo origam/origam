@@ -1370,12 +1370,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mapbox/geojson-area@npm:^0.2.2":
-  version: 0.2.2
-  resolution: "@mapbox/geojson-area@npm:0.2.2"
+"@mapbox/geojson-area@npm:^0.3.0":
+  version: 0.3.0
+  resolution: "@mapbox/geojson-area@npm:0.3.0"
   dependencies:
     wgs84: "npm:0.0.0"
-  checksum: 10c0/46a85e14877bbd24486f4352810b2d078ce072f4a81120b9481eb967334e5cc9d2c5ae8b2ddab2dfbe1c0822b18758b39f078339b43a18754ef514a32e95fb1c
+  checksum: 10c0/0c683faa29077cad2281be699c37d63c26a1858eaaf9bbd4098072b038f2b856ca078d58d2c94cd2c650a074478ace307ff90bffe5fcf78e05a7bbc87246dad3
   languageName: node
   linkType: hard
 
@@ -6202,7 +6202,7 @@ __metadata:
     "@decorize/bind": "npm:^1.0.3"
     "@esbuild-plugins/node-globals-polyfill": "npm:^0.2.3"
     "@esbuild-plugins/node-modules-polyfill": "npm:^0.2.2"
-    "@mapbox/geojson-area": "npm:^0.2.2"
+    "@mapbox/geojson-area": "npm:^0.3.0"
     "@messageformat/core": "npm:^3.4.1"
     "@testing-library/dom": "npm:^10.4.2"
     "@testing-library/jest-dom": "npm:^7.0.1"
