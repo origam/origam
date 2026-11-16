@@ -21,36 +21,62 @@ import { expect, test } from '@playwright/test';
 import { closeAiPanel } from '@support/aiPanel';
 import { resetBackend } from '@support/resetBackend';
 
-const TRANSFORMATION = 'SD_Empty';
-const TRANSFORMATION_ID = '693db72d-a400-4df3-b4b7-e0487e7ce8d6';
+const cases = [
+  {
+    caption: 'XSL Transformation',
+    treePath: ['Transformations'],
+    itemName: 'SD_Empty',
+    itemId: '693db72d-a400-4df3-b4b7-e0487e7ce8d6',
+  },
+  {
+    caption: 'XSL Rule',
+    treePath: ['Rules', '_common'],
+    itemName: 'ER_ExceptionTemplate',
+    itemId: 'e1c65fcd-118d-4eb3-9c2f-aa27fec132ba',
+  },
+  {
+    caption: 'End Rule',
+    treePath: ['Rules', 'Work Queue'],
+    itemName: 'ER_WQ_Unlock',
+    itemId: 'cb164d4d-d971-4fa7-be5b-80f4348a2f3f',
+  },
+  {
+    caption: 'Complex Data Rule',
+    treePath: ['Rules', 'Work Queue'],
+    itemName: 'WorkQueue_FillRetryValues',
+    itemId: 'dcc3e0e1-a1bd-4525-a9cf-1372a3f9fb8e',
+  },
+];
 
 test.describe('Id in the XSLT settings (real backend)', () => {
   test.beforeEach(async ({ request }) => {
     await resetBackend(request);
   });
 
-  test('Settings show the transformation id read-only and copy it', async ({ page }) => {
-    await page.goto('/');
-    await closeAiPanel(page);
-    await page.getByTestId('tree-toggle-Business Logic').click();
-    await page.getByTestId('tree-toggle-Transformations').click();
-    await page.getByTestId(`tree-node-${TRANSFORMATION}`).dblclick();
-    await expect(page.getByTestId(`tab-${TRANSFORMATION}`)).toBeVisible();
+  for (const { caption, treePath, itemName, itemId } of cases) {
+    test(`Settings of ${caption} show its id read-only and copy it`, async ({ page }) => {
+      await page.goto('/');
+      await closeAiPanel(page);
+      await page.getByTestId('tree-toggle-Business Logic').click();
+      for (const folder of treePath) {
+        await page.getByTestId(`tree-toggle-${folder}`).click();
+      }
+      await page.getByTestId(`tree-node-${itemName}`).dblclick();
+      await expect(page.getByTestId(`tab-${itemName}`)).toBeVisible();
 
-    await page
-      .getByText('Settings', { exact: true })
-      .and(page.locator(':not([data-test-id="topbar-settings"] *)'))
-      .click();
+      await page
+        .getByText('Settings', { exact: true })
+        .and(page.locator(':not([data-test-id="topbar-settings"] *)'))
+        .click();
 
-    const idInput = page.getByTestId('property-input-Id');
-    await expect(idInput).toBeVisible();
-    await expect(idInput).toHaveValue(TRANSFORMATION_ID);
-    await expect(idInput).toBeDisabled();
+      const idInput = page.getByTestId('property-input-Id');
+      await expect(idInput).toBeVisible();
+      await expect(idInput).toHaveValue(itemId);
+      await expect(idInput).toBeDisabled();
 
-    await page.context().grantPermissions(['clipboard-read', 'clipboard-write']);
-    await idInput.locator('xpath=..').getByTitle('Copy to clipboard').click();
-    await expect
-      .poll(() => page.evaluate(() => navigator.clipboard.readText()))
-      .toBe(TRANSFORMATION_ID);
-  });
+      await page.context().grantPermissions(['clipboard-read', 'clipboard-write']);
+      await idInput.locator('xpath=..').getByTitle('Copy to clipboard').click();
+      await expect.poll(() => page.evaluate(() => navigator.clipboard.readText())).toBe(itemId);
+    });
+  }
 });
