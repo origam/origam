@@ -105,21 +105,13 @@ export class FormFocusManager {
   }
 
   forceAutoFocus() {
-    if (this.focusableContainers.length === 0 && this.backupFocusPlaceholder) {
+    if (this.focusableContainers.length === 0) {
       setTimeout(() => {
         requestFocus(this.backupFocusPlaceholder);
       }, 0);
       return;
     }
-    const focusable = this.focusableContainers[0].focusable;
-    if (focusable.disabled) {
-      //  (focusable as any).readOnly returns always false => readonly fields cannot be skipped
-      this.focusNext(focusable);
-      return;
-    }
-    setTimeout(() => {
-      this.focusAndRemember(focusable);
-    }, 0);
+    this.focusInDirection(undefined, 1);
   }
 
   autoFocus() {
@@ -136,62 +128,53 @@ export class FormFocusManager {
   }
 
   focusNext(activeElement: any) {
-    this.focusNextInternal(activeElement, 0);
-  }
-
-  focusNextInternal(activeElement: any, callNumber: number) {
-    if (callNumber > 20) {
-      return;
-    }
-    const currentContainerIndex = this.focusableContainers.findIndex(
-      (container) => container.focusable === activeElement,
-    );
-    const focusable = this.findNextVisibleElement(currentContainerIndex);
-    if (focusable !== activeElement && focusable.disabled) {
-      this.focusNextInternal(focusable, callNumber + 1);
-    } else {
-      setTimeout(() => {
-        this.focusAndRemember(focusable);
-      });
-    }
-  }
-
-  findNextVisibleElement(currentContainerIndex: number): IFocusable {
-    const nextIndex =
-      this.focusableContainers.length - 1 > currentContainerIndex
-        ? currentContainerIndex + 1
-        : 0;
-    const focusable = this.focusableContainers[nextIndex].focusable;
-    if (!focusable.checkVisibility()) {
-      return this.findNextVisibleElement(nextIndex);
-    }
-    return focusable;
+    this.focusInDirection(activeElement, 1);
   }
 
   focusPrevious(activeElement: any) {
+    this.focusInDirection(activeElement, -1);
+  }
+
+  private focusInDirection(activeElement: any, direction: 1 | -1) {
     const currentContainerIndex = this.focusableContainers.findIndex(
       (container) => container.focusable === activeElement,
     );
-    const focusable = this.findPreviousVisibleElement(currentContainerIndex);
-    if (focusable.disabled) {
-      this.focusPrevious(focusable);
-    } else {
-      setTimeout(() => {
-        this.focusAndRemember(focusable);
-      });
+    const focusable = this.findFocusableElement(
+      currentContainerIndex,
+      direction,
+    );
+    if (!focusable) {
+      return;
     }
+    setTimeout(() => {
+      this.focusAndRemember(focusable);
+    });
   }
 
-  findPreviousVisibleElement(currentContainerIndex: number): IFocusable {
-    const previousIndex =
-      currentContainerIndex === 0
-        ? this.focusableContainers.length - 1
-        : currentContainerIndex - 1;
-    const focusable = this.focusableContainers[previousIndex].focusable;
-    if (!focusable.checkVisibility()) {
-      return this.findPreviousVisibleElement(previousIndex);
+  private findFocusableElement(
+    currentContainerIndex: number,
+    direction: 1 | -1,
+  ): IFocusable | undefined {
+    const count = this.focusableContainers.length;
+    let index = currentContainerIndex;
+
+    if (currentContainerIndex < 0 && direction === -1) {
+      // Start before the last field when navigating backward
+      // from an element that isn't registered.
+      index = 0;
     }
-    return focusable;
+
+    // Visit each field at most once, including when none can receive focus.
+    for (let checked = 0; checked < count; checked++) {
+      // Move in the requested direction and wrap around at either end.
+      // Adding count keeps the remainder nonnegative when moving backward.
+      index = (index + direction + count) % count;
+      const focusable = this.focusableContainers[index].focusable;
+      if (!focusable.disabled && focusable.checkVisibility()) {
+        return focusable;
+      }
+    }
+    return undefined;
   }
 
   async activeEditorCloses() {
