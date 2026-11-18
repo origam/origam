@@ -272,7 +272,7 @@ export const DesignSurface: React.FC<{
           data-orientation={line.orientation}
           data-kind={line.kind}
           className={cn(S.snapLine, S[line.orientation], {
-            [S.baseline]: line.kind === 'baseline',
+            [S.measure]: line.kind !== 'alignment',
           })}
           style={getSnapLineStyle(line)}
         />
