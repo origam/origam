@@ -93,6 +93,21 @@
     <data name="DeploymentScript_UnsupportedDeploymentActivityType" xml:space="preserve">
         <value>Unsupported deployment activity type</value>
     </data>
+    <data name="DeploymentScript_ExecutionFailed" xml:space="preserve">
+        <value>Deployment script {0} failed: {1}</value>
+    </data>
+    <data name="DeploymentScript_PlatformNotConfigured" xml:space="preserve">
+        <value>Deployment script {0} was not executed because platform {1} is not configured.</value>
+    </data>
+    <data name="DeploymentScript_BusinessServicesNotAvailable" xml:space="preserve">
+        <value>Business services service not available</value>
+    </data>
+    <data name="DeploymentScript_NotFound" xml:space="preserve">
+        <value>UpdateScriptActivity is not found.</value>
+    </data>
+    <data name="DeploymentScript_VersionNotFound" xml:space="preserve">
+        <value>DeploymentVersion is not found.</value>
+    </data>
     <data name="Wizard_ColumnNotFound" xml:space="preserve">
         <value>Column {0} not found</value>
     </data>

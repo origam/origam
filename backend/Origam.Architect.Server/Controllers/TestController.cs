@@ -131,6 +131,24 @@ public class TestController(
         return Ok();
     }
 
+    [HttpGet("Platforms")]
+    public IActionResult Platforms()
+    {
+        if (!environment.IsDevelopment())
+        {
+            return NotFound();
+        }
+
+        return Ok(
+            ConfigurationManager
+                .GetActiveConfiguration()
+                .GetAllPlatforms()
+                .OrderByDescending(platform => platform.IsPrimary)
+                .Select(platform => platform.GetParseEnum(platform.DataService))
+                .Distinct()
+        );
+    }
+
     private FileEventQueue GetFileEventQueue() =>
         (persistenceService as FilePersistenceService)?.FileEventQueue;
 }
