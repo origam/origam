@@ -140,7 +140,7 @@ public class UserApiAdditionalAuthenticationMiddlewareTests
         var settings = new Dictionary<string, string>
         {
             ["OpenIddictConfig:ClientApplicationTemplates:Configured"] = "true",
-            ["OpenIddictConfig:PrivateApiAuthentication"] = defaultMethod,
+            ["OpenIddictConfig:PrivateApiAuthenticationMethod"] = defaultMethod,
         };
         if (additionalMethod != null)
         {
