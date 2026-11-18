@@ -45,6 +45,7 @@ using Origam.Service.Core;
 using Origam.Workbench;
 using Origam.Workbench.Services;
 using Origam.Workbench.Services.CoreServices;
+using StbImageSharp;
 using Assert = NUnit.Framework.Assert;
 
 namespace Origam.RuleTests;
@@ -683,9 +684,9 @@ public class XsltTests
     {
         string xsltCall = string.Format(xsltCallTemplate, Convert.ToBase64String(image));
         object xPathResult = RunInXpath(xsltCall);
-        Assert.That(xPathResult, Is.EqualTo(expectedResult));
+        AssertImagesEqual(expectedResult, (string)xPathResult);
         string xsltResult = RunInXslt(xsltCall);
-        Assert.That(xsltResult, Is.EqualTo(expectedResult));
+        AssertImagesEqual(expectedResult, xsltResult);
     }
 
     [TestCase("AS:ResizeImage('{0}', '4', '4')", resizedImage1Linux)]
@@ -696,8 +697,26 @@ public class XsltTests
         string xsltCall = string.Format(xsltCallTemplate, Convert.ToBase64String(image));
         object xPathResult = RunInXpath(xsltCall);
         string xsltResult = RunInXslt(xsltCall);
-        Assert.That(xPathResult, Is.EqualTo(expectedResult));
-        Assert.That(xsltResult, Is.EqualTo(expectedResult));
+        AssertImagesEqual(expectedResult, (string)xPathResult);
+        AssertImagesEqual(expectedResult, xsltResult);
+    }
+
+    private static void AssertImagesEqual(string expectedBase64, string actualBase64)
+    {
+        byte[] expectedBytes = Convert.FromBase64String(expectedBase64);
+        byte[] actualBytes = Convert.FromBase64String(actualBase64);
+
+        // PNG compression and metadata can change without changing the image pixels.
+        byte[] pngSignature = { 137, 80, 78, 71, 13, 10, 26, 10 };
+        Assert.That(actualBytes.Take(pngSignature.Length), Is.EqualTo(pngSignature));
+        var expectedImage = ImageResult.FromMemory(
+            expectedBytes,
+            ColorComponents.RedGreenBlueAlpha
+        );
+        var actualImage = ImageResult.FromMemory(actualBytes, ColorComponents.RedGreenBlueAlpha);
+        Assert.That(actualImage.Width, Is.EqualTo(expectedImage.Width));
+        Assert.That(actualImage.Height, Is.EqualTo(expectedImage.Height));
+        Assert.That(actualImage.Data, Is.EqualTo(expectedImage.Data), "Image RGBA pixels differ.");
     }
 
     [Test]
