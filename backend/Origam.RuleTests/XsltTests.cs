@@ -716,7 +716,11 @@ public class XsltTests
         var actualImage = ImageResult.FromMemory(actualBytes, ColorComponents.RedGreenBlueAlpha);
         Assert.That(actualImage.Width, Is.EqualTo(expectedImage.Width));
         Assert.That(actualImage.Height, Is.EqualTo(expectedImage.Height));
-        Assert.That(actualImage.Data, Is.EqualTo(expectedImage.Data), "Image RGBA pixels differ.");
+        // GDI+ versions can round interpolated color components differently.
+        for (int i = 0; i < expectedImage.Data.Length; i++)
+        {
+            Assert.That(actualImage.Data[i], Is.EqualTo(expectedImage.Data[i]).Within(1));
+        }
     }
 
     [Test]
