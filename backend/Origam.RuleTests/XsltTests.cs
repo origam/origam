@@ -25,12 +25,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
-using System.Drawing;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 using System.Security.Principal;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -49,6 +46,7 @@ using Origam.Service.Core;
 using Origam.Workbench;
 using Origam.Workbench.Services;
 using Origam.Workbench.Services.CoreServices;
+using StbImageSharp;
 using Assert = NUnit.Framework.Assert;
 
 namespace Origam.RuleTests;
@@ -680,7 +678,6 @@ public class XsltTests
     [TestCase("AS:ResizeImage('{0}', '4', '4')", resizedImage1)]
     [TestCase("AS:ResizeImage('{0}', '4', '4', 'true', 'png')", resizedImage2)]
     [Platform(Include = "Win")]
-    [SupportedOSPlatform("windows")]
     public void ShouldConvertImage(string xsltCallTemplate, string expectedResult)
     {
         string xsltCall = string.Format(xsltCallTemplate, Convert.ToBase64String(image));
@@ -688,23 +685,25 @@ public class XsltTests
         string xsltResult = RunInXslt(xsltCall);
         Assert.That(xsltResult, Is.EqualTo(xPathResult));
 
-        using var expectedStream = new MemoryStream(Convert.FromBase64String(expectedResult));
-        using var actualStream = new MemoryStream(Convert.FromBase64String(xPathResult));
-        using var expected = new Bitmap(expectedStream);
-        using var actual = new Bitmap(actualStream);
-        Assert.That(actual.Size, Is.EqualTo(expected.Size));
-        for (int y = 0; y < expected.Height; y++)
+        AssertImagesEqual(expectedResult, xPathResult);
+    }
+
+    private static void AssertImagesEqual(string expectedBase64, string actualBase64)
+    {
+        var expected = ImageResult.FromMemory(
+            Convert.FromBase64String(expectedBase64),
+            ColorComponents.RedGreenBlueAlpha
+        );
+        var actual = ImageResult.FromMemory(
+            Convert.FromBase64String(actualBase64),
+            ColorComponents.RedGreenBlueAlpha
+        );
+        Assert.That(actual.Width, Is.EqualTo(expected.Width));
+        Assert.That(actual.Height, Is.EqualTo(expected.Height));
+        // GDI+ versions can round interpolated color components differently.
+        for (int i = 0; i < expected.Data.Length; i++)
         {
-            for (int x = 0; x < expected.Width; x++)
-            {
-                Color expectedPixel = expected.GetPixel(x, y);
-                Color actualPixel = actual.GetPixel(x, y);
-                // GDI+ versions can round interpolated color components differently.
-                Assert.That(actualPixel.R, Is.EqualTo(expectedPixel.R).Within(1));
-                Assert.That(actualPixel.G, Is.EqualTo(expectedPixel.G).Within(1));
-                Assert.That(actualPixel.B, Is.EqualTo(expectedPixel.B).Within(1));
-                Assert.That(actualPixel.A, Is.EqualTo(expectedPixel.A).Within(1));
-            }
+            Assert.That(actual.Data[i], Is.EqualTo(expected.Data[i]).Within(1));
         }
     }
 
