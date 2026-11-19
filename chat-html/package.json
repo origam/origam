@@ -90,7 +90,7 @@
     "sass": "^1.108.2",
     "vite": "^8.3.6",
     "vite-tsconfig-paths": "^6.1.1",
-    "ws": "^8.22.1"
+    "ws": "^8.22.2"
   },
   "resolutions": {
     "@types/react": "17.0.2",
