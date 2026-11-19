@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   flex: 1;
   min-width: 0;
   overflow: auto;
+  contain: inline-size;
 }
 
 .table {
@@ -33,12 +34,93 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
     border-bottom: 1px solid var(--background4);
 
     th {
+      position: relative;
       text-align: left;
       padding: 0.25rem 0.5rem;
       color: var(--background7);
       font-weight: 600;
       white-space: nowrap;
+
+      &.sortedColumn {
+        background-color: var(--foreground5);
+        color: var(--foreground7);
+      }
     }
+
+    th + th {
+      border-left: 1px solid var(--background4);
+    }
+  }
+
+  td + td {
+    border-left: 1px solid var(--background3);
+  }
+}
+
+.resized {
+  table-layout: fixed;
+
+  td {
+    overflow-wrap: anywhere;
+  }
+
+  td > * {
+    min-width: 0;
+  }
+}
+
+.sortButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  max-width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 1px solid var(--brand);
+    outline-offset: 2px;
+  }
+}
+
+.sortLabel {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sortIndicator {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  font-size: 11px;
+}
+
+.unsortedIcon {
+  flex-shrink: 0;
+  transform: rotate(90deg);
+  color: var(--background5);
+}
+
+.resizeHandle {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  width: 5px;
+  cursor: col-resize;
+  transition: background 0.15s ease;
+  user-select: none;
+  touch-action: none;
+
+  &:hover,
+  &:active {
+    background: var(--brand);
   }
 }
 
@@ -69,6 +151,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
     padding: 0.25rem 0.5rem;
     color: var(--background7);
   }
+}
+
+.table thead th.fillerColumn,
+.row td.fillerColumn,
+.orphanedRow td.fillerColumn {
+  padding: 0;
 }
 
 .statusColumn {
