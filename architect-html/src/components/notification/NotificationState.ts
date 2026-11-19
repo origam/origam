@@ -28,6 +28,7 @@ export interface IActionResultNotification {
   kind: NotificationKind;
   title: string;
   subtitle?: string;
+  details?: string;
   results: ISearchResult[];
   onShowResult?: () => void;
   durationMs: number;
@@ -48,6 +49,7 @@ export class NotificationState {
     key?: string;
     title: string;
     subtitle?: string;
+    details?: string;
     results?: ISearchResult[];
     onShowResult?: () => void;
     kind?: NotificationKind;
@@ -66,6 +68,7 @@ export class NotificationState {
       kind: input.kind ?? 'success',
       title: input.title,
       subtitle: input.subtitle,
+      details: input.details,
       results: input.results ?? [],
       onShowResult: input.onShowResult,
       durationMs: duration,

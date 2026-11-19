@@ -105,8 +105,41 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
     height: 1px;
   }
 
-  &.baseline {
-    background-color: var(--brand);
+  &.measure::before,
+  &.measure::after {
+    content: '';
+    position: absolute;
+    background-color: inherit;
+  }
+
+  &.measure.horizontal::before,
+  &.measure.horizontal::after {
+    top: -5px;
+    width: 1px;
+    height: 11px;
+  }
+
+  &.measure.horizontal::before {
+    left: 0;
+  }
+
+  &.measure.horizontal::after {
+    right: 0;
+  }
+
+  &.measure.vertical::before,
+  &.measure.vertical::after {
+    left: -5px;
+    width: 11px;
+    height: 1px;
+  }
+
+  &.measure.vertical::before {
+    top: 0;
+  }
+
+  &.measure.vertical::after {
+    bottom: 0;
   }
 }
 

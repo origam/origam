@@ -19,18 +19,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { ReactElement } from 'react';
 import S from '@editors/designerEditor/common/designerComponents/Components.module.scss';
-import {
-  Component,
-  lineBaseline,
-} from '@editors/designerEditor/common/designerComponents/Component.tsx';
+import { Component } from '@editors/designerEditor/common/designerComponents/Component.tsx';
 
 export class Label extends Component {
   get hasBorder(): boolean {
     return false;
-  }
-
-  get textBaseline(): number | null {
-    return this.absoluteTop + lineBaseline;
   }
 
   getDesignerRepresentation(): ReactElement | null {

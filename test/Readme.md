@@ -8,8 +8,8 @@ The original Jest/Puppeteer suite is retained separately in `tests_e2e_legacy` f
 3. Copy `.env.mssql.example` to `.env.mssql` and/or `.env.postgresql.example` to `.env.postgresql`.
 4. Edit each copied file: set `OrigamSettings__DataConnectionString` to the application's test database
    connection string and adjust `ORIGAM_E2E_URL` and the login credentials for that application.
-   Set `OpenIddictConfig__PrivateApiAuthentication` to match the running server's
-   `OpenIddictConfig:PrivateApiAuthentication` (`Token` or `Cookie`). This selects the matching
+   Set `OpenIddictConfig__PrivateApiAuthenticationMethod` to match the running server's
+   `OpenIddictConfig:PrivateApiAuthenticationMethod` (`Token` or `Cookie`). This selects the matching
    API tests; configure the server's authentication mode separately.
    The SOAP API tests run only when `SoapAPI__Enabled` is `true`; set `SoapAPI__AuthenticationMethod`
    to match the running server's `SoapAPI:AuthenticationMethod` (`CookieAndToken`, the default, `Cookie` or `Token`).

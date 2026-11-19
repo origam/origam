@@ -27,13 +27,12 @@ import { ComponentType, IComponentData } from '@editors/designerEditor/common/Co
 import { Component } from '@editors/designerEditor/common/designerComponents/Component';
 import { toComponentRecursive } from '@editors/designerEditor/common/designerComponents/ControlToComponent';
 import {
-  allEdges,
   Bounds,
   Edge,
-  findSnapLines,
-  findSnapOffset,
   noSnapTargets,
   SnapLine,
+  snapMove,
+  snapResize,
   SnapTargets,
 } from '@editors/designerEditor/common/Snapping';
 import { EditorProperty } from '@editors/gridEditor/EditorProperty';
@@ -263,9 +262,9 @@ export class DesignSurfaceState implements IComponentProvider {
       ? this.findComponentAt(mouseX, mouseY, component)
       : component.parent;
     const targets = isSnapEnabled ? this.getSnapTargets(component, container) : noSnapTargets;
-    const offset = findSnapOffset(boundsAt(component, left, top), targets, allEdges);
-    this.updatePosition(component, left + offset.x, top + offset.y);
-    this.snapLines = findSnapLines(boundsOf(component), targets, allEdges);
+    const snap = snapMove(boundsAt(component, left, top), targets);
+    this.updatePosition(component, left + snap.x, top + snap.y);
+    this.snapLines = snap.lines;
   }
 
   private getSnapTargets(component: Component, container: Component | null): SnapTargets {
@@ -426,8 +425,8 @@ export class DesignSurfaceState implements IComponentProvider {
     if (!this.resizeState.component || !this.resizeState.handle) return;
 
     const component = this.resizeState.component;
-    let deltaX = Math.round(mouseX - this.resizeState.startX);
-    let deltaY = Math.round(mouseY - this.resizeState.startY);
+    const deltaX = Math.round(mouseX - this.resizeState.startX);
+    const deltaY = Math.round(mouseY - this.resizeState.startY);
     if (!this.resizeState.didResize && deltaX === 0 && deltaY === 0) {
       return;
     }
@@ -436,39 +435,36 @@ export class DesignSurfaceState implements IComponentProvider {
     this.resizeState.lastY = mouseY;
     this.resizeState.isSnapEnabled = isSnapEnabled;
     const { originalWidth, originalHeight, originalLeft, originalTop } = this.resizeState;
+    const originalRight = originalLeft + originalWidth;
+    const originalBottom = originalTop + originalHeight;
     const edges = resizedEdges[this.resizeState.handle];
     const targets = isSnapEnabled
       ? this.getSnapTargets(component, component.parent)
       : noSnapTargets;
-    const offset = findSnapOffset(
+    const snap = snapResize(
       {
-        left: originalLeft + (edges.includes('left') ? deltaX : 0),
-        top: originalTop + (edges.includes('top') ? deltaY : 0),
-        right: originalLeft + originalWidth + (edges.includes('right') ? deltaX : 0),
-        bottom: originalTop + originalHeight + (edges.includes('bottom') ? deltaY : 0),
-        baseline: null,
+        left: edges.includes('left')
+          ? Math.min(originalLeft + deltaX, originalRight - minComponentWidth)
+          : originalLeft,
+        top: edges.includes('top')
+          ? Math.min(originalTop + deltaY, originalBottom - minComponentHeight)
+          : originalTop,
+        right: edges.includes('right')
+          ? Math.max(originalRight + deltaX, originalLeft + minComponentWidth)
+          : originalRight,
+        bottom: edges.includes('bottom')
+          ? Math.max(originalBottom + deltaY, originalTop + minComponentHeight)
+          : originalBottom,
       },
-      targets,
       edges,
+      targets,
+      { width: minComponentWidth, height: minComponentHeight },
     );
-    deltaX += offset.x;
-    deltaY += offset.y;
-
-    if (edges.includes('left')) {
-      component.width = Math.max(minComponentWidth, originalWidth - deltaX);
-      component.absoluteLeft = originalLeft + originalWidth - component.width;
-    }
-    if (edges.includes('right')) {
-      component.width = Math.max(minComponentWidth, originalWidth + deltaX);
-    }
-    if (edges.includes('top')) {
-      component.height = Math.max(minComponentHeight, originalHeight - deltaY);
-      component.absoluteTop = originalTop + originalHeight - component.height;
-    }
-    if (edges.includes('bottom')) {
-      component.height = Math.max(minComponentHeight, originalHeight + deltaY);
-    }
-    this.snapLines = findSnapLines(boundsOf(component), targets, edges);
+    component.width = snap.bounds.right - snap.bounds.left;
+    component.height = snap.bounds.bottom - snap.bounds.top;
+    component.absoluteLeft = snap.bounds.left;
+    component.absoluteTop = snap.bounds.top;
+    this.snapLines = snap.lines;
   }
 
   @action
@@ -569,13 +565,11 @@ function boundsOf(component: Component): Bounds {
 }
 
 function boundsAt(component: Component, left: number, top: number): Bounds {
-  const baseline = component.textBaseline;
   return {
     left,
     top,
     right: left + component.width,
     bottom: top + component.height,
-    baseline: baseline === null ? null : baseline - component.absoluteTop + top,
   };
 }
 

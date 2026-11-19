@@ -1,6 +1,6 @@
 ﻿### Test dual authentication on selected endpoints.
 ### Assuming the folowing in  appsettings.jon:
-###    "PrivateApiAuthentication":  "Token",
+###    "PrivateApiAuthenticationMethod":  "Token",
 ###    "PrivateApiAdditionalAuthenticationMethods": {
 ###        "/api/private/allDataTypesCookie": "Cookie"
 ###    },
