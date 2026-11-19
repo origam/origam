@@ -4135,10 +4135,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"immutable@npm:^5.1.5, immutable@npm:^5.1.9":
+"immutable@npm:^5.1.5":
   version: 5.1.9
   resolution: "immutable@npm:5.1.9"
   checksum: 10c0/ae7032b60b81b682f3e7e4df13e1ec9a401a603eb81b15bb3e37331ed6666e318c71994c6936e1462eb443d32d04769396562a7e2669da22457c8ba279c03ad2
+  languageName: node
+  linkType: hard
+
+"immutable@npm:^5.2.0":
+  version: 5.2.0
+  resolution: "immutable@npm:5.2.0"
+  checksum: 10c0/e2c976c8977f2bd3b1e0c221ec073614a9da2325ac25fa889b15fbac5605ba5df9b6dd1d3f4c4d7ca48b830fb0375645538cfa538955f4b665bcefe8afa8b6de
   languageName: node
   linkType: hard
 
@@ -6237,7 +6244,7 @@ __metadata:
     html-to-draftjs: "npm:^1.5.0"
     identity-obj-proxy: "npm:^3.0.0"
     immer: "npm:^11.2.9"
-    immutable: "npm:^5.1.9"
+    immutable: "npm:^5.2.0"
     jest: "npm:^30.5.2"
     jest-environment-jsdom: "npm:^30.5.2"
     js-cookie: "npm:^3.0.8"
