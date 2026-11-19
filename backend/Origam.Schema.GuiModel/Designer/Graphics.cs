@@ -81,7 +81,5 @@ public class Graphics : AbstractSchemaItem
         get => graphicsDataByte.Get();
         set => graphicsDataByte.Set(value);
     }
-
-    public override byte[] NodeImage => GraphicsDataByte;
     #endregion
 }
