@@ -14,8 +14,7 @@
   <PropertyGroup>
     <NoWarn>$(NoWarn);MSB3277</NoWarn>
   </PropertyGroup>
-  <PropertyGroup>
-  </PropertyGroup>
+  <PropertyGroup></PropertyGroup>
   <PropertyGroup>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
