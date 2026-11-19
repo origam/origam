@@ -45,6 +45,7 @@ async function beforeEachTest(){
     //devtools: true,
     // slowMo: 50,
     headless: false,
+    executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || undefined,
     defaultViewport: {
       width: 1800,
       height: 2000, // to make all 30 lines visible and avoid the need for scrolling

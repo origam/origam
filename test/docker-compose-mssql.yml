@@ -32,6 +32,7 @@ services:
     environment:
       - BUILDKIT_PROGRESS=tty
       - CI=true
+      - PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome
     ports:
       - "443:443"
     depends_on:
