@@ -71,3 +71,6 @@ updates:
       # Draft.js and react-draft-wysiwyg require Immutable 3.x or 4.x.
       - dependency-name: "immutable"
         versions: [">=5.0.0"]
+      # The chat client uses React 17 and imports AutoSizer from react-virtualized 9. Remove when react in chat is upgaded.
+      - dependency-name: "react-virtualized"
+        update-types: ["version-update:semver-major", "version-update:semver-minor", "version-update:semver-patch"]
