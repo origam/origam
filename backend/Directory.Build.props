@@ -1,5 +1,6 @@
 ﻿<Project>
   <PropertyGroup>
+    <LangVersion>14.0</LangVersion>
     <Configurations>Debug;Release;Debug Architect Server;Release Architect Server;Debug Server;Release Server</Configurations>
     <Configuration Condition="'$(Configuration)' == ''">Debug</Configuration>
     <DebugSymbols>true</DebugSymbols>

@@ -1,7 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <LangVersion>10</LangVersion>
     <RootNamespace>Schedule</RootNamespace>
   </PropertyGroup>
 </Project>

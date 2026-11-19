@@ -6,9 +6,6 @@
   <PropertyGroup>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
-  <PropertyGroup>
-    <LangVersion>10</LangVersion>
-  </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="morelinq" Version="4.4.0" />
     <PackageReference Include="System.Security.Permissions" Version="10.0.14" />

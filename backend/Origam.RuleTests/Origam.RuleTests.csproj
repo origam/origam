@@ -3,7 +3,6 @@
     <TargetFramework>net10.0</TargetFramework>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <EnableDefaultItems>false</EnableDefaultItems>
-    <LangVersion>10</LangVersion>
     <AssemblyName>Origam.RuleTests</AssemblyName>
     <RootNamespace>Origam.RuleTests</RootNamespace>
     <IsPackable>false</IsPackable>
