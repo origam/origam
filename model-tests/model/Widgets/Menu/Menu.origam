@@ -277,6 +277,38 @@
       frmi:requestSaveAfterUpdate="false"
       ami:roles="*"
       frmi:screen="ArrayTest#ArrayTest/64266781-83b6-44e2-919e-49fb63be0691" />
+    <frmi:MenuItem
+      asi:abstract="false"
+      ami:alwaysOpenNew="false"
+      frmi:autoRefreshInterval="Root/DataConstant/_numbers/_Number_3.origam#_Number_3/1e4627b1-c5ec-4517-a4b2-b8c76a494bef"
+      frmi:autoSaveOnListRecordChange="false"
+      ami:displayName="All Data Types Filtered By Dates With Auto Refresh"
+      x:id="da49d248-0765-4757-a6d6-1d28aaab4164"
+      frmi:method="Widgets/DataStructure/Widgets/AllDataTypes.origam#AllDataTypes/GetByBetweenDate1/b1129e59-49d8-4c6e-b356-dd66c9bf7d81"
+      asi:name="AllDataTypes_DateBetween_AutoRefresh"
+      ami:openExclusively="false"
+      ami:order="100"
+      frmi:readOnlyAccess="false"
+      frmi:refreshAfterSaveType="RefreshChangedRecords"
+      frmi:refreshOnFocus="false"
+      frmi:refreshPortalAfterSave="false"
+      frmi:requestSaveAfterUpdate="false"
+      ami:roles="*"
+      frmi:screen="Widgets/FormControlSet/Widgets/AllDataTypes.origam#AllDataTypes/acf532d5-5a54-49d7-ac50-30a59ff6b32d"
+      frmi:selectionDialogPanel="Widgets/PanelControlSet/Widgets/SD_DateSelection.origam#SD_DateSelection/d19c26e8-49f3-4a01-be2e-93d4be9e37b7">
+      <sdpm:SelectionDialogParameterMapping
+        asi:abstract="false"
+        x:id="bb2f7490-cd4f-478d-8f31-e87007cc046a"
+        sdpm:itemType="SelectionDialogParameterMapping"
+        asi:name="AllDataTypes_parDate1From"
+        sdpm:selectionDialogField="Root/DataEntity/__system/SD.origam#SD/d1/d9e921ff-b2dc-46a2-966c-aba0c53f5751" />
+      <sdpm:SelectionDialogParameterMapping
+        asi:abstract="false"
+        x:id="bdd44f32-e7d4-426e-9ddd-4c02dc84edad"
+        sdpm:itemType="SelectionDialogParameterMapping"
+        asi:name="AllDataTypes_parDate1To"
+        sdpm:selectionDialogField="Root/DataEntity/__system/SD.origam#SD/d2/6a0393da-99b4-44ea-ad4f-91e8c3511e2e" />
+    </frmi:MenuItem>
     <s2:MenuItem
       asi:abstract="false"
       ami:displayName="Dropdown"

@@ -19,10 +19,13 @@ const privateLinkReportMenuItemId = "menu_5619f201-dc00-488c-85f6-e1d2c6c3732d";
 const settingsMenuFolderId = "menu_1cd3d010-c1cf-4f5c-b81f-7896029b4ce0";
 const generalMenuFolderId = "menu_fbbfcbd2-4032-4bc0-b4db-076ff0bbd448";
 const systemColorsMenuItemId = "menu_db9a696b-f85b-4864-b049-36ea1ca86ee4";
+const selectionDialogAutoRefreshMenuItemId = "menu_da49d248-0765-4757-a6d6-1d28aaab4164";
+const dateSelectionDialogDataViewId = "dataView_d19c26e8-49f3-4a01-be2e-93d4be9e37b7";
 
 module.exports = {widgetsMenuItemId, sectionsMenuItemId, masterDetailMenuItemId,
   allDataTypesMenuId, allDataTypesLazyMenuItemsId, topMenuHeader, masterDataViewId,
   detailDataViewId, detailEditorId, detailTabHandelId, masterDetailLazyLoadedMenuItemId,
   detailsDetailTabHandleId,
   allDataTypesLazyDataViewId, workflowTestItemId, allDataTypesDataViewId, reportWindowMenuItemId,
-  settingsMenuFolderId, generalMenuFolderId, systemColorsMenuItemId, privateLinkReportMenuItemId};
+  settingsMenuFolderId, generalMenuFolderId, systemColorsMenuItemId, privateLinkReportMenuItemId,
+  selectionDialogAutoRefreshMenuItemId, dateSelectionDialogDataViewId};
