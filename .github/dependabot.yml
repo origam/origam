@@ -42,6 +42,9 @@ updates:
       # Keep mobx on the 6.x release line. Upgrading to 7.x requires additional migration work.
       - dependency-name: "mobx"
         versions: [">=7.0.0"]
+      # The frontend imports AutoSizer from react-virtualized 9.
+      - dependency-name: "react-virtualized"
+        update-types: ["version-update:semver-major", "version-update:semver-minor", "version-update:semver-patch"]
   - package-ecosystem: "npm"
     directory: "/architect-html"
     open-pull-requests-limit: 20
