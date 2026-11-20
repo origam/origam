@@ -157,6 +157,25 @@
       frmi:requestSaveAfterUpdate="false"
       ami:roles="AllDataTypes"
       frmi:screen="Widgets/FormControlSet/Widgets/AllDataTypes.origam#AllDataTypes/acf532d5-5a54-49d7-ac50-30a59ff6b32d" />
+    <frmi:MenuItem
+      asi:abstract="false"
+      ami:alwaysOpenNew="false"
+      frmi:autoRefreshInterval="Root/DataConstant/_numbers/_Number_3.origam#_Number_3/1e4627b1-c5ec-4517-a4b2-b8c76a494bef"
+      frmi:autoSaveOnListRecordChange="false"
+      ami:displayName="All Data Types With Selection Dialog And Auto Refresh"
+      x:id="1c4757f0-d4ec-45ee-9dae-d31ada658cf4"
+      frmi:method="Widgets/DataStructure/Widgets/AllDataTypes.origam#AllDataTypes/GetTop30/89c90dee-440b-4b5c-b977-4fb472c43329"
+      asi:name="AllDataTypes_SelectionDialogAutoRefresh"
+      ami:openExclusively="false"
+      ami:order="100"
+      frmi:readOnlyAccess="false"
+      frmi:refreshAfterSaveType="RefreshChangedRecords"
+      frmi:refreshOnFocus="false"
+      frmi:refreshPortalAfterSave="false"
+      frmi:requestSaveAfterUpdate="false"
+      ami:roles="*"
+      frmi:screen="Widgets/FormControlSet/Widgets/AllDataTypes.origam#AllDataTypes/acf532d5-5a54-49d7-ac50-30a59ff6b32d"
+      frmi:selectionDialogPanel="Widgets/PanelControlSet/Widgets/SD_UserAccount.origam#SD_UserAccount/7bce6c9d-04ec-4c09-ad29-88472fdd3249" />
     <s2:MenuItem
       asi:abstract="false"
       ami:displayName="Dropdown"
