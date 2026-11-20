@@ -12,6 +12,7 @@
   <ItemGroup>
     <PackageReference Include="CSharpFunctionalExtensions" Version="2.20.4" />
     <PackageReference Include="log4net" Version="3.5.0" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="7.1.2" />
     <PackageReference Include="morelinq" Version="4.4.0" />
   </ItemGroup>
   <ItemGroup>
