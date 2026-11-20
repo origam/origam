@@ -16,8 +16,8 @@ const {
 const { restoreAllDataTypesTable } = require("./dbTools");
 
 const autoRefreshIntervalMilliseconds = 3_000;
-const dateFrom = "06/23/2021";
-const dateTo = "07/02/2021";
+const dateFrom = "23.06.2021";
+const dateTo = "02.07.2021";
 const rowCountInDateRange = 10;
 
 test.beforeAll(async () => {
