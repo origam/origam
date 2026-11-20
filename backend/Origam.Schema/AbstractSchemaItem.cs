@@ -396,9 +396,8 @@ public abstract class AbstractSchemaItem
             _myAncestorsPopulated = false;
             _childItemsPopulated = false;
 #if ORIGAM_SERVER
-            _hasParameterReferencesCached = false;
+            cachedParameterReferences = null;
 #endif
-            _parameterReferences.Clear();
 
             if (_childItems != null)
             {
@@ -944,7 +943,9 @@ public abstract class AbstractSchemaItem
     public List<SchemaItemParameter> Parameters =>
         ChildItemsByType<SchemaItemParameter>(SchemaItemParameter.CategoryConst);
 
-    Dictionary<string, ParameterReference> _parameterReferences = new();
+#if ORIGAM_SERVER
+    private volatile Dictionary<string, ParameterReference> cachedParameterReferences;
+#endif
 
     [Category("(Schema Item)")]
     [Browsable(false)]
@@ -953,59 +954,33 @@ public abstract class AbstractSchemaItem
         get
         {
 #if ORIGAM_SERVER
-            if (!_hasParameterReferencesCached)
+            var snapshot = cachedParameterReferences;
+            if (snapshot != null)
             {
-                lock (Lock)
-                {
-                    if (!_hasParameterReferencesCached)
-                    {
-#else
+                return snapshot;
+            }
+#endif
             lock (Lock)
             {
-#endif
-                        _parameterReferences.Clear();
-                        GetParameterReferences(this, _parameterReferences);
 #if ORIGAM_SERVER
-                        _hasParameterReferences = (_parameterReferences.Count > 0);
-                        _hasParameterReferencesCached = true;
-                    }
+                if (cachedParameterReferences != null)
+                {
+                    return cachedParameterReferences;
                 }
 #endif
+                // A caller may still be enumerating the previous result.
+                var references = new Dictionary<string, ParameterReference>();
+                GetParameterReferences(this, references);
+#if ORIGAM_SERVER
+                cachedParameterReferences = references;
+#endif
+                return references;
             }
-            return _parameterReferences;
         }
     }
-#if ORIGAM_SERVER
-    private bool _hasParameterReferencesCached = false;
-#endif
-    private bool _hasParameterReferences = false;
 
     [Browsable(false)]
-    public bool HasParameterReferences
-    {
-        get
-        {
-#if ORIGAM_SERVER
-            if (!_hasParameterReferencesCached)
-            {
-                lock (Lock)
-                {
-                    if (!_hasParameterReferencesCached)
-                    {
-#else
-            lock (Lock)
-            {
-#endif
-                        _hasParameterReferences = ParameterReferences.Count > 0;
-#if ORIGAM_SERVER
-                        _hasParameterReferencesCached = true;
-                    }
-                }
-#endif
-            }
-            return _hasParameterReferences;
-        }
-    }
+    public bool HasParameterReferences => ParameterReferences.Count > 0;
 
     public List<T> ChildItemsByType<T>(string itemType)
         where T : ISchemaItem
