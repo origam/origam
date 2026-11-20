@@ -131,6 +131,8 @@ public class SelectionDialogSessionStore : SessionStore
         windowElement.SetAttribute("SuppressSave", "true");
         this.SuppressSave = true;
         windowElement.SetAttribute("SuppressRefresh", "true");
+        windowElement.SetAttribute("AutoRefreshInterval", "0");
+        windowElement.RemoveAttribute("RefreshOnFocus");
         //windowElement.SetAttribute("ShowWorkflowNextButton", "true");
         list = formXml.SelectNodes("//Actions");
         XmlElement actionsElement = list[0] as XmlElement;
