@@ -36,24 +36,24 @@ public class TrackerSerializationData
 
     public Dictionary<string, int> ItemTrackerStats => itemTrackerStats;
 
-    [ProtoMember(2)]
+    [ProtoMember(2, IsRequired = true)]
     private readonly AutoIncrementedIntIndex<string> categoryIndex =
         new AutoIncrementedIntIndex<string>();
 
     [ProtoMember(1)]
     private List<OrigamFileSerializedForm> serializationList;
 
-    [ProtoMember(3)]
+    [ProtoMember(3, IsRequired = true)]
     private readonly AutoIncrementedIntIndex<Guid> guidIndex = new AutoIncrementedIntIndex<Guid>();
 
-    [ProtoMember(4)]
+    [ProtoMember(4, IsRequired = true)]
     private readonly AutoIncrementedIntIndex<string> parentFolderIndex =
         new AutoIncrementedIntIndex<string>();
 
     [ProtoMember(5)]
     private readonly Dictionary<string, int> itemTrackerStats;
 
-    [ProtoMember(6)]
+    [ProtoMember(6, IsRequired = true)]
     private readonly AutoIncrementedIntIndex<TypeInfo> typeIndex =
         new AutoIncrementedIntIndex<TypeInfo>();
 
