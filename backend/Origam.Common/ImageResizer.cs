@@ -1,4 +1,4 @@
-﻿#region license
+#region license
 /*
 Copyright 2005 - 2021 Advantage Solutions, s. r. o.
 
@@ -20,72 +20,20 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
-using System.IO;
-using System.Linq;
-using System.Runtime.Versioning;
+using SkiaSharp;
 
 namespace Origam;
 
-[SupportedOSPlatform("windows")]
 public static class ImageResizer
 {
-    private static byte[] FixedSizeBytes(Image img, int width, int height)
+    public static SKBitmap Resize(SKBitmap image, int width)
     {
-        using (Image thumbnail = FixedSize(img, width, height))
-        {
-            MemoryStream ms = new MemoryStream();
-            try
-            {
-                thumbnail.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
-                return ms.GetBuffer();
-            }
-            finally
-            {
-                if (ms != null)
-                {
-                    ms.Close();
-                }
-            }
-        }
-    }
-
-    public static Image Resize(Image image, int width)
-    {
+        ArgumentNullException.ThrowIfNull(image);
         if (image.Width == width)
         {
             return image;
         }
-
         return Resize(image, width, width, true);
-    }
-
-    private static byte[] ResizeBytes(
-        Image img,
-        int width,
-        int height,
-        bool keepAspectRatio,
-        System.Drawing.Imaging.ImageFormat outFormat
-    )
-    {
-        using (Image resized = Resize(img, width, height, keepAspectRatio))
-        {
-            MemoryStream ms = new MemoryStream();
-            try
-            {
-                resized.Save(ms, outFormat);
-                return ms.GetBuffer();
-            }
-            finally
-            {
-                if (ms != null)
-                {
-                    ms.Close();
-                }
-            }
-        }
     }
 
     public static byte[] ResizeBytesInBytesOut(
@@ -96,170 +44,173 @@ public static class ImageResizer
         string outFormat
     )
     {
-        System.Drawing.Imaging.ImageFormat format;
-        switch (outFormat.ToLower())
+        SKEncodedImageFormat format;
+        switch (outFormat.ToLowerInvariant())
         {
             case "jpeg":
             case "jpg":
             {
-                format = System.Drawing.Imaging.ImageFormat.Jpeg;
+                format = SKEncodedImageFormat.Jpeg;
                 break;
             }
-
             case "png":
             {
-                format = System.Drawing.Imaging.ImageFormat.Png;
+                format = SKEncodedImageFormat.Png;
                 break;
             }
-
-            case "gif":
-            {
-                format = System.Drawing.Imaging.ImageFormat.Gif;
-                break;
-            }
-
             default:
-            {
                 throw new OrigamException(
-                    String.Format(
-                        "Invalid program exception. Unexpected " + "output image format: {0}",
-                        outFormat
-                    )
+                    string.Format(Strings.UnsupportedOutputImageFormat, outFormat)
                 );
-            }
         }
-        MemoryStream ms = new MemoryStream(imgBytes);
-        Image img = Image.FromStream(ms);
-        return ResizeBytes(img, width, height, keepAspectRatio, format);
+        using var stream = new SKMemoryStream(imgBytes);
+        using var codec = SKCodec.Create(stream);
+        if (codec == null)
+        {
+            throw new ArgumentException(message: null, nameof(imgBytes));
+        }
+        using SKBitmap decoded =
+            SKBitmap.Decode(codec) ?? throw new ArgumentException(message: null, nameof(imgBytes));
+        using SKBitmap oriented = Orient(decoded, codec.EncodedOrigin);
+        using SKBitmap resized = Resize(oriented, width, height, keepAspectRatio);
+        return Encode(resized, format);
     }
 
     public static byte[] FixedSizeBytesInBytesOut(byte[] imgBytes, int width, int height)
     {
-        MemoryStream ms = new MemoryStream(imgBytes);
-        Image img = Image.FromStream(ms);
-        return FixedSizeBytes(img, width, height);
+        using SKBitmap image = Decode(imgBytes);
+        using SKBitmap thumbnail = FixedSize(image, width, height);
+        return Encode(thumbnail, SKEncodedImageFormat.Png);
     }
 
     public static int[] GetImageDimensions(byte[] imgBytes)
     {
-        MemoryStream ms = new MemoryStream(imgBytes);
-        Image img = Image.FromStream(ms);
-        return new int[2] { img.Width, img.Height };
+        using SKBitmap image = Decode(imgBytes);
+        return new[] { image.Width, image.Height };
     }
 
-    public static Image FixedSize(Image imgPhoto, int Width, int Height)
+    private static SKBitmap Decode(byte[] imgBytes)
     {
-        int sourceWidth = imgPhoto.Width;
-        int sourceHeight = imgPhoto.Height;
-        int sourceX = 0;
-        int sourceY = 0;
-        int destX = 0;
-        int destY = 0;
-        float nPercent = 0;
-        float nPercentW = 0;
-        float nPercentH = 0;
-        nPercentW = ((float)Width / (float)sourceWidth);
-        nPercentH = ((float)Height / (float)sourceHeight);
-        if (nPercentH < nPercentW)
+        using var stream = new SKMemoryStream(imgBytes);
+        using var codec = SKCodec.Create(stream);
+        if (codec == null)
         {
-            nPercent = nPercentH;
-            destX = System.Convert.ToInt16((Width - (sourceWidth * nPercent)) / 2);
+            throw new ArgumentException(message: null, nameof(imgBytes));
         }
-        else
-        {
-            nPercent = nPercentW;
-            destY = System.Convert.ToInt16((Height - (sourceHeight * nPercent)) / 2);
-        }
-        int destWidth = (int)(sourceWidth * nPercent);
-        int destHeight = (int)(sourceHeight * nPercent);
-        Bitmap bmPhoto = new Bitmap(Width, Height, PixelFormat.Format24bppRgb);
-        bmPhoto.SetResolution(imgPhoto.HorizontalResolution, imgPhoto.VerticalResolution);
-        bmPhoto.MakeTransparent(Color.Transparent);
-        System.Drawing.Graphics grPhoto = System.Drawing.Graphics.FromImage(bmPhoto);
-        grPhoto.Clear(Color.Transparent);
-        grPhoto.InterpolationMode = InterpolationMode.HighQualityBicubic;
-        grPhoto.DrawImage(
-            imgPhoto,
-            new Rectangle(destX, destY, destWidth, destHeight),
-            new Rectangle(sourceX, sourceY, sourceWidth, sourceHeight),
-            GraphicsUnit.Pixel
+        return SKBitmap.Decode(codec)
+            ?? throw new ArgumentException(message: null, nameof(imgBytes));
+    }
+
+    private static byte[] Encode(SKBitmap bitmap, SKEncodedImageFormat format)
+    {
+        using SKImage image = SKImage.FromBitmap(bitmap);
+        using SKData data = image.Encode(format, quality: 75);
+        return data.ToArray();
+    }
+
+    public static SKBitmap FixedSize(SKBitmap image, int width, int height)
+    {
+        ArgumentNullException.ThrowIfNull(image);
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(width);
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(height);
+        float scale = Math.Min((float)width / image.Width, (float)height / image.Height);
+        int destWidth = Math.Max(1, (int)(image.Width * scale));
+        int destHeight = Math.Max(1, (int)(image.Height * scale));
+        int destX = Convert.ToInt32((width - (image.Width * scale)) / 2);
+        int destY = Convert.ToInt32((height - (image.Height * scale)) / 2);
+        return Draw(
+            image,
+            width,
+            height,
+            new SKRect(destX, destY, destX + destWidth, destY + destHeight),
+            SKColors.Transparent
         );
-        grPhoto.Dispose();
-        return bmPhoto;
     }
 
-    private static Image Resize(Image imgPhoto, int Width, int Height, bool KeepAspectRatio)
+    private static SKBitmap Resize(SKBitmap image, int width, int height, bool keepAspectRatio)
     {
-        // fix iphone rotation
-        if (imgPhoto.PropertyIdList.Contains(0x0112))
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(width);
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(height);
+        if (keepAspectRatio)
         {
-            int rotationValue = imgPhoto.GetPropertyItem(0x0112).Value[0];
-            switch (rotationValue)
+            float scale = Math.Min((float)width / image.Width, (float)height / image.Height);
+            width = Math.Max(1, (int)(image.Width * scale));
+            height = Math.Max(1, (int)(image.Height * scale));
+        }
+        return Draw(image, width, height, new SKRect(0, 0, width, height), SKColors.Black);
+    }
+
+    private static SKBitmap Draw(
+        SKBitmap source,
+        int width,
+        int height,
+        SKRect destination,
+        SKColor background
+    )
+    {
+        var result = new SKBitmap(width, height, SKColorType.Rgba8888, SKAlphaType.Premul);
+        using var canvas = new SKCanvas(result);
+        canvas.Clear(background);
+        using SKImage image = SKImage.FromBitmap(source);
+        canvas.DrawImage(image, destination, new SKSamplingOptions(SKCubicResampler.Mitchell));
+        return result;
+    }
+
+    private static SKBitmap Orient(SKBitmap source, SKEncodedOrigin origin)
+    {
+        bool swapDimensions = origin >= SKEncodedOrigin.LeftTop;
+        int width = swapDimensions ? source.Height : source.Width;
+        int height = swapDimensions ? source.Width : source.Height;
+        var result = new SKBitmap(width, height, SKColorType.Rgba8888, SKAlphaType.Premul);
+        using var canvas = new SKCanvas(result);
+        switch (origin)
+        {
+            case SKEncodedOrigin.TopRight:
             {
-                case 1: // landscape, do nothing
-                {
-                    break;
-                }
-                case 8: // rotated 90 right
-                {
-                    // de-rotate:
-                    imgPhoto.RotateFlip(rotateFlipType: RotateFlipType.Rotate270FlipNone);
-                    break;
-                }
-
-                case 3: // bottoms up
-                {
-                    imgPhoto.RotateFlip(rotateFlipType: RotateFlipType.Rotate180FlipNone);
-                    break;
-                }
-
-                case 6: // rotated 90 left
-                {
-                    imgPhoto.RotateFlip(rotateFlipType: RotateFlipType.Rotate90FlipNone);
-                    break;
-                }
+                canvas.Translate(width, 0);
+                canvas.Scale(-1, 1);
+                break;
+            }
+            case SKEncodedOrigin.BottomRight:
+            {
+                canvas.Translate(width, height);
+                canvas.RotateDegrees(180);
+                break;
+            }
+            case SKEncodedOrigin.BottomLeft:
+            {
+                canvas.Translate(0, height);
+                canvas.Scale(1, -1);
+                break;
+            }
+            case SKEncodedOrigin.LeftTop:
+            {
+                canvas.RotateDegrees(90);
+                canvas.Scale(1, -1);
+                break;
+            }
+            case SKEncodedOrigin.RightTop:
+            {
+                canvas.Translate(width, 0);
+                canvas.RotateDegrees(90);
+                break;
+            }
+            case SKEncodedOrigin.RightBottom:
+            {
+                canvas.Translate(width, height);
+                canvas.RotateDegrees(90);
+                canvas.Scale(-1, 1);
+                break;
+            }
+            case SKEncodedOrigin.LeftBottom:
+            {
+                canvas.Translate(0, height);
+                canvas.RotateDegrees(270);
+                break;
             }
         }
-        int sourceWidth = imgPhoto.Width;
-        int sourceHeight = imgPhoto.Height;
-        float nPercent = 0;
-        float nPercentW = 0;
-        float nPercentH = 0;
-        nPercentW = ((float)Width / (float)sourceWidth);
-        nPercentH = ((float)Height / (float)sourceHeight);
-        if (nPercentH < nPercentW)
-        {
-            nPercent = nPercentH;
-        }
-        else
-        {
-            nPercent = nPercentW;
-        }
-        int destWidth;
-        int destHeight;
-        if (KeepAspectRatio)
-        {
-            destWidth = (int)(sourceWidth * nPercent);
-            destHeight = (int)(sourceHeight * nPercent);
-        }
-        else
-        {
-            destWidth = Width;
-            destHeight = Height;
-        }
-        Bitmap bmPhoto = new Bitmap(destWidth, destHeight, PixelFormat.Format24bppRgb);
-        bmPhoto.SetResolution(imgPhoto.HorizontalResolution, imgPhoto.VerticalResolution);
-        //bmPhoto.MakeTransparent(Color.Transparent);
-        System.Drawing.Graphics grPhoto = System.Drawing.Graphics.FromImage(bmPhoto);
-        //grPhoto.Clear(Color.Transparent);
-        grPhoto.InterpolationMode = InterpolationMode.HighQualityBicubic;
-        grPhoto.DrawImage(
-            imgPhoto,
-            new Rectangle(0, 0, destWidth, destHeight),
-            new Rectangle(0, 0, sourceWidth, sourceHeight),
-            GraphicsUnit.Pixel
-        );
-        grPhoto.Dispose();
-        return bmPhoto;
+        using SKImage image = SKImage.FromBitmap(source);
+        canvas.DrawImage(image, 0, 0, new SKSamplingOptions(SKFilterMode.Nearest));
+        return result;
     }
 }
