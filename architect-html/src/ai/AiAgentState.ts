@@ -33,7 +33,7 @@ import {
   parseRunResult,
   RUN_RESULT_EVENT_NAME,
 } from '@/ai/agui/ArchitectAgentClient';
-import { getAgentConnection } from '@/ai/AiPromptApi';
+import { getAgentConnection, getCustomInstructions } from '@/ai/AiPromptApi';
 import {
   blobToDataUrl,
   deleteChatThread,
@@ -239,6 +239,7 @@ export class AiAgentState {
           forwardedProps: {
             enabledSections: this.rootStore.aiToolSectionsState.enabledSections,
             summary: thread.summary,
+            customInstructions: await getCustomInstructions(),
           },
         },
         this.buildSubscriber(thread.id),

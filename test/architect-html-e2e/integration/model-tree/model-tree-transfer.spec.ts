@@ -129,6 +129,31 @@ test.describe('Model tree move and copy (real backend)', () => {
     await expectModelFile(`${CONSTANTS_DIR}/UngroupedConstant.origam`, true);
   });
 
+  test('Copy and paste copies a constant into a group of another package', async ({ page }) => {
+    await openConstants(page);
+
+    await openContextMenu(page, 'UngroupedConstant');
+    await awaitMoveVerdicts(page, () =>
+      menuItem(page, 'UngroupedConstant', 'tree-menu-copy').click(),
+    );
+
+    await openContextMenu(page, 'Synchronization');
+    await expectMoveSucceeds(page, () =>
+      menuItem(page, 'Synchronization', 'tree-menu-paste').click(),
+    );
+
+    await expect(page.getByTestId('tree-node-Copy of UngroupedConstant')).toBeVisible();
+
+    await expectModelFile(
+      `${CONSTANTS_DIR}/Synchronization/Copy of UngroupedConstant.origam`,
+      true,
+    );
+    await expectModelFile(
+      'Root/DataConstant/Synchronization/Copy of UngroupedConstant.origam',
+      false,
+    );
+  });
+
   test('Paste from the context menu closes the menu', async ({ page }) => {
     await openConstants(page);
 

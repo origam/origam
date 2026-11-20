@@ -20,6 +20,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 .root {
   display: flex;
   flex-direction: column;
+  box-sizing: border-box;
+  width: 460px;
   padding: 12px;
   gap: 0.5rem;
   font-size: 14px;
@@ -43,6 +45,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 .note {
   color: var(--background6);
+  font-size: 12px;
+}
+
+.filePath {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
   font-size: 12px;
 }
 

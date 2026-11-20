@@ -58,6 +58,30 @@ public sealed class ArchitectModelProbe(HttpClient architect)
             .ToList();
     }
 
+    public async Task<IReadOnlyList<ModelItemReference>> FindSchemaItemsContainingAsync(
+        string nameFragment,
+        string itemTypeName
+    )
+    {
+        var body = await architect.GetStringAsync(
+            requestUri: "/Search/SearchSchemaByName?query=" + Uri.EscapeDataString(nameFragment),
+            CancellationToken.None
+        );
+
+        using var document = JsonDocument.Parse(body);
+        return document
+            .RootElement.EnumerateArray()
+            .Where(node =>
+                node.TryGetProperty(propertyName: "itemTypeName", out var type)
+                && type.GetString() == itemTypeName
+            )
+            .Select(node => new ModelItemReference(
+                node.GetProperty("origamId").GetString() ?? string.Empty,
+                node.GetProperty("nodeText").GetString() ?? string.Empty
+            ))
+            .ToList();
+    }
+
     public async Task<IReadOnlyList<DatabaseField>> ReadDatabaseFieldsAsync(string entityId)
     {
         var body = await architect.GetStringAsync(

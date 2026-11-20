@@ -129,7 +129,78 @@ public class ResponseCompactionFilter(NewItemTypeCatalogService catalogService)
             return JsonSerializer.Serialize(CompactWidget(screenItem), JsonOptions);
         }
 
+        if (
+            root.TryGetProperty(propertyName: "targets", out JsonElement targets)
+            && targets.ValueKind == JsonValueKind.Array
+            && root.TryGetProperty(propertyName: "isSourceInActivePackage", out _)
+        )
+        {
+            return CompactMoveTargets(root, targets);
+        }
+
         return null;
+    }
+
+    private static string CompactMoveTargets(JsonElement root, JsonElement targets)
+    {
+        var compactedTargets = new List<Dictionary<string, object?>>();
+        foreach (JsonElement target in targets.EnumerateArray())
+        {
+            var compactedTarget = new Dictionary<string, object?>(StringComparer.Ordinal)
+            {
+                ["id"] = target.GetStringOrNull(propertyName: "id"),
+                ["nodeText"] = target.GetStringOrNull(propertyName: "nodeText"),
+                ["path"] = target.GetStringOrNull(propertyName: "path"),
+            };
+            if (target.GetInt32OrNull(propertyName: "depth") == 0)
+            {
+                compactedTarget["packageName"] = string.Empty;
+            }
+            else
+            {
+                compactedTarget["packageName"] = target.GetStringOrNull(
+                    propertyName: "packageName"
+                );
+                compactedTarget["isInActivePackage"] = target.GetBooleanOrNull(
+                    propertyName: "isInActivePackage"
+                );
+            }
+
+            compactedTarget["isCurrentLocation"] = target.GetBooleanOrNull(
+                propertyName: "isCurrentLocation"
+            );
+            compactedTarget["canMove"] = target.GetBooleanOrNull(propertyName: "canMove");
+            compactedTarget["canCopy"] = target.GetBooleanOrNull(propertyName: "canCopy");
+            string? moveRefusal = target.GetStringOrNull(propertyName: "moveRefusal");
+            if (
+                moveRefusal != null
+                && target.GetBooleanOrNull(propertyName: "isCurrentLocation") != true
+            )
+            {
+                compactedTarget["moveRefusal"] = moveRefusal;
+            }
+            compactedTargets.Add(compactedTarget);
+        }
+
+        var summary = new Dictionary<string, object?>(StringComparer.Ordinal)
+        {
+            ["isSourceInActivePackage"] = root.GetBooleanOrNull(
+                propertyName: "isSourceInActivePackage"
+            ),
+        };
+        string? packageRefusal = root.GetStringOrNull(propertyName: "packageRefusal");
+        if (packageRefusal != null)
+        {
+            summary["packageRefusal"] = packageRefusal;
+        }
+        summary["isTruncated"] = root.GetBooleanOrNull(propertyName: "isTruncated");
+        summary["targets"] = compactedTargets;
+        summary["packageId"] = root.GetStringOrNull(propertyName: "packageId");
+        if (root.TryGetProperty(propertyName: "packages", out JsonElement packages))
+        {
+            summary["packages"] = packages;
+        }
+        return JsonSerializer.Serialize(summary, JsonOptions);
     }
 
     private string? CompactEditorTab(JsonElement root, JsonElement node)

@@ -74,7 +74,6 @@ public sealed class ArchitectTargetStrategy(
         var httpClientFactory = services.GetRequiredService<IHttpClientFactory>();
         var aiOptions = services.GetRequiredService<IOptions<AiOptions>>().Value;
         var baseUrlProvider = services.GetRequiredService<ArchitectBaseUrlProvider>();
-        var customInstructions = services.GetRequiredService<CustomInstructionsFile>();
         var toolErrorLogger = services.GetRequiredService<ILogger<ToolErrorFilter>>();
 
         var options = ArchitectTargetOptions.Create(() => baseUrlProvider.BaseUrl);
@@ -102,7 +101,6 @@ public sealed class ArchitectTargetStrategy(
             modelIndexService,
             newItemTypeCatalogService,
             aliasMappingService,
-            customInstructions,
             prompts
         );
 

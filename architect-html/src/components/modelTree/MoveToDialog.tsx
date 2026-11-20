@@ -17,59 +17,73 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { T } from '@/main';
-import { IDropDownValue, IMoveTarget } from '@api/IArchitectApi';
+import { RootStoreContext, T } from '@/main';
+import { IDropDownValue, IMoveTarget, IMoveTargetsResult } from '@api/IArchitectApi';
 import S from '@components/modelTree/MoveToDialog.module.scss';
 import { ModalWindow } from '@dialogs/ModalWindow';
 import { FilterableSelect } from '@editors/propertyEditor/FilterableSelect';
+import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
 import { observer } from 'mobx-react-lite';
-import { KeyboardEvent, useMemo, useState } from 'react';
+import { KeyboardEvent, useContext, useMemo, useState } from 'react';
 
 interface MoveToDialogProps {
   sourceName: string;
-  targets: IMoveTarget[];
-  isSourceInActivePackage: boolean;
-  isTruncated: boolean;
+  initialResult: IMoveTargetsResult;
+  loadTargets: (packageId: string) => Promise<IMoveTargetsResult>;
   onCancel: () => void;
-  onConfirm: (target: IMoveTarget, isCopy: boolean) => void;
+  onConfirm: (target: IMoveTarget, isCopy: boolean, packageId: string | undefined) => void;
 }
 
 // Non breaking - the dropdown collapses plain spaces.
-const INDENT = '  ';
+const INDENT = '  ';
 
 export const MoveToDialog = observer(
-  ({
-    sourceName,
-    targets,
-    isSourceInActivePackage,
-    isTruncated,
-    onCancel,
-    onConfirm,
-  }: MoveToDialogProps) => {
-    const packages = useMemo(
-      () => [...new Set(targets.map(target => target.packageName))].sort(),
-      [targets],
-    );
-    const [packageName, setPackageName] = useState(() => defaultPackage(targets, packages));
-    const [targetKey, setTargetKey] = useState<string | null>(null);
+  ({ sourceName, initialResult, loadTargets, onCancel, onConfirm }: MoveToDialogProps) => {
+    const rootStore = useContext(RootStoreContext);
+    const run = runInFlowWithHandler(rootStore.errorDialogController);
+    const [result, setResult] = useState(initialResult);
+    const [targetKey, setTargetKey] = useState(() => currentLocationKey(initialResult.targets));
+    const [isLoading, setIsLoading] = useState(false);
 
-    const packageTargets = useMemo(
-      () =>
-        targets
-          .filter(target => target.packageName === packageName)
-          .sort((left, right) => left.path.localeCompare(right.path)),
-      [targets, packageName],
+    const targets = useMemo(
+      () => [...result.targets].sort((left, right) => left.path.localeCompare(right.path)),
+      [result],
     );
-    const selected = packageTargets.find(target => target.key === targetKey) ?? null;
+    const selected = targets.find(target => target.key === targetKey) ?? null;
+    const activePackage = result.packages.find(movePackage => movePackage.isActive);
+    const chosenPackage = result.packages.find(movePackage => movePackage.id === result.packageId);
 
-    const targetOptions: IDropDownValue[] = packageTargets.map(target => ({
+    const targetOptions: IDropDownValue[] = targets.map(target => ({
       value: target.key,
-      name: INDENT.repeat(target.depth) + target.nodeText,
+      name:
+        INDENT.repeat(target.depth) +
+        (target.depth > 0 && target.packageName !== chosenPackage?.name
+          ? T('{0} ({1})', 'move_to_target_in_package', target.nodeText, target.packageName)
+          : target.nodeText),
     }));
 
+    function changePackage(packageId: string) {
+      run({
+        generator: function* () {
+          setIsLoading(true);
+          try {
+            const next = (yield loadTargets(packageId)) as IMoveTargetsResult;
+            setResult(next);
+            setTargetKey(key =>
+              next.targets.some(target => target.key === key)
+                ? key
+                : currentLocationKey(next.targets),
+            );
+          } finally {
+            setIsLoading(false);
+          }
+        },
+      });
+    }
+
     function confirmTarget(isCopy: boolean) {
-      if (selected && (isCopy ? selected.canCopy : selected.canMove)) {
-        onConfirm(selected, isCopy);
+      if (selected && !isLoading && (isCopy ? selected.canCopy : selected.canMove)) {
+        onConfirm(selected, isCopy, result.packageId ?? undefined);
       }
     }
 
@@ -88,7 +102,7 @@ export const MoveToDialog = observer(
             <button
               className={S.button}
               data-test-id="move-to-button-move"
-              disabled={!selected || !selected.canMove}
+              disabled={isLoading || !selected || !selected.canMove}
               onClick={() => confirmTarget(false)}
             >
               {T('Move', 'move_to_button_move')}
@@ -96,7 +110,7 @@ export const MoveToDialog = observer(
             <button
               className={S.button}
               data-test-id="move-to-button-copy"
-              disabled={!selected || !selected.canCopy}
+              disabled={isLoading || !selected || !selected.canCopy}
               onClick={() => confirmTarget(true)}
             >
               {T('Copy', 'move_to_button_copy')}
@@ -118,12 +132,16 @@ export const MoveToDialog = observer(
                 <span className={S.label}>{T('Package', 'move_to_package')}</span>
                 <span className={S.field} data-test-id="move-to-package">
                   <FilterableSelect
-                    options={packages.map(name => ({ value: name, name: name }))}
-                    selectedValue={packageName}
+                    options={result.packages.map(movePackage => ({
+                      value: movePackage.id,
+                      name: movePackage.name,
+                    }))}
+                    selectedValue={result.packageId}
                     autoFocus={true}
                     onChange={value => {
-                      setPackageName(value);
-                      setTargetKey(null);
+                      if (value && value !== result.packageId) {
+                        changePackage(value);
+                      }
                     }}
                   />
                 </span>
@@ -138,21 +156,34 @@ export const MoveToDialog = observer(
                   />
                 </span>
               </label>
-              {selected && !selected.canMove && !isSourceInActivePackage && (
-                <div className={S.note} data-test-id="move-to-copy-only">
+              {selected?.canMove && selected.filePath && (
+                <div className={S.row}>
+                  <span className={S.label}>{T('File', 'move_to_file')}</span>
+                  <span className={S.filePath} data-test-id="move-to-file-path">
+                    {selected.filePath}
+                  </span>
+                </div>
+              )}
+              {result.packageRefusal && (
+                <div className={S.note} data-test-id="move-to-package-refusal">
+                  {result.packageRefusal}
+                </div>
+              )}
+              {selected && !selected.canMove && selected.moveRefusal && (
+                <div className={S.note} data-test-id="move-to-move-refusal">
+                  {selected.moveRefusal}
+                </div>
+              )}
+              {activePackage && activePackage.id !== result.packageId && (
+                <div className={S.note} data-test-id="move-to-copy-note">
                   {T(
-                    'Only a copy can be created, {0} is not in the active package.',
-                    'move_to_copy_only',
-                    sourceName,
+                    'A copy is always created in the active package {0}.',
+                    'move_to_copy_active_package',
+                    activePackage.name,
                   )}
                 </div>
               )}
-              {selected && !selected.canMove && isSourceInActivePackage && (
-                <div className={S.note} data-test-id="move-to-copy-only-target">
-                  {T('Only a copy can be created for this target.', 'move_to_copy_only_target')}
-                </div>
-              )}
-              {isTruncated && (
+              {result.isTruncated && (
                 <div className={S.note}>
                   {T('Too many targets, the list is incomplete.', 'move_to_truncated')}
                 </div>
@@ -165,8 +196,6 @@ export const MoveToDialog = observer(
   },
 );
 
-function defaultPackage(targets: IMoveTarget[], packages: string[]): string {
-  const current = targets.find(target => target.isCurrentLocation);
-  const active = targets.find(target => target.isInActivePackage);
-  return current?.packageName ?? active?.packageName ?? packages[0] ?? '';
+function currentLocationKey(targets: IMoveTarget[]): string | null {
+  return targets.find(target => target.isCurrentLocation)?.key ?? null;
 }

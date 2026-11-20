@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.Architect.Server.Exceptions;
 using Origam.Architect.Server.Models;
 using Origam.Architect.Server.ReturnModels;
 using Origam.DA.ObjectPersistence;
@@ -55,6 +56,7 @@ public class MoveNodeResolver(
                 useCache: true,
                 throwNotFoundException: false
             );
+            RestoreRootProvider(node);
             if (node == null || !reference.IsNonPersistentItem)
             {
                 return node;
@@ -68,5 +70,27 @@ public class MoveNodeResolver(
         }
 
         return GetRootProviderById(reference.Id) as IBrowserNode2;
+    }
+
+    private void RestoreRootProvider(IBrowserNode2 node)
+    {
+        if (node is not ISchemaItem { RootProvider: null } item)
+        {
+            return;
+        }
+
+        ISchemaItem root;
+        try
+        {
+            root = SchemaItemTreePath.GetRoot(item);
+        }
+        catch (OrphanedSchemaReferenceException)
+        {
+            return;
+        }
+
+        item.RootProvider = schemaService
+            .Providers.OfType<AbstractSchemaItemProvider>()
+            .FirstOrDefault(provider => provider.RootItemType == root.ItemType);
     }
 }

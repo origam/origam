@@ -75,9 +75,9 @@ public class Program
         builder.Services.AddSingleton<LocalizationService>();
         builder.Services.AddSingleton<PanelControlFactory>();
         builder.Services.AddSingleton<MoveNodeResolver>();
+        builder.Services.AddSingleton<PackageChangeChecker>();
         builder.Services.AddSingleton<MoveRuleEvaluator>();
         builder.Services.AddSingleton<MoveTargetFinder>();
-        builder.Services.AddSingleton<CrossPackageMoveValidator>();
         builder.Services.AddSingleton<SchemaItemMover>();
         builder.Services.AddSingleton<SchemaItemCopier>();
         builder.Services.AddSingleton<SchemaItemMoveService>();

@@ -21,13 +21,18 @@ import { simpleErrorHandler } from '@api/ArchitectApi';
 import { HttpClient } from '@api/httpClient';
 
 const httpClient = new HttpClient(simpleErrorHandler);
+const CUSTOM_INSTRUCTIONS_STORAGE_KEY = 'origam-ai-custom-instructions';
 
 export async function getCustomInstructions(): Promise<string> {
-  return (await httpClient.get<{ text: string }>('/agent/prompt/custom-instructions')).data.text;
+  try {
+    return localStorage.getItem(CUSTOM_INSTRUCTIONS_STORAGE_KEY) ?? '';
+  } catch {
+    return '';
+  }
 }
 
 export async function saveCustomInstructions(text: string): Promise<void> {
-  await httpClient.post('/agent/prompt/custom-instructions', { text });
+  localStorage.setItem(CUSTOM_INSTRUCTIONS_STORAGE_KEY, text);
 }
 
 export interface AgentConnection {

@@ -21,4 +21,4 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 namespace Origam.AI.Agent.Tests.Infrastructure.Agent;
 
-public sealed record ToolCallRecord(string Name, string Arguments, string? Result);
+public sealed record ToolCallRecord(string Id, string Name, string Arguments, string? Result);

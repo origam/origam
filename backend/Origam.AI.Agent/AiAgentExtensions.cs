@@ -41,7 +41,6 @@ public static class AiAgentExtensions
         AddHttpClients(services);
 
         services.AddSingleton(new PromptPack(PromptPack.SharedPackName));
-        services.AddSingleton<CustomInstructionsFile>();
         services.AddSingleton<AiScriptStore>();
         services.AddSingleton<SessionSummarizerService>();
         services.AddSingleton<ChatHistoryService>();

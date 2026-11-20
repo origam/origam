@@ -19,6 +19,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.AI.Agent.Models.Requests;
+namespace Origam.AI.Agent.Tests.Infrastructure.Architect;
 
-public sealed record CustomInstructionsUpdate(string Text);
+public sealed record MovePackage(string Id, string Name, bool IsActive);
