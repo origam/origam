@@ -26,16 +26,6 @@ namespace Origam;
 
 public static class ImageResizer
 {
-    public static SKBitmap Resize(SKBitmap image, int width)
-    {
-        ArgumentNullException.ThrowIfNull(image);
-        if (image.Width == width)
-        {
-            return image;
-        }
-        return Resize(image, width, width, true);
-    }
-
     public static byte[] ResizeBytesInBytesOut(
         byte[] imgBytes,
         int width,
@@ -44,25 +34,14 @@ public static class ImageResizer
         string outFormat
     )
     {
-        SKEncodedImageFormat format;
-        switch (outFormat.ToLowerInvariant())
+        SKEncodedImageFormat format = outFormat.ToLowerInvariant() switch
         {
-            case "jpeg":
-            case "jpg":
-            {
-                format = SKEncodedImageFormat.Jpeg;
-                break;
-            }
-            case "png":
-            {
-                format = SKEncodedImageFormat.Png;
-                break;
-            }
-            default:
-                throw new OrigamException(
-                    string.Format(Strings.UnsupportedOutputImageFormat, outFormat)
-                );
-        }
+            "jpeg" or "jpg" => SKEncodedImageFormat.Jpeg,
+            "png" => SKEncodedImageFormat.Png,
+            _ => throw new OrigamException(
+                string.Format(Strings.UnsupportedOutputImageFormat, outFormat)
+            ),
+        };
         using var stream = new SKMemoryStream(imgBytes);
         using var codec = SKCodec.Create(stream);
         if (codec == null)

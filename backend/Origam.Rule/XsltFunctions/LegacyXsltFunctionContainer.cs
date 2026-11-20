@@ -2036,7 +2036,6 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
             .ToDateTime(date, XmlDateTimeSerializationMode.RoundtripKind)
             .AddMonths(1)
             .ToString("yyyy-MM-01");
-        ;
     }
 
     public string LastDayOfMonth(string date)
@@ -2065,7 +2064,6 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
         return XmlConvert
             .ToDateTime(date, XmlDateTimeSerializationMode.RoundtripKind)
             .ToString("yyyy");
-        ;
     }
 
     public string Month(string date)
@@ -2073,7 +2071,6 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
         return XmlConvert
             .ToDateTime(date, XmlDateTimeSerializationMode.RoundtripKind)
             .ToString("MM");
-        ;
     }
 
     public string DecimalNumber(string number)
