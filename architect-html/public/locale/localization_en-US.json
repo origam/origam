@@ -99,6 +99,7 @@
   "schema_item_results_column_type": "Type",
   "schema_item_results_column_folder": "Folder",
   "schema_item_results_column_package": "Package",
+  "schema_item_results_sort_by": "Sort by {0}. Ctrl+click to sort by several columns.",
   "schema_item_results_orphaned_note": "Orphaned reference - parent chain is broken",
   "schema_item_results_not_applicable": "n/a",
   "editor_search_results_header": "Search results for \"{0}\"",

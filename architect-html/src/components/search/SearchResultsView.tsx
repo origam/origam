@@ -24,15 +24,19 @@ import SchemaItemResultsTable from '@components/schemaItemResults/SchemaItemResu
 import { observer } from 'mobx-react-lite';
 
 const SearchResultsView = observer(({ editorState }: { editorState: SearchResultsTabState }) => {
-  const rows = editorState.results.map(result => ({
-    key: result.schemaId,
-    result,
-    extraCell: result.isOrphaned
+  const rows = editorState.results.map(result => {
+    const packageReferenceText = result.isOrphaned
       ? T('n/a', 'schema_item_results_not_applicable')
       : result.packageReference
         ? T('Yes', 'dialog_yes')
-        : T('No', 'dialog_no'),
-  }));
+        : T('No', 'dialog_no');
+    return {
+      key: result.schemaId,
+      result,
+      extraCell: packageReferenceText,
+      extraText: packageReferenceText,
+    };
+  });
 
   return (
     <div className={S.root}>

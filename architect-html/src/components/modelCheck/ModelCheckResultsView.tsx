@@ -158,6 +158,7 @@ const ModelCheckResultsView = observer(
       key: `${error.item.schemaId}-${index}`,
       result: error.item,
       extraCell: <span className={S.message}>{error.message}</span>,
+      extraText: error.message,
     }));
 
     return (
