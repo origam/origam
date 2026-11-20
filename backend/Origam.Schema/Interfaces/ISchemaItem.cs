@@ -39,7 +39,6 @@ public interface ISchemaItem : IPersistent, ISchemaItemProvider, ICloneable
     SchemaItemAncestorCollection AllAncestors { get; }
     List<SchemaItemParameter> Parameters { get; }
     Dictionary<string, ParameterReference> ParameterReferences { get; }
-    bool HasParameterReferences { get; }
     string ItemType { get; }
     ISchemaItem GetChildByName(string name);
     ISchemaItem GetChildById(Guid id);

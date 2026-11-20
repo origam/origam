@@ -979,9 +979,6 @@ public abstract class AbstractSchemaItem
         }
     }
 
-    [Browsable(false)]
-    public bool HasParameterReferences => ParameterReferences.Count > 0;
-
     public List<T> ChildItemsByType<T>(string itemType)
         where T : ISchemaItem
     {
