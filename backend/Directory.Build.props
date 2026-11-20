@@ -74,7 +74,7 @@
         <PackageReference
           Include="Meziantou.Analyzer"
           Condition="'$(EnableExtendedAnalysis)' == 'true'"
-          Version="3.0.320"
+          Version="3.0.321"
           PrivateAssets="all"
           IncludeAssets="build;analyzers;buildtransitive"
         />

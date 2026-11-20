@@ -17,10 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {
-  Component,
-  getCenteredLineBaseline,
-} from '@editors/designerEditor/common/designerComponents/Component';
+import { Component } from '@editors/designerEditor/common/designerComponents/Component';
 import S from '@editors/designerEditor/common/designerComponents/Components.module.scss';
 import { ReactElement } from 'react';
 
@@ -31,10 +28,6 @@ export class AsCheckBox extends Component {
 
   get canResizeHeight(): boolean {
     return false;
-  }
-
-  get textBaseline(): number | null {
-    return getCenteredLineBaseline(this.absoluteTop, this.height);
   }
 
   getDesignerRepresentation(): ReactElement | null {

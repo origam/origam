@@ -244,10 +244,6 @@ export class TreeNode implements IEditorNode {
     }
   }
 
-  *runUpdateScriptActivity() {
-    yield this.architectApi.runUpdateScriptActivity(this.origamId);
-  }
-
   createNode(typeName: string, name?: string | null) {
     return function* (this: TreeNode): Generator<Promise<any>, void, any> {
       const apiTabData: IApiTabData = yield this.architectApi.createNode(this, typeName, name);
