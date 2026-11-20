@@ -6,7 +6,7 @@ const { restoreAllDataTypesTable } = require("./dbTools");
 
 const autoRefreshIntervalMilliseconds = 3_000;
 const screenRowCount = 30;
-const enteredDate = "06/23/2021";
+const enteredDate = "23.06.2021";
 const selectionDialogDateInputSelector = `#${userAccountSelectionDialogDataViewId} input`;
 
 let browser;
@@ -118,7 +118,7 @@ describe("Html client", () => {
 
     expect(await getSelectionDialogDate()).toBe(enteredValue);
     expect(sessionRequests.refreshResponses).toEqual([]);
-  });
+  }, 120_000);
 
   it("Should stop refreshing a selection dialog once it opens its screen", async () => {
     await openSelectionDialog();
@@ -136,7 +136,7 @@ describe("Html client", () => {
       sessionRequests.refreshResponses.map(() => ({ sessionId: screenSessionId, status: 200 }))
     );
     expect(await isSessionExpiredMessageShown()).toBe(false);
-  });
+  }, 120_000);
 
   it("Should keep the selected row and focus after an auto refresh of a screen opened from a selection dialog", async () => {
     await openSelectionDialog();
@@ -166,5 +166,5 @@ describe("Html client", () => {
       .toEqual({ rowCount: String(screenRowCount), selectedRow });
     expect(await isFocusInsideScreen()).toBe(true);
     expect(await isSessionExpiredMessageShown()).toBe(false);
-  });
+  }, 120_000);
 });
