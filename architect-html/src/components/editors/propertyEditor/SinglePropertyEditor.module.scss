@@ -50,6 +50,18 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
     width: 100%;
   }
 
+  input[type='number'] {
+    appearance: textfield;
+    -moz-appearance: textfield;
+
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      appearance: none;
+      -webkit-appearance: none;
+      margin: 0;
+    }
+  }
+
   .checkbox {
     margin: 0;
     appearance: none;
