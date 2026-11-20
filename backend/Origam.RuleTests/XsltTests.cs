@@ -677,7 +677,6 @@ public class XsltTests
 
     [TestCase("AS:ResizeImage('{0}', '4', '4')", resizedImage1)]
     [TestCase("AS:ResizeImage('{0}', '4', '4', 'true', 'png')", resizedImage2)]
-    [Platform(Include = "Win")]
     public void ShouldConvertImage(string xsltCallTemplate, string expectedResult)
     {
         string xsltCall = string.Format(xsltCallTemplate, Convert.ToBase64String(image));
@@ -700,7 +699,6 @@ public class XsltTests
         );
         Assert.That(actual.Width, Is.EqualTo(expected.Width));
         Assert.That(actual.Height, Is.EqualTo(expected.Height));
-        // GDI+ versions can round interpolated color components differently.
         for (int i = 0; i < expected.Data.Length; i++)
         {
             Assert.That(actual.Data[i], Is.EqualTo(expected.Data[i]).Within(1));
