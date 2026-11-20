@@ -133,19 +133,6 @@ public abstract class AbstractMenuItem : AbstractSchemaItem, IAuthorizationConte
         get => order;
         set => order = value;
     }
-
-    public override byte[] NodeImage
-    {
-        get
-        {
-            if (this.MenuIcon == null)
-            {
-                return base.NodeImage;
-            }
-
-            return MenuIcon.GraphicsDataByte;
-        }
-    }
     #endregion
     #region IAuthorizationContextContainer Members
     [Browsable(false)]

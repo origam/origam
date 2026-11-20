@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" shape-rendering="crispEdges">
+<g stroke="none">
+<path fill="#272940" d="M1 1h1v10h3v1h-4zM7 2h1v1h-1zM5 5h1v1h-1zM7 6h7v1h1v1h-2v2h-7v-3h1v1h2v-1h-2zM3 8h1v1h-1zM14 9h1v6h-1zM7 11h2v1h-2zM11 11h1v1h-1zM10 12h1v2h-1zM12 12h1v4h-1v-1h-1v-1h1zM6 14h2v1h-2z"/>
+<path fill="#ec5949" d="M7 4h1v1h-1zM2 9h1v1h1v-1h1v2h-3z"/>
+<path fill="#c85047" d="M2 8h1v1h-1zM4 8h1v1h-1z"/>
+<path fill="#3e2f41" d="M7 3h1v1h-1z"/>
+<path fill="#d45348" d="M3 9h1v1h-1z"/>
+<path fill="#3e2c3a" fill-opacity=".9882" d="M6 4h1v1h-1zM8 4h1v1h-1zM2 7h1v1h-1zM4 7h1v1h-1z"/>
+<path fill="#7e4354" fill-opacity=".9725" d="M5 6h1v1h-1z"/>
+<path fill="#5a5a62" fill-opacity=".902" d="M3 7h1v1h-1z"/>
+<path fill="#856262" fill-opacity=".902" d="M6 5h1v1h-1z"/>
+<path fill="#606060" fill-opacity=".898" d="M6 3h1v1h-1zM4 6h1v1h-1z"/>
+<path fill="#626365" fill-opacity=".8784" d="M6 12h1v1h-1zM8 13h1v1h-1z"/>
+<path fill="#626262" fill-opacity=".8745" d="M8 3h1v1h-1zM2 6h1v1h-1z"/>
+<path fill="#6d6d70" fill-opacity=".8157" d="M7 12h1v1h-1z"/>
+<path fill="#757575" fill-opacity=".7529" d="M7 13h1v1h-1z"/>
+<path fill="#777" fill-opacity=".7216" d="M9 5h1v1h-1z"/>
+<path fill="#7b7b7b" fill-opacity=".6745" d="M6 6h1v1h-1z"/>
+<path fill="#818181" fill-opacity=".6275" d="M14 6h1v1h-1zM6 11h1v1h-1zM10 11h1v1h-1zM12 11h1v1h-1zM8 14h1v1h-1zM10 14h1v1h-1z"/>
+<path fill="#838383" fill-opacity=".5961" d="M8 5h1v1h-1z"/>
+<path fill="#858585" fill-opacity=".5647" d="M5 4h1v1h-1z"/>
+<path fill="#878787" fill-opacity=".5647" d="M5 7h1v1h-1z"/>
+<path fill="#878787" fill-opacity=".5333" d="M9 4h1v1h-1z"/>
+<path fill="#8d8d8d" fill-opacity=".502" d="M7 5h1v1h-1zM5 8h1v3h-1z"/>
+<path fill="#a7a7a7" fill-opacity=".251" d="M5 11h1v1h-1z"/>
+<path fill="#afafaf" fill-opacity=".1882" d="M6 2h1v1h-1zM8 2h1v1h-1zM2 5h1v1h-1zM4 5h1v1h-1z"/>
+<path fill="#b7b7b7" fill-opacity=".1255" d="M7 1h1v1h-1z"/>
+<path fill="#bfbfbf" fill-opacity=".0627" d="M8 12h1v1h-1zM6 13h1v1h-1z"/>
+</g>
+</svg>

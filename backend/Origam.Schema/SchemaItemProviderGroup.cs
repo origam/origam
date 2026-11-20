@@ -61,10 +61,6 @@ public class SchemaItemProviderGroup : IBrowserNode2, IComparable
     {
         get { return _id; }
     }
-    public byte[] NodeImage
-    {
-        get { return null; }
-    }
     public bool CanDelete
     {
         get { return false; }

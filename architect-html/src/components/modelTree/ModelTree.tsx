@@ -25,7 +25,6 @@ import {
   IRunUpdateScriptActivityResult,
   ISearchResult,
 } from '@api/IArchitectApi';
-import { Icon } from '@components/icon/Icon';
 import S from '@components/modelTree/ModelTree.module.scss';
 import { MoveToDialog } from '@components/modelTree/MoveToDialog';
 import { TreeNode, toNodeRef } from '@components/modelTree/TreeNode';
@@ -861,9 +860,7 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
             className={labelClassNames}
             data-test-id={`tree-node-${node.nodeText}`}
           >
-            <div className={S.icon}>
-              <Icon src={node.iconUrl ?? '/Icons/generic.svg'} />
-            </div>
+            <img className={S.icon} src={node.iconUrl ?? '/Icons/0.svg'} alt="" draggable={false} />
             {node.nodeText}
             <DeploymentBadges node={node} />
           </div>
@@ -1252,7 +1249,10 @@ const ModelTree = observer(() => {
     >
       <div className={S.content}>
         {modelTreeState.activePackageName && (
-          <div className={S.packageName}>{modelTreeState.activePackageName}</div>
+          <div className={S.packageName} data-test-id="tree-package-name">
+            <img className={S.icon} src="/Icons/09_packages-1.svg" alt="" draggable={false} />
+            {modelTreeState.activePackageName}
+          </div>
         )}
         {modelTreeState.modelNodes.map(node => (
           <ModelTreeNode key={node.id + node.nodeText} node={node} level={0} />

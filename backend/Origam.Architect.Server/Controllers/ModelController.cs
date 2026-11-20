@@ -44,7 +44,8 @@ public class ModelController(
     ModelTransactionRunner modelTransactionRunner,
     TabService tabService,
     ModelGroupService modelGroupService,
-    MenuItemService menuItemService
+    MenuItemService menuItemService,
+    NodeIconService nodeIconService
 ) : ControllerBase
 {
     private readonly IPersistenceProvider persistenceProvider = persistenceService.SchemaProvider;
@@ -66,6 +67,7 @@ public class ModelController(
                 Id = x.NodeId + x.NodeText,
                 NodeText = x.NodeText,
                 HasChildNodes = x.HasChildNodes,
+                IconUrl = nodeIconService.GetIconUrl(x),
                 NodeLevelType = NodeLevelType.Category,
                 Children = x.ChildNodes()
                     .Cast<ISchemaItemProvider>()

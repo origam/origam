@@ -169,6 +169,9 @@ public class ExternalFilePath : OrigamPath
         return true;
     }
 
+    public static string GetFileName(string externalLinkWithPrefix) =>
+        externalLinkWithPrefix.Substring(ExternalFileLinkPrefix.Length);
+
     public static Guid? ParseOwnerId(string externalFilePath)
     {
         string[] splitPath = externalFilePath.Split(Delimiter);
@@ -216,7 +219,7 @@ public class ExternalFilePath : OrigamPath
         : base(basePath)
     {
         LinkWithPrefix = externalLinkWithPrefix;
-        string externalFileName = LinkWithPrefix.Substring(ExternalFileLinkPrefix.Length);
+        string externalFileName = GetFileName(LinkWithPrefix);
         if (!ExternalFileExtensionTools.TryParse(externalFileName, out extension))
         {
             throw new Exception($"Could not parse file extension from {externalFileName}");

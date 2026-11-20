@@ -47,7 +47,7 @@ const SERVER_CMD =
 // it must contain appsettings.json. CI builds Release (not Debug), so it sets
 // ARCHITECT_SERVER_CWD to the actual build dir. Must be an existing directory,
 // otherwise the launcher fails with "spawn cmd.exe ENOENT".
-const serverCwd = process.env.ARCHITECT_SERVER_CWD ?? serverDir;
+export const serverCwd = process.env.ARCHITECT_SERVER_CWD ?? serverDir;
 
 export default defineConfig({
   ...sharedConfig,

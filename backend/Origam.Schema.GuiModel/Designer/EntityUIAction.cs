@@ -231,17 +231,6 @@ public abstract class EntityUIAction : AbstractSchemaItem
     [DefaultValue(false)]
     [XmlAttribute("modal")]
     public bool IsModalDialog { get; set; } = false;
-    public override byte[] NodeImage
-    {
-        get
-        {
-            if (ButtonIcon == null)
-            {
-                return null;
-            }
-            return ButtonIcon.GraphicsDataByte;
-        }
-    }
     public Guid ConfirmationMessageId;
 
     [Category("References")]

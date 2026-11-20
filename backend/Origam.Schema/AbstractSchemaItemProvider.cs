@@ -251,10 +251,6 @@ public abstract class AbstractSchemaItemProvider : ISchemaItemProvider
     }
 
     public abstract string Icon { get; }
-    public virtual byte[] NodeImage
-    {
-        get { return null; }
-    }
     public List<SchemaItemGroup> ChildGroups
     {
         get

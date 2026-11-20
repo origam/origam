@@ -20,10 +20,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.ComponentModel;
 using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
-using static Origam.DA.ObjectPersistence.ExternalFileExtension;
 
 namespace Origam.Schema.GuiModel;
 
@@ -33,36 +31,19 @@ namespace Origam.Schema.GuiModel;
 [SchemaItemDescription("Image", "icon_image.png")]
 [HelpTopic("Images")]
 [XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
+[ClassMetaVersion("6.0.1")]
 public class Graphics : AbstractSchemaItem
 {
     public const string CategoryConst = "Graphics";
 
     public Graphics()
-        : base()
-    {
-        InitializeProperyContainers();
-    }
+        : base() { }
 
     public Graphics(Guid schemaExtensionId)
-        : base(schemaExtensionId)
-    {
-        InitializeProperyContainers();
-    }
+        : base(schemaExtensionId) { }
 
     public Graphics(Key primaryKey)
-        : base(primaryKey)
-    {
-        InitializeProperyContainers();
-    }
-
-    private void InitializeProperyContainers()
-    {
-        graphicsDataByte = new PropertyContainer<byte[]>(
-            containerName: nameof(graphicsDataByte),
-            containingObject: this
-        );
-    }
+        : base(primaryKey) { }
 
     #region Overriden ISchemaItem Members
 
@@ -70,18 +51,5 @@ public class Graphics : AbstractSchemaItem
     {
         get { return CategoryConst; }
     }
-    #endregion
-    #region Properties
-    private PropertyContainer<byte[]> graphicsDataByte;
-
-    [Browsable(false)]
-    [XmlExternalFileReference(containerName: nameof(graphicsDataByte), extension: Png)]
-    public byte[] GraphicsDataByte
-    {
-        get => graphicsDataByte.Get();
-        set => graphicsDataByte.Set(value);
-    }
-
-    public override byte[] NodeImage => GraphicsDataByte;
     #endregion
 }

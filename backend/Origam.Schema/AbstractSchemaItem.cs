@@ -1397,12 +1397,6 @@ public abstract class AbstractSchemaItem
     }
 
     [Browsable(false)]
-    public virtual byte[] NodeImage
-    {
-        get { return null; }
-    }
-
-    [Browsable(false)]
     public virtual string FontStyle
     {
         get { return "Regular"; }
