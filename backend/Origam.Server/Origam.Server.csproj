@@ -16,7 +16,7 @@
     <PackageReference Include="CSharpFunctionalExtensions" Version="2.20.4" />
     <PackageReference
       Include="Microsoft.AspNetCore.Authentication.OpenIdConnect"
-      Version="10.0.14"
+      Version="10.0.15"
     />
     <PackageReference Include="Microsoft.AspNetCore.Buffering" Version="0.2.2" />
     <PackageReference
