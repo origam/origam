@@ -1,4 +1,4 @@
-﻿#region license
+#region license
 
 /*
 Copyright 2005 - 2022 Advantage Solutions, s. r. o.
@@ -25,12 +25,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
-using System.Drawing;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 using System.Security.Principal;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -49,6 +46,8 @@ using Origam.Service.Core;
 using Origam.Workbench;
 using Origam.Workbench.Services;
 using Origam.Workbench.Services.CoreServices;
+using SkiaSharp;
+using StbImageSharp;
 using Assert = NUnit.Framework.Assert;
 
 namespace Origam.RuleTests;
@@ -524,24 +523,6 @@ public class XsltTests
         Assert.That(xsltResult, Is.EqualTo(expectedResult));
     }
 
-    // ResizeImage(string inputData, int width, int height, string keepAspectRatio, string outFormat)
-
-    private const string resizedImage1 =
-        "iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAAXNSR0IArs4c6QA"
-        + "AAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAmSURBVBhXY/"
-        + "j3798KID4PwyCBm/+RAEjgIpQNBiCBy1A2EPz/DwAwcj5F+ErgqwAAAABJRU5Er"
-        + "kJgggAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-        + "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-        + "AAAAAAAAAAAAAAAAAAAAAAAAAAA==";
-
-    private const string resizedImage2 =
-        "iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAAAXNSR0IArs4c6QAA"
-        + "AARnQU1BAACxjwv8YQUAAAAJcEhZcwAAFiUAABYlAUlSJPAAAAAlSURBVBhXY1ixY"
-        + "sV5GGC4efPmfxhguHjxIpQJ5Fy+fBnK/P8fADtAK5y4oNB3AAAAAElFTkSuQmCCAA"
-        + "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-        + "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-        + "AAAAAAAAAAAAAAAA==";
-
     // white square 6x6, png format.
     private byte[] image =
     {
@@ -677,39 +658,149 @@ public class XsltTests
         130,
     };
 
-    [TestCase("AS:ResizeImage('{0}', '4', '4')", resizedImage1)]
-    [TestCase("AS:ResizeImage('{0}', '4', '4', 'true', 'png')", resizedImage2)]
-    [Platform(Include = "Win")]
-    [SupportedOSPlatform("windows")]
-    public void ShouldConvertImage(string xsltCallTemplate, string expectedResult)
+    [TestCase("AS:ResizeImage('{0}', 6, 6)", 6, 6, true)]
+    [TestCase("AS:ResizeImage('{0}', 6, 6, 'true', 'png')", 6, 3, false)]
+    [TestCase("AS:ResizeImage('{0}', 6, 6, 'false', 'PNG')", 6, 6, false)]
+    [TestCase("AS:ResizeImage('{0}', 6, 6, 'true', 'jpg')", 6, 3, false)]
+    [TestCase("AS:ResizeImage('{0}', 6, 6, 'false', 'jpeg')", 6, 6, false)]
+    [TestCase("AS:ResizeImage('{0}', 1, 1, 'true', 'png')", 1, 1, false)]
+    public void ShouldConvertImage(string xsltCallTemplate, int width, int height, bool padded)
     {
-        string xsltCall = string.Format(xsltCallTemplate, Convert.ToBase64String(image));
+        using var source = new SKBitmap(8, 4);
+        source.Erase(SKColors.Red);
+        using SKData data = source.Encode(SKEncodedImageFormat.Png, 100);
+        string xsltCall = string.Format(xsltCallTemplate, Convert.ToBase64String(data.ToArray()));
         string xPathResult = (string)RunInXpath(xsltCall);
         string xsltResult = RunInXslt(xsltCall);
         Assert.That(xsltResult, Is.EqualTo(xPathResult));
 
-        using var expectedStream = new MemoryStream(Convert.FromBase64String(expectedResult));
-        using var actualStream = new MemoryStream(Convert.FromBase64String(xPathResult));
-        using var expected = new Bitmap(expectedStream);
-        using var actual = new Bitmap(actualStream);
-        Assert.That(actual.Size, Is.EqualTo(expected.Size));
-        for (int y = 0; y < expected.Height; y++)
+        byte[] bytes = Convert.FromBase64String(xPathResult);
+        using var stream = new SKMemoryStream(bytes);
+        using var codec = SKCodec.Create(stream);
+        Assert.That(
+            codec.EncodedFormat,
+            Is.EqualTo(
+                xsltCallTemplate.Contains("jpg") || xsltCallTemplate.Contains("jpeg")
+                    ? SKEncodedImageFormat.Jpeg
+                    : SKEncodedImageFormat.Png
+            )
+        );
+        var actual = ImageResult.FromMemory(bytes, ColorComponents.RedGreenBlueAlpha);
+        Assert.That(actual.Width, Is.EqualTo(width));
+        Assert.That(actual.Height, Is.EqualTo(height));
+        for (int y = 0; y < height; y++)
         {
-            for (int x = 0; x < expected.Width; x++)
+            for (int x = 0; x < width; x++)
             {
-                Color expectedPixel = expected.GetPixel(x, y);
-                Color actualPixel = actual.GetPixel(x, y);
-                // GDI+ versions can round interpolated color components differently.
-                Assert.That(actualPixel.R, Is.EqualTo(expectedPixel.R).Within(1));
-                Assert.That(actualPixel.G, Is.EqualTo(expectedPixel.G).Within(1));
-                Assert.That(actualPixel.B, Is.EqualTo(expectedPixel.B).Within(1));
-                Assert.That(actualPixel.A, Is.EqualTo(expectedPixel.A).Within(1));
+                int offset = ((y * width) + x) * 4;
+                bool padding = padded && (y < 2 || y >= 5);
+                Assert.That(actual.Data[offset + 3], Is.EqualTo(padding ? 0 : 255));
+                if (!padding)
+                {
+                    Assert.That(actual.Data[offset], Is.EqualTo(255).Within(2));
+                    Assert.That(actual.Data[offset + 1], Is.LessThanOrEqualTo(2));
+                    Assert.That(actual.Data[offset + 2], Is.LessThanOrEqualTo(2));
+                }
             }
         }
     }
 
+    [TestCase(1, 40, 20, true)]
+    [TestCase(2, 40, 20, true)]
+    [TestCase(3, 40, 20, false)]
+    [TestCase(4, 40, 20, false)]
+    [TestCase(5, 20, 40, true)]
+    [TestCase(6, 20, 40, false)]
+    [TestCase(7, 20, 40, false)]
+    [TestCase(8, 20, 40, true)]
+    public void ShouldApplyImageOrientation(int orientation, int width, int height, bool redFirst)
+    {
+        using var source = new SKBitmap(40, 20);
+        using (var canvas = new SKCanvas(source))
+        {
+            canvas.Clear(SKColors.Blue);
+            using var paint = new SKPaint { Color = SKColors.Red };
+            canvas.DrawRect(new SKRect(0, 0, 40, 10), paint);
+        }
+        using SKData jpeg = source.Encode(SKEncodedImageFormat.Jpeg, 100);
+        // JPEG APP1 segment containing a little-endian EXIF orientation tag.
+        byte[] exif = Convert.FromHexString(
+            "FFE1002245786966000049492A0008000000010012010300010000000100000000000000"
+        );
+        exif[28] = (byte)orientation;
+        byte[] original = jpeg.ToArray();
+        byte[] input = original.Take(2).Concat(exif).Concat(original.Skip(2)).ToArray();
+        byte[] output = ImageResizer.ResizeBytesInBytesOut(input, 40, 40, true, "png");
+        var actual = ImageResult.FromMemory(output, ColorComponents.RedGreenBlueAlpha);
+        Assert.That(actual.Width, Is.EqualTo(width));
+        Assert.That(actual.Height, Is.EqualTo(height));
+        int offset = ((2 * width) + 2) * 4;
+        Assert.That(actual.Data[offset + (redFirst ? 0 : 2)], Is.GreaterThan(240));
+        Assert.That(actual.Data[offset + (redFirst ? 2 : 0)], Is.LessThan(15));
+    }
+
     [Test]
-    [Platform(Include = "Win")]
+    public void ShouldCompositeTransparentImageOnBlackWhenResizing()
+    {
+        using var source = new SKBitmap(4, 4, SKColorType.Rgba8888, SKAlphaType.Premul);
+        source.Erase(new SKColor(255, 0, 0, 128));
+        using SKData data = source.Encode(SKEncodedImageFormat.Png, 100);
+        byte[] output = ImageResizer.ResizeBytesInBytesOut(data.ToArray(), 4, 4, false, "png");
+        var actual = ImageResult.FromMemory(output, ColorComponents.RedGreenBlueAlpha);
+        Assert.That(actual.Data[0], Is.EqualTo(128).Within(1));
+        Assert.That(actual.Data[1], Is.Zero);
+        Assert.That(actual.Data[2], Is.Zero);
+        Assert.That(actual.Data[3], Is.EqualTo(255));
+    }
+
+    [TestCase(0, 4)]
+    [TestCase(4, 0)]
+    [TestCase(-1, 4)]
+    public void ShouldRejectInvalidImageDimensions(int width, int height)
+    {
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+            ImageResizer.FixedSizeBytesInBytesOut(image, width, height)
+        );
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+            ImageResizer.ResizeBytesInBytesOut(image, width, height, true, "png")
+        );
+    }
+
+    [Test]
+    public void ShouldRejectInvalidImageData()
+    {
+        Assert.Throws<ArgumentException>(() =>
+            ImageResizer.GetImageDimensions(new byte[] { 1, 2, 3 })
+        );
+        Assert.Throws<ArgumentException>(() =>
+            ImageResizer.FixedSizeBytesInBytesOut(new byte[] { 1, 2, 3 }, 4, 4)
+        );
+        Assert.Throws<ArgumentException>(() =>
+            ImageResizer.ResizeBytesInBytesOut(new byte[] { 1, 2, 3 }, 4, 4, true, "png")
+        );
+    }
+
+    [TestCase("gif")]
+    [TestCase("GIF")]
+    [TestCase("unsupported")]
+    public void ShouldRejectUnsupportedOutputImageFormat(string format)
+    {
+        var exception = Assert.Throws<OrigamException>(() =>
+            LegacyXsltFunctionContainer.ResizeImage(
+                Convert.ToBase64String(image),
+                4,
+                4,
+                "true",
+                format
+            )
+        );
+        Assert.That(
+            exception.Message,
+            Is.EqualTo(string.Format(Strings.UnsupportedOutputImageFormat, format))
+        );
+    }
+
+    [Test]
     public void ShouldGetImageDimensions()
     {
         string xsltCall = $"AS:GetImageDimensions('{Convert.ToBase64String(image)}')";
