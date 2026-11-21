@@ -80,7 +80,7 @@ async function enterSelectionDialogDate() {
   const input = await page.$(selectionDialogDateInputSelector);
   await input.click({ clickCount: 3 });
   await page.keyboard.type(enteredDate);
-  await page.keyboard.press("Tab");
+  await page.keyboard.press("Enter");
   await waitUntil(
     async () => (await getSelectionDialogDate()).startsWith(enteredDate),
     10_000,
