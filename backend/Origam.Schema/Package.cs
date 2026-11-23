@@ -186,6 +186,7 @@ public class Package : AbstractPersistent, IBrowserNode2, IComparable, IFilePers
         get => null;
         set => throw new InvalidOperationException(ResourceUtils.GetString("ErrorMoveExtension"));
     }
+    public byte[] NodeImage => null;
 
     [Browsable(false)]
     public string NodeId => this.PrimaryKey["Id"].ToString();

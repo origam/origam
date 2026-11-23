@@ -180,6 +180,7 @@ public class SchemaItemGroup : AbstractPersistent, ISchemaItemProvider, IFilePer
         get => null;
         set => throw new InvalidOperationException(ResourceUtils.GetString("ErrorMoveGroup"));
     }
+    public byte[] NodeImage => null;
 
     [Browsable(false)]
     public string NodeId => PrimaryKey["Id"].ToString();

@@ -121,6 +121,12 @@ public class SchemaItemAncestor
     }
 
     [Browsable(false)]
+    public byte[] NodeImage
+    {
+        get { return null; }
+    }
+
+    [Browsable(false)]
     public string NodeId
     {
         get { return this.PrimaryKey["Id"].ToString(); }

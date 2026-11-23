@@ -33,6 +33,7 @@ public interface IBrowserNode2 : IBrowserNode
     bool CanMove(IBrowserNode2 newNode);
 
     IBrowserNode2 ParentNode { get; set; }
+    byte[] NodeImage { get; }
     bool Hide { get; set; }
     string NodeId { get; }
     string FontStyle { get; }

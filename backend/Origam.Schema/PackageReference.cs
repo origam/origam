@@ -126,6 +126,10 @@ public class PackageReference : AbstractPersistent, IBrowserNode2, IComparable, 
         get { return null; }
         set { throw new InvalidOperationException(ResourceUtils.GetString("ErrorMoveExtension")); }
     }
+    public byte[] NodeImage
+    {
+        get { return null; }
+    }
 
     [Browsable(false)]
     public string NodeId

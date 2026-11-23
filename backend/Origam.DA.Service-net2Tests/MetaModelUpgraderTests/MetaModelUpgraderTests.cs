@@ -28,7 +28,6 @@ using Moq;
 using NUnit.Framework;
 using Origam.DA.Service.MetaModelUpgrade;
 using Origam.DA.Service.NamespaceMapping;
-using Origam.Schema.GuiModel;
 
 namespace Origam.DA.ServiceTests.MetaModelUpgraderTests;
 
@@ -360,35 +359,6 @@ public class MetaModelUpgraderTests : ClassUpgradeTestBase
             );
             sut.TryUpgrade(xFileData);
         });
-    }
-
-    [Test]
-    public void ShouldDeleteExternalFileOfRemovedProperty()
-    {
-        XNamespace graphicsNamespace =
-            $"http://schemas.origam.com/{typeof(Graphics).FullName}/6.0.1";
-        XFileData xFileData = LoadFile("GraphicsV6.0.0.origam");
-        var fileWriter = new Mock<IFileWriter>();
-        var sut = new MetaModelAnalyzer(fileWriter.Object, new MetaModelUpgrader());
-        sut.TryUpgrade(xFileData);
-
-        XElement classNode = xFileData.Document.ClassNodes.First();
-        Assert.That(
-            classNode.Attributes().Any(attribute => attribute.Name.LocalName == "graphicsDataByte"),
-            Is.False
-        );
-        Assert.That(
-            xFileData.Document.FileElement.Attribute(XNamespace.Xmlns.GetName("g"))?.Value,
-            Is.EqualTo(graphicsNamespace.ToString())
-        );
-        string externalFile = Path.Combine(
-            TestFilesDir.FullName,
-            "GraphicsV6.0.0.origam___graphicsDataByte___0858cbb7-ff2f-4cc4-8727-57daa399012a.png"
-        );
-        fileWriter.Verify(
-            writer => writer.Delete(It.Is<FileInfo>(file => file.FullName == externalFile)),
-            Times.Once
-        );
     }
 
     [Test]

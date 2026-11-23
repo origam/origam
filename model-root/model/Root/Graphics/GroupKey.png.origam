@@ -2,9 +2,10 @@
 <x:file
   xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
   xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
-  xmlns:g="http://schemas.origam.com/Origam.Schema.GuiModel.Graphics/6.0.1">
+  xmlns:g="http://schemas.origam.com/Origam.Schema.GuiModel.Graphics/6.0.0">
   <g:Graphics
     asi:abstract="false"
+    g:graphicsDataByte="-***-ExternalFile:GroupKey.png.origam___graphicsDataByte___b432bf83-64da-45b0-8a6a-d683ab619194.png"
     x:id="b432bf83-64da-45b0-8a6a-d683ab619194"
     asi:name="GroupKey.png" />
 </x:file>

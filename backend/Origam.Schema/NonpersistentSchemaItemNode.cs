@@ -57,6 +57,7 @@ public class NonpersistentSchemaItemNode : IBrowserNode2, ISchemaItemFactory
             // TODO:  Add NonpersistentSchemaItemNode.Hide setter implementation
         }
     }
+    public byte[] NodeImage => null;
     #endregion
     #region IBrowserNode Members
     public bool HasChildNodes => this.ChildNodes().Count > 0;

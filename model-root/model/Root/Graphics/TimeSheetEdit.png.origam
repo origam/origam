@@ -2,9 +2,10 @@
 <x:file
   xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
   xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
-  xmlns:g="http://schemas.origam.com/Origam.Schema.GuiModel.Graphics/6.0.1">
+  xmlns:g="http://schemas.origam.com/Origam.Schema.GuiModel.Graphics/6.0.0">
   <g:Graphics
     asi:abstract="false"
+    g:graphicsDataByte="-***-ExternalFile:TimeSheetEdit.png.origam___graphicsDataByte___ff5addee-8a52-4057-a917-8312b4bbd6bf.png"
     x:id="ff5addee-8a52-4057-a917-8312b4bbd6bf"
     asi:name="TimeSheetEdit.png" />
 </x:file>

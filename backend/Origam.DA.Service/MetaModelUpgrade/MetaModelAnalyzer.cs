@@ -55,7 +55,6 @@ public class MetaModelAnalyzer
         {
             metaModelUpgrader.UpgradeToVersion6(xFileData.Document);
         }
-        List<string> externalFileLinks = GetExternalFileLinks(xFileData.Document);
         var documentContainer = new DocumentContainer(xFileData);
         List<bool> upgradeFlags = xFileData
             .Document.ClassNodes.ToArray()
@@ -67,31 +66,9 @@ public class MetaModelAnalyzer
         {
             xFileData.Document.FixNamespaces();
             WriteFile(xFileData);
-            DeleteDroppedExternalFiles(xFileData, externalFileLinks);
             return true;
         }
         return false;
-    }
-
-    private static List<string> GetExternalFileLinks(OrigamXDocument document)
-    {
-        return document
-            .ClassNodes.Attributes()
-            .Select(attribute => attribute.Value)
-            .Where(ExternalFilePath.IsExternalFileLink)
-            .ToList();
-    }
-
-    private void DeleteDroppedExternalFiles(XFileData xFileData, List<string> linksBeforeUpgrade)
-    {
-        IEnumerable<string> droppedLinks = linksBeforeUpgrade.Except(
-            GetExternalFileLinks(xFileData.Document)
-        );
-        foreach (string droppedLink in droppedLinks)
-        {
-            string fileName = ExternalFilePath.GetFileName(droppedLink);
-            fileWriter.Delete(new FileInfo(Path.Combine(xFileData.File.DirectoryName, fileName)));
-        }
     }
 
     private bool IsVersion5(XFileData xFileData)
