@@ -30,7 +30,7 @@ namespace Origam.Architect.Server.Services;
 
 public class DeploymentScriptRunnerService(ILogger<DeploymentScriptRunnerService> logger)
 {
-    public void RunDeploymentScript(AbstractUpdateScriptActivity script)
+    public string RunDeploymentScript(AbstractUpdateScriptActivity script)
     {
         var transactionId = Guid.NewGuid().ToString();
 
@@ -40,12 +40,18 @@ public class DeploymentScriptRunnerService(ILogger<DeploymentScriptRunnerService
                 message: "Executing deployment script: {ScriptName}",
                 script.Name
             );
-            ExecuteActivity(script, transactionId);
+            string output = ExecuteActivity(script, transactionId);
             ResourceMonitor.Commit(transactionId);
             logger.LogInformation(
                 message: "Deployment script executed successfully: {ScriptName}",
                 script.Name
             );
+            return output;
+        }
+        catch (UserOrigamException)
+        {
+            ResourceMonitor.Rollback(transactionId);
+            throw;
         }
         catch (Exception ex)
         {
@@ -55,11 +61,13 @@ public class DeploymentScriptRunnerService(ILogger<DeploymentScriptRunnerService
                 message: "Error executing deployment script: {ScriptName}",
                 script.Name
             );
-            throw new Exception($"Error executing deployment script '{script.Name}'", ex);
+            throw new UserOrigamException(
+                string.Format(Strings.DeploymentScript_ExecutionFailed, script.Name, ex.Message)
+            );
         }
     }
 
-    private void ExecuteActivity(AbstractUpdateScriptActivity activity, string transactionId)
+    private string ExecuteActivity(AbstractUpdateScriptActivity activity, string transactionId)
     {
         if (logger.IsEnabled(LogLevel.Information))
         {
@@ -73,11 +81,11 @@ public class DeploymentScriptRunnerService(ILogger<DeploymentScriptRunnerService
         {
             if (activity is ServiceCommandUpdateScriptActivity serviceActivity)
             {
-                ExecuteServiceCommandActivity(serviceActivity, transactionId);
+                return ExecuteServiceCommandActivity(serviceActivity, transactionId);
             }
             else if (activity is FileRestoreUpdateScriptActivity fileActivity)
             {
-                ExecuteFileRestoreActivity(fileActivity);
+                return ExecuteFileRestoreActivity(fileActivity);
             }
             else
             {
@@ -102,7 +110,7 @@ public class DeploymentScriptRunnerService(ILogger<DeploymentScriptRunnerService
         }
     }
 
-    private void ExecuteServiceCommandActivity(
+    private string ExecuteServiceCommandActivity(
         ServiceCommandUpdateScriptActivity activity,
         string transactionId
     )
@@ -110,7 +118,9 @@ public class DeploymentScriptRunnerService(ILogger<DeploymentScriptRunnerService
         var service = ServiceManager.Services.GetService<IBusinessServicesService>();
         if (service == null)
         {
-            throw new InvalidOperationException("Business services service not available");
+            throw new InvalidOperationException(
+                Strings.DeploymentScript_BusinessServicesNotAvailable
+            );
         }
 
         IServiceAgent agent = service.GetAgent(
@@ -126,6 +136,7 @@ public class DeploymentScriptRunnerService(ILogger<DeploymentScriptRunnerService
         )
         {
             OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
+            var executed = false;
             settings.DeployPlatforms?.ForEach(platform =>
             {
                 var databaseType = (DatabaseType)
@@ -134,8 +145,19 @@ public class DeploymentScriptRunnerService(ILogger<DeploymentScriptRunnerService
                 {
                     agent.SetDataService(DataServiceFactory.GetDataService(platform));
                     result = agent.ExecuteUpdate(activity.CommandText, transactionId);
+                    executed = true;
                 }
             });
+            if (!executed)
+            {
+                throw new UserOrigamException(
+                    string.Format(
+                        Strings.DeploymentScript_PlatformNotConfigured,
+                        activity.Name,
+                        activity.DatabaseType
+                    )
+                );
+            }
         }
         else
         {
@@ -146,9 +168,10 @@ public class DeploymentScriptRunnerService(ILogger<DeploymentScriptRunnerService
         {
             logger.LogInformation(result);
         }
+        return result;
     }
 
-    private void ExecuteFileRestoreActivity(FileRestoreUpdateScriptActivity activity)
+    private string ExecuteFileRestoreActivity(FileRestoreUpdateScriptActivity activity)
     {
         throw new NotImplementedException();
     }

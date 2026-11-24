@@ -37,7 +37,12 @@ export const NumericPropertyInput: React.FC<{
     return type === 'integer' ? parseInt(val, 10) : parseFloat(val);
   };
 
+  const inputRef = useRef<HTMLInputElement>(null);
+
   useEffect(() => {
+    if (document.activeElement === inputRef.current) {
+      return;
+    }
     setInputValue(property.value != null ? String(property.value) : '');
   }, [property.value]);
 
@@ -53,6 +58,7 @@ export const NumericPropertyInput: React.FC<{
 
   return (
     <input
+      ref={inputRef}
       type="number"
       step={type === 'float' ? 'any' : '1'}
       disabled={property.readOnly}

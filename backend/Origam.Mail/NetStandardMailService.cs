@@ -215,6 +215,10 @@ public class NetStandardMailService : AbstractMailService
                     }
                 }
             }
+            if (!mailrow.IsReplyToNull() && !string.IsNullOrWhiteSpace(mailrow.ReplyTo))
+            {
+                m.ReplyToList.Add(new MailAddress(mailrow.ReplyTo));
+            }
             if (!mailrow.IsMessageBodyNull())
             {
                 //put html body inside

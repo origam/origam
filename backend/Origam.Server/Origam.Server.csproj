@@ -3,50 +3,9 @@
     <TargetFramework>net10.0</TargetFramework>
     <UserSecretsId>8a03936d-700c-4edd-9ffa-e3df428dc822</UserSecretsId>
     <TypeScriptToolsVersion>3.1</TypeScriptToolsVersion>
-    <LangVersion>12</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
-    <Configurations>Debug Client;Debug Architect;Debug Server;Release Client;Release Architect;Release Server</Configurations>
     <Version>0.0.0.0</Version>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Client|AnyCPU' ">
-    <DefineConstants>ORIGAM_CLIENT</DefineConstants>
-    <OutputPath>bin\Release\</OutputPath>
-    <DebugSymbols>true</DebugSymbols>
-    <Optimize>true</Optimize>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug Client|AnyCPU' ">
-    <DefineConstants>DEBUG;TRACE;ORIGAM_CLIENT</DefineConstants>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DebugSymbols>true</DebugSymbols>
-    <Optimize>false</Optimize>
-    <DebugType>full</DebugType>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Server|AnyCPU' ">
-    <DefineConstants>ORIGAM_CLIENT;ORIGAM_SERVER</DefineConstants>
-    <OutputPath>bin\Release\</OutputPath>
-    <DebugSymbols>true</DebugSymbols>
-    <Optimize>true</Optimize>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug Server|AnyCPU' ">
-    <DefineConstants>DEBUG;TRACE;ORIGAM_CLIENT;ORIGAM_SERVER</DefineConstants>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DebugSymbols>true</DebugSymbols>
-    <Optimize>false</Optimize>
-    <DebugType>full</DebugType>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Architect|AnyCPU' ">
-    <DefineConstants>$(DefineConstants)</DefineConstants>
-    <OutputPath>bin\Release\</OutputPath>
-    <DebugSymbols>true</DebugSymbols>
-    <Optimize>true</Optimize>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug Architect|AnyCPU' ">
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DebugSymbols>true</DebugSymbols>
-    <Optimize>false</Optimize>
-    <DebugType>full</DebugType>
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="assets\identity\lib" />
@@ -56,32 +15,32 @@
     <PackageReference Include="CSharpFunctionalExtensions" Version="2.20.4" />
     <PackageReference
       Include="Microsoft.AspNetCore.Authentication.OpenIdConnect"
-      Version="10.0.14"
+      Version="10.0.15"
     />
     <PackageReference Include="Microsoft.AspNetCore.Buffering" Version="0.2.2" />
     <PackageReference
       Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore"
-      Version="10.0.14"
+      Version="10.0.15"
     />
     <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="5.0.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="5.0.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic" Version="5.0.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.14" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.15" />
     <PackageReference Include="Microsoft.Extensions.Logging.Log4Net.AspNetCore" Version="10.0.0" />
     <PackageReference Include="Microsoft.OpenApi" Version="2.13.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="10.0.2" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.3" />
     <PackageReference Include="OpenIddict.AspNetCore" Version="7.1.0" />
-    <PackageReference Include="OpenIddict.EntityFrameworkCore" Version="7.7.2" />
-    <PackageReference Include="OpenIddict.Quartz" Version="7.7.2" />
-    <PackageReference Include="OpenIddict.Server.AspNetCore" Version="7.1.0" />
-    <PackageReference Include="OpenIddict.Validation.AspNetCore" Version="7.1.0" />
+    <PackageReference Include="OpenIddict.EntityFrameworkCore" Version="7.8.0" />
+    <PackageReference Include="OpenIddict.Quartz" Version="7.8.0" />
+    <PackageReference Include="OpenIddict.Server.AspNetCore" Version="7.8.0" />
+    <PackageReference Include="OpenIddict.Validation.AspNetCore" Version="7.8.0" />
     <PackageReference Include="Origam.Service.Core" Version="2.3.3" />
-    <PackageReference Include="SkiaSharp" Version="4.153.1" />
-    <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="4.153.1" />
+    <PackageReference Include="SkiaSharp" Version="4.156.0" />
+    <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="4.155.0" />
     <PackageReference
       Include="SkiaSharp.NativeAssets.NanoServer"
-      Version="4.153.1"
+      Version="4.155.0"
       GeneratePathProperty="true"
       ExcludeAssets="all"
     />

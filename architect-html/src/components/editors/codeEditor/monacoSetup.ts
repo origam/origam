@@ -21,6 +21,8 @@ import { loader } from '@monaco-editor/react';
 import 'monaco-editor/languages/definitions/sql/register.js';
 import 'monaco-editor/languages/definitions/xml/register.js';
 import * as monaco from 'monaco-editor/editor/editor.api.js';
+import 'monaco-editor/editor/contrib/snippet/browser/snippetController2.js';
+import 'monaco-editor/editor/contrib/suggest/browser/suggestController.js';
 import EditorWorker from 'monaco-editor/editor/editor.worker.js?worker';
 
 self.MonacoEnvironment = {

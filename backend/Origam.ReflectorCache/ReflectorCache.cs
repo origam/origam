@@ -32,42 +32,6 @@ public class ReflectorCache : IReflectorCache
 
     public object InvokeObject(string classname, string assembly)
     {
-#if !ORIGAM_SERVER && !NETSTANDARD
-        switch (assembly)
-        {
-            case "Origam.Gui.Win":
-            {
-                switch (classname)
-                {
-                    case "Origam.Gui.Win.AsPanel":
-                        return new Origam.Gui.Win.AsPanel();
-                    case "Origam.Gui.Win.AsForm":
-                        return new Origam.Gui.Win.AsForm();
-                    case "Origam.Gui.Win.GroupBoxWithChamfer":
-                        return new Origam.Gui.Win.GroupBoxWithChamfer();
-
-                    case "Origam.Gui.Win.AsDropDown":
-                        return new Origam.Gui.Win.AsDropDown();
-
-                    case "Origam.Gui.Win.AsDateBox":
-                        return new Origam.Gui.Win.AsDateBox();
-
-                    case "Origam.Gui.Win.AsTextBox":
-                        return new Origam.Gui.Win.AsTextBox();
-                }
-                break;
-            }
-            //				case "System.Windows.Forms":
-            //					switch(classname)
-            //					{
-            //						case "System.Windows.Forms.Label":
-            //							return;
-            //						case "System.Windows.Forms.Panel":
-            //							return;
-            //					}
-            //					break;
-        }
-#endif
         return null;
     }
 

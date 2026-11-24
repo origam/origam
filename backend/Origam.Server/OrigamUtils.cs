@@ -32,10 +32,11 @@ public static class OrigamUtils
 {
     public static void ConnectOrigamRuntime(
         ILoggerFactory loggerFactory,
-        bool reloadModelWhenFilesChangesDetected
+        bool reloadModelWhenFilesChangesDetected,
+        Action onRestartRequested
     )
     {
-        OrigamEngine.OrigamEngine.ConnectRuntime();
+        OrigamEngine.OrigamEngine.ConnectRuntime(onRestartRequested: onRestartRequested);
         if (!reloadModelWhenFilesChangesDetected)
         {
             return;

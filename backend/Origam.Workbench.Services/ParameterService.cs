@@ -26,7 +26,7 @@ using System.Data;
 using Origam.DA;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
-using core = Origam.Workbench.Services.CoreServices;
+using Core = Origam.Workbench.Services.CoreServices;
 
 namespace Origam.Workbench.Services;
 
@@ -756,7 +756,7 @@ public class ParameterService : IParameterService
             // lazily initialize resolver dict from db
             languageResolveDict = new Hashtable();
 
-            DataSet result = core.DataService.Instance.LoadData(
+            DataSet result = Core.DataService.Instance.LoadData(
                 new Guid("a406c361-3f02-4947-90ef-f9d73228ed60"),
                 Guid.Empty,
                 Guid.Empty,

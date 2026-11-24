@@ -1,4 +1,4 @@
-﻿#region license
+#region license
 /*
 Copyright 2005 - 2021 Advantage Solutions, s. r. o.
 
@@ -23,30 +23,25 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.IO;
 using Microsoft.Extensions.Configuration;
-using Origam.Extensions;
 #pragma warning restore IDE0005
-#if NETSTANDARD
 using Microsoft.Extensions.DependencyInjection;
-#endif
+using Origam.Extensions;
 
 namespace Origam.Mail;
 
 public class MailServiceFactory
 {
-#if NETSTANDARD
     private static IServiceProvider DIServiceProvider;
 
     public static void SetDIServiceProvider(IServiceProvider diServiceProvider)
     {
         DIServiceProvider = diServiceProvider;
     }
-#endif
 
     private MailServiceFactory() { }
 
     public static IMailService GetMailService()
     {
-#if NETSTANDARD
         var configuration = DIServiceProvider.GetService<IConfiguration>();
         var mailConfig = configuration.GetSection("MailConfig");
         string username = mailConfig["UserName"];
@@ -63,8 +58,5 @@ public class MailServiceFactory
             password: password,
             useSsl: useSsl
         );
-#else
-        return new NetFxMailService();
-#endif
     }
 }

@@ -1,4 +1,4 @@
-﻿#region license
+#region license
 
 /*
 Copyright 2005 - 2025 Advantage Solutions, s. r. o.
@@ -21,7 +21,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 #endregion
 
-#if NETSTANDARD
 using System;
 
 namespace Origam.Config;
@@ -273,4 +272,3 @@ public class Config : IConfig
         return null;
     }
 }
-#endif

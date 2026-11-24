@@ -23,7 +23,6 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Reflection;
-using System.Security;
 using System.Xml;
 using System.Xml.XPath;
 using System.Xml.Xsl;
@@ -243,7 +242,7 @@ public class OrigamXsltContext : XsltContext
         );
         if (method != null)
         {
-            return new FuncExtension(extension, method, null);
+            return new FuncExtension(extension, method);
         }
         return null;
     }
@@ -293,15 +292,13 @@ public class OrigamXsltContext : XsltContext
         private object extension;
         private MethodInfo method;
         private TypeCode[] typeCodes;
-        private PermissionSet permissions;
 
-        public FuncExtension(object extension, MethodInfo method, PermissionSet permissions)
+        public FuncExtension(object extension, MethodInfo method)
         {
             System.Diagnostics.Debug.Assert(extension != null);
             System.Diagnostics.Debug.Assert(method != null);
             this.extension = extension;
             this.method = method;
-            this.permissions = permissions;
             XPathResultType returnType = GetXPathType(method.ReturnType);
             ParameterInfo[] parameters = method.GetParameters();
             int minArgs = parameters.Length;
@@ -341,10 +338,6 @@ public class OrigamXsltContext : XsltContext
             for (int i = args.Length - 1; 0 <= i; i--)
             {
                 args[i] = ConvertToXPathType(args[i], this.ArgTypes[i], this.typeCodes[i]);
-            }
-            if (this.permissions != null)
-            {
-                this.permissions.PermitOnly();
             }
             return method.Invoke(extension, args);
         }

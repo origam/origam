@@ -50,6 +50,7 @@ export class XsltEditorState implements ITabViewState, ITabState, IPropertyManag
   @observable public accessor ruleSetId: string | undefined;
   private readonly gridEditorState: GridEditorState;
   public readonly nameProperty: EditorProperty | undefined;
+  public readonly idProperty: EditorProperty | undefined;
 
   // This editor can be used with multiple Origam SchemaItems. If the item is XslRule,
   // there will be a property named targetDataStructurePropertyName which contains the
@@ -91,6 +92,7 @@ export class XsltEditorState implements ITabViewState, ITabState, IPropertyManag
       modelTreeState,
     );
     this.nameProperty = properties?.find(prop => prop.name === 'Name');
+    this.idProperty = properties?.find(prop => prop.name === 'Id');
     this.targetStructureProperty = properties?.find(prop => prop.name === 'Structure');
     if (this.targetStructureProperty) {
       const value = this.targetStructureProperty.value;
@@ -121,6 +123,10 @@ export class XsltEditorState implements ITabViewState, ITabState, IPropertyManag
 
   get isDirty() {
     return this.gridEditorState.isDirty;
+  }
+
+  get validationErrors() {
+    return this.gridEditorState.validationErrors;
   }
 
   get isActive() {

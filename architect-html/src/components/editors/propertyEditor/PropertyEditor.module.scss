@@ -19,12 +19,19 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 .root {
   flex: 1;
+  display: grid;
+  grid-template-columns: fit-content(50%) minmax(0, 1fr);
+  column-gap: 1rem;
 
   .category {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: subgrid;
     border-radius: 0.25rem;
     overflow: hidden;
 
     .categoryHeader {
+      grid-column: 1 / -1;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -53,10 +60,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
     }
 
     .property {
+      grid-column: 1 / -1;
       display: grid;
-      grid-template-columns: minmax(8rem, 14rem) minmax(0, 1fr);
+      grid-template-columns: subgrid;
       align-items: center;
-      column-gap: 1rem;
       padding: 0.5rem;
       color: #000;
 

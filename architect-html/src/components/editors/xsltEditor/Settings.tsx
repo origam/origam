@@ -87,6 +87,7 @@ export const Settings = observer(({ editorState }: { editorState: XsltEditorStat
     <>
       <div className={S.inputs}>
         {renderPropertyEditor(editorState.nameProperty, editorState.nameProperty?.name)}
+        {renderPropertyEditor(editorState.idProperty, T('Id', 'xsl_editor_settings_id'))}
         <div className={S.inputRow}>
           <div>{T('Source Structure', 'source_structure_label')}</div>
           {renderSelectWithOpenButton(

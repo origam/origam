@@ -25,9 +25,11 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Runtime.Versioning;
 
 namespace Origam;
 
+[SupportedOSPlatform("windows")]
 public static class ImageResizer
 {
     private static byte[] FixedSizeBytes(Image img, int width, int height)

@@ -53,7 +53,7 @@ public class ScreenSectionCondition : AbstractSchemaItem
         set
         {
             ScreenSectionId = value?.Id ?? Guid.Empty;
-            if (ScreenSectionId != null && ScreenSectionId != Guid.Empty)
+            if (ScreenSectionId != Guid.Empty)
             {
                 var panelControl = (PanelControlSet)
                     PersistenceProvider.RetrieveInstance(

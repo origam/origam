@@ -51,20 +51,17 @@ jobs:
         with:
           dotnet-version: '10.0.x'
 
-      - name: Setup MSBuild
-        uses: microsoft/setup-msbuild@v3
-
       - name: Setup NuGet
         uses: NuGet/setup-nuget@v4
 
       # --- Build the Architect Server -------------------------------------
       - name: Restore backend
         run: |
-          msbuild Origam.sln -t:restore /p:Configuration="Release Architect Server" -v:m
+          dotnet msbuild Origam.sln -t:restore /p:Configuration="Release Architect Server" -v:m
         working-directory: backend
 
       - name: Build Architect Server
-        run: msbuild Origam.sln /t:"Architect\Origam_Architect_Server" /p:Configuration="Release Architect Server" -v:m
+        run: dotnet msbuild Origam.sln /t:"Architect\Origam_Architect_Server" /p:Configuration="Release Architect Server" -v:m
         working-directory: backend
 
       # Find the actual build output instead of hardcoding it, then expose the

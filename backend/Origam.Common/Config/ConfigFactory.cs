@@ -1,4 +1,4 @@
-﻿#region license
+#region license
 /*
 Copyright 2005 - 2025 Advantage Solutions, s. r. o.
 
@@ -31,11 +31,6 @@ public static class ConfigFactory
 {
     public static IConfig GetConfig()
     {
-#pragma warning disable CS0162
-#if NETSTANDARD
         return new Config();
-#endif
-        return new NullConfig();
-#pragma warning restore CS0162
     }
 }

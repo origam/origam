@@ -46,6 +46,7 @@ export const ScreenToolbox: React.FC<{
     return (
       <div
         key={section.name}
+        title={section.name}
         draggable
         onDragStart={() => onFieldDragStart(section)}
         className={S.toolboxField}

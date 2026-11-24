@@ -168,7 +168,7 @@ public abstract class AbstractDataEntity : AbstractSchemaItem, IDataEntity, ISch
         get { return _caption; }
         set { _caption = value; }
     }
-#if ORIGAM_CLIENT
+#if ORIGAM_SERVER
     private bool _columnsPopulated = false;
     private List<IDataEntityColumn> _columns;
 #endif
@@ -178,7 +178,7 @@ public abstract class AbstractDataEntity : AbstractSchemaItem, IDataEntity, ISch
     {
         get
         {
-#if ORIGAM_CLIENT
+#if ORIGAM_SERVER
             if (!_columnsPopulated)
             {
                 lock (Lock)

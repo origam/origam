@@ -290,6 +290,7 @@ export const FilterableSelect = observer((props: FilterableSelectProps) => {
         disabled={disabled}
         className={S.filterableInput}
         value={filter ?? selectedLabel}
+        title={filter ?? selectedLabel}
         onChange={event => {
           committedRef.current = false;
           navigatedRef.current = false;
@@ -347,6 +348,8 @@ export const FilterableSelect = observer((props: FilterableSelectProps) => {
             )}
             {visibleOptions.map((option, i) => {
               const index = startIndex + i;
+              const optionLabel =
+                option.name === '' ? T('(none)', 'property_lookup_no_value') : option.name;
               return (
                 <li
                   key={String(option.value) + option.name}
@@ -366,8 +369,9 @@ export const FilterableSelect = observer((props: FilterableSelectProps) => {
                     highlightSourceRef.current = 'mouse';
                     setHighlight(index);
                   }}
+                  title={optionLabel}
                 >
-                  {option.name === '' ? T('(none)', 'property_lookup_no_value') : option.name}
+                  {optionLabel}
                 </li>
               );
             })}

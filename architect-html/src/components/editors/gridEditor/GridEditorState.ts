@@ -50,12 +50,8 @@ export class GridEditorState implements ITabState, IPropertyManager {
 
   @computed
   get isDirty() {
-    let someHasError = false;
-    for (const property of this.properties) {
-      someHasError = someHasError || !!property.error;
-    }
     const hasLocalChange = !!this.unsentProperty || this.isSendingUnsentValue;
-    return (this._isDirty || hasLocalChange) && !someHasError;
+    return this._isDirty || hasLocalChange;
   }
 
   @computed
@@ -90,6 +86,9 @@ export class GridEditorState implements ITabState, IPropertyManager {
     try {
       this.isSaving = true;
       yield* this.sendUnsentValue();
+      if (this.validationErrors.length > 0) {
+        throw new Error(T('Fix the errors to save', 'save_blocked_by_errors'));
+      }
       yield this.architectApi.persistChanges(this.editorNode.origamId);
       const treeNode = this.editorNode.parent;
       const fallbackParent =

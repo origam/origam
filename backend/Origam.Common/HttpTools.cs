@@ -323,7 +323,10 @@ public class HttpTools : IHttpTools
                 "Request could not be authenticated because serviceProvider is null. This is expected if you send Http requests from the Architect."
             );
         }
+        // Keep the WebResponse-based API used by existing integrations.
+#pragma warning disable SYSLIB0014
         var webRequest = WebRequest.Create(request.Url);
+#pragma warning restore SYSLIB0014
         var httpWebRequest = webRequest as HttpWebRequest;
         if (request.Timeout != null)
         {
@@ -501,7 +504,10 @@ public class MyUri : Uri
 
     public static new string EscapeUriString(string stringToEscape)
     {
+        // Preserve escaping of complete URLs, including their separators.
+#pragma warning disable SYSLIB0013
         return Uri.EscapeUriString(stringToEscape);
+#pragma warning restore SYSLIB0013
     }
 
     public static new string EscapeDataString(string stringToEscape)

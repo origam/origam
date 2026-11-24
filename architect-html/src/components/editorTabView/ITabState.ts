@@ -38,5 +38,5 @@ export interface ITabState {
 }
 
 export function canSave(tabState: ITabState): boolean {
-  return tabState.isDirty && !tabState.warnings?.length;
+  return tabState.isDirty && !tabState.validationErrors?.length && !tabState.warnings?.length;
 }

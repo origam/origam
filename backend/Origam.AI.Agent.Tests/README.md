@@ -6,8 +6,7 @@ records tool calls, tokens, wall time and cost, and prints them as a benchmark.
 ## Running
 
 ```
-MSBuild.exe Origam.sln -t:"AI\Origam_AI_Agent_Tests" -p:Configuration="Release Architect Server"
-vstest.console.exe Origam.AI.Agent.Tests/bin/Release/net10.0/Origam.AI.Agent.Tests.dll
+dotnet test Origam.AI.Agent.Tests/Origam.AI.Agent.Tests.csproj -c "Release Architect Server"
 ```
 
 The tests boot Architect in-process. Set `ORIGAM_ARCHITECT_URL` to run them against an

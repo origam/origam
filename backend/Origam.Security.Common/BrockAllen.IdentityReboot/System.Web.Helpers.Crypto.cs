@@ -29,10 +29,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 // Original License: http://www.apache.org/licenses/LICENSE-2.0
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
-using System.Text;
 
 namespace BrockAllen.IdentityReboot.Internal;
 
@@ -41,82 +39,6 @@ internal static class Crypto
     private const int PBKDF2_ITERATION_COUNT = 1000; // default for Rfc2898DeriveBytes
     private const int PBKDF2_SUBKEY_LENGTH = 256 / 8; // 256 bits
     private const int SALT_SIZE = 128 / 8; // 128 bits
-
-    [SuppressMessage(
-        "Microsoft.Naming",
-        "CA1720:IdentifiersShouldNotContainTypeNames",
-        MessageId = "byte",
-        Justification = "It really is a byte length"
-    )]
-    internal static byte[] GenerateSaltInternal(int byteLength = SALT_SIZE)
-    {
-        byte[] buf = new byte[byteLength];
-        using (var rng = new RNGCryptoServiceProvider())
-        {
-            rng.GetBytes(buf);
-        }
-        return buf;
-    }
-
-    [SuppressMessage(
-        "Microsoft.Naming",
-        "CA1720:IdentifiersShouldNotContainTypeNames",
-        MessageId = "byte",
-        Justification = "It really is a byte length"
-    )]
-    public static string GenerateSalt(int byteLength = SALT_SIZE)
-    {
-        return Convert.ToBase64String(GenerateSaltInternal(byteLength));
-    }
-
-    public static string Hash(string input, string algorithm = "sha256")
-    {
-        if (input == null)
-        {
-            throw new ArgumentNullException("input");
-        }
-        return Hash(Encoding.UTF8.GetBytes(input), algorithm);
-    }
-
-    public static string Hash(byte[] input, string algorithm = "sha256")
-    {
-        if (input == null)
-        {
-            throw new ArgumentNullException("input");
-        }
-        using (HashAlgorithm alg = HashAlgorithm.Create(algorithm))
-        {
-            if (alg != null)
-            {
-                byte[] hashData = alg.ComputeHash(input);
-                return BinaryToHex(hashData);
-            }
-
-            throw new InvalidOperationException();
-        }
-    }
-
-    [SuppressMessage(
-        "Microsoft.Naming",
-        "CA1709:IdentifiersShouldBeCasedCorrectly",
-        MessageId = "SHA",
-        Justification = "Consistent with the Framework, which uses SHA"
-    )]
-    public static string SHA1(string input)
-    {
-        return Hash(input, "sha1");
-    }
-
-    [SuppressMessage(
-        "Microsoft.Naming",
-        "CA1709:IdentifiersShouldBeCasedCorrectly",
-        MessageId = "SHA",
-        Justification = "Consistent with the Framework, which uses SHA"
-    )]
-    public static string SHA256(string input)
-    {
-        return Hash(input, "sha256");
-    }
 
     /* =======================
      * HASHED PASSWORD FORMATS
@@ -134,13 +56,14 @@ internal static class Crypto
             throw new ArgumentNullException("password");
         }
         // Produce a version 0 (see comment above) password hash.
-        byte[] salt;
-        byte[] subkey;
-        using (var deriveBytes = new Rfc2898DeriveBytes(password, SALT_SIZE, iterationCount))
-        {
-            salt = deriveBytes.Salt;
-            subkey = deriveBytes.GetBytes(PBKDF2_SUBKEY_LENGTH);
-        }
+        byte[] salt = RandomNumberGenerator.GetBytes(SALT_SIZE);
+        byte[] subkey = Rfc2898DeriveBytes.Pbkdf2(
+            password,
+            salt,
+            iterationCount,
+            HashAlgorithmName.SHA1,
+            PBKDF2_SUBKEY_LENGTH
+        );
         byte[] outputBytes = new byte[1 + SALT_SIZE + PBKDF2_SUBKEY_LENGTH];
         Buffer.BlockCopy(salt, 0, outputBytes, 1, SALT_SIZE);
         Buffer.BlockCopy(subkey, 0, outputBytes, 1 + SALT_SIZE, PBKDF2_SUBKEY_LENGTH);
@@ -176,25 +99,14 @@ internal static class Crypto
         Buffer.BlockCopy(hashedPasswordBytes, 1, salt, 0, SALT_SIZE);
         byte[] storedSubkey = new byte[PBKDF2_SUBKEY_LENGTH];
         Buffer.BlockCopy(hashedPasswordBytes, 1 + SALT_SIZE, storedSubkey, 0, PBKDF2_SUBKEY_LENGTH);
-        byte[] generatedSubkey;
-        using (var deriveBytes = new Rfc2898DeriveBytes(password, salt, iterationCount))
-        {
-            generatedSubkey = deriveBytes.GetBytes(PBKDF2_SUBKEY_LENGTH);
-        }
+        byte[] generatedSubkey = Rfc2898DeriveBytes.Pbkdf2(
+            password,
+            salt,
+            iterationCount,
+            HashAlgorithmName.SHA1,
+            PBKDF2_SUBKEY_LENGTH
+        );
         return ByteArraysEqual(storedSubkey, generatedSubkey);
-    }
-
-    internal static string BinaryToHex(byte[] data)
-    {
-        char[] hex = new char[data.Length * 2];
-        for (int iter = 0; iter < data.Length; iter++)
-        {
-            byte hexChar = ((byte)(data[iter] >> 4));
-            hex[iter * 2] = (char)(hexChar > 9 ? hexChar + 0x37 : hexChar + 0x30);
-            hexChar = ((byte)(data[iter] & 0xF));
-            hex[(iter * 2) + 1] = (char)(hexChar > 9 ? hexChar + 0x37 : hexChar + 0x30);
-        }
-        return new string(hex);
     }
 
     // Compares two byte arrays for equality.

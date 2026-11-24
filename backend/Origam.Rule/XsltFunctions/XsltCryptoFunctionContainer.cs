@@ -35,7 +35,7 @@ public class XsltCryptoFunctionContainer
 
     public string PasswordDigest(string password, string timestamp, string nonce)
     {
-        SHA1 sha1 = SHA1Managed.Create();
+        using SHA1 sha1 = SHA1.Create();
         byte[] passwordHashedBytes = sha1.ComputeHash(Encoding.UTF8.GetBytes(password));
         byte[] timestampBytes = string.IsNullOrEmpty(timestamp)
             ? new byte[0]

@@ -160,7 +160,7 @@ export interface IArchitectApi {
 
   setVersionCurrent(schemaItemId: string): Promise<void>;
 
-  runUpdateScriptActivity(schemaItemId: string): Promise<void>;
+  runUpdateScriptActivity(schemaItemId: string): Promise<IRunUpdateScriptActivityResult>;
   fetchDeploymentScriptsList(platform: string | null): Promise<IDatabaseResultResponse>;
   addToDeployment(request: IAddToDeploymentRequest): Promise<void>;
   addToModel(request: IAddToModelRequest): Promise<void>;
@@ -216,6 +216,10 @@ export interface IGetDataStructureFilterSetSqlResult {
   filterSetName: string;
   dataStructureName: string;
   sql: string;
+}
+
+export interface IRunUpdateScriptActivityResult {
+  output: string;
 }
 
 export interface IShowSqlEditorData {

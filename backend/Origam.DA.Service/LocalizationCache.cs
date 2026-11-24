@@ -57,7 +57,7 @@ public class LocalizationCache : ILocalizationCache, IDisposable
 
     private void LoadFromLocalizationFolder()
     {
-#if !ORIGAM_CLIENT
+#if !ORIGAM_SERVER
         return;
 #else
         OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();

@@ -57,7 +57,7 @@ public abstract class AbstractIndexFile : IDisposable
         {
             byte[] bytes = new UTF8Encoding(true).GetBytes(entry + Environment.NewLine);
             fileStream.Seek(0, SeekOrigin.End);
-            fileStream.Write(array: bytes, offset: 0, count: bytes.Length);
+            fileStream.Write(buffer: bytes, offset: 0, count: bytes.Length);
         }
         catch (Exception)
         {

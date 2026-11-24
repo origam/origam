@@ -45,6 +45,7 @@ public class WorkQueueIntegrationTests
     [TearDown]
     public void TearDown()
     {
+        SecurityManager.SetServerIdentity();
         SqlManager sqlManager = SqlManagerFactory.Create(
             DataService.Instance,
             DataServiceFactory.GetDataService()
@@ -52,6 +53,30 @@ public class WorkQueueIntegrationTests
         sqlManager.DeleteWorkQueueEntries();
         Console.WriteLine("\nRunning DisconnectRuntime.");
         OrigamEngine.OrigamEngine.DisconnectRuntime();
+    }
+
+    [Test]
+    public async Task ShouldNotifyHostWhenRestartIsRequested()
+    {
+        var restartRequested = new TaskCompletionSource(
+            TaskCreationOptions.RunContinuationsAsynchronously
+        );
+        int restartCount = 0;
+        OrigamEngine.OrigamEngine.ConnectRuntime(
+            configName: "LinearWorkQueueProcessor",
+            customServiceFactory: new TestRuntimeServiceFactory(),
+            onRestartRequested: () =>
+            {
+                Interlocked.Increment(ref restartCount);
+                restartRequested.TrySetResult();
+            }
+        );
+
+        OrigamEngine.OrigamEngine.SetRestart();
+        await restartRequested.Task.WaitAsync(TimeSpan.FromSeconds(10));
+        await Task.Delay(TimeSpan.FromMilliseconds(1500));
+
+        Assert.That(restartCount, Is.EqualTo(1));
     }
 
     [TestCase("LinearWorkQueueProcessor")]
@@ -169,15 +194,22 @@ public class WorkQueueIntegrationTests
             var firstIntervalOperations = deleteOperations
                 .Take(throttlingItemsPerInterval)
                 .ToList();
-            var firstOperationInFirstInterval = firstIntervalOperations.First();
+            DateTime firstIntervalStart = dataService
+                .Operations.OfType<ThrottlingIntervalOperation>()
+                .First(operation => operation.WorkQueueId == SqlManager.TestQueue3)
+                .IntervalStart;
 
             var firstOperationInSecondInterval = deleteOperations
                 .Skip(throttlingItemsPerInterval)
                 .First();
-            DateTime expectedSecondIntervalStart =
-                firstOperationInFirstInterval.ExecutedAt.AddSeconds(throttlingIntervalSeconds);
+            DateTime expectedSecondIntervalStart = firstIntervalStart.AddSeconds(
+                throttlingIntervalSeconds
+            );
 
-            Assert.That(firstOperationInSecondInterval.ExecutedAt > expectedSecondIntervalStart);
+            Assert.That(
+                firstOperationInSecondInterval.ExecutedAt,
+                Is.GreaterThanOrEqualTo(expectedSecondIntervalStart)
+            );
             foreach (var operation in firstIntervalOperations)
             {
                 Assert.That(operation.ExecutedAt < expectedSecondIntervalStart);
@@ -261,9 +293,17 @@ public class WorkQueueIntegrationTests
             errorQueueId: null
         );
         sqlManager.InsertOneEntryIntoFailingQueue();
-        Thread.Sleep(3000);
-        int attempts = sqlManager.GetFailingQueueEntryAttempts();
+        int attempts = 0;
+        DateTime deadline = DateTime.UtcNow.AddSeconds(15);
+        while (attempts == 0 && DateTime.UtcNow < deadline)
+        {
+            Thread.Sleep(100);
+            attempts = sqlManager.GetFailingQueueEntryAttempts();
+        }
         Assert.That(attempts, Is.EqualTo(1));
+
+        Thread.Sleep(2000);
+        Assert.That(sqlManager.GetFailingQueueEntryAttempts(), Is.EqualTo(1));
     }
 
     [Test]

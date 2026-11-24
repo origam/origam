@@ -64,7 +64,7 @@ public class FilePersistenceBuilder : IPersistenceBuilder
         };
         var metaModelUpgradeService = ServiceManager.Services.GetService<MetaModelUpgradeService>();
 
-#if !ORIGAM_CLIENT
+#if !ORIGAM_SERVER
         MetaModelUpgradeMode mode = MetaModelUpgradeMode.Upgrade;
 #else
         MetaModelUpgradeMode mode = MetaModelUpgradeMode.Ignore;

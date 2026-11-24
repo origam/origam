@@ -7,6 +7,7 @@
 # of string. Instead of Kè it printed just K.
 
 FROM mcr.microsoft.com/dotnet/aspnet:10.0-noble AS base
+ENV OpenIddictConfig__FallbackGeneratedCertificateDirectory=/home/origam/certificates
 WORKDIR /tmp
 #INSTALL YARN & NODEJS 24
 RUN apt-get update \

@@ -1,4 +1,4 @@
-﻿#region license
+#region license
 /*
 Copyright 2005 - 2021 Advantage Solutions, s. r. o.
 
@@ -286,7 +286,6 @@ public class Program
                 EntryAssembly();
                 return HashPassword(options);
             }
-#if !NETCORE2_1
             case ProcessQueueOptions options:
             {
                 EntryAssembly();
@@ -329,7 +328,6 @@ public class Program
                 EntryAssembly();
                 return NormalizeFileFormat();
             }
-#endif
             default:
             {
                 return 1;
@@ -343,9 +341,7 @@ public class Program
         {
             typeof(ProcessCheckRulesOptions),
             typeof(ProcessDocGeneratorOptions),
-            typeof(GeneratePassHashOptions)
-#if !NETCORE2_1
-            ,
+            typeof(GeneratePassHashOptions),
             typeof(GetRootVersionOptions),
             typeof(RunSqlCommandOptions),
             typeof(RunSqlProcedureCommandOptions),
@@ -354,8 +350,7 @@ public class Program
             typeof(RestartServerOptions),
             typeof(CreateHashIndexOptions),
             typeof(CompareSchemaOptions),
-            typeof(NormalizeFileFormatOptions)
-#endif
+            typeof(NormalizeFileFormatOptions),
         };
     }
 

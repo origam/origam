@@ -41,7 +41,7 @@ using Origam.Schema.EntityModel;
 using Origam.Schema.WorkflowModel;
 using Origam.Service.Core;
 using Origam.Workbench.Services;
-using core = Origam.Workbench.Services.CoreServices;
+using Core = Origam.Workbench.Services.CoreServices;
 using Timer = System.Timers.Timer;
 
 namespace Origam.Workflow.WorkQueue;
@@ -52,7 +52,7 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
         System.Reflection.MethodBase.GetCurrentMethod()?.DeclaringType
     );
     private readonly string WQ_EVENT_ONCREATE = "fe40902f-8a44-477e-96f9-d157eee16a0f";
-    private readonly core.ICoreDataService dataService = core.DataService.Instance;
+    private readonly Core.ICoreDataService dataService = Core.DataService.Instance;
     private CancellationTokenSource cancellationTokenSource = new();
     private readonly WorkQueueUtils workQueueUtils;
     private readonly IWorkQueueProcessor queueProcessor;
@@ -563,7 +563,7 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
                             )
                         );
                     }
-                    core.WorkflowService.ExecuteWorkflow(
+                    Core.WorkflowService.ExecuteWorkflow(
                         new Guid("0fea481a-24ab-4e98-8793-617ab5bb7272"),
                         queryParameterCollection,
                         transactionId
@@ -708,7 +708,7 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
                 );
             }
             if (
-                core.WorkflowService.ExecuteWorkflow(
+                Core.WorkflowService.ExecuteWorkflow(
                     new Guid("1e621daf-c70d-4cc1-9a52-73427c499006"),
                     queryParameterCollection,
                     transactionId
@@ -1616,7 +1616,7 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
             };
             parameters.Add(new QueryParameter(parameterMapping.Name, val));
         }
-        core.WorkflowService.ExecuteWorkflow(cmd.WorkflowId, parameters, transactionId);
+        Core.WorkflowService.ExecuteWorkflow(cmd.WorkflowId, parameters, transactionId);
     }
 
     private object GetDataDocumentFactory(DataSet dataSet)

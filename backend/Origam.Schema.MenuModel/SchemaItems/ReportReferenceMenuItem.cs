@@ -69,7 +69,7 @@ public class ReportReferenceMenuItem : AbstractMenuItem
 
     public override UI.BrowserNodeCollection ChildNodes()
     {
-#if ORIGAM_CLIENT
+#if ORIGAM_SERVER
         return new Origam.UI.BrowserNodeCollection();
 #else
         return base.ChildNodes();

@@ -27,7 +27,6 @@ using System.Linq;
 using System.Xml.Serialization;
 using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
-using Origam.Extensions;
 using Origam.Schema.EntityModel;
 using Origam.Schema.EntityModel.Interfaces;
 
@@ -240,7 +239,7 @@ public abstract class EntityUIAction : AbstractSchemaItem
             {
                 return null;
             }
-            return ButtonIcon.GraphicsData.ToByteArray();
+            return ButtonIcon.GraphicsDataByte;
         }
     }
     public Guid ConfirmationMessageId;

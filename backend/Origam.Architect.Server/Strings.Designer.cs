@@ -82,11 +82,56 @@ namespace Origam.Architect.Server {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Business services service not available.
+        /// </summary>
+        internal static string DeploymentScript_BusinessServicesNotAvailable {
+            get {
+                return ResourceManager.GetString("DeploymentScript_BusinessServicesNotAvailable", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Deployment script {0} failed: {1}.
+        /// </summary>
+        internal static string DeploymentScript_ExecutionFailed {
+            get {
+                return ResourceManager.GetString("DeploymentScript_ExecutionFailed", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to UpdateScriptActivity is not found..
+        /// </summary>
+        internal static string DeploymentScript_NotFound {
+            get {
+                return ResourceManager.GetString("DeploymentScript_NotFound", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Deployment script {0} was not executed because platform {1} is not configured..
+        /// </summary>
+        internal static string DeploymentScript_PlatformNotConfigured {
+            get {
+                return ResourceManager.GetString("DeploymentScript_PlatformNotConfigured", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Unsupported deployment activity type.
         /// </summary>
         internal static string DeploymentScript_UnsupportedDeploymentActivityType {
             get {
                 return ResourceManager.GetString("DeploymentScript_UnsupportedDeploymentActivityType", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to DeploymentVersion is not found..
+        /// </summary>
+        internal static string DeploymentScript_VersionNotFound {
+            get {
+                return ResourceManager.GetString("DeploymentScript_VersionNotFound", resourceCulture);
             }
         }
         

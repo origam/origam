@@ -36,7 +36,7 @@ using Origam.Schema.MenuModel;
 using Origam.Schema.WorkflowModel;
 using Origam.Service.Core;
 using Origam.Workbench.Services;
-using core = Origam.Workbench.Services.CoreServices;
+using Core = Origam.Workbench.Services.CoreServices;
 
 namespace Origam.Workflow;
 
@@ -52,7 +52,7 @@ public class DataServiceAgent : AbstractServiceAgent
 
     public DataServiceAgent()
     {
-        _dataService = core.DataServiceFactory.GetDataService();
+        _dataService = Core.DataServiceFactory.GetDataService();
     }
 
     public IDataService DataService
@@ -146,7 +146,7 @@ public class DataServiceAgent : AbstractServiceAgent
             {
                 query.Parameters.Add(new QueryParameter(returnContext.Name, data));
             }
-            Object res = core.WorkflowService.ExecuteWorkflow(
+            Object res = Core.WorkflowService.ExecuteWorkflow(
                 dataStructureWorkflowMethod.LoadWorkflowId,
                 query.Parameters,
                 this.TransactionId
@@ -232,7 +232,7 @@ public class DataServiceAgent : AbstractServiceAgent
                 );
             }
             // call workflow
-            return core.WorkflowService.ExecuteWorkflow(
+            return Core.WorkflowService.ExecuteWorkflow(
                 dataStructureWorkflowMethod.LoadWorkflowId,
                 query.Parameters,
                 this.TransactionId

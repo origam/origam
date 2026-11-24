@@ -13,10 +13,7 @@
 # severities live in .editorconfig — they don't need a global config because
 # nothing is silencing them at a higher precedence.
 #
-# This file is conditionally included from Directory.Build.props and only
-# attaches to modern SDK-style projects (i.e. NOT to legacy net472 / .NET
-# Framework non-SDK csproj files), matching where Meziantou.Analyzer itself
-# is referenced.
+# Directory.Build.props includes this file for projects with extended analysis enabled.
 
 is_global = true
 global_level = 100
