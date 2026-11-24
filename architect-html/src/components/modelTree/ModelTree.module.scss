@@ -34,6 +34,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 }
 
 .packageName {
+  display: flex;
+  align-items: center;
+  gap: 4px;
   font-weight: bold;
   padding: 8px 8px 8px 4px;
   border-bottom: 1px solid #ccc;
@@ -165,6 +168,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 }
 
 .icon {
-  width: 20px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
 }
