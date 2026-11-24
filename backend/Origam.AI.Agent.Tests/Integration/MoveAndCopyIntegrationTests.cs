@@ -493,8 +493,8 @@ public sealed class MoveAndCopyIntegrationTests : AgentIntegrationTestBase
         var conversation = new AgentConversation();
         var changeTrace = await RunAgentAsync(
             prompt: $"Change the package of the database entity {entityName} to "
-                + $"{otherPackage.Name}, it should belong to {otherPackage.Name} from now on. Do "
-                + "not ask me to confirm anything.",
+                + $"{otherPackage.Name}, it should belong to {otherPackage.Name} from now on. Put "
+                + $"it into any folder of {otherPackage.Name}. Do not ask me to confirm anything.",
             conversation
         );
 
@@ -525,8 +525,8 @@ public sealed class MoveAndCopyIntegrationTests : AgentIntegrationTestBase
         }
 
         var backTrace = await RunAgentAsync(
-            prompt: $"Now give it back to the package {activePackage.Name}. Do not ask me to "
-                + "confirm anything.",
+            prompt: $"Now give it back to the package {activePackage.Name}, into any folder of "
+                + $"{activePackage.Name}. Do not ask me to confirm anything.",
             conversation
         );
 
