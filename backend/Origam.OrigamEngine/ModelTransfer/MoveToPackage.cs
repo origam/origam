@@ -22,7 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Origam.DA.ObjectPersistence;
+using Origam.DA.Service;
 using Origam.Schema;
 using Origam.Schema.GuiModel;
 using Origam.UI;
@@ -40,14 +40,26 @@ public class MoveToPackage(SchemaService schema, IPersistenceService persistence
             .ToList();
     }
 
-    public List<SchemaItemGroup> GetGroups(IBrowserNode2 activeNode, Package package)
+    public List<IBrowserNode2> GetTargets(IBrowserNode2 activeNode, Package package)
+    {
+        if (activeNode is ISchemaItem { ParentItem: { } parent })
+        {
+            return IsPackageIncluded(package, parent.SchemaExtensionId) ? [parent] : [];
+        }
+        return [.. GetGroups(activeNode, package)];
+    }
+
+    private static List<SchemaItemGroup> GetGroups(IBrowserNode2 activeNode, Package package)
     {
         var movedGroup = activeNode as SchemaItemGroup;
         return GetActiveItemRootProvider(activeNode)
             .ChildGroups.OrderBy(group => group.Name)
             .Where(group => group.SchemaExtensionId == package.Id)
             .SelectMany(group => group.ChildGroupsRecursive.Prepend(group))
-            .Where(group => movedGroup == null || !IsGroupOrItsDescendant(group, movedGroup))
+            .Where(group =>
+                IsPackageIncluded(package, group.SchemaExtensionId)
+                && (movedGroup == null || !IsGroupOrItsDescendant(group, movedGroup))
+            )
             .ToList();
     }
 
@@ -71,6 +83,10 @@ public class MoveToPackage(SchemaService schema, IPersistenceService persistence
                 targetPackage.Name,
                 FormatToIdList(dependenciesInPackagesNotReferencedByTargetPackage)
             );
+        }
+        if (!ReferenceIndexManager.Initialized)
+        {
+            return Strings.ErrorReferenceIndexNotReady;
         }
         List<ISchemaItem> usagesInPackagesWhichDontDependOnTargetPackage = movingItems
             .SelectMany(item => item.GetUsage())
@@ -97,26 +113,28 @@ public class MoveToPackage(SchemaService schema, IPersistenceService persistence
         {
             throw new UserOrigamException(refusal);
         }
-        IPersistenceProvider persistenceProvider = persistenceService.SchemaProvider;
-        persistenceProvider.BeginTransaction();
         try
         {
-            if (activeNode is SchemaItemGroup activeGroup)
-            {
-                MoveGroupRecursive(targetPackage, targetGroup, activeGroup);
-            }
-            else if (activeNode is ISchemaItem activeItem)
-            {
-                MoveSchemaItem(targetPackage, targetGroup, activeItem);
-            }
+            ModelTransaction.Run(
+                persistenceService.SchemaProvider,
+                () =>
+                {
+                    if (activeNode is SchemaItemGroup activeGroup)
+                    {
+                        MoveGroupRecursive(targetPackage, targetGroup, activeGroup);
+                    }
+                    else if (activeNode is ISchemaItem activeItem)
+                    {
+                        MoveSchemaItem(targetPackage, targetGroup, activeItem);
+                    }
+                }
+            );
         }
         catch
         {
-            persistenceProvider.EndTransactionDontSave();
-            GetActiveItemRootProvider(activeNode).ClearCache();
+            GetActiveItemRootProvider(activeNode)?.ClearCache();
             throw;
         }
-        persistenceProvider.EndTransaction();
     }
 
     private static ISchemaItemProvider GetActiveItemRootProvider(IBrowserNode2 activeNode)

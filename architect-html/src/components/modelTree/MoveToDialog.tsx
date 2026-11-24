@@ -163,15 +163,17 @@ export const MoveToDialog = observer(
               {result.packageRefusal}
             </div>
           )}
-          {activePackage && activePackage.id !== result.packageId && (
-            <div className={S.note} data-test-id="move-to-copy-note">
-              {T(
-                'A copy is always created in the active package {0}.',
-                'move_to_copy_active_package',
-                activePackage.name,
-              )}
-            </div>
-          )}
+          {activePackage &&
+            activePackage.id !== result.packageId &&
+            targets.some(target => target.canCopy) && (
+              <div className={S.note} data-test-id="move-to-copy-note">
+                {T(
+                  'A copy is always created in the active package {0}.',
+                  'move_to_copy_active_package',
+                  activePackage.name,
+                )}
+              </div>
+            )}
         </div>
       </ModalWindow>
     );

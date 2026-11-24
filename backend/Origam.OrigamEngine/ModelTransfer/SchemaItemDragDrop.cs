@@ -22,7 +22,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Origam.DA.ObjectPersistence;
 using Origam.Schema;
 using Origam.UI;
 using Origam.Workbench.Services;
@@ -60,57 +59,78 @@ public class SchemaItemDragDrop(
         {
             return null;
         }
-        ISchemaItemProvider rootProvider = originalItem.RootProvider;
-        ISchemaItem oldParent = originalItem.ParentItem;
-        ISchemaItem item = isCopy ? (ISchemaItem)originalItem.Clone() : originalItem;
+        ISchemaItem item = null;
         try
         {
-            bool renameCopy = true;
-            if (dropTarget == item.RootProvider)
-            {
-                item.Group = null;
-            }
-            else if (dropTarget is SchemaItemGroup group)
-            {
-                item.Group = group;
-            }
-            else
-            {
-                var dropElement = (ISchemaItem)dropTarget;
-                item.Group = null;
-                item.ParentNode = dropElement;
-                if (dropElement.IsAbstract && !item.IsAbstract)
+            ModelTransaction.Run(
+                persistenceService.SchemaProvider,
+                () =>
                 {
-                    item.IsAbstract = true;
+                    item = isCopy ? (ISchemaItem)originalItem.Clone() : originalItem;
+                    Place(item, dropTarget, isCopy);
                 }
-                renameCopy = GetTakenNames(item).Contains(item.Name);
-            }
-            if (isCopy)
-            {
-                item.SetExtensionRecursive(schemaService.ActiveExtension);
-                if (renameCopy)
-                {
-                    item.Name = GetItemText(item);
-                }
-                RunInTransaction(() => SaveCopy(item));
-            }
-            else
-            {
-                RunInTransaction(item.Persist);
-            }
+            );
         }
         catch
         {
-            rootProvider?.ClearCache();
-            oldParent?.ClearCache();
-            (dropTarget as ISchemaItem)?.ClearCache();
+            originalItem.RootProvider?.ClearCache();
+            if (isCopy && item != null)
+            {
+                DiscardCopy(item);
+            }
             throw;
         }
-        if (oldParent == null && item.ParentItem != null)
-        {
-            rootProvider?.ClearCache();
-        }
         return item;
+    }
+
+    private void Place(ISchemaItem item, IBrowserNode2 dropTarget, bool isCopy)
+    {
+        bool renameCopy = true;
+        if (dropTarget == item.RootProvider)
+        {
+            item.Group = null;
+        }
+        else if (dropTarget is SchemaItemGroup group)
+        {
+            item.Group = group;
+        }
+        else
+        {
+            var dropElement = (ISchemaItem)dropTarget;
+            if (item.ParentItem == null)
+            {
+                item.RootProvider?.ClearCache();
+            }
+            item.Group = null;
+            item.ParentNode = dropElement;
+            if (dropElement.IsAbstract && !item.IsAbstract)
+            {
+                item.IsAbstract = true;
+            }
+            renameCopy = GetTakenNames(item).Contains(item.Name);
+        }
+        if (isCopy)
+        {
+            item.SetExtensionRecursive(schemaService.ActiveExtension);
+            if (renameCopy)
+            {
+                item.Name = GetItemText(item);
+            }
+            SaveCopy(item);
+        }
+        else
+        {
+            item.Persist();
+        }
+    }
+
+    private static void DiscardCopy(ISchemaItem copy)
+    {
+        ISchemaItemProvider provider = (ISchemaItemProvider)copy.ParentItem ?? copy.RootProvider;
+        if (provider != null && provider.ChildItems.Contains(copy))
+        {
+            provider.ChildItems.Remove(copy);
+        }
     }
 
     private void SaveCopy(ISchemaItem item)
@@ -144,22 +164,6 @@ public class SchemaItemDragDrop(
             }
         }
         return children;
-    }
-
-    private void RunInTransaction(Action action)
-    {
-        IPersistenceProvider persistenceProvider = persistenceService.SchemaProvider;
-        persistenceProvider.BeginTransaction();
-        try
-        {
-            action();
-        }
-        catch
-        {
-            persistenceProvider.EndTransactionDontSave();
-            throw;
-        }
-        persistenceProvider.EndTransaction();
     }
 
     private static string GetItemText(ISchemaItem item)

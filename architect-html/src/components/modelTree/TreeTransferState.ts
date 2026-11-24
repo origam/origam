@@ -242,7 +242,7 @@ export class TreeTransferState {
 
     this.isBusy = true;
     try {
-      const movedIds = source ? this.collectSubtreeIds(source) : [sourceRef.id];
+      const movedIds = this.getMovedIds(source, sourceRef);
       if (!isCopy && !(yield* this.confirmUnsavedChanges(movedIds, sourceRef))) {
         return false;
       }
@@ -300,6 +300,18 @@ export class TreeTransferState {
       yield when(() => !node.isLoading);
     }
     yield* node.loadChildren.bind(node)();
+  }
+
+  private getMovedIds(source: TreeNode | null, sourceRef: INodeLoadData): string[] {
+    if (!source) {
+      return [sourceRef.id];
+    }
+    if (source.isFolder) {
+      return this.rootStore.editorTabViewState.editorsContainers.flatMap(editor =>
+        editor.state.origamId ? [editor.state.origamId] : [],
+      );
+    }
+    return this.collectSubtreeIds(source);
   }
 
   private collectSubtreeIds(node: TreeNode): string[] {

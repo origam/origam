@@ -42,6 +42,7 @@ function ref(id: string, nodeText: string): NodeRef {
 
 const UNGROUPED_CONSTANT = ref('024f30d7-64c1-43b7-8e0e-5d185597ae45', 'UngroupedConstant');
 const CONSTANT_GROUP = ref('3fb9c2c0-6254-4733-9b49-6058514b1451', 'AutomaticTests');
+const SECOND_CONSTANT_GROUP = ref('650ea494-be88-4372-be1a-339115778b2f', 'AutomaticTestsGroup');
 const ENTITY_GROUP = ref('d79cfa79-5f2d-4e9f-a655-0bb55c8db553', 'AutomaticTests');
 const CONSTANTS_ROOT = ref('Origam.Schema.EntityModel.DataConstantSchemaItemProvider', 'Constants');
 // Belongs to Root, which AutomaticTests references.
@@ -321,7 +322,7 @@ test.describe('Model tree move rules (real backend)', () => {
     expect(response.ok()).toBeFalsy();
     expect(await errorMessage(response)).toContain(MISSING_DEPENDENCY);
     await expectModelFile(FIELD_ENTITY_FILE, true);
-    await expectModelFile('Root/DataEntity/Widgets/AllDataTypes.origam', false);
+    await expectModelFile(`Root/DataEntity/${rootFolder.nodeText}/AllDataTypes.origam`, false);
   });
 
   test('A folder moves with its items into a folder of another package', async ({ request }) => {
@@ -338,6 +339,29 @@ test.describe('Model tree move rules (real backend)', () => {
       true,
     );
     await expectModelFile(`${CONSTANTS_DIR}/AutomaticTests/GroupedConstant.origam`, false);
+  });
+
+  test('A folder cannot be copied', async ({ request }) => {
+    const response = await request.post('/Model/MoveNode', {
+      data: { source: CONSTANT_GROUP, target: SECOND_CONSTANT_GROUP, isCopy: true },
+    });
+
+    expect(response.ok()).toBeFalsy();
+    await expectModelFile(`${CONSTANTS_DIR}/AutomaticTests/GroupedConstant.origam`, true);
+    await expectModelFile(
+      `${CONSTANTS_DIR}/AutomaticTestsGroup/AutomaticTests/GroupedConstant.origam`,
+      false,
+    );
+  });
+
+  test('A field cannot be given to a package that does not see its entity', async ({
+    request,
+  }) => {
+    await activatePackage(request, FIELD_PACKAGE);
+    const rootId = await findPackageId(request, ROOT_PACKAGE);
+    const { targets } = await getMoveTargets(request, FIELD, rootId);
+
+    expect(targets.size).toBe(0);
   });
 
   test('A folder is never its own target', async ({ request }) => {

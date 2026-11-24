@@ -136,6 +136,7 @@ test.describe('Model tree move to dialog (real backend)', () => {
     await expect(page.getByTestId('move-to-package-refusal')).toContainText(
       'Cannot move the item to "Root" because it has dependencies',
     );
+    await selectOption(page, 'move-to-target', 'Synchronization');
     await expect(page.getByTestId('move-to-button-move')).toBeDisabled();
   });
 

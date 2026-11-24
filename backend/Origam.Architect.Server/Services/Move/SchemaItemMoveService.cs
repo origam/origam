@@ -138,7 +138,10 @@ public class SchemaItemMoveService(
         IBrowserNode2 target =
             nodeResolver.Resolve(targetReference)
             ?? throw new UserOrigamException(Strings.Move_TargetNotFound);
-        if (GetRootProvider(source) is not AbstractSchemaItemProvider provider)
+        if (
+            GetRootProvider(source) is not AbstractSchemaItemProvider provider
+            || (isCopy && source is not ISchemaItem)
+        )
         {
             throw NotAllowed(source, target);
         }
@@ -210,11 +213,7 @@ public class SchemaItemMoveService(
 
     private IEnumerable<IBrowserNode2> GetPackageTargets(IBrowserNode2 source, Package package)
     {
-        if (source is ISchemaItem { ParentItem: { } parent })
-        {
-            return [parent];
-        }
-        return moveToPackage.GetGroups(source, package);
+        return moveToPackage.GetTargets(source, package);
     }
 
     private static IEnumerable<IBrowserNode2> GetDropCandidates(
@@ -372,7 +371,7 @@ public class SchemaItemMoveService(
 
     private static List<ISchemaItem> GetRootItems(IBrowserNode2 node)
     {
-        return node switch
+        List<ISchemaItem> roots = node switch
         {
             ISchemaItem item => [item.RootItem],
             SchemaItemGroup group => group
@@ -381,6 +380,14 @@ public class SchemaItemMoveService(
                 .ToList(),
             _ => [],
         };
+        return
+        [
+            .. roots,
+            .. roots
+                .OfType<PanelControlSet>()
+                .Select(section => section.PanelControl)
+                .Where(control => control != null),
+        ];
     }
 
     private static ISchemaItemProvider GetRootProvider(IBrowserNode2 node)

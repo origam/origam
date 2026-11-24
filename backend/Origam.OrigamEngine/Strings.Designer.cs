@@ -98,6 +98,15 @@ namespace Origam.OrigamEngine {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to The index of references is still being built. Try it again in a moment..
+        /// </summary>
+        internal static string ErrorReferenceIndexNotReady {
+            get {
+                return ResourceManager.GetString("ErrorReferenceIndexNotReady", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Unsupported menu type..
         /// </summary>
         internal static string ErrorUnknownMenuType {
