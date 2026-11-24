@@ -29,7 +29,7 @@
       <Version>2.2.4</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.AspNetCore.Identity">
-      <Version>2.2.0</Version>
+      <Version>2.3.14</Version>
     </PackageReference>
   </ItemGroup>
 </Project>
