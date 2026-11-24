@@ -364,6 +364,26 @@ test.describe('Model tree move rules (real backend)', () => {
     expect(targets.size).toBe(0);
   });
 
+  test('A folder of another package can only change its package', async ({ request }) => {
+    const { targets, packageRefusal } = await getMoveTargets(request, FOREIGN_GROUP);
+
+    expect(packageRefusal).toContain("'Attachments' belongs to package 'Root'");
+    expect(targets.size).toBeGreaterThan(0);
+    for (const target of targets.values()) {
+      expect(target.canMove).toBe(false);
+    }
+    const [rootFolder] = targets.values();
+    const response = await request.post('/Model/MoveNode', {
+      data: {
+        source: FOREIGN_GROUP,
+        target: ref(rootFolder.id, rootFolder.nodeText),
+        isCopy: false,
+      },
+    });
+    expect(response.ok()).toBeFalsy();
+    await expectModelFile('Root/DataConstant/Attachments/.origamGroup', true);
+  });
+
   test('A folder is never its own target', async ({ request }) => {
     const { targets } = await getMoveTargets(request, CONSTANT_GROUP);
 

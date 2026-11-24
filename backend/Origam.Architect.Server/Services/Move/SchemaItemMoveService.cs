@@ -103,7 +103,8 @@ public class SchemaItemMoveService(
             }
             return result;
         }
-        result.PackageRefusal = moveToPackage.GetRefusal(source, package);
+        result.PackageRefusal =
+            GetForeignFolderRefusal(source, package) ?? moveToPackage.GetRefusal(source, package);
         foreach (IBrowserNode2 candidate in GetPackageTargets(source, package))
         {
             bool canCopy =
@@ -203,12 +204,30 @@ public class SchemaItemMoveService(
 
     private IBrowserNode2 ChangePackage(IBrowserNode2 source, IBrowserNode2 target, Package package)
     {
+        string foreignFolderRefusal = GetForeignFolderRefusal(source, package);
+        if (foreignFolderRefusal != null)
+        {
+            throw new UserOrigamException(foreignFolderRefusal);
+        }
         if (!GetPackageTargets(source, package).Any(candidate => candidate.NodeId == target.NodeId))
         {
             throw NotAllowed(source, target);
         }
         moveToPackage.Move(source, package, target as SchemaItemGroup);
         return source;
+    }
+
+    private string GetForeignFolderRefusal(IBrowserNode2 source, Package package)
+    {
+        if (
+            source is not SchemaItemGroup group
+            || group.SchemaExtensionId != package.Id
+            || group.SchemaExtensionId == schemaService.ActiveSchemaExtensionId
+        )
+        {
+            return null;
+        }
+        return string.Format(Strings.Move_NotInActivePackage, group.Name, package.Name);
     }
 
     private IEnumerable<IBrowserNode2> GetPackageTargets(IBrowserNode2 source, Package package)

@@ -242,7 +242,11 @@ export class TreeTransferState {
 
     this.isBusy = true;
     try {
-      const movedIds = this.getMovedIds(source, sourceRef);
+      const movedIds = [
+        ...this.getMovedIds(source, sourceRef),
+        ...this.collectAncestorIds(source),
+        ...(targetNode ? [targetNode.origamId, ...this.collectAncestorIds(targetNode)] : []),
+      ];
       if (!isCopy && !(yield* this.confirmUnsavedChanges(movedIds, sourceRef))) {
         return false;
       }
@@ -312,6 +316,14 @@ export class TreeTransferState {
       );
     }
     return this.collectSubtreeIds(source);
+  }
+
+  private collectAncestorIds(node: TreeNode | null): string[] {
+    const ids: string[] = [];
+    for (let ancestor = node?.parent ?? null; ancestor; ancestor = ancestor.parent) {
+      ids.push(ancestor.origamId);
+    }
+    return ids;
   }
 
   private collectSubtreeIds(node: TreeNode): string[] {
