@@ -7,10 +7,10 @@
   <ItemGroup>
     <PackageReference
       Include="Microsoft.CodeAnalysis.Analyzers"
-      Version="5.9.0"
+      Version="5.12.0"
       PrivateAssets="all"
     />
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="5.9.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="5.12.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Origam.Analyzers\Origam.Analyzers.csproj" />
