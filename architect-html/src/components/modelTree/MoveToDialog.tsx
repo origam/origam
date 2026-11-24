@@ -122,73 +122,55 @@ export const MoveToDialog = observer(
         }
       >
         <div className={S.root} data-test-id="move-to-dialog" onKeyDown={onKeyDown}>
+          {result.packages.length > 0 && (
+            <label className={S.row}>
+              <span className={S.label}>{T('Package', 'move_to_package')}</span>
+              <span className={S.field} data-test-id="move-to-package">
+                <FilterableSelect
+                  options={result.packages.map(movePackage => ({
+                    value: movePackage.id,
+                    name: movePackage.name,
+                  }))}
+                  selectedValue={result.packageId}
+                  autoFocus={true}
+                  onChange={value => {
+                    if (value && value !== result.packageId) {
+                      changePackage(value);
+                    }
+                  }}
+                />
+              </span>
+            </label>
+          )}
           {targets.length === 0 ? (
             <div className={S.note} data-test-id="move-to-empty">
               {T('No target available.', 'move_to_empty')}
             </div>
           ) : (
-            <>
-              <label className={S.row}>
-                <span className={S.label}>{T('Package', 'move_to_package')}</span>
-                <span className={S.field} data-test-id="move-to-package">
-                  <FilterableSelect
-                    options={result.packages.map(movePackage => ({
-                      value: movePackage.id,
-                      name: movePackage.name,
-                    }))}
-                    selectedValue={result.packageId}
-                    autoFocus={true}
-                    onChange={value => {
-                      if (value && value !== result.packageId) {
-                        changePackage(value);
-                      }
-                    }}
-                  />
-                </span>
-              </label>
-              <label className={S.row}>
-                <span className={S.label}>{T('Target', 'move_to_target')}</span>
-                <span className={S.field} data-test-id="move-to-target">
-                  <FilterableSelect
-                    options={targetOptions}
-                    selectedValue={targetKey}
-                    onChange={value => setTargetKey(value)}
-                  />
-                </span>
-              </label>
-              {selected?.canMove && selected.filePath && (
-                <div className={S.row}>
-                  <span className={S.label}>{T('File', 'move_to_file')}</span>
-                  <span className={S.filePath} data-test-id="move-to-file-path">
-                    {selected.filePath}
-                  </span>
-                </div>
+            <label className={S.row}>
+              <span className={S.label}>{T('Target', 'move_to_target')}</span>
+              <span className={S.field} data-test-id="move-to-target">
+                <FilterableSelect
+                  options={targetOptions}
+                  selectedValue={targetKey}
+                  onChange={value => setTargetKey(value)}
+                />
+              </span>
+            </label>
+          )}
+          {result.packageRefusal && (
+            <div className={S.note} data-test-id="move-to-package-refusal">
+              {result.packageRefusal}
+            </div>
+          )}
+          {activePackage && activePackage.id !== result.packageId && (
+            <div className={S.note} data-test-id="move-to-copy-note">
+              {T(
+                'A copy is always created in the active package {0}.',
+                'move_to_copy_active_package',
+                activePackage.name,
               )}
-              {result.packageRefusal && (
-                <div className={S.note} data-test-id="move-to-package-refusal">
-                  {result.packageRefusal}
-                </div>
-              )}
-              {selected && !selected.canMove && selected.moveRefusal && (
-                <div className={S.note} data-test-id="move-to-move-refusal">
-                  {selected.moveRefusal}
-                </div>
-              )}
-              {activePackage && activePackage.id !== result.packageId && (
-                <div className={S.note} data-test-id="move-to-copy-note">
-                  {T(
-                    'A copy is always created in the active package {0}.',
-                    'move_to_copy_active_package',
-                    activePackage.name,
-                  )}
-                </div>
-              )}
-              {result.isTruncated && (
-                <div className={S.note}>
-                  {T('Too many targets, the list is incomplete.', 'move_to_truncated')}
-                </div>
-              )}
-            </>
+            </div>
           )}
         </div>
       </ModalWindow>

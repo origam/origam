@@ -35,6 +35,7 @@ using Origam.Architect.Server.Services.SectionEditor;
 using Origam.Architect.Server.Services.Wizards;
 using Origam.Architect.Server.Services.Xslt;
 using Origam.Extensions;
+using Origam.OrigamEngine.ModelTransfer;
 using Origam.Workbench.Services;
 
 namespace Origam.Architect.Server;
@@ -75,11 +76,8 @@ public class Program
         builder.Services.AddSingleton<LocalizationService>();
         builder.Services.AddSingleton<PanelControlFactory>();
         builder.Services.AddSingleton<MoveNodeResolver>();
-        builder.Services.AddSingleton<PackageChangeChecker>();
-        builder.Services.AddSingleton<MoveRuleEvaluator>();
-        builder.Services.AddSingleton<MoveTargetFinder>();
-        builder.Services.AddSingleton<SchemaItemMover>();
-        builder.Services.AddSingleton<SchemaItemCopier>();
+        builder.Services.AddSingleton<SchemaItemDragDrop>();
+        builder.Services.AddSingleton<MoveToPackage>();
         builder.Services.AddSingleton<SchemaItemMoveService>();
         builder.Services.AddSingleton<PropertyEditorService>();
         builder.Services.AddSingleton<ItemTypeCatalogService>();

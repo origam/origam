@@ -1075,7 +1075,7 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
             <Item
               id="move-to"
               data-test-id="tree-menu-move-to"
-              disabled={!node.canDrag}
+              disabled={!node.canDrag && !node.isFolder}
               onClick={openMoveToDialog}
             >
               {T('Move to...', 'tree_node_move_to')}

@@ -52,9 +52,9 @@ const SECTION_GROUP = ref('d3087181-fe7b-48dd-85b9-97a4f17f3b6d', 'Dimensions');
 const SECTIONS_PROVIDER = 'Origam.Schema.GuiModel.PanelSchemaItemProvider';
 const FIELD = ref('f5997d8d-384f-4a20-9dc3-490bdc05f791', 'Boolean1');
 const FIELD_ENTITY = ref('7a2338f2-7290-4cec-b0ad-2c0ee6386885', 'AllDataTypes');
-const FIELD_ENTITY_GROUP = ref('4d3cf570-0e2a-42a2-8cf7-a8b17318be3d', 'Widgets');
 const FOREIGN_ENTITY = ref('fe4b0866-624b-43b4-8975-5dcbd769e0d1', 'OrigamSyncSystem');
 const ROOT_PACKAGE = 'Root';
+const MISSING_DEPENDENCY = 'Cannot move the item to "Root" because it has dependencies';
 
 test.describe('Model tree move rules (real backend)', () => {
   test.describe.configure({ mode: 'default', timeout: 45_000 });
@@ -76,9 +76,8 @@ test.describe('Model tree move rules (real backend)', () => {
       canMove: true,
       canCopy: true,
     });
-    // The constant already sits there, only a copy is left.
     expect(verdicts.get(key(CONSTANTS_ROOT))).toEqual({
-      canMove: false,
+      canMove: true,
       canCopy: true,
     });
     // A group of entities holds a different root item type.
@@ -130,12 +129,9 @@ test.describe('Model tree move rules (real backend)', () => {
     await expectModelFile(`${CONSTANTS_DIR}/UngroupedConstant.origam`, true);
   });
 
-  test('A move to the current location is refused', async ({ request }) => {
-    const response = await request.post('/Model/MoveNode', {
-      data: { source: UNGROUPED_CONSTANT, target: CONSTANTS_ROOT, isCopy: false },
-    });
+  test('A move to the current location keeps the item where it is', async ({ request }) => {
+    await moveNode(request, UNGROUPED_CONSTANT, CONSTANTS_ROOT);
 
-    expect(response.ok()).toBeFalsy();
     await expectModelFile(`${CONSTANTS_DIR}/UngroupedConstant.origam`, true);
   });
 
@@ -211,7 +207,7 @@ test.describe('Model tree move rules (real backend)', () => {
     expect(isSourceInActivePackage).toBe(true);
 
     expect(targets.get(key(CONSTANTS_ROOT))).toMatchObject({
-      canMove: false,
+      canMove: true,
       canCopy: true,
       path: 'Constants',
       depth: 0,
@@ -251,40 +247,45 @@ test.describe('Model tree move rules (real backend)', () => {
 
     expect(packageRefusal).toBeNull();
     expect(targets.get(key(FOREIGN_GROUP))).toMatchObject({ canMove: true, canCopy: true });
-    expect(targets.get(key(FOREIGN_GROUP))?.filePath?.replaceAll('\\', '/')).toBe(
-      'Root/DataConstant/Attachments/UngroupedConstant.origam',
-    );
-    expect(targets.get(key(CONSTANT_GROUP))).toMatchObject({ canMove: false, canCopy: true });
-    expect(targets.get(key(CONSTANT_GROUP))?.moveRefusal).toContain(
-      "package 'Root' does not include package 'AutomaticTests'",
-    );
+    expect(targets.has(key(CONSTANT_GROUP))).toBe(false);
+    expect(targets.has(key(CONSTANTS_ROOT))).toBe(false);
 
     await moveNode(request, UNGROUPED_CONSTANT, FOREIGN_GROUP, rootId);
     await expectModelFile('Root/DataConstant/Attachments/UngroupedConstant.origam', true);
     await expectModelFile(`${CONSTANTS_DIR}/UngroupedConstant.origam`, false);
 
-    await moveNode(request, UNGROUPED_CONSTANT, CONSTANTS_ROOT, ownId);
-    await expectModelFile(`${CONSTANTS_DIR}/UngroupedConstant.origam`, true);
+    await moveNode(request, UNGROUPED_CONSTANT, CONSTANT_GROUP, ownId);
+    await expectModelFile(`${CONSTANTS_DIR}/AutomaticTests/UngroupedConstant.origam`, true);
     await expectModelFile('Root/DataConstant/Attachments/UngroupedConstant.origam', false);
   });
 
-  test('An item of another package can only be given to the active package', async ({
-    request,
-  }) => {
-    const securityId = await findPackageId(request, 'Security');
+  test('A package change needs a folder of the new package', async ({ request }) => {
+    const rootId = await findPackageId(request, ROOT_PACKAGE);
     const response = await request.post('/Model/MoveNode', {
       data: {
-        source: FOREIGN_CONSTANT,
+        source: UNGROUPED_CONSTANT,
         target: CONSTANTS_ROOT,
         isCopy: false,
-        packageId: securityId,
+        packageId: rootId,
       },
     });
 
     expect(response.ok()).toBeFalsy();
     expect(await errorMessage(response)).toContain(
-      "'InitialUserCreated' belongs to package 'Root', so it can only be moved into the active package",
+      "'UngroupedConstant' cannot be moved to 'Constants'",
     );
+    await expectModelFile(`${CONSTANTS_DIR}/UngroupedConstant.origam`, true);
+  });
+
+  test('A move of an item of another package within its package is refused', async ({
+    request,
+  }) => {
+    const response = await request.post('/Model/MoveNode', {
+      data: { source: FOREIGN_CONSTANT, target: CONSTANT_GROUP, isCopy: false },
+    });
+
+    expect(response.ok()).toBeFalsy();
+    expect(await errorMessage(response)).toContain("'InitialUserCreated' belongs to package 'Root'");
   });
 
   test('A package change is refused when a package that does not see it uses the item', async ({
@@ -293,9 +294,7 @@ test.describe('Model tree move rules (real backend)', () => {
     const ownId = await findPackageId(request, PACKAGE);
     const { targets, packageRefusal } = await getMoveTargets(request, FOREIGN_ENTITY, ownId);
 
-    expect(packageRefusal).toContain(
-      "'OrigamSyncSystem' cannot belong to package 'AutomaticTests'",
-    );
+    expect(packageRefusal).toContain('Cannot move the item to "AutomaticTests"');
     expect(targets.size).toBeGreaterThan(0);
     for (const target of targets.values()) {
       expect(target.canMove).toBe(false);
@@ -307,22 +306,56 @@ test.describe('Model tree move rules (real backend)', () => {
   }) => {
     await activatePackage(request, FIELD_PACKAGE);
     const rootId = await findPackageId(request, ROOT_PACKAGE);
+    const { targets, packageRefusal } = await getMoveTargets(request, FIELD_ENTITY, rootId);
+    expect(packageRefusal).toContain(MISSING_DEPENDENCY);
+    const [rootFolder] = targets.values();
     const response = await request.post('/Model/MoveNode', {
-      data: { source: FIELD_ENTITY, target: FIELD_ENTITY_GROUP, isCopy: false, packageId: rootId },
+      data: {
+        source: FIELD_ENTITY,
+        target: ref(rootFolder.id, rootFolder.nodeText),
+        isCopy: false,
+        packageId: rootId,
+      },
     });
 
     expect(response.ok()).toBeFalsy();
-    expect(await errorMessage(response)).toContain(
-      "'AllDataTypes' cannot belong to package 'Root'",
-    );
+    expect(await errorMessage(response)).toContain(MISSING_DEPENDENCY);
     await expectModelFile(FIELD_ENTITY_FILE, true);
     await expectModelFile('Root/DataEntity/Widgets/AllDataTypes.origam', false);
   });
 
-  test('A group has no move targets', async ({ request }) => {
+  test('A folder moves with its items into a folder of another package', async ({ request }) => {
+    const rootId = await findPackageId(request, ROOT_PACKAGE);
+    const { targets, packageRefusal } = await getMoveTargets(request, CONSTANT_GROUP, rootId);
+
+    expect(packageRefusal).toBeNull();
+    expect(targets.get(key(FOREIGN_GROUP))).toMatchObject({ canMove: true, canCopy: false });
+
+    await moveNode(request, CONSTANT_GROUP, FOREIGN_GROUP, rootId);
+    await expectModelFile('Root/DataConstant/Attachments/AutomaticTests/.origamGroup', true);
+    await expectModelFile(
+      'Root/DataConstant/Attachments/AutomaticTests/GroupedConstant.origam',
+      true,
+    );
+    await expectModelFile(`${CONSTANTS_DIR}/AutomaticTests/GroupedConstant.origam`, false);
+  });
+
+  test('A folder is never its own target', async ({ request }) => {
     const { targets } = await getMoveTargets(request, CONSTANT_GROUP);
 
-    expect(targets.size).toBe(0);
+    expect(targets.has(key(CONSTANT_GROUP))).toBe(false);
+  });
+
+  test('A field copied into its own entity gets a new name', async ({ request }) => {
+    await activatePackage(request, FIELD_PACKAGE);
+    const response = await request.post('/Model/MoveNode', {
+      data: { source: FIELD, target: FIELD_ENTITY, isCopy: true },
+    });
+
+    expect(response.ok(), await response.text()).toBeTruthy();
+    const { node } = (await response.json()) as { node: { nodeText: string } };
+    expect(node.nodeText).toBe('Copy of Boolean1');
+    expect(readModelFile(FIELD_ENTITY_FILE)).toContain('asi:name="Copy of Boolean1"');
   });
 
   test('A copied screen section gets its own widget', async ({ request }) => {
@@ -341,13 +374,13 @@ test.describe('Model tree move rules (real backend)', () => {
     await expectModelFile('AutomaticTests/Control/Copy of DimensionEntityRelation.origam', true);
   });
 
-  test('A repeated copy gets a numbered name', async ({ request }) => {
+  test('A repeated copy gets another Copy of', async ({ request }) => {
     await copyIntoGroup(request);
     const second = await copyIntoGroup(request);
 
-    expect(second).toBe('Copy of UngroupedConstant (2)');
+    expect(second).toBe('Copy of Copy of UngroupedConstant');
     await expectModelFile(
-      `${CONSTANTS_DIR}/AutomaticTests/Copy of UngroupedConstant (2).origam`,
+      `${CONSTANTS_DIR}/AutomaticTests/Copy of Copy of UngroupedConstant.origam`,
       true,
     );
   });
@@ -409,6 +442,8 @@ interface MoveTargetsResult {
 }
 
 interface MoveTarget {
+  id: string;
+  nodeText: string;
   key: string;
   path: string;
   depth: number;
@@ -416,8 +451,6 @@ interface MoveTarget {
   isCurrentLocation: boolean;
   canMove: boolean;
   canCopy: boolean;
-  moveRefusal: string | null;
-  filePath: string | null;
 }
 
 async function getMoveTargets(

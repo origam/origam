@@ -473,14 +473,13 @@ public sealed class MoveAndCopyIntegrationTests : AgentIntegrationTestBase
 
     [Test]
     [Category(MutatingCategory)]
-    public async Task PackageChangeRequest_ChangesThePackage_ThenChangesItBack()
+    public async Task PackageChangeRequest_MovesItIntoAFolderOfThePackage_ThenBack()
     {
         var entityName = "AiPackage" + NewSuffix();
         CreatedEntityNames.Add("Copy of " + entityName);
         CreatedEntityNames.Add(entityName);
         var entityId = await CreateTopLevelEntityAsync(entityName);
         var beforeChange = await transfers.ReadMoveTargetsAsync(entityId);
-        var originalLocation = RequireCurrentLocation(beforeChange, entityName);
         var activePackage = beforeChange.Packages.Single(package => package.IsActive);
         var otherPackage =
             beforeChange.Packages.FirstOrDefault(package => package.Name == RootPackageName)
@@ -508,9 +507,9 @@ public sealed class MoveAndCopyIntegrationTests : AgentIntegrationTestBase
             $"'{entityName}' still belongs to {activePackage.Name}. " + changeTrace.Describe()
         );
         Assert.That(
-            afterChange.CurrentLocation?.Id,
-            Is.EqualTo(originalLocation.Id),
-            $"Changing the package of '{entityName}' also moved it, it is "
+            afterChange.CurrentLocation?.PackageName,
+            Is.EqualTo(otherPackage.Name),
+            $"'{entityName}' is not in a folder of {otherPackage.Name}, it is "
                 + $"{afterChange.Describe()}. "
                 + changeTrace.Describe()
         );
@@ -542,9 +541,10 @@ public sealed class MoveAndCopyIntegrationTests : AgentIntegrationTestBase
                 + backTrace.Describe()
         );
         Assert.That(
-            afterBack.CurrentLocation?.Id,
-            Is.EqualTo(originalLocation.Id),
-            $"'{entityName}' is not where it was, it is {afterBack.Describe()}. "
+            afterBack.CurrentLocation?.PackageName,
+            Is.EqualTo(activePackage.Name),
+            $"'{entityName}' is not in a folder of {activePackage.Name}, it is "
+                + $"{afterBack.Describe()}. "
                 + backTrace.Describe()
         );
     }

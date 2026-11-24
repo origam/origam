@@ -132,4 +132,15 @@
   <data name="WorkQueueRemoveConfirmationMessage" xml:space="preserve">
     <value>Do you really want to remove selected message(s)?</value>
   </data>
+  <data name="CopyOf" xml:space="preserve">
+    <value>Copy of {0}</value>
+  </data>
+  <data name="ErrorDependenciesInPackagesNotReferencedByTargetPackage" xml:space="preserve">
+    <value>Cannot move the item to "{0}" because it has dependencies in packages not referenced by the target package:
+			{1}</value>
+  </data>
+  <data name="ErrorUsagesInPackagesWhichDontDependOnTargetPackage" xml:space="preserve">
+    <value>Cannot move the item to "{0}" because items that depend on it would not be able to reach it:
+			{1}</value>
+  </data>
 </root>

@@ -645,8 +645,6 @@ export interface IMoveTarget {
   isCurrentLocation: boolean;
   canMove: boolean;
   canCopy: boolean;
-  moveRefusal: string | null;
-  filePath: string | null;
 }
 
 export interface IMovePackage {
@@ -661,7 +659,6 @@ export interface IMoveTargetsResult {
   packageId: string | null;
   packageRefusal: string | null;
   isSourceInActivePackage: boolean;
-  isTruncated: boolean;
 }
 
 export interface IPackagesInfo {

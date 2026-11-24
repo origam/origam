@@ -171,14 +171,6 @@ public class ResponseCompactionFilter(NewItemTypeCatalogService catalogService)
             );
             compactedTarget["canMove"] = target.GetBooleanOrNull(propertyName: "canMove");
             compactedTarget["canCopy"] = target.GetBooleanOrNull(propertyName: "canCopy");
-            string? moveRefusal = target.GetStringOrNull(propertyName: "moveRefusal");
-            if (
-                moveRefusal != null
-                && target.GetBooleanOrNull(propertyName: "isCurrentLocation") != true
-            )
-            {
-                compactedTarget["moveRefusal"] = moveRefusal;
-            }
             compactedTargets.Add(compactedTarget);
         }
 
@@ -193,7 +185,6 @@ public class ResponseCompactionFilter(NewItemTypeCatalogService catalogService)
         {
             summary["packageRefusal"] = packageRefusal;
         }
-        summary["isTruncated"] = root.GetBooleanOrNull(propertyName: "isTruncated");
         summary["targets"] = compactedTargets;
         summary["packageId"] = root.GetStringOrNull(propertyName: "packageId");
         if (root.TryGetProperty(propertyName: "packages", out JsonElement packages))

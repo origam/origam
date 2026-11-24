@@ -48,8 +48,6 @@ public class MoveTargetResult
     public bool IsCurrentLocation { get; set; }
     public bool CanMove { get; set; }
     public bool CanCopy { get; set; }
-    public string MoveRefusal { get; set; }
-    public string FilePath { get; set; }
 }
 
 public class MoveTargetsResult
@@ -59,5 +57,4 @@ public class MoveTargetsResult
     public Guid? PackageId { get; set; }
     public string PackageRefusal { get; set; }
     public bool IsSourceInActivePackage { get; set; }
-    public bool IsTruncated { get; set; }
 }

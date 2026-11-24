@@ -74,6 +74,12 @@ public class MoveNodeResolver(
 
     private void RestoreRootProvider(IBrowserNode2 node)
     {
+        if (node is SchemaItemGroup { RootProvider: null, ParentItem: null } group)
+        {
+            group.RootProvider = FindProvider(group.RootItemType);
+            return;
+        }
+
         if (node is not ISchemaItem { RootProvider: null } item)
         {
             return;
@@ -89,8 +95,13 @@ public class MoveNodeResolver(
             return;
         }
 
-        item.RootProvider = schemaService
+        item.RootProvider = FindProvider(root.ItemType);
+    }
+
+    private AbstractSchemaItemProvider FindProvider(string rootItemType)
+    {
+        return schemaService
             .Providers.OfType<AbstractSchemaItemProvider>()
-            .FirstOrDefault(provider => provider.RootItemType == root.ItemType);
+            .FirstOrDefault(provider => provider.RootItemType == rootItemType);
     }
 }
