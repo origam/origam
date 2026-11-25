@@ -1,0 +1,77 @@
+name: Dependabot eligibility label
+
+on:
+  pull_request_target:
+    types: [opened, reopened, synchronize, edited, ready_for_review, converted_to_draft]
+
+permissions:
+  pull-requests: write
+
+jobs:
+  label:
+    if: >-
+      github.event.pull_request.user.login == 'dependabot[bot]' &&
+      github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    concurrency:
+      group: dependabot-eligibility-${{ github.event.pull_request.number }}
+    steps:
+      # Use only PR metadata. This workflow runs with a write token from the base branch.
+      - name: Fetch verified Dependabot metadata
+        if: github.event.pull_request.base.ref == 'master' && !github.event.pull_request.draft
+        id: metadata
+        uses: dependabot/fetch-metadata@25dd0e34f4fe68f24cc83900b1fe3fe149efef98 # v3.1.0
+
+      - name: Reconcile eligibility label
+        if: ${{ !cancelled() }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          EVENT_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          EVENT_BASE_REF: ${{ github.event.pull_request.base.ref }}
+          EVENT_DRAFT: ${{ github.event.pull_request.draft }}
+          METADATA_OUTCOME: ${{ steps.metadata.outcome }}
+          UPDATED_DEPENDENCIES: ${{ steps.metadata.outputs.updated-dependencies-json }}
+          LABEL: eligible-for-auto-merge
+        run: |
+          repo_api="repos/$GITHUB_REPOSITORY"
+          pr=$(gh api "$repo_api/pulls/$PR_NUMBER")
+          if ! jq -e --arg sha "$EVENT_HEAD_SHA" --arg base "$EVENT_BASE_REF" --argjson draft "$EVENT_DRAFT" '
+            .state == "open" and .head.sha == $sha and .base.ref == $base and .draft == $draft
+          ' <<< "$pr" > /dev/null; then
+            exit 0
+          fi
+
+          labels_api="$repo_api/issues/$PR_NUMBER/labels"
+          # Keep this allowlist aligned with the nuget-test-patches group.
+          if [[ "$METADATA_OUTCOME" == success ]] &&
+            jq -e '.base.ref == "master" and .draft == false and .commits == 1' <<< "$pr" > /dev/null &&
+            jq -e -s '
+              def stable_version:
+                capture("^(?<major>[1-9][0-9]*)\\.(?<minor>0|[1-9][0-9]*)\\.(?<patch>0|[1-9][0-9]*)$");
+              def stable_patch:
+                [.prevVersion, .newVersion | stable_version] as $versions
+                | ($versions | length) == 2
+                  and $versions[0].major == $versions[1].major
+                  and $versions[0].minor == $versions[1].minor
+                  and ($versions[0].patch | tonumber) < ($versions[1].patch | tonumber);
+              length == 1 and (.[0] |
+                type == "array" and length > 0 and all(.[];
+                  .packageEcosystem == "nuget"
+                  and .updateType == "version-update:semver-patch"
+                  and .maintainerChanges == false
+                  and (.dependencyName | ascii_downcase |
+                    IN("microsoft.net.test.sdk", "moq", "nunit", "nunit3testadapter"))
+                  and stable_patch
+                )
+              )
+            ' <<< "$UPDATED_DEPENDENCIES" > /dev/null; then
+            if ! gh api "$repo_api/labels/$LABEL" --silent 2>/dev/null; then
+              gh api "$repo_api/labels" --silent -f name="$LABEL" -f color=0e8a16 \
+                -f description="Dependabot patch candidate based on dependency metadata" ||
+                gh api "$repo_api/labels/$LABEL" --silent
+            fi
+            gh api "$labels_api" --silent -f "labels[]=$LABEL"
+          elif jq -e --arg label "$LABEL" 'any(.labels[]; .name == $label)' <<< "$pr" > /dev/null; then
+            gh api --method DELETE "$labels_api/$LABEL" --silent
+          fi
