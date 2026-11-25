@@ -43,7 +43,7 @@ jobs:
           fi
 
           labels_api="$repo_api/issues/$PR_NUMBER/labels"
-          # Keep this allowlist aligned with the nuget-test-patches group.
+          # Keep these allowlists aligned with nuget-test-patches and frontend-test-patches.
           if [[ "$METADATA_OUTCOME" == success ]] &&
             jq -e '.base.ref == "master" and .draft == false and .commits == 1' <<< "$pr" > /dev/null &&
             jq -e -s '
@@ -55,13 +55,26 @@ jobs:
                   and $versions[0].major == $versions[1].major
                   and $versions[0].minor == $versions[1].minor
                   and ($versions[0].patch | tonumber) < ($versions[1].patch | tonumber);
+              def test_dependency:
+                if .packageEcosystem == "nuget" then
+                  .dependencyName | ascii_downcase |
+                  IN("microsoft.net.test.sdk", "moq", "nunit", "nunit3testadapter")
+                elif .packageEcosystem == "npm_and_yarn" then
+                  .directory == "/frontend-html"
+                  and .dependencyType == "direct:development"
+                  and (.dependencyName | IN(
+                    "@testing-library/dom", "@testing-library/jest-dom", "@testing-library/react",
+                    "@testing-library/user-event", "@types/jest", "identity-obj-proxy",
+                    "jest", "jest-environment-jsdom", "ts-jest"
+                  ))
+                else
+                  false
+                end;
               length == 1 and (.[0] |
                 type == "array" and length > 0 and all(.[];
-                  .packageEcosystem == "nuget"
-                  and .updateType == "version-update:semver-patch"
+                  .updateType == "version-update:semver-patch"
                   and .maintainerChanges == false
-                  and (.dependencyName | ascii_downcase |
-                    IN("microsoft.net.test.sdk", "moq", "nunit", "nunit3testadapter"))
+                  and test_dependency
                   and stable_patch
                 )
               )

@@ -56,6 +56,19 @@ updates:
       frontend-react:
         patterns: ["react", "react-dom", "@types/react", "@types/react-dom"]
         update-types: ["minor", "patch"]
+      frontend-test-patches:
+        dependency-type: "development"
+        patterns:
+          - "@testing-library/dom"
+          - "@testing-library/jest-dom"
+          - "@testing-library/react"
+          - "@testing-library/user-event"
+          - "@types/jest"
+          - "identity-obj-proxy"
+          - "jest"
+          - "jest-environment-jsdom"
+          - "ts-jest"
+        update-types: ["patch"]
       frontend-dev-patches:
         dependency-type: "development"
         update-types: ["patch"]
