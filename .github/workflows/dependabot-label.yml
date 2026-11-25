@@ -43,48 +43,54 @@ jobs:
           fi
 
           labels_api="$repo_api/issues/$PR_NUMBER/labels"
-          # Keep these allowlists aligned with the test and Vite patch groups.
+          # Keep these allowlists aligned with the test and Vite groups.
           if [[ "$METADATA_OUTCOME" == success ]] &&
             jq -e '.base.ref == "master" and .draft == false and .commits == 1' <<< "$pr" > /dev/null &&
             jq -e -s '
               def stable_version:
                 capture("^(?<major>[1-9][0-9]*)\\.(?<minor>0|[1-9][0-9]*)\\.(?<patch>0|[1-9][0-9]*)$");
-              def stable_patch:
+              def stable_update:
                 [.prevVersion, .newVersion | stable_version] as $versions
                 | ($versions | length) == 2
                   and $versions[0].major == $versions[1].major
-                  and $versions[0].minor == $versions[1].minor
-                  and ($versions[0].patch | tonumber) < ($versions[1].patch | tonumber);
-              def eligible_dependency:
+                  and (
+                    (.updateType == "version-update:semver-patch"
+                      and $versions[0].minor == $versions[1].minor
+                      and ($versions[0].patch | tonumber) < ($versions[1].patch | tonumber))
+                    or (.updateType == "version-update:semver-minor"
+                      and ($versions[0].minor | tonumber) < ($versions[1].minor | tonumber))
+                  );
+              def vite_dependency:
+                .packageEcosystem == "npm_and_yarn"
+                and .dependencyType == "direct:development"
+                and (.directory | IN("/frontend-html", "/architect-html"))
+                and (.dependencyName | IN("vite", "@vitejs/plugin-react"));
+              def test_dependency:
                 if .packageEcosystem == "nuget" then
                   .dependencyName | ascii_downcase |
                   IN("microsoft.net.test.sdk", "moq", "nunit", "nunit3testadapter")
                 elif .packageEcosystem == "npm_and_yarn" then
-                  .dependencyType == "direct:development"
-                  and (
-                    ((.directory | IN("/frontend-html", "/architect-html"))
-                      and (.dependencyName | IN("vite", "@vitejs/plugin-react")))
-                    or (.directory == "/frontend-html" and (.dependencyName | IN(
-                      "@testing-library/dom", "@testing-library/jest-dom", "@testing-library/react",
-                      "@testing-library/user-event", "@types/jest", "identity-obj-proxy",
-                      "jest", "jest-environment-jsdom", "ts-jest"
-                    )))
-                  )
+                  .directory == "/frontend-html"
+                  and .dependencyType == "direct:development"
+                  and (.dependencyName | IN(
+                    "@testing-library/dom", "@testing-library/jest-dom", "@testing-library/react",
+                    "@testing-library/user-event", "@types/jest", "identity-obj-proxy",
+                    "jest", "jest-environment-jsdom", "ts-jest"
+                  ))
                 else
                   false
                 end;
               length == 1 and (.[0] |
                 type == "array" and length > 0 and all(.[];
-                  .updateType == "version-update:semver-patch"
-                  and .maintainerChanges == false
-                  and eligible_dependency
-                  and stable_patch
+                  .maintainerChanges == false
+                  and stable_update
+                  and (vite_dependency or (.updateType == "version-update:semver-patch" and test_dependency))
                 )
               )
             ' <<< "$UPDATED_DEPENDENCIES" > /dev/null; then
             if ! gh api "$repo_api/labels/$LABEL" --silent 2>/dev/null; then
               gh api "$repo_api/labels" --silent -f name="$LABEL" -f color=0e8a16 \
-                -f description="Dependabot patch candidate based on dependency metadata" ||
+                -f description="Dependabot update candidate based on dependency metadata" ||
                 gh api "$repo_api/labels/$LABEL" --silent
             fi
             gh api "$labels_api" --silent -f "labels[]=$LABEL"

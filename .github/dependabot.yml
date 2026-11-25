@@ -90,13 +90,13 @@ updates:
           - "jest-environment-jsdom"
           - "ts-jest"
         update-types: ["minor"]
-      frontend-vite-patches:
+      frontend-vite:
         dependency-type: "development"
         patterns: ["vite", "@vitejs/plugin-react"]
-        update-types: ["patch"]
-      frontend-dev-patches:
+        update-types: ["patch", "minor"]
+      frontend-dev-updates:
         dependency-type: "development"
-        update-types: ["patch"]
+        update-types: ["patch", "minor"]
     ignore:
       # Keep mobx on the 6.x release line. Upgrading to 7.x requires additional migration work.
       - dependency-name: "mobx"
@@ -119,13 +119,13 @@ updates:
       architect-react:
         patterns: ["react", "react-dom", "@types/react", "@types/react-dom"]
         update-types: ["minor", "patch"]
-      architect-vite-patches:
+      architect-vite:
         dependency-type: "development"
         patterns: ["vite", "@vitejs/plugin-react"]
-        update-types: ["patch"]
-      architect-dev-patches:
+        update-types: ["patch", "minor"]
+      architect-dev-updates:
         dependency-type: "development"
-        update-types: ["patch"]
+        update-types: ["patch", "minor"]
     ignore:
       - dependency-name: "eslint"
         versions: [">=10.0.0 <10.1.0"]
@@ -144,9 +144,9 @@ updates:
       chat-react:
         patterns: ["react", "react-dom", "@types/react", "@types/react-dom"]
         update-types: ["minor", "patch"]
-      chat-dev-patches:
+      chat-dev-updates:
         dependency-type: "development"
-        update-types: ["patch"]
+        update-types: ["patch", "minor"]
     ignore:
       # Draft.js and react-draft-wysiwyg require Immutable 3.x or 4.x.
       - dependency-name: "immutable"
