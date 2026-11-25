@@ -24,6 +24,14 @@ updates:
           - "NUnit3TestAdapter"
         update-types:
           - "patch"
+      nuget-test-minors:
+        patterns:
+          - "Microsoft.NET.Test.Sdk"
+          - "Moq"
+          - "NUnit"
+          - "NUnit3TestAdapter"
+        update-types:
+          - "minor"
       log4net:
         patterns:
           - "log4net"
