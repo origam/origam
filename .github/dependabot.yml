@@ -90,6 +90,10 @@ updates:
           - "jest-environment-jsdom"
           - "ts-jest"
         update-types: ["minor"]
+      frontend-vite-patches:
+        dependency-type: "development"
+        patterns: ["vite", "@vitejs/plugin-react"]
+        update-types: ["patch"]
       frontend-dev-patches:
         dependency-type: "development"
         update-types: ["patch"]
@@ -115,6 +119,10 @@ updates:
       architect-react:
         patterns: ["react", "react-dom", "@types/react", "@types/react-dom"]
         update-types: ["minor", "patch"]
+      architect-vite-patches:
+        dependency-type: "development"
+        patterns: ["vite", "@vitejs/plugin-react"]
+        update-types: ["patch"]
       architect-dev-patches:
         dependency-type: "development"
         update-types: ["patch"]

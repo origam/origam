@@ -43,7 +43,7 @@ jobs:
           fi
 
           labels_api="$repo_api/issues/$PR_NUMBER/labels"
-          # Keep these allowlists aligned with nuget-test-patches and frontend-test-patches.
+          # Keep these allowlists aligned with the test and Vite patch groups.
           if [[ "$METADATA_OUTCOME" == success ]] &&
             jq -e '.base.ref == "master" and .draft == false and .commits == 1' <<< "$pr" > /dev/null &&
             jq -e -s '
@@ -55,18 +55,21 @@ jobs:
                   and $versions[0].major == $versions[1].major
                   and $versions[0].minor == $versions[1].minor
                   and ($versions[0].patch | tonumber) < ($versions[1].patch | tonumber);
-              def test_dependency:
+              def eligible_dependency:
                 if .packageEcosystem == "nuget" then
                   .dependencyName | ascii_downcase |
                   IN("microsoft.net.test.sdk", "moq", "nunit", "nunit3testadapter")
                 elif .packageEcosystem == "npm_and_yarn" then
-                  .directory == "/frontend-html"
-                  and .dependencyType == "direct:development"
-                  and (.dependencyName | IN(
-                    "@testing-library/dom", "@testing-library/jest-dom", "@testing-library/react",
-                    "@testing-library/user-event", "@types/jest", "identity-obj-proxy",
-                    "jest", "jest-environment-jsdom", "ts-jest"
-                  ))
+                  .dependencyType == "direct:development"
+                  and (
+                    ((.directory | IN("/frontend-html", "/architect-html"))
+                      and (.dependencyName | IN("vite", "@vitejs/plugin-react")))
+                    or (.directory == "/frontend-html" and (.dependencyName | IN(
+                      "@testing-library/dom", "@testing-library/jest-dom", "@testing-library/react",
+                      "@testing-library/user-event", "@types/jest", "identity-obj-proxy",
+                      "jest", "jest-environment-jsdom", "ts-jest"
+                    )))
+                  )
                 else
                   false
                 end;
@@ -74,7 +77,7 @@ jobs:
                 type == "array" and length > 0 and all(.[];
                   .updateType == "version-update:semver-patch"
                   and .maintainerChanges == false
-                  and test_dependency
+                  and eligible_dependency
                   and stable_patch
                 )
               )
