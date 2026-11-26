@@ -454,12 +454,13 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     if (autoRefreshPeriod) {
       this.disposers.push(
         autorun(() => {
-          if (
+          const shouldSuspendAutoRefresh =
             !getIsSuppressSave(this) &&
-            (getIsFormScreenDirty(this) || !getIsActiveScreen(this))
-          ) {
-            this.clearAutoRefreshInterval();
-          } else {
+            (getIsFormScreenDirty(this) || !getIsActiveScreen(this));
+
+          this.clearAutoRefreshInterval();
+
+          if (!shouldSuspendAutoRefresh) {
             this._autoRefreshTimerHandle = setInterval(
               () => this.performAutoReload(),
               autoRefreshPeriod * 1000
@@ -478,6 +479,10 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   }
 
   performAutoReload() {
+    if (getOpenedScreen(this)?.isClosed) {
+      this.clearAutoRefreshInterval();
+      return;
+    }
     const self = this;
     flow(function*() {
       try {
