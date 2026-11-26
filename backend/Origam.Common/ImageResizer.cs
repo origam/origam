@@ -42,33 +42,26 @@ public static class ImageResizer
                 string.Format(Strings.UnsupportedOutputImageFormat, outFormat)
             ),
         };
-        using var stream = new SKMemoryStream(imgBytes);
-        using var codec = SKCodec.Create(stream);
-        if (codec == null)
-        {
-            throw new ArgumentException(message: null, nameof(imgBytes));
-        }
-        using SKBitmap decoded =
-            SKBitmap.Decode(codec) ?? throw new ArgumentException(message: null, nameof(imgBytes));
-        using SKBitmap oriented = Orient(decoded, codec.EncodedOrigin);
+        using SKBitmap decoded = Decode(imgBytes, out SKEncodedOrigin origin);
+        using SKBitmap oriented = Orient(decoded, origin);
         using SKBitmap resized = Resize(oriented, width, height, keepAspectRatio);
         return Encode(resized, format);
     }
 
     public static byte[] FixedSizeBytesInBytesOut(byte[] imgBytes, int width, int height)
     {
-        using SKBitmap image = Decode(imgBytes);
+        using SKBitmap image = Decode(imgBytes, out _);
         using SKBitmap thumbnail = FixedSize(image, width, height);
         return Encode(thumbnail, SKEncodedImageFormat.Png);
     }
 
     public static int[] GetImageDimensions(byte[] imgBytes)
     {
-        using SKBitmap image = Decode(imgBytes);
+        using SKBitmap image = Decode(imgBytes, out _);
         return new[] { image.Width, image.Height };
     }
 
-    private static SKBitmap Decode(byte[] imgBytes)
+    private static SKBitmap Decode(byte[] imgBytes, out SKEncodedOrigin origin)
     {
         using var stream = new SKMemoryStream(imgBytes);
         using var codec = SKCodec.Create(stream);
@@ -76,6 +69,7 @@ public static class ImageResizer
         {
             throw new ArgumentException(message: null, nameof(imgBytes));
         }
+        origin = codec.EncodedOrigin;
         return SKBitmap.Decode(codec)
             ?? throw new ArgumentException(message: null, nameof(imgBytes));
     }
