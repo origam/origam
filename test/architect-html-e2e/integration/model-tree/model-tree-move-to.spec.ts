@@ -69,7 +69,6 @@ test.describe('Model tree move to dialog (real backend)', () => {
     await openMoveToDialog(page, 'UngroupedConstant');
 
     await awaitMoveTargets(page, () => selectOption(page, 'move-to-package', 'Root'));
-    await expect(page.getByTestId('move-to-copy-note')).toBeVisible();
     await selectOption(page, 'move-to-target', 'Attachments');
     await expectMoveSucceeds(page, () => page.getByTestId('move-to-button-move').click());
     await expectTreeSettled(page, 'UngroupedConstant');
@@ -80,7 +79,6 @@ test.describe('Model tree move to dialog (real backend)', () => {
     await expect(movedNode.locator('xpath=../..')).toHaveClass(/highlighted/);
     await expectBoxSettled(movedNode);
     await openMoveToDialog(page, 'UngroupedConstant');
-    await expect(page.getByTestId('move-to-button-move')).toBeDisabled();
     await awaitMoveTargets(page, () => selectOption(page, 'move-to-package', PACKAGE));
     await selectOption(page, 'move-to-target', 'AutomaticTests');
     await expectMoveSucceeds(page, () => page.getByTestId('move-to-button-move').click());
@@ -175,7 +173,25 @@ test.describe('Model tree move to dialog (real backend)', () => {
     await expectModelFile(`${CONSTANTS_DIR}/AutomaticTestsGroup/TargetConstant.origam`, false);
   });
 
-  test('An item of another package can only be copied', async ({ page }) => {
+  test('Move to moves an item of another package into a folder of its package', async ({
+    page,
+  }) => {
+    await openConstants(page);
+    await openMoveToDialog(page, 'InitialUserCreated');
+
+    await expect(page.getByTestId('move-to-button-move')).toBeDisabled();
+    await selectOption(page, 'move-to-target', 'Attachments');
+    await expectMoveSucceeds(page, () => page.getByTestId('move-to-button-move').click());
+
+    await expect(page.getByTestId('move-to-dialog')).toHaveCount(0);
+    await expectTreeSettled(page, 'InitialUserCreated');
+    await expectModelFile('Root/DataConstant/Attachments/InitialUserCreated.origam', true);
+    await expectModelFile('Root/DataConstant/InitialUserCreated.origam', false);
+  });
+
+  test('An item of another package can only be copied into a folder outside its package', async ({
+    page,
+  }) => {
     await openConstants(page);
     await openMoveToDialog(page, 'InitialUserCreated');
 

@@ -48,6 +48,9 @@ const CONSTANTS_ROOT = ref('Origam.Schema.EntityModel.DataConstantSchemaItemProv
 // Belongs to Root, which AutomaticTests references.
 const FOREIGN_CONSTANT = ref('e42f864f-5018-4967-abdc-5910439adc9a', 'InitialUserCreated');
 const FOREIGN_GROUP = ref('9e00cfe2-ad80-40f2-aeb2-321dcc57325e', 'Attachments');
+const SECOND_FOREIGN_GROUP = ref('578dbd96-c916-49d7-885c-bc4a7905f712', 'Model');
+const THIRD_PACKAGE = 'Widgets';
+const THIRD_PACKAGE_GROUP = ref('b95b6f28-62c5-46bb-ab27-6b9555e46856', 'Widgets');
 const SCREEN_SECTION = ref('263a4b50-3920-4445-84c7-4df5b3065d74', 'DimensionEntityRelation');
 const SECTION_GROUP = ref('d3087181-fe7b-48dd-85b9-97a4f17f3b6d', 'Dimensions');
 const SECTIONS_PROVIDER = 'Origam.Schema.GuiModel.PanelSchemaItemProvider';
@@ -92,7 +95,7 @@ test.describe('Model tree move rules (real backend)', () => {
     });
   });
 
-  test('An item of another package can only be copied', async ({ request }) => {
+  test('An item of another package can only be copied by drag and drop', async ({ request }) => {
     const verdicts = await getMoveVerdicts(request, FOREIGN_CONSTANT, [
       CONSTANT_GROUP,
       CONSTANTS_ROOT,
@@ -230,15 +233,19 @@ test.describe('Model tree move rules (real backend)', () => {
     expect(targets.has(key(FOREIGN_CONSTANT))).toBe(false);
   });
 
-  test('Move targets of an item of another package are copy only', async ({ request }) => {
-    const { targets, isSourceInActivePackage } = await getMoveTargets(request, FOREIGN_CONSTANT);
+  test('An item of another package can be moved only into the folders of its package', async ({
+    request,
+  }) => {
+    const { targets, isSourceInActivePackage, packageRefusal } = await getMoveTargets(
+      request,
+      FOREIGN_CONSTANT,
+    );
 
     expect(isSourceInActivePackage).toBe(false);
-
-    expect(targets.size).toBeGreaterThan(0);
-    for (const target of targets.values()) {
-      expect(target).toMatchObject({ canMove: false, canCopy: true });
-    }
+    expect(packageRefusal).toBeNull();
+    expect(targets.get(key(FOREIGN_GROUP))).toMatchObject({ canMove: true, canCopy: true });
+    expect(targets.get(key(CONSTANT_GROUP))).toMatchObject({ canMove: false, canCopy: true });
+    expect(targets.get(key(CONSTANTS_ROOT))).toMatchObject({ canMove: false, canCopy: true });
   });
 
   test('A move with another package changes the package and takes it back', async ({ request }) => {
@@ -278,7 +285,7 @@ test.describe('Model tree move rules (real backend)', () => {
     await expectModelFile(`${CONSTANTS_DIR}/UngroupedConstant.origam`, true);
   });
 
-  test('A move of an item of another package within its package is refused', async ({
+  test('An item of another package is not moved into a folder outside its package', async ({
     request,
   }) => {
     const response = await request.post('/Model/MoveNode', {
@@ -287,6 +294,31 @@ test.describe('Model tree move rules (real backend)', () => {
 
     expect(response.ok()).toBeFalsy();
     expect(await errorMessage(response)).toContain("'InitialUserCreated' belongs to package 'Root'");
+    await expectModelFile('Root/DataConstant/InitialUserCreated.origam', true);
+  });
+
+  test('An item of another package moves into a folder of its package', async ({ request }) => {
+    await moveNode(request, FOREIGN_CONSTANT, FOREIGN_GROUP);
+
+    await expectModelFile('Root/DataConstant/Attachments/InitialUserCreated.origam', true);
+    await expectModelFile('Root/DataConstant/InitialUserCreated.origam', false);
+    await expectModelFile(`${CONSTANTS_DIR}/Attachments/InitialUserCreated.origam`, false);
+  });
+
+  test('An item of another package is given to a third package', async ({ request }) => {
+    const thirdPackageId = await findPackageId(request, THIRD_PACKAGE);
+    const { targets, packageRefusal } = await getMoveTargets(
+      request,
+      FOREIGN_CONSTANT,
+      thirdPackageId,
+    );
+
+    expect(packageRefusal).toBeNull();
+    expect(targets.get(key(THIRD_PACKAGE_GROUP))).toMatchObject({ canMove: true });
+
+    await moveNode(request, FOREIGN_CONSTANT, THIRD_PACKAGE_GROUP, thirdPackageId);
+    await expectModelFile('Widgets/DataConstant/Widgets/InitialUserCreated.origam', true);
+    await expectModelFile('Root/DataConstant/InitialUserCreated.origam', false);
   });
 
   test('A package change is refused when a package that does not see it uses the item', async ({
@@ -364,23 +396,33 @@ test.describe('Model tree move rules (real backend)', () => {
     expect(targets.size).toBe(0);
   });
 
-  test('A folder of another package can only change its package', async ({ request }) => {
+  test('A folder of another package moves into another folder of its package', async ({
+    request,
+  }) => {
     const { targets, packageRefusal } = await getMoveTargets(request, FOREIGN_GROUP);
 
-    expect(packageRefusal).toContain("'Attachments' belongs to package 'Root'");
-    expect(targets.size).toBeGreaterThan(0);
-    for (const target of targets.values()) {
-      expect(target.canMove).toBe(false);
-    }
-    const [rootFolder] = targets.values();
-    const response = await request.post('/Model/MoveNode', {
-      data: {
-        source: FOREIGN_GROUP,
-        target: ref(rootFolder.id, rootFolder.nodeText),
-        isCopy: false,
-      },
+    expect(packageRefusal).toBeNull();
+    expect(targets.get(key(SECOND_FOREIGN_GROUP))).toMatchObject({
+      canMove: true,
+      canCopy: false,
     });
+    expect(targets.has(key(CONSTANT_GROUP))).toBe(false);
+
+    await moveNode(request, FOREIGN_GROUP, SECOND_FOREIGN_GROUP);
+    await expectModelFile('Root/DataConstant/Model/Attachments/.origamGroup', true);
+    await expectModelFile('Root/DataConstant/Model/Attachments/Attachment_Compress.origam', true);
+    await expectModelFile('Root/DataConstant/Attachments/.origamGroup', false);
+  });
+
+  test('A folder of another package is not moved into a folder outside its package', async ({
+    request,
+  }) => {
+    const response = await request.post('/Model/MoveNode', {
+      data: { source: FOREIGN_GROUP, target: CONSTANT_GROUP, isCopy: false },
+    });
+
     expect(response.ok()).toBeFalsy();
+    expect(await errorMessage(response)).toContain("'Attachments' belongs to package 'Root'");
     await expectModelFile('Root/DataConstant/Attachments/.origamGroup', true);
   });
 

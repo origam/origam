@@ -82,10 +82,16 @@ public class MoveNodeFacade(
         result.IsSourceInActivePackage = GetPackageId(source) == activePackage.Id;
         if (source is ISchemaItem item && package.Id == item.SchemaExtensionId)
         {
-            result.PackageRefusal = GetKeepPackageRefusal(source, package);
+            HashSet<string> ownPackageTargetIds = schemaService.CanEditItem(item)
+                ? []
+                : GetPackageTargets(item, package)
+                    .Select(packageTarget => packageTarget.NodeId)
+                    .ToHashSet();
             foreach (IBrowserNode2 candidate in GetDropCandidates(item, provider))
             {
-                bool canMove = dragDrop.CanDrop(item, candidate, isCopy: false);
+                bool canMove =
+                    dragDrop.CanDrop(item, candidate, isCopy: false)
+                    || ownPackageTargetIds.Contains(candidate.NodeId);
                 bool canCopy = dragDrop.CanDrop(item, candidate, isCopy: true);
                 if (canMove || canCopy)
                 {
@@ -104,8 +110,7 @@ public class MoveNodeFacade(
             }
             return result;
         }
-        result.PackageRefusal =
-            GetKeepPackageRefusal(source, package) ?? moveToPackage.GetRefusal(source, package);
+        result.PackageRefusal = moveToPackage.GetRefusal(source, package);
         foreach (IBrowserNode2 candidate in GetPackageTargets(source, package))
         {
             bool canCopy =
@@ -156,7 +161,13 @@ public class MoveNodeFacade(
         List<ISchemaItem> changedRoots = GetRootItems(source);
         IBrowserNode2 result =
             source is ISchemaItem item
-            && (isCopy || (packageId ?? item.SchemaExtensionId) == item.SchemaExtensionId)
+            && (
+                isCopy
+                || (
+                    (packageId ?? item.SchemaExtensionId) == item.SchemaExtensionId
+                    && schemaService.CanEditItem(item)
+                )
+            )
                 ? Drop(item, target, isCopy, activePackage)
                 : ChangePackage(source, target, GetPackage(source, packageId, packages));
         gitNodeStatusService.ClearCache();
@@ -187,12 +198,6 @@ public class MoveNodeFacade(
         Package activePackage
     )
     {
-        if (!isCopy && !schemaService.CanEditItem(item))
-        {
-            throw new UserOrigamException(
-                string.Format(Strings.Move_NotInActivePackage, item.Name, item.PackageName)
-            );
-        }
         ISchemaItem result = dragDrop.Drop(item, target, isCopy) ?? throw NotAllowed(item, target);
         if (isCopy && result is PanelControlSet { PanelControl: null } panelControlSet)
         {
@@ -205,34 +210,23 @@ public class MoveNodeFacade(
 
     private IBrowserNode2 ChangePackage(IBrowserNode2 source, IBrowserNode2 target, Package package)
     {
-        string keepPackageRefusal = GetKeepPackageRefusal(source, package);
-        if (keepPackageRefusal != null)
-        {
-            throw new UserOrigamException(keepPackageRefusal);
-        }
         if (!GetPackageTargets(source, package).Any(candidate => candidate.NodeId == target.NodeId))
         {
-            throw NotAllowed(source, target);
+            bool staysInPackageThatIsNotActive =
+                GetPackageId(source) == package.Id
+                && package.Id != schemaService.ActiveSchemaExtensionId;
+            throw staysInPackageThatIsNotActive
+                ? new UserOrigamException(
+                    string.Format(
+                        Strings.Move_NotInActivePackage,
+                        TreeNode.ToNodeText(source),
+                        package.Name
+                    )
+                )
+                : NotAllowed(source, target);
         }
         moveToPackage.Move(source, package, target as SchemaItemGroup);
         return source;
-    }
-
-    private string GetKeepPackageRefusal(IBrowserNode2 source, Package package)
-    {
-        Guid sourcePackageId = GetPackageId(source);
-        if (
-            sourcePackageId != package.Id
-            || sourcePackageId == schemaService.ActiveSchemaExtensionId
-        )
-        {
-            return null;
-        }
-        return string.Format(
-            Strings.Move_NotInActivePackage,
-            TreeNode.ToNodeText(source),
-            package.Name
-        );
     }
 
     private IEnumerable<IBrowserNode2> GetPackageTargets(IBrowserNode2 source, Package package)

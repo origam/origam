@@ -469,7 +469,7 @@ namespace Origam.Architect.Server {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Only items of the active package can be moved within their package. '{0}' belongs to package '{1}'..
+        ///   Looks up a localized string similar to '{0}' belongs to package '{1}', which is not active, and the target is not a folder of package '{1}'..
         /// </summary>
         internal static string Move_NotInActivePackage {
             get {

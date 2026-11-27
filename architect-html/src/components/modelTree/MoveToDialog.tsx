@@ -50,7 +50,6 @@ export const MoveToDialog = observer(
       [result],
     );
     const selected = targets.find(target => target.key === targetKey) ?? null;
-    const activePackage = result.packages.find(movePackage => movePackage.isActive);
     const chosenPackage = result.packages.find(movePackage => movePackage.id === result.packageId);
 
     const targetOptions: IDropDownValue[] = targets.map(target => ({
@@ -163,17 +162,6 @@ export const MoveToDialog = observer(
               {result.packageRefusal}
             </div>
           )}
-          {activePackage &&
-            activePackage.id !== result.packageId &&
-            targets.some(target => target.canCopy) && (
-              <div className={S.note} data-test-id="move-to-copy-note">
-                {T(
-                  'A copy is always created in the active package {0}.',
-                  'move_to_copy_active_package',
-                  activePackage.name,
-                )}
-              </div>
-            )}
         </div>
       </ModalWindow>
     );

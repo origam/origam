@@ -65,6 +65,10 @@ public class MoveToPackage(SchemaService schema, IPersistenceService persistence
 
     public string GetRefusal(IBrowserNode2 activeNode, Package targetPackage)
     {
+        if (IsItemOfPackage(activeNode, targetPackage))
+        {
+            return null;
+        }
         List<ISchemaItem> movingItems = GetMovingItems(activeNode);
         HashSet<Guid> movingIds = movingItems.Select(item => item.Id).ToHashSet();
         List<ISchemaItem> dependenciesInPackagesNotReferencedByTargetPackage = movingItems
@@ -157,7 +161,17 @@ public class MoveToPackage(SchemaService schema, IPersistenceService persistence
         {
             item.Group = targetGroup;
         }
+        if (IsItemOfPackage(item, targetPackage))
+        {
+            item.Persist();
+            return;
+        }
         MoveSchemaItem(item, targetPackage);
+    }
+
+    private static bool IsItemOfPackage(IBrowserNode2 node, Package package)
+    {
+        return node is ISchemaItem item && item.SchemaExtensionId == package.Id;
     }
 
     private static void MoveSchemaItem(ISchemaItem item, Package targetPackage)

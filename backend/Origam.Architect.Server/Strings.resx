@@ -31,7 +31,7 @@
         <value>The drop target no longer exists in the model.</value>
     </data>
     <data name="Move_NotInActivePackage" xml:space="preserve">
-        <value>Only items of the active package can be moved within their package. '{0}' belongs to package '{1}'.</value>
+        <value>'{0}' belongs to package '{1}', which is not active, and the target is not a folder of package '{1}'.</value>
     </data>
     <data name="Move_NotAllowed" xml:space="preserve">
         <value>'{0}' cannot be moved to '{1}'.</value>

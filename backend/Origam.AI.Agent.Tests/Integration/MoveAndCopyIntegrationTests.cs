@@ -269,7 +269,13 @@ public sealed class MoveAndCopyIntegrationTests : AgentIntegrationTestBase
         var originalLocation = RequireCurrentLocation(beforeMove, RootConstantName);
         var folder = beforeMove
             .Targets.Where(target =>
-                target is { CanCopy: true, IsCurrentLocation: false, IsTopLevelFolder: false }
+                target
+                    is {
+                        CanMove: false,
+                        CanCopy: true,
+                        IsCurrentLocation: false,
+                        IsTopLevelFolder: false,
+                    }
             )
             .OrderByDescending(target => target.IsInActivePackage)
             .ThenBy(target => target.Path, StringComparer.Ordinal)
