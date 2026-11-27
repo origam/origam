@@ -442,24 +442,6 @@ namespace Origam.Architect.Server {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Copy of {0}.
-        /// </summary>
-        internal static string CopyOfName {
-            get {
-                return ResourceManager.GetString("CopyOfName", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Copy of {0} ({1}).
-        /// </summary>
-        internal static string CopyOfNameNumbered {
-            get {
-                return ResourceManager.GetString("CopyOfNameNumbered", resourceCulture);
-            }
-        }
-
-        /// <summary>
         ///   Looks up a localized string similar to No package is active. Select a package first..
         /// </summary>
         internal static string Move_NoActivePackage {
@@ -487,83 +469,11 @@ namespace Origam.Architect.Server {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Only model items can be moved. Folders, categories and model groups cannot..
-        /// </summary>
-        internal static string Move_SourceNotMovable {
-            get {
-                return ResourceManager.GetString("Move_SourceNotMovable", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to '{0}' has not been saved yet. Save it before moving or copying it..
-        /// </summary>
-        internal static string Move_SourceNotPersisted {
-            get {
-                return ResourceManager.GetString("Move_SourceNotPersisted", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to '{0}' cannot be moved, the package it belongs to is not loaded..
-        /// </summary>
-        internal static string Move_SourcePackageNotFound {
-            get {
-                return ResourceManager.GetString("Move_SourcePackageNotFound", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Only items from the active package can be moved. '{0}' belongs to package '{1}' and can only be copied..
+        ///   Looks up a localized string similar to '{0}' belongs to package '{1}', which is not active, and the target is not a folder of package '{1}'..
         /// </summary>
         internal static string Move_NotInActivePackage {
             get {
                 return ResourceManager.GetString("Move_NotInActivePackage", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to An item cannot be dropped onto itself..
-        /// </summary>
-        internal static string Move_TargetIsSource {
-            get {
-                return ResourceManager.GetString("Move_TargetIsSource", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to '{0}' is already in '{1}'..
-        /// </summary>
-        internal static string Move_TargetIsCurrentLocation {
-            get {
-                return ResourceManager.GetString("Move_TargetIsCurrentLocation", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to '{0}' cannot be moved into '{1}', which is one of its own children..
-        /// </summary>
-        internal static string Move_TargetIsDescendant {
-            get {
-                return ResourceManager.GetString("Move_TargetIsDescendant", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to '{0}' cannot be moved to '{1}', the parent chain of the target is too deep or broken..
-        /// </summary>
-        internal static string Move_TargetChainUnknown {
-            get {
-                return ResourceManager.GetString("Move_TargetChainUnknown", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Only top level items can be moved directly into '{0}'..
-        /// </summary>
-        internal static string Move_ProviderRequiresTopLevelItem {
-            get {
-                return ResourceManager.GetString("Move_ProviderRequiresTopLevelItem", resourceCulture);
             }
         }
 
@@ -577,38 +487,11 @@ namespace Origam.Architect.Server {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to '{0}' cannot be moved to package '{1}' because it depends on items in packages the target package does not reference: {2}.
+        ///   Looks up a localized string similar to '{0}' cannot be moved into package '{1}'. Choose the active package or a package it includes..
         /// </summary>
-        internal static string Move_DependenciesOutsideTargetPackage {
+        internal static string Move_PackageNotAvailable {
             get {
-                return ResourceManager.GetString("Move_DependenciesOutsideTargetPackage", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to '{0}' cannot be moved to package '{1}' because items that use it would not be able to reach it: {2}.
-        /// </summary>
-        internal static string Move_UsagesCannotReachTargetPackage {
-            get {
-                return ResourceManager.GetString("Move_UsagesCannotReachTargetPackage", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to '{0}' cannot be moved to package '{1}' because the model reference index is not available. Reload the model and try again..
-        /// </summary>
-        internal static string Move_UsagesNotChecked {
-            get {
-                return ResourceManager.GetString("Move_UsagesNotChecked", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to '{0}' cannot be moved, the group it belongs to could not be loaded..
-        /// </summary>
-        internal static string Move_SourceGroupNotFound {
-            get {
-                return ResourceManager.GetString("Move_SourceGroupNotFound", resourceCulture);
+                return ResourceManager.GetString("Move_PackageNotAvailable", resourceCulture);
             }
         }
 

@@ -21,36 +21,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 namespace Origam.Architect.Server.ReturnModels;
 
-public class MoveVerdictResult
-{
-    public string Key { get; set; }
-    public bool CanMove { get; set; }
-    public bool CanCopy { get; set; }
-}
-
 public class MoveNodeResult
 {
     public TreeNode Node { get; set; }
+    public MoveLocationResult SourceLocation { get; set; }
+    public MovePackageResult SourcePackage { get; set; }
     public List<string> ParentNodeIds { get; set; }
-}
-
-public class MoveTargetResult
-{
-    public string Id { get; set; }
-    public string NodeText { get; set; }
-    public string Key { get; set; }
-    public string Path { get; set; }
-    public int Depth { get; set; }
-    public string PackageName { get; set; }
-    public bool IsInActivePackage { get; set; }
-    public bool IsCurrentLocation { get; set; }
-    public bool CanMove { get; set; }
-    public bool CanCopy { get; set; }
-}
-
-public class MoveTargetsResult
-{
-    public List<MoveTargetResult> Targets { get; set; }
-    public bool IsSourceInActivePackage { get; set; }
-    public bool IsTruncated { get; set; }
 }

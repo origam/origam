@@ -37,7 +37,7 @@ namespace Origam.Architect.Server.Controllers;
 [ApiController]
 [Route("[controller]")]
 public class ModelController(
-    SchemaItemMoveService moveService,
+    MoveNodeFacade moveNodeFacade,
     SchemaService schemaService,
     IPersistenceService persistenceService,
     TreeNodeFactory treeNodeFactory,
@@ -275,20 +275,89 @@ public class ModelController(
         [Required] [FromBody] MoveVerdictsModel input
     )
     {
-        return Ok(moveService.GetMoveVerdicts(input.Source, input.Targets));
+        return Ok(moveNodeFacade.GetMoveVerdicts(input.Source, input.Targets));
     }
 
     [HttpPost("GetMoveTargets")]
+    [EndpointDescription(
+        "List the places a model item or a folder can be moved or copied to - the list the "
+            + "Architect's 'Move to...' dialog shows. Pass source = {id: <id of the item or "
+            + "folder>}. packageId is optional: leave it out for moves that keep the package, or "
+            + "pass the id of one of the returned packages to change the package. The result has "
+            + "packages (id, name and isActive), packageId (the package the targets are for; "
+            + "without a package change the package that owns the item - name it when a move is "
+            + "not possible because of the package), "
+            + "packageRefusal (why the package cannot change to packageId; empty when it can), "
+            + "isSourceInActivePackage and targets. Each target has id (pass it unchanged as "
+            + "target.id to POST /Model/MoveNode), nodeText, path (where it sits in the tree), "
+            + "packageName (the package that owns that folder or parent, which is not the package "
+            + "of the item), isInActivePackage, isCurrentLocation (the item is there now; "
+            + "remember it in case the user wants the item moved back), canMove and canCopy. "
+            + "Without a package change a top level item such as an entity, a constant or a "
+            + "screen can go to the top folder of its type or to a folder of that type in any "
+            + "loaded package, and an item that can change its parent, such as a field, a menu "
+            + "item or a workflow step, lists the possible parent items; an item of a package "
+            + "that is not active can only be moved into a folder of its own package, any item "
+            + "can be copied. With another package the targets are "
+            + "the folders of that package, or for an item inside another item, such as a field, "
+            + "only its current parent when the new package includes the parent's package. A "
+            + "folder can only be moved, into a folder of the chosen package (by default its own), "
+            + "and everything in it then belongs to that package; it cannot go back to the top "
+            + "folder of its type. Skip this call when you already know the target id, for "
+            + "example the entity id from MODEL INDEX that a field should move to."
+    )]
     public ActionResult<MoveTargetsResult> GetMoveTargets(
         [Required] [FromBody] MoveTargetsModel input
     )
     {
-        return Ok(moveService.GetMoveTargets(input.Source));
+        return Ok(moveNodeFacade.GetMoveTargets(input.Source, input.PackageId));
     }
 
     [HttpPost("MoveNode")]
+    [EndpointDescription(
+        "Move or copy one model item, or move a folder, to another place in the model tree, "
+            + "like drag and drop, cut and paste or copy and paste in the Architect. source = "
+            + "{id: <the item or folder>}, target = {id: <where it goes>}: a target id from POST "
+            + "/Model/GetMoveTargets, a folder id, a top level folder id (a type name, not a GUID) "
+            + "or a parent item id such as the entity a field should move to. Do not pass nodeText "
+            + "or isNonPersistentItem. isCopy false MOVES: the id stays the same and everything "
+            + "that references it keeps working. For an item, without packageId or with its own "
+            + "package the move keeps the package that owns the item, a folder of another package "
+            + "is a normal target, and an item of a package that is not active can only be moved "
+            + "into a folder of its own package. To change "
+            + "the package that owns an item, pass packageId, one of the packages from POST "
+            + "/Model/GetMoveTargets, and a folder of that package as target (for an item inside "
+            + "another item, such as a field, its current parent): the item and its children then "
+            + "belong to that package. Pass packageId only when the user explicitly asks for the "
+            + "package to change; a request to move an item into a folder is never such a "
+            + "request, not even when the move is refused because the item belongs to another "
+            + "package - then tell the user the reason and ask. A folder always moves into "
+            + "another folder of packageId (by default the "
+            + "folder's own package), so a folder of another package as target needs that "
+            + "package's id; the folder and everything in it, also items of other packages, then "
+            + "belong to that package, and a folder cannot go back to the top folder of its type. "
+            + "The "
+            + "model refuses a package change when something that moves uses an item of a package "
+            + "the new package does not include, or when an item of a package that does not "
+            + "include the new package uses something that moves. isCopy true COPIES an item and "
+            + "ignores packageId: the copy gets a new id and belongs to the ACTIVE package; placed "
+            + "in a folder or at the top it is named 'Copy of <name>' (more 'Copy of' when that "
+            + "name is taken), placed under a parent item it keeps its name unless the parent "
+            + "already has a child with that name. Folders cannot be copied. Never imitate a move "
+            + "or a package change by copying and deleting. The change is saved to disk at once. "
+            + "On success returns {node, sourceLocation, sourcePackage, parentNodeIds}: "
+            + "node.origamId is the unchanged id or the new copy's id, node.nodeText its name; "
+            + "sourceLocation is where it was before a move, or where the original stays for a "
+            + "copy, with id, nodeText, path and packageName; sourcePackage is the package that "
+            + "owned it before. When you report a move, give both places by their path and name "
+            + "the package when it changed. To undo a move of an item pass sourceLocation.id as "
+            + "target.id; to undo a package change pass sourcePackage.id as packageId and a target "
+            + "from POST /Model/GetMoveTargets for that package. An error response carries the reason the "
+            + "model refused; when the user asked for a move, tell them the reason and ask before "
+            + "making a copy instead."
+    )]
     public ActionResult<MoveNodeResult> MoveNode([Required] [FromBody] MoveNodeModel input)
     {
-        return Ok(moveService.Move(input.Source, input.Target, input.IsCopy));
+        return Ok(moveNodeFacade.Move(input.Source, input.Target, input.IsCopy, input.PackageId));
     }
 }

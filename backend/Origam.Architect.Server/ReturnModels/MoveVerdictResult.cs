@@ -19,13 +19,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.Architect.Server.Services.Move;
+namespace Origam.Architect.Server.ReturnModels;
 
-// A model with a broken or cyclic item chain must not hang or crash the server.
-public static class MoveLimits
+public class MoveVerdictResult
 {
-    public const int MaxParentWalkDepth = 200;
-    public const int MaxChildWalkDepth = 200;
-    public const int MaxTargets = 500;
-    public const int MaxCandidates = 5000;
+    public string Key { get; set; }
+    public bool CanMove { get; set; }
+    public bool CanCopy { get; set; }
 }

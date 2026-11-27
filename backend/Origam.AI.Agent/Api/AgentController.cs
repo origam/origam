@@ -22,7 +22,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Origam.AI.Agent.Configuration;
-using Origam.AI.Agent.Models.Requests;
 using Origam.AI.Agent.Models.Responses;
 using Origam.AI.Agent.Providers;
 using Origam.AI.Agent.Services.OpenApi;
@@ -35,7 +34,6 @@ namespace Origam.AI.Agent.Api;
 [Tags(OpenApiSectionProvider.AgentApiSectionName)]
 public sealed class AgentController(
     IOptions<AiOptions> options,
-    CustomInstructionsFile customInstructions,
     IEnumerable<IAgentTargetStrategy> targets
 ) : ControllerBase
 {
@@ -50,19 +48,6 @@ public sealed class AgentController(
             settings.Model,
             settings.HasApiKey
         );
-    }
-
-    [HttpGet("prompt/custom-instructions")]
-    public CustomInstructions GetCustomInstructions()
-    {
-        return new CustomInstructions(customInstructions.Read());
-    }
-
-    [HttpPost("prompt/custom-instructions")]
-    public IActionResult SaveCustomInstructions([FromBody] CustomInstructionsUpdate update)
-    {
-        customInstructions.Write(update.Text);
-        return Ok();
     }
 
     [HttpGet("{target}/sections")]

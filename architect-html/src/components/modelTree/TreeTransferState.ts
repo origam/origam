@@ -215,9 +215,17 @@ export class TreeTransferState {
     source: TreeNode,
     targetRef: INodeLoadData,
     isCopy: boolean,
+    packageId?: string,
   ): Generator<Promise<any>, boolean, any> {
     const targetNode = this.rootStore.modelTreeState.findNodeById(targetRef.id);
-    return yield* this.executeMove(source, toNodeRef(source), targetRef, targetNode, isCopy);
+    return yield* this.executeMove(
+      source,
+      toNodeRef(source),
+      targetRef,
+      targetNode,
+      isCopy,
+      packageId,
+    );
   }
 
   private *executeMove(
@@ -226,6 +234,7 @@ export class TreeTransferState {
     targetRef: INodeLoadData,
     targetNode: TreeNode | null,
     isCopy: boolean,
+    packageId?: string,
   ): Generator<Promise<any>, boolean, any> {
     if (this.isBusy) {
       return false;
@@ -233,7 +242,12 @@ export class TreeTransferState {
 
     this.isBusy = true;
     try {
-      if (!isCopy && !(yield* this.confirmUnsavedChanges(source, sourceRef))) {
+      const movedIds = [
+        ...this.getMovedIds(source, sourceRef),
+        ...this.collectAncestorIds(source),
+        ...(targetNode ? [targetNode.origamId, ...this.collectAncestorIds(targetNode)] : []),
+      ];
+      if (!isCopy && !(yield* this.confirmUnsavedChanges(movedIds, sourceRef))) {
         return false;
       }
 
@@ -241,9 +255,13 @@ export class TreeTransferState {
         source: sourceRef,
         target: targetRef,
         isCopy: isCopy,
+        packageId: isCopy ? undefined : packageId,
       });
 
       yield* this.refreshAfterMove(source, targetNode, result);
+      if (!isCopy) {
+        yield* this.rootStore.editorTabViewState.reloadEditorsForOrigamIds(movedIds)();
+      }
       return true;
     } finally {
       this.isBusy = false;
@@ -252,10 +270,9 @@ export class TreeTransferState {
 
   // Persist cascades to child items.
   private *confirmUnsavedChanges(
-    source: TreeNode | null,
+    movedIds: string[],
     sourceRef: INodeLoadData,
   ): Generator<Promise<any>, boolean, any> {
-    const movedIds = source ? this.collectSubtreeIds(source) : [sourceRef.id];
     const dirtyEditors = this.rootStore.editorTabViewState.editorsContainers.filter(
       editor => editor.state.isDirty && movedIds.some(id => editor.state.tabId.includes(id)),
     );
@@ -287,6 +304,26 @@ export class TreeTransferState {
       yield when(() => !node.isLoading);
     }
     yield* node.loadChildren.bind(node)();
+  }
+
+  private getMovedIds(source: TreeNode | null, sourceRef: INodeLoadData): string[] {
+    if (!source) {
+      return [sourceRef.id];
+    }
+    if (source.isFolder) {
+      return this.rootStore.editorTabViewState.editorsContainers.flatMap(editor =>
+        editor.state.origamId ? [editor.state.origamId] : [],
+      );
+    }
+    return this.collectSubtreeIds(source);
+  }
+
+  private collectAncestorIds(node: TreeNode | null): string[] {
+    const ids: string[] = [];
+    for (let ancestor = node?.parent ?? null; ancestor; ancestor = ancestor.parent) {
+      ids.push(ancestor.origamId);
+    }
+    return ids;
   }
 
   private collectSubtreeIds(node: TreeNode): string[] {

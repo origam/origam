@@ -185,13 +185,14 @@ public sealed class ArchitectAgentClient : IDisposable
 
         var toolCalls = toolCallOrder
             .Select(toolCallId => new ToolCallRecord(
+                toolCallId,
                 toolCallNames.GetValueOrDefault(toolCallId, defaultValue: ""),
                 toolCallArguments.GetValueOrDefault(toolCallId)?.ToString() ?? "",
                 toolCallResults.GetValueOrDefault(toolCallId)
             ))
             .ToList();
 
-        conversation?.Append(prompt, replyText.ToString());
+        conversation?.Append(prompt, replyText.ToString(), toolCalls);
 
         return new AgentRunTrace(
             toolCalls,

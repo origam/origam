@@ -21,7 +21,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Microsoft.Extensions.AI;
 using Origam.AI.Agent.Chat;
-using Origam.AI.Agent.Configuration;
 using Origam.AI.Agent.Services;
 using Origam.AI.Agent.Strategy.Architect.ItemTypes;
 using Origam.AI.Agent.Strategy.Architect.ModelIndex;
@@ -32,7 +31,6 @@ public sealed class ArchitectContextProvider(
     ModelIndexService modelIndexService,
     NewItemTypeCatalogService newItemTypeCatalogService,
     AliasMappingService aliasMappingService,
-    CustomInstructionsFile customInstructions,
     ArchitectPromptPack prompts
 ) : IPromptContextProvider
 {
@@ -49,8 +47,7 @@ public sealed class ArchitectContextProvider(
                 cancellationToken
             ),
             settings,
-            aliasMappingService,
-            customInstructions.Read()
+            aliasMappingService
         );
     }
 }

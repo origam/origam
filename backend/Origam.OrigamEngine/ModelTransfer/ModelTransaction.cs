@@ -19,18 +19,30 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.Schema;
-using Origam.Workbench.Services;
+using System;
+using Origam.DA.ObjectPersistence;
 
-namespace Origam.Architect.Server.Services.Move;
+namespace Origam.OrigamEngine.ModelTransfer;
 
-// Every move service is a singleton of its own, so each entry point has to check
-// the precondition instead of relying on the facade having checked it.
-public static class MovePreconditions
+internal static class ModelTransaction
 {
-    public static Package RequireActivePackage(SchemaService schemaService)
+    public static void Run(IPersistenceProvider persistenceProvider, Action action)
     {
-        return schemaService.ActiveExtension
-            ?? throw new UserOrigamException(Strings.Move_NoActivePackage);
+        persistenceProvider.BeginTransaction();
+        bool committed = false;
+        try
+        {
+            action();
+            persistenceProvider.EndTransaction();
+            committed = true;
+        }
+        catch
+        {
+            if (!committed)
+            {
+                persistenceProvider.EndTransactionDontSave();
+            }
+            throw;
+        }
     }
 }

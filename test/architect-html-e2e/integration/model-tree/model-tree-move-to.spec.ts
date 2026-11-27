@@ -22,6 +22,7 @@ import { activatePackage } from '@support/activatePackage';
 import {
   awaitMoveTargets,
   awaitMoveVerdicts,
+  expectBoxSettled,
   expectModelFile,
   expectMoveSucceeds,
   expectTreeSettled,
@@ -34,8 +35,8 @@ import { resetBackend } from '@support/resetBackend';
 const PACKAGE = 'AutomaticTests';
 const CONSTANTS_DIR = 'AutomaticTests/DataConstant';
 // A group of constants living in Root, which AutomaticTests references.
-const FOREIGN_GROUP = 'Attachments';
-const CONSTANT_GROUP = 'AutomaticTests';
+const FOREIGN_GROUP = 'Attachments (Root)';
+const CONSTANT_GROUP = 'AutomaticTests (AutomaticTests)';
 
 test.describe('Model tree move to dialog (real backend)', () => {
   test.describe.configure({ mode: 'default', timeout: 45_000 });
@@ -46,49 +47,160 @@ test.describe('Model tree move to dialog (real backend)', () => {
     await activatePackage(request, PACKAGE);
   });
 
-  test('Move to moves a constant into a group of another package', async ({ page }) => {
+  test('Move to moves a constant into a group of another package and keeps its package', async ({
+    page,
+  }) => {
     await openConstants(page);
     await openMoveToDialog(page, 'UngroupedConstant');
 
-    await selectOption(page, 'move-to-package', 'Root');
     await selectOption(page, 'move-to-target', FOREIGN_GROUP);
     await expectMoveSucceeds(page, () => page.getByTestId('move-to-button-move').click());
 
     await expect(page.getByTestId('move-to-dialog')).toHaveCount(0);
     await expectTreeSettled(page, 'UngroupedConstant');
 
-    await expectModelFile('Root/DataConstant/Attachments/UngroupedConstant.origam', true);
+    await expectModelFile(`${CONSTANTS_DIR}/Attachments/UngroupedConstant.origam`, true);
+    await expectModelFile('Root/DataConstant/Attachments/UngroupedConstant.origam', false);
     await expectModelFile(`${CONSTANTS_DIR}/UngroupedConstant.origam`, false);
   });
 
-  test('Move to copies a constant into a group of another package', async ({ page }) => {
+  test('Move to gives a constant to another package and takes it back', async ({ page }) => {
     await openConstants(page);
     await openMoveToDialog(page, 'UngroupedConstant');
 
-    await selectOption(page, 'move-to-package', 'Root');
-    await selectOption(page, 'move-to-target', FOREIGN_GROUP);
-    await expectMoveSucceeds(page, () => page.getByTestId('move-to-button-copy').click());
+    await awaitMoveTargets(page, () => selectOption(page, 'move-to-package', 'Root'));
+    await selectOption(page, 'move-to-target', 'Attachments');
+    await expectMoveSucceeds(page, () => page.getByTestId('move-to-button-move').click());
+    await expectTreeSettled(page, 'UngroupedConstant');
+    await expectModelFile('Root/DataConstant/Attachments/UngroupedConstant.origam', true);
+    await expectModelFile(`${CONSTANTS_DIR}/UngroupedConstant.origam`, false);
 
-    await expectModelFile('Root/DataConstant/Attachments/Copy of UngroupedConstant.origam', true);
-    await expectModelFile(`${CONSTANTS_DIR}/UngroupedConstant.origam`, true);
+    const movedNode = page.getByTestId('tree-node-UngroupedConstant');
+    await expect(movedNode.locator('xpath=../..')).toHaveClass(/highlighted/);
+    await expectBoxSettled(movedNode);
+    await openMoveToDialog(page, 'UngroupedConstant');
+    await awaitMoveTargets(page, () => selectOption(page, 'move-to-package', PACKAGE));
+    await selectOption(page, 'move-to-target', 'AutomaticTests');
+    await expectMoveSucceeds(page, () => page.getByTestId('move-to-button-move').click());
+    await expectTreeSettled(page, 'UngroupedConstant');
+    await expectModelFile(`${CONSTANTS_DIR}/AutomaticTests/UngroupedConstant.origam`, true);
+    await expectModelFile('Root/DataConstant/Attachments/UngroupedConstant.origam', false);
   });
 
-  test('Move to is disabled for a group', async ({ page }) => {
+  test('Move to lists only the folders of another package', async ({ page }) => {
     await openConstants(page);
+    await openMoveToDialog(page, 'UngroupedConstant');
 
-    await openContextMenu(page, 'AutomaticTestsGroup');
-    await expect(menuItem(page, 'AutomaticTestsGroup', 'tree-menu-move-to')).toHaveAttribute(
-      'aria-disabled',
-      'true',
+    await awaitMoveTargets(page, () => selectOption(page, 'move-to-package', 'Root'));
+    const input = page.getByTestId('move-to-target').locator('input');
+    await input.click();
+    await input.fill('Constants');
+    await expect(
+      dropdownOptions(page).filter({ hasText: 'Compression Algorithm Constants' }),
+    ).toHaveCount(1);
+    await expect(dropdownOptions(page).filter({ hasText: /^\s*Constants\s*$/ })).toHaveCount(0);
+  });
+
+  test('An open editor shows the new package and file right after a move', async ({ page }) => {
+    await openConstants(page);
+    await page.getByTestId('tree-node-UngroupedConstant').dblclick();
+    const infoSection = page.getByRole('button', { name: 'Info', exact: true }).filter({
+      visible: true,
+    });
+    await infoSection.click();
+    await expect(infoSection).toHaveAttribute('aria-expanded', 'true');
+    await expect(visibleProperty(page, 'PackageName')).toHaveValue(PACKAGE);
+
+    await openMoveToDialog(page, 'UngroupedConstant');
+    await awaitMoveTargets(page, () => selectOption(page, 'move-to-package', 'Root'));
+    await selectOption(page, 'move-to-target', 'Attachments');
+    await expectMoveSucceeds(page, () => page.getByTestId('move-to-button-move').click());
+
+    await expect(visibleProperty(page, 'PackageName')).toHaveValue('Root');
+    await expect(visibleProperty(page, 'RelativeFilePath')).toHaveValue(
+      filePath('Root/DataConstant/Attachments/UngroupedConstant.origam'),
     );
   });
 
-  test('An item of another package can only be copied', async ({ page }) => {
+  test('Move to refuses a package that misses a dependency', async ({ page, request }) => {
+    await activatePackage(request, 'Widgets');
+    await page.goto('/');
+    await page.getByTestId('tree-toggle-Data').click();
+    await page.getByTestId('tree-toggle-Entities').click();
+    await page.getByTestId('tree-toggle-Widgets').click();
+    await openMoveToDialog(page, 'AllDataTypes');
+
+    await awaitMoveTargets(page, () => selectOption(page, 'move-to-package', 'Root'));
+    const refusal = page.getByTestId('move-to-package-refusal');
+    await expect(refusal).toContainText('"AllDataTypes" cannot be moved to package "Root"');
+    expect(await refusal.innerText()).toBe(
+      [
+        '"AllDataTypes" cannot be moved to package "Root" because it uses items of packages that "Root" does not reference (Attachments):',
+        'Virtual Entity "IOrigamAttachments" (Attachments)',
+      ].join('\n'),
+    );
+    await selectOption(page, 'move-to-target', 'Synchronization');
+    await expect(page.getByTestId('move-to-button-move')).toBeDisabled();
+  });
+
+  test('Move to copies a constant into a group of another package as an item of the active one', async ({
+    page,
+  }) => {
+    await openConstants(page);
+    await openMoveToDialog(page, 'UngroupedConstant');
+
+    await selectOption(page, 'move-to-target', FOREIGN_GROUP);
+    await expectMoveSucceeds(page, () => page.getByTestId('move-to-button-copy').click());
+
+    await expectModelFile(`${CONSTANTS_DIR}/Attachments/Copy of UngroupedConstant.origam`, true);
+    await expectModelFile('Root/DataConstant/Attachments/Copy of UngroupedConstant.origam', false);
+    await expectModelFile(`${CONSTANTS_DIR}/UngroupedConstant.origam`, true);
+  });
+
+  test('Move to moves a folder with its items into a folder of another package', async ({
+    page,
+  }) => {
+    await openConstants(page);
+    await openMoveToDialog(page, 'AutomaticTestsGroup');
+
+    await awaitMoveTargets(page, () => selectOption(page, 'move-to-package', 'Root'));
+    await selectOption(page, 'move-to-target', 'Attachments');
+    await expect(page.getByTestId('move-to-button-copy')).toBeDisabled();
+    await expectMoveSucceeds(page, () => page.getByTestId('move-to-button-move').click());
+
+    await expect(page.getByTestId('move-to-dialog')).toHaveCount(0);
+    await expectTreeSettled(page, 'AutomaticTestsGroup');
+    await expectModelFile('Root/DataConstant/Attachments/AutomaticTestsGroup/.origamGroup', true);
+    await expectModelFile(
+      'Root/DataConstant/Attachments/AutomaticTestsGroup/TargetConstant.origam',
+      true,
+    );
+    await expectModelFile(`${CONSTANTS_DIR}/AutomaticTestsGroup/TargetConstant.origam`, false);
+  });
+
+  test('Move to moves an item of another package into a folder of its package', async ({
+    page,
+  }) => {
+    await openConstants(page);
+    await openMoveToDialog(page, 'InitialUserCreated');
+
+    await expect(page.getByTestId('move-to-button-move')).toBeDisabled();
+    await selectOption(page, 'move-to-target', 'Attachments');
+    await expectMoveSucceeds(page, () => page.getByTestId('move-to-button-move').click());
+
+    await expect(page.getByTestId('move-to-dialog')).toHaveCount(0);
+    await expectTreeSettled(page, 'InitialUserCreated');
+    await expectModelFile('Root/DataConstant/Attachments/InitialUserCreated.origam', true);
+    await expectModelFile('Root/DataConstant/InitialUserCreated.origam', false);
+  });
+
+  test('An item of another package can only be copied into a folder outside its package', async ({
+    page,
+  }) => {
     await openConstants(page);
     await openMoveToDialog(page, 'InitialUserCreated');
 
     await selectOption(page, 'move-to-target', CONSTANT_GROUP);
-    await expect(page.getByTestId('move-to-copy-only')).toBeVisible();
     await expect(page.getByTestId('move-to-button-move')).toBeDisabled();
     await expect(page.getByTestId('move-to-button-copy')).toBeEnabled();
   });
@@ -96,11 +208,10 @@ test.describe('Model tree move to dialog (real backend)', () => {
   test('The target list is filtered while typing', async ({ page }) => {
     await openConstants(page);
     await openMoveToDialog(page, 'UngroupedConstant');
-    await selectOption(page, 'move-to-package', 'Root');
 
     const input = page.getByTestId('move-to-target').locator('input');
     await input.click();
-    await input.fill(FOREIGN_GROUP);
+    await input.fill('AutomaticTestsGroup');
     await expect(dropdownOptions(page)).toHaveCount(1);
 
     await input.fill('nothing matches this');
@@ -152,9 +263,19 @@ async function selectOption(page: Page, testId: string, optionText: string): Pro
   await input.click();
   await input.fill(optionText);
   // Nested options are indented.
-  await dropdownOptions(page)
-    .filter({ hasText: new RegExp(`^\\s*${optionText}\\s*$`) })
-    .first()
-    .click();
-  await expect(input).toHaveValue(new RegExp(`^\\s*${optionText}\\s*$`));
+  const exactText = new RegExp(`^\\s*${escapeRegExp(optionText)}\\s*$`);
+  await dropdownOptions(page).filter({ hasText: exactText }).first().click();
+  await expect(input).toHaveValue(exactText);
+}
+
+function visibleProperty(page: Page, propertyName: string) {
+  return page.getByTestId(`property-input-${propertyName}`).filter({ visible: true });
+}
+
+function filePath(relativePath: string): RegExp {
+  return new RegExp(`^${escapeRegExp(relativePath).split('/').join('[\\\\/]')}$`);
+}
+
+function escapeRegExp(text: string): string {
+  return text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }

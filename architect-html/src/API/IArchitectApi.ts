@@ -41,12 +41,13 @@ export interface IArchitectApi {
     targets: INodeLoadData[];
   }): Promise<IMoveVerdict[]>;
 
-  getMoveTargets(args: { source: INodeLoadData }): Promise<IMoveTargetsResult>;
+  getMoveTargets(args: { source: INodeLoadData; packageId?: string }): Promise<IMoveTargetsResult>;
 
   moveNode(args: {
     source: INodeLoadData;
     target: INodeLoadData;
     isCopy: boolean;
+    packageId?: string;
   }): Promise<IMoveNodeResult>;
 
   searchSchemaByAllFields(query: string): Promise<ISearchResult[]>;
@@ -646,10 +647,18 @@ export interface IMoveTarget {
   canCopy: boolean;
 }
 
+export interface IMovePackage {
+  id: string;
+  name: string;
+  isActive: boolean;
+}
+
 export interface IMoveTargetsResult {
   targets: IMoveTarget[];
+  packages: IMovePackage[];
+  packageId: string | null;
+  packageRefusal: string | null;
   isSourceInActivePackage: boolean;
-  isTruncated: boolean;
 }
 
 export interface IPackagesInfo {

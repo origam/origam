@@ -32,6 +32,11 @@
     <Compile Update="Search\SearchRequest.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Strings.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Strings.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Update="Strings.cs-CZ.resx">

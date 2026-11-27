@@ -37,8 +37,7 @@ public static class ArchitectPromptBuilder
         ModelIndexContent modelIndex,
         ItemTypePromptSections itemTypeSections,
         AgentRunSettings settings,
-        AliasMappingService aliasMappingService,
-        string customInstructions
+        AliasMappingService aliasMappingService
     )
     {
         var messages = new List<ChatMessage>();
@@ -85,10 +84,10 @@ public static class ArchitectPromptBuilder
             messages.AddSystemMessage(prompts.SessionSummaryHeader + "\n\n" + settings.Summary);
         }
 
-        if (!string.IsNullOrWhiteSpace(customInstructions))
+        if (!string.IsNullOrWhiteSpace(settings.CustomInstructions))
         {
             messages.AddSystemMessage(
-                prompts.CustomInstructionsHeader + "\n\n" + customInstructions
+                prompts.CustomInstructionsHeader + "\n\n" + settings.CustomInstructions
             );
         }
 

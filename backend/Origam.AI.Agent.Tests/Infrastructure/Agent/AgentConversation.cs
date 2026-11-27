@@ -27,12 +27,47 @@ public sealed class AgentConversation
 
     public List<AgentMessage> Messages { get; } = [];
 
-    public void Append(string prompt, string reply)
+    public void Append(string prompt, string reply, IReadOnlyList<ToolCallRecord> toolCalls)
     {
         Messages.Add(new AgentMessage(Guid.NewGuid().ToString(), Role: "user", prompt));
-        if (reply.Trim().Length > 0)
+        var answeredCalls = toolCalls
+            .Where(toolCall => toolCall.Result is not null && toolCall.Name.Length > 0)
+            .ToList();
+        if (reply.Trim().Length == 0 && answeredCalls.Count == 0)
         {
-            Messages.Add(new AgentMessage(Guid.NewGuid().ToString(), Role: "assistant", reply));
+            return;
+        }
+
+        var assistantMessageId = Guid.NewGuid().ToString();
+        Messages.Add(
+            new AgentMessage(
+                assistantMessageId,
+                Role: "assistant",
+                reply,
+                answeredCalls.Count == 0
+                    ? null
+                    : answeredCalls
+                        .Select(toolCall => new AgentToolCall(
+                            toolCall.Id,
+                            Type: "function",
+                            new AgentToolFunction(
+                                toolCall.Name,
+                                toolCall.Arguments.Length == 0 ? "{}" : toolCall.Arguments
+                            )
+                        ))
+                        .ToList()
+            )
+        );
+        foreach (var toolCall in answeredCalls)
+        {
+            Messages.Add(
+                new AgentMessage(
+                    $"{assistantMessageId}-{toolCall.Id}",
+                    Role: "tool",
+                    toolCall.Result!,
+                    ToolCallId: toolCall.Id
+                )
+            );
         }
     }
 }

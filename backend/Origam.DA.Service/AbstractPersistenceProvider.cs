@@ -90,8 +90,14 @@ public abstract class AbstractPersistenceProvider : IPersistenceProvider
             return ReferenceIndexManager
                 .GetReferences(id)
                 .Select(refInfo =>
-                    (T)RetrieveInstance(refInfo.Type, new ModelElementKey(refInfo.Id))
+                    (T)RetrieveInstance(
+                        type: refInfo.Type,
+                        primaryKey: new ModelElementKey(refInfo.Id),
+                        useCache: true,
+                        throwNotFoundException: false
+                    )
                 )
+                .Where(reference => reference != null)
                 .ToList();
         }
         finally

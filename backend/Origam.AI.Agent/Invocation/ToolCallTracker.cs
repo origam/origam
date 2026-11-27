@@ -97,12 +97,15 @@ public class ToolCallTracker(int maxIterations) : IToolInvocationFilter
                 var origamId = nodeElement.GetStringOrNull(propertyName: "origamId");
                 if (IsGuid(origamId))
                 {
-                    AddNode(
-                        origamId!,
-                        nodeElement.GetStringOrNull(propertyName: "nodeText"),
-                        nodeElement.GetStringOrNull(propertyName: "itemTypeName"),
-                        action: "created"
-                    );
+                    if (nodeElement.GetBooleanOrNull(propertyName: "isFolder") != true)
+                    {
+                        AddNode(
+                            origamId!,
+                            nodeElement.GetStringOrNull(propertyName: "nodeText"),
+                            nodeElement.GetStringOrNull(propertyName: "itemTypeName"),
+                            action: "created"
+                        );
+                    }
                     extractedFromResult = true;
                     ModelChanged = true;
                 }

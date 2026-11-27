@@ -28,7 +28,8 @@ namespace Origam.AI.Agent.Chat;
 public record AgentRunSettings(
     IReadOnlyList<string> EnabledSections,
     string? Summary,
-    ChatFocus? Focus
+    ChatFocus? Focus,
+    string? CustomInstructions
 )
 {
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
@@ -40,7 +41,12 @@ public record AgentRunSettings(
     {
         if (input is null)
         {
-            return new AgentRunSettings(defaultSections, Summary: null, Focus: null);
+            return new AgentRunSettings(
+                defaultSections,
+                Summary: null,
+                Focus: null,
+                CustomInstructions: null
+            );
         }
 
         var forwardedProperties = Deserialize<ForwardedProperties>(input.ForwardedProperties);
@@ -48,7 +54,12 @@ public record AgentRunSettings(
 
         var enabledSections = forwardedProperties?.EnabledSections ?? defaultSections;
 
-        return new AgentRunSettings(enabledSections, forwardedProperties?.Summary, state?.Focus);
+        return new AgentRunSettings(
+            enabledSections,
+            forwardedProperties?.Summary,
+            state?.Focus,
+            forwardedProperties?.CustomInstructions
+        );
     }
 
     private static TPayload? Deserialize<TPayload>(JsonElement? element)
@@ -69,7 +80,11 @@ public record AgentRunSettings(
         }
     }
 
-    private record ForwardedProperties(IReadOnlyList<string>? EnabledSections, string? Summary);
+    private record ForwardedProperties(
+        IReadOnlyList<string>? EnabledSections,
+        string? Summary,
+        string? CustomInstructions
+    );
 
     private record AgentState(ChatFocus? Focus);
 }
