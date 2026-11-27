@@ -136,14 +136,18 @@
     <value>Copy of {0}</value>
   </data>
   <data name="ErrorDependenciesInPackagesNotReferencedByTargetPackage" xml:space="preserve">
-    <value>Cannot move the item to "{0}" because it has dependencies in packages not referenced by the target package:
-			{1}</value>
+    <value>"{0}" cannot be moved to package "{1}" because it uses items of packages that "{1}" does not reference ({2}):</value>
   </data>
   <data name="ErrorReferenceIndexNotReady" xml:space="preserve">
     <value>The index of references is still being built. Try it again in a moment.</value>
   </data>
   <data name="ErrorUsagesInPackagesWhichDontDependOnTargetPackage" xml:space="preserve">
-    <value>Cannot move the item to "{0}" because items that depend on it would not be able to reach it:
-			{1}</value>
+    <value>"{0}" cannot be moved to package "{1}" because it is used by items of packages that do not reference "{1}" ({2}):</value>
+  </data>
+  <data name="ItemInPackage" xml:space="preserve">
+    <value>{0} "{1}" ({2})</value>
+  </data>
+  <data name="MoreItems" xml:space="preserve">
+    <value>and {0} more</value>
   </data>
 </root>

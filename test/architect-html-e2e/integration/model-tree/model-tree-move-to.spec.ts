@@ -131,8 +131,13 @@ test.describe('Model tree move to dialog (real backend)', () => {
     await openMoveToDialog(page, 'AllDataTypes');
 
     await awaitMoveTargets(page, () => selectOption(page, 'move-to-package', 'Root'));
-    await expect(page.getByTestId('move-to-package-refusal')).toContainText(
-      'Cannot move the item to "Root" because it has dependencies',
+    const refusal = page.getByTestId('move-to-package-refusal');
+    await expect(refusal).toContainText('"AllDataTypes" cannot be moved to package "Root"');
+    expect(await refusal.innerText()).toBe(
+      [
+        '"AllDataTypes" cannot be moved to package "Root" because it uses items of packages that "Root" does not reference (Attachments):',
+        'Virtual Entity "IOrigamAttachments" (Attachments)',
+      ].join('\n'),
     );
     await selectOption(page, 'move-to-target', 'Synchronization');
     await expect(page.getByTestId('move-to-button-move')).toBeDisabled();

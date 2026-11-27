@@ -70,8 +70,7 @@ namespace Origam.OrigamEngine {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Cannot move the item to &quot;{0}&quot; because it has dependencies in packages not referenced by the target package:
-        ///			{1}.
+        ///   Looks up a localized string similar to &quot;{0}&quot; cannot be moved to package &quot;{1}&quot; because it uses items of packages that &quot;{1}&quot; does not reference ({2}):.
         /// </summary>
         internal static string ErrorDependenciesInPackagesNotReferencedByTargetPackage {
             get {
@@ -116,12 +115,29 @@ namespace Origam.OrigamEngine {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Cannot move the item to &quot;{0}&quot; because items that depend on it would not be able to reach it:
-        ///			{1}.
+        ///   Looks up a localized string similar to &quot;{0}&quot; cannot be moved to package &quot;{1}&quot; because it is used by items of packages that do not reference &quot;{1}&quot; ({2}):.
         /// </summary>
         internal static string ErrorUsagesInPackagesWhichDontDependOnTargetPackage {
             get {
                 return ResourceManager.GetString("ErrorUsagesInPackagesWhichDontDependOnTargetPackage", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to {0} &quot;{1}&quot; ({2}).
+        /// </summary>
+        internal static string ItemInPackage {
+            get {
+                return ResourceManager.GetString("ItemInPackage", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to and {0} more.
+        /// </summary>
+        internal static string MoreItems {
+            get {
+                return ResourceManager.GetString("MoreItems", resourceCulture);
             }
         }
 

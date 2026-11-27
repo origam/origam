@@ -57,8 +57,16 @@ const SECTIONS_PROVIDER = 'Origam.Schema.GuiModel.PanelSchemaItemProvider';
 const FIELD = ref('f5997d8d-384f-4a20-9dc3-490bdc05f791', 'Boolean1');
 const FIELD_ENTITY = ref('7a2338f2-7290-4cec-b0ad-2c0ee6386885', 'AllDataTypes');
 const FOREIGN_ENTITY = ref('fe4b0866-624b-43b4-8975-5dcbd769e0d1', 'OrigamSyncSystem');
+const WIDELY_USED_ENTITY = ref('457a4391-e94f-424c-89d0-dc3804121ce6', 'BusinessPartner');
 const ROOT_PACKAGE = 'Root';
-const MISSING_DEPENDENCY = 'Cannot move the item to "Root" because it has dependencies';
+const ROOT_ENTITY_GROUP = ref('016bee9c-18e5-47bd-97cb-76eebabeb911', 'Dimensions');
+const FIELD_ENTITY_GROUP = ref('4d3cf570-0e2a-42a2-8cf7-a8b17318be3d', 'Widgets');
+const CHAT_ENTITY = ref('478da4a8-dc69-42bb-b10a-7fab3eaa8d6d', 'OrigamChatMessage');
+const LOOKUP = ref('4b72f11a-4513-4e19-a8f5-addf40a277b1', 'AllDataTypes');
+const LOOKUP_FILE = 'Widgets/DataLookup/Widgets/AllDataTypes.origam';
+const LOOKUP_GROUP = ref('d685fdb1-6fc7-45ed-b5f8-aedee76ad905', 'Widgets');
+const ROOT_LOOKUP_GROUP = ref('4a317fd6-56da-4d3d-8f2f-6022d4ce83f5', 'Synchronization');
+const LISTED_ITEMS_LIMIT = 10;
 
 test.describe('Model tree move rules (real backend)', () => {
   test.describe.configure({ mode: 'default', timeout: 45_000 });
@@ -327,34 +335,104 @@ test.describe('Model tree move rules (real backend)', () => {
     const ownId = await findPackageId(request, PACKAGE);
     const { targets, packageRefusal } = await getMoveTargets(request, FOREIGN_ENTITY, ownId);
 
-    expect(packageRefusal).toContain('Cannot move the item to "AutomaticTests"');
+    expect(packageRefusal).toBe(
+      [
+        '"OrigamSyncSystem" cannot be moved to package "AutomaticTests" because it is used by items of packages that do not reference "AutomaticTests" (Root):',
+        'Entity "LookupOrigamSyncSystem/OrigamSyncSystem" (Root)',
+        'Database Field "OrigamSyncConnection/refOrigamSyncSystemId" (Root)',
+        'Database Field "OrigamSyncProvider/refOrigamSyncSystemId" (Root)',
+      ].join('\n'),
+    );
     expect(targets.size).toBeGreaterThan(0);
     for (const target of targets.values()) {
       expect(target.canMove).toBe(false);
     }
   });
 
-  test('A package change is refused when the new package misses a dependency', async ({
+  test('A refusal lists the first items and counts the rest', async ({ request }) => {
+    const ownId = await findPackageId(request, PACKAGE);
+    const { packageRefusal } = await getMoveTargets(request, WIDELY_USED_ENTITY, ownId);
+
+    const [reason, ...items] = (packageRefusal ?? '').split('\n');
+    expect(reason).toMatch(
+      /^"BusinessPartner" cannot be moved to package "AutomaticTests" because it is used by items of packages that do not reference "AutomaticTests" \(.*Root.*\):$/,
+    );
+    expect(items).toHaveLength(LISTED_ITEMS_LIMIT + 1);
+    for (const item of items.slice(0, LISTED_ITEMS_LIMIT)) {
+      expect(item).toMatch(/^[A-Za-z ]+ ".+" \(.+\)$/);
+    }
+    expect(items[LISTED_ITEMS_LIMIT]).toMatch(/^and \d+ more$/);
+    expect(packageRefusal).not.toMatch(/[0-9a-f]{8}-[0-9a-f]{4}-/);
+  });
+
+  test('A package change is refused when the item uses a package the new one does not reference', async ({
     request,
   }) => {
     await activatePackage(request, FIELD_PACKAGE);
     const rootId = await findPackageId(request, ROOT_PACKAGE);
-    const { targets, packageRefusal } = await getMoveTargets(request, FIELD_ENTITY, rootId);
-    expect(packageRefusal).toContain(MISSING_DEPENDENCY);
-    const [rootFolder] = targets.values();
+    const { targets, packageRefusal } = await getMoveTargets(request, LOOKUP, rootId);
+
+    expect(packageRefusal).toBe(
+      [
+        '"AllDataTypes" cannot be moved to package "Root" because it uses items of packages that "Root" does not reference (Widgets):',
+        'Data Structure "LookupAllDataTypes" (Widgets)',
+        'Filter Set "LookupAllDataTypes/GetId" (Widgets)',
+      ].join('\n'),
+    );
+    expect(targets.get(key(ROOT_LOOKUP_GROUP))).toMatchObject({ canMove: false });
+
     const response = await request.post('/Model/MoveNode', {
-      data: {
-        source: FIELD_ENTITY,
-        target: ref(rootFolder.id, rootFolder.nodeText),
-        isCopy: false,
-        packageId: rootId,
-      },
+      data: { source: LOOKUP, target: ROOT_LOOKUP_GROUP, isCopy: false, packageId: rootId },
     });
 
     expect(response.ok()).toBeFalsy();
-    expect(await errorMessage(response)).toContain(MISSING_DEPENDENCY);
-    await expectModelFile(FIELD_ENTITY_FILE, true);
-    await expectModelFile(`Root/DataEntity/${rootFolder.nodeText}/AllDataTypes.origam`, false);
+    expect(await errorMessage(response)).toBe(packageRefusal);
+    await expectModelFile(LOOKUP_FILE, true);
+    await expectModelFile('Root/DataLookup/Synchronization/AllDataTypes.origam', false);
+  });
+
+  test('A refused folder names the item that cannot change its package', async ({ request }) => {
+    await activatePackage(request, FIELD_PACKAGE);
+    const rootId = await findPackageId(request, ROOT_PACKAGE);
+    const { packageRefusal } = await getMoveTargets(request, LOOKUP_GROUP, rootId);
+
+    expect(packageRefusal).toMatch(
+      /^"[^"]+" cannot be moved to package "Root" because it uses items of packages that "Root" does not reference \(Widgets\):\n/,
+    );
+
+    const response = await request.post('/Model/MoveNode', {
+      data: { source: LOOKUP_GROUP, target: ROOT_LOOKUP_GROUP, isCopy: false, packageId: rootId },
+    });
+
+    expect(response.ok()).toBeFalsy();
+    expect(await errorMessage(response)).toBe(packageRefusal);
+    await expectModelFile(LOOKUP_FILE, true);
+    await expectModelFile('Widgets/DataLookup/Widgets/.origamGroup', true);
+  });
+
+  test('An entity is given to a package that does not reference what its fields use', async ({
+    request,
+  }) => {
+    await activatePackage(request, FIELD_PACKAGE);
+    const rootId = await findPackageId(request, ROOT_PACKAGE);
+    const copyResponse = await request.post('/Model/MoveNode', {
+      data: { source: CHAT_ENTITY, target: FIELD_ENTITY_GROUP, isCopy: true },
+    });
+    expect(copyResponse.ok(), await copyResponse.text()).toBeTruthy();
+    const { node } = (await copyResponse.json()) as {
+      node: { origamId: string; nodeText: string };
+    };
+    const copy = ref(node.origamId, node.nodeText);
+
+    const { targets, packageRefusal } = await getMoveTargets(request, copy, rootId);
+    expect(packageRefusal).toBeNull();
+    expect(targets.get(key(ROOT_ENTITY_GROUP))).toMatchObject({ canMove: true });
+
+    await moveNode(request, copy, ROOT_ENTITY_GROUP, rootId);
+    const movedFile = 'Root/DataEntity/Dimensions/Copy of OrigamChatMessage.origam';
+    await expectModelFile(movedFile, true);
+    await expectModelFile('Widgets/DataEntity/Widgets/Copy of OrigamChatMessage.origam', false);
+    expect(readModelFile(movedFile)).toContain('Chat/DataEntity/Chat/OrigamChatRoom.origam');
   });
 
   test('A folder moves with its items into a folder of another package', async ({ request }) => {

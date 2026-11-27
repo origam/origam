@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Origam.DA.Service;
 using Origam.Schema;
@@ -32,6 +33,8 @@ namespace Origam.OrigamEngine.ModelTransfer;
 
 public class MoveToPackage(SchemaService schema, IPersistenceService persistenceService)
 {
+    private const int MaxListedItems = 10;
+
     public List<Package> GetPackages()
     {
         return schema
@@ -65,47 +68,61 @@ public class MoveToPackage(SchemaService schema, IPersistenceService persistence
 
     public string GetRefusal(IBrowserNode2 activeNode, Package targetPackage)
     {
-        if (IsItemOfPackage(activeNode, targetPackage))
+        List<ISchemaItem> topLevelItems = GetTopLevelItems(activeNode);
+        List<ISchemaItem> itemsChangingPackage = topLevelItems
+            .Where(item => !IsItemOfPackage(item, targetPackage))
+            .ToList();
+        if (itemsChangingPackage.Count == 0)
         {
             return null;
         }
-        List<ISchemaItem> movingItems = GetMovingItems(activeNode);
-        HashSet<Guid> movingIds = movingItems.Select(item => item.Id).ToHashSet();
-        List<ISchemaItem> dependenciesInPackagesNotReferencedByTargetPackage = movingItems
-            .SelectMany(item => item.GetDependencies(ignoreErrors: true))
-            .Where(item =>
-                item != null
-                && !movingIds.Contains(item.Id)
-                && !IsPackageIncluded(targetPackage, item.SchemaExtensionId)
-            )
-            .DistinctBy(item => item.Id)
-            .ToList();
-        if (dependenciesInPackagesNotReferencedByTargetPackage.Count != 0)
+        HashSet<Guid> movingIds = topLevelItems
+            .SelectMany(GetItemAndDescendants)
+            .Select(item => item.Id)
+            .ToHashSet();
+        foreach (ISchemaItem item in itemsChangingPackage)
         {
-            return string.Format(
-                Strings.ErrorDependenciesInPackagesNotReferencedByTargetPackage,
-                targetPackage.Name,
-                FormatToIdList(dependenciesInPackagesNotReferencedByTargetPackage)
-            );
+            List<ISchemaItem> dependenciesInPackagesNotReferencedByTargetPackage =
+                item.GetDependencies(ignoreErrors: true)
+                    .Where(dependency =>
+                        dependency != null
+                        && !movingIds.Contains(dependency.Id)
+                        && !IsPackageIncluded(targetPackage, dependency.SchemaExtensionId)
+                    )
+                    .DistinctBy(dependency => dependency.Id)
+                    .ToList();
+            if (dependenciesInPackagesNotReferencedByTargetPackage.Count != 0)
+            {
+                return FormatRefusal(
+                    Strings.ErrorDependenciesInPackagesNotReferencedByTargetPackage,
+                    item,
+                    targetPackage,
+                    dependenciesInPackagesNotReferencedByTargetPackage
+                );
+            }
         }
         if (!ReferenceIndexManager.Initialized)
         {
             return Strings.ErrorReferenceIndexNotReady;
         }
-        List<ISchemaItem> usagesInPackagesWhichDontDependOnTargetPackage = movingItems
-            .SelectMany(item => item.GetUsage())
-            .Where(item =>
-                !movingIds.Contains(item.Id) && !IsPackageIncluded(item.Package, targetPackage.Id)
-            )
-            .DistinctBy(item => item.Id)
-            .ToList();
-        if (usagesInPackagesWhichDontDependOnTargetPackage.Count != 0)
+        foreach (ISchemaItem item in itemsChangingPackage)
         {
-            return string.Format(
-                Strings.ErrorUsagesInPackagesWhichDontDependOnTargetPackage,
-                targetPackage.Name,
-                FormatToIdList(usagesInPackagesWhichDontDependOnTargetPackage)
-            );
+            List<ISchemaItem> usagesInPackagesWhichDontDependOnTargetPackage = item.GetUsage()
+                .Where(usage =>
+                    !movingIds.Contains(usage.Id)
+                    && !IsPackageIncluded(usage.Package, targetPackage.Id)
+                )
+                .DistinctBy(usage => usage.Id)
+                .ToList();
+            if (usagesInPackagesWhichDontDependOnTargetPackage.Count != 0)
+            {
+                return FormatRefusal(
+                    Strings.ErrorUsagesInPackagesWhichDontDependOnTargetPackage,
+                    item,
+                    targetPackage,
+                    usagesInPackagesWhichDontDependOnTargetPackage
+                );
+            }
         }
         return null;
     }
@@ -209,34 +226,27 @@ public class MoveToPackage(SchemaService schema, IPersistenceService persistence
         group.Persist();
     }
 
-    private static List<ISchemaItem> GetMovingItems(IBrowserNode2 activeNode)
+    private static List<ISchemaItem> GetTopLevelItems(IBrowserNode2 activeNode)
     {
-        var items = new List<ISchemaItem>();
-        if (activeNode is SchemaItemGroup activeGroup)
+        return activeNode switch
         {
-            foreach (SchemaItemGroup group in activeGroup.ChildGroupsRecursive.Prepend(activeGroup))
-            {
-                foreach (ISchemaItem child in group.ChildItems)
-                {
-                    AddItemAndDescendants(child, items);
-                }
-            }
-        }
-        else if (activeNode is ISchemaItem activeItem)
-        {
-            AddItemAndDescendants(activeItem, items);
-        }
-        return items;
+            SchemaItemGroup activeGroup => activeGroup
+                .ChildGroupsRecursive.Prepend(activeGroup)
+                .SelectMany(group => group.ChildItems)
+                .ToList(),
+            ISchemaItem activeItem => [activeItem],
+            _ => [],
+        };
     }
 
-    private static void AddItemAndDescendants(ISchemaItem item, List<ISchemaItem> items)
+    private static IEnumerable<ISchemaItem> GetItemAndDescendants(ISchemaItem item)
     {
-        items.Add(item);
-        items.AddRange(item.ChildItemsRecursive.Where(child => child.DerivedFrom == null));
-        if (item is PanelControlSet { PanelControl: { } panelControl })
-        {
-            items.Add(panelControl);
-        }
+        IEnumerable<ISchemaItem> itemAndDescendants = item
+            .ChildItemsRecursive.Where(child => child.DerivedFrom == null)
+            .Prepend(item);
+        return item is PanelControlSet { PanelControl: { } panelControl }
+            ? itemAndDescendants.Append(panelControl)
+            : itemAndDescendants;
     }
 
     private static bool IsPackageIncluded(Package package, Guid packageId)
@@ -257,8 +267,50 @@ public class MoveToPackage(SchemaService schema, IPersistenceService persistence
         return false;
     }
 
-    private static string FormatToIdList(List<ISchemaItem> schemaItems)
+    private static string FormatRefusal(
+        string template,
+        ISchemaItem item,
+        Package targetPackage,
+        List<ISchemaItem> blockingItems
+    )
     {
-        return "[" + string.Join("\n", schemaItems.Select(schemaItem => schemaItem.Id)) + "]";
+        List<ISchemaItem> sortedItems = blockingItems
+            .OrderBy(blockingItem => blockingItem.Package.Name, StringComparer.Ordinal)
+            .ThenBy(GetPath, StringComparer.Ordinal)
+            .ToList();
+        List<string> lines = sortedItems
+            .Take(MaxListedItems)
+            .Select(blockingItem =>
+                string.Format(
+                    Strings.ItemInPackage,
+                    blockingItem.ModelDescription() ?? blockingItem.ItemType,
+                    GetPath(blockingItem),
+                    blockingItem.Package.Name
+                )
+            )
+            .ToList();
+        if (sortedItems.Count > MaxListedItems)
+        {
+            lines.Add(string.Format(Strings.MoreItems, sortedItems.Count - MaxListedItems));
+        }
+        string packageNames = string.Join(
+            ", ",
+            sortedItems.Select(blockingItem => blockingItem.Package.Name).Distinct()
+        );
+        return string.Format(template, item.Name, targetPackage.Name, packageNames)
+            + "\n"
+            + string.Join("\n", lines);
+    }
+
+    private static string GetPath(ISchemaItem item)
+    {
+        try
+        {
+            return item.Path.Replace(Path.DirectorySeparatorChar, '/');
+        }
+        catch (Exception)
+        {
+            return item.Name;
+        }
     }
 }
