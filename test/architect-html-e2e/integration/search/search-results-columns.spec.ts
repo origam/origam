@@ -24,6 +24,11 @@ import { resetBackend } from '@support/resetBackend';
 const QUERY = 'IActive';
 const MIN_COLUMN_WIDTH = 48;
 
+type BodyStyle = { cursor: string; userSelect: string };
+
+const BODY_STYLE_BEFORE_RESIZE: BodyStyle = { cursor: 'progress', userSelect: 'text' };
+const BODY_STYLE_WHILE_RESIZING: BodyStyle = { cursor: 'col-resize', userSelect: 'none' };
+
 async function searchResults(page: Page): Promise<Locator> {
   await page.goto('/');
   await closeAiPanel(page);
@@ -67,14 +72,36 @@ async function widthOf(locator: Locator): Promise<number> {
   return locator.evaluate(element => element.getBoundingClientRect().width);
 }
 
-async function dragBorder(page: Page, headerCell: Locator, targetX: (startX: number) => number) {
+async function borderCenter(headerCell: Locator): Promise<{ x: number; y: number }> {
   const border = (await headerCell.getByRole('separator').boundingBox())!;
-  const startX = border.x + border.width / 2;
-  const middleY = border.y + border.height / 2;
-  await page.mouse.move(startX, middleY);
+  return { x: border.x + border.width / 2, y: border.y + border.height / 2 };
+}
+
+async function pressBorder(page: Page, headerCell: Locator): Promise<{ x: number; y: number }> {
+  const center = await borderCenter(headerCell);
+  await page.mouse.move(center.x, center.y);
   await page.mouse.down();
-  await page.mouse.move(targetX(startX), middleY, { steps: 5 });
+  return center;
+}
+
+async function dragBorder(page: Page, headerCell: Locator, targetX: (startX: number) => number) {
+  const start = await pressBorder(page, headerCell);
+  await page.mouse.move(targetX(start.x), start.y, { steps: 5 });
   await page.mouse.up();
+}
+
+async function setBodyStyle(page: Page, style: BodyStyle) {
+  await page.evaluate(({ cursor, userSelect }) => {
+    document.body.style.cursor = cursor;
+    document.body.style.userSelect = userSelect;
+  }, style);
+}
+
+async function bodyStyle(page: Page): Promise<BodyStyle> {
+  return page.evaluate(() => ({
+    cursor: document.body.style.cursor,
+    userSelect: document.body.style.userSelect,
+  }));
 }
 
 async function horizontalOverflowAround(element: Locator): Promise<number> {
@@ -176,5 +203,45 @@ test.describe('Search result columns (real backend)', () => {
     ).toBeGreaterThan(0);
     expect(await horizontalOverflowAround(wrapper)).toBe(0);
     await expect(header(table, 'Found in')).toBeVisible();
+  });
+
+  test('releasing the mouse restores the cursor and text selection', async ({ page }) => {
+    const table = await searchResults(page);
+    await setBodyStyle(page, BODY_STYLE_BEFORE_RESIZE);
+
+    const start = await pressBorder(page, header(table, 'Found in'));
+    await page.mouse.move(start.x + 50, start.y, { steps: 5 });
+    await expect.poll(() => bodyStyle(page)).toEqual(BODY_STYLE_WHILE_RESIZING);
+
+    await page.mouse.up();
+    await expect.poll(() => bodyStyle(page)).toEqual(BODY_STYLE_BEFORE_RESIZE);
+  });
+
+  test('a cancelled resize restores the cursor and text selection', async ({ page }) => {
+    const table = await searchResults(page);
+    await setBodyStyle(page, BODY_STYLE_BEFORE_RESIZE);
+    const touchPoint = await borderCenter(header(table, 'Found in'));
+    const devTools = await page.context().newCDPSession(page);
+
+    await devTools.send('Input.dispatchTouchEvent', {
+      type: 'touchStart',
+      touchPoints: [touchPoint],
+    });
+    await expect.poll(() => bodyStyle(page)).toEqual(BODY_STYLE_WHILE_RESIZING);
+
+    await devTools.send('Input.dispatchTouchEvent', { type: 'touchCancel', touchPoints: [] });
+    await expect.poll(() => bodyStyle(page)).toEqual(BODY_STYLE_BEFORE_RESIZE);
+  });
+
+  test('closing the tab mid-resize restores the cursor and text selection', async ({ page }) => {
+    const table = await searchResults(page);
+    await setBodyStyle(page, BODY_STYLE_BEFORE_RESIZE);
+
+    await pressBorder(page, header(table, 'Found in'));
+    await expect.poll(() => bodyStyle(page)).toEqual(BODY_STYLE_WHILE_RESIZING);
+
+    await page.getByTestId(`tab-close-Search: ${QUERY}`).dispatchEvent('click');
+    await expect(page.getByTestId('schema-item-results-table')).toHaveCount(0);
+    await expect.poll(() => bodyStyle(page)).toEqual(BODY_STYLE_BEFORE_RESIZE);
   });
 });

@@ -23,7 +23,7 @@ import S from '@components/schemaItemResults/SchemaItemResultsTable.module.scss'
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
 import cn from 'classnames';
 import { observer } from 'mobx-react-lite';
-import { ReactNode, useContext, useRef, useState } from 'react';
+import { ReactNode, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { VscArrowSwap, VscTriangleDown, VscTriangleUp, VscWarning } from 'react-icons/vsc';
 
 export interface ISchemaItemResultRow {
@@ -64,6 +64,8 @@ const SchemaItemResultsTable = observer(
       columnIndex: number;
       pointerX: number;
       widths: number[];
+      bodyCursor: string;
+      bodyUserSelect: string;
     } | null>(null);
     const notApplicable = T('n/a', 'schema_item_results_not_applicable');
 
@@ -160,6 +162,8 @@ const SchemaItemResultsTable = observer(
         columnIndex: headerCell.cellIndex,
         pointerX: event.clientX,
         widths,
+        bodyCursor: resizeStartRef.current?.bodyCursor ?? document.body.style.cursor,
+        bodyUserSelect: resizeStartRef.current?.bodyUserSelect ?? document.body.style.userSelect,
       };
       setColumnWidths(widths);
       document.body.style.cursor = 'col-resize';
@@ -182,11 +186,17 @@ const SchemaItemResultsTable = observer(
       );
     }
 
-    function stopResizing() {
+    const stopResizing = useCallback(() => {
+      const resizeStart = resizeStartRef.current;
+      if (!resizeStart) {
+        return;
+      }
       resizeStartRef.current = null;
-      document.body.style.cursor = '';
-      document.body.style.userSelect = '';
-    }
+      document.body.style.cursor = resizeStart.bodyCursor;
+      document.body.style.userSelect = resizeStart.bodyUserSelect;
+    }, []);
+
+    useEffect(() => stopResizing, [stopResizing]);
 
     function highlightInModelTree(result: ISearchResult) {
       run({
