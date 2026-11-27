@@ -365,6 +365,24 @@ test.describe('Model tree move rules (real backend)', () => {
     expect(packageRefusal).not.toMatch(/[0-9a-f]{8}-[0-9a-f]{4}-/);
   });
 
+  test('A usage check skips an item that was deleted outside the server', async ({ request }) => {
+    await activatePackage(request, FIELD_PACKAGE);
+    const copyResponse = await request.post('/Model/MoveNode', {
+      data: { source: CHAT_ENTITY, target: FIELD_ENTITY_GROUP, isCopy: true },
+    });
+    expect(copyResponse.ok(), await copyResponse.text()).toBeTruthy();
+    await expectModelFile('Widgets/DataEntity/Widgets/Copy of OrigamChatMessage.origam', true);
+
+    await resetBackend(request);
+    await activatePackage(request, PACKAGE);
+    await expectModelFile('Widgets/DataEntity/Widgets/Copy of OrigamChatMessage.origam', false);
+
+    const ownId = await findPackageId(request, PACKAGE);
+    const { packageRefusal } = await getMoveTargets(request, WIDELY_USED_ENTITY, ownId);
+    expect(packageRefusal).toContain('"BusinessPartner" cannot be moved to package');
+    expect(packageRefusal).not.toContain('Copy of OrigamChatMessage');
+  });
+
   test('A package change is refused when the item uses a package the new one does not reference', async ({
     request,
   }) => {
