@@ -78,7 +78,7 @@ public class Program
         builder.Services.AddSingleton<MoveNodeResolver>();
         builder.Services.AddSingleton<SchemaItemDragDrop>();
         builder.Services.AddSingleton<MoveToPackage>();
-        builder.Services.AddSingleton<SchemaItemMoveService>();
+        builder.Services.AddSingleton<MoveNodeFacade>();
         builder.Services.AddSingleton<PropertyEditorService>();
         builder.Services.AddSingleton<ItemTypeCatalogService>();
         builder.Services.AddSingleton<ApiControlFactory>();

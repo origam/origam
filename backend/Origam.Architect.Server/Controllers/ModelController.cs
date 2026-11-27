@@ -37,7 +37,7 @@ namespace Origam.Architect.Server.Controllers;
 [ApiController]
 [Route("[controller]")]
 public class ModelController(
-    SchemaItemMoveService moveService,
+    MoveNodeFacade moveNodeFacade,
     SchemaService schemaService,
     IPersistenceService persistenceService,
     TreeNodeFactory treeNodeFactory,
@@ -273,7 +273,7 @@ public class ModelController(
         [Required] [FromBody] MoveVerdictsModel input
     )
     {
-        return Ok(moveService.GetMoveVerdicts(input.Source, input.Targets));
+        return Ok(moveNodeFacade.GetMoveVerdicts(input.Source, input.Targets));
     }
 
     [HttpPost("GetMoveTargets")]
@@ -305,7 +305,7 @@ public class ModelController(
         [Required] [FromBody] MoveTargetsModel input
     )
     {
-        return Ok(moveService.GetMoveTargets(input.Source, input.PackageId));
+        return Ok(moveNodeFacade.GetMoveTargets(input.Source, input.PackageId));
     }
 
     [HttpPost("MoveNode")]
@@ -352,6 +352,6 @@ public class ModelController(
     )]
     public ActionResult<MoveNodeResult> MoveNode([Required] [FromBody] MoveNodeModel input)
     {
-        return Ok(moveService.Move(input.Source, input.Target, input.IsCopy, input.PackageId));
+        return Ok(moveNodeFacade.Move(input.Source, input.Target, input.IsCopy, input.PackageId));
     }
 }

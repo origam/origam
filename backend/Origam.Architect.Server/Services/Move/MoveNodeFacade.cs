@@ -30,7 +30,7 @@ using Origam.Workbench.Services;
 
 namespace Origam.Architect.Server.Services.Move;
 
-public class SchemaItemMoveService(
+public class MoveNodeFacade(
     SchemaService schemaService,
     MoveNodeResolver nodeResolver,
     SchemaItemDragDrop dragDrop,
