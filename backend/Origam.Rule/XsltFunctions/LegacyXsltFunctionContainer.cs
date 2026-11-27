@@ -1,4 +1,4 @@
-﻿#region license
+#region license
 
 /*
 Copyright 2005 - 2022 Advantage Solutions, s. r. o.
@@ -28,7 +28,6 @@ using System.Data;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Runtime.Versioning;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
@@ -982,7 +981,6 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
         return res;
     }
 
-    [SupportedOSPlatform("windows")]
     public static string ResizeImage(string inputData, int width, int height)
     {
         byte[] inBytes = System.Convert.FromBase64String(inputData);
@@ -992,7 +990,6 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
         );
     }
 
-    [SupportedOSPlatform("windows")]
     public static string ResizeImage(
         string inputData,
         int width,
@@ -1019,7 +1016,6 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
         );
     }
 
-    [SupportedOSPlatform("windows")]
     public static XPathNodeIterator GetImageDimensions(string inputData)
     {
         byte[] inBytes = Convert.FromBase64String(inputData);
@@ -2040,7 +2036,6 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
             .ToDateTime(date, XmlDateTimeSerializationMode.RoundtripKind)
             .AddMonths(1)
             .ToString("yyyy-MM-01");
-        ;
     }
 
     public string LastDayOfMonth(string date)
@@ -2069,7 +2064,6 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
         return XmlConvert
             .ToDateTime(date, XmlDateTimeSerializationMode.RoundtripKind)
             .ToString("yyyy");
-        ;
     }
 
     public string Month(string date)
@@ -2077,7 +2071,6 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
         return XmlConvert
             .ToDateTime(date, XmlDateTimeSerializationMode.RoundtripKind)
             .ToString("MM");
-        ;
     }
 
     public string DecimalNumber(string number)
