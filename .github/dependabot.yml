@@ -4,7 +4,7 @@ updates:
     directory: "/backend"
     open-pull-requests-limit: 20
     schedule:
-      interval: "daily"
+      interval: "weekly"
     cooldown:
       default-days: 7
       include:
@@ -16,6 +16,28 @@ updates:
         patterns:
           - "csharpier"
           - "CSharpier.MsBuild"
+      nuget-test-patches:
+        patterns:
+          - "Microsoft.NET.Test.Sdk"
+          - "Moq"
+          - "NUnit"
+          - "NUnit3TestAdapter"
+        update-types:
+          - "patch"
+      nuget-test-minors:
+        patterns:
+          - "Microsoft.NET.Test.Sdk"
+          - "Moq"
+          - "NUnit"
+          - "NUnit3TestAdapter"
+        update-types:
+          - "minor"
+      log4net:
+        patterns:
+          - "log4net"
+        update-types:
+          - "minor"
+          - "patch"
     ignore:
       # Keep Microsoft.OpenApi on the 2.x release line. Upgrading to 3.x requires additional migration work.
       - dependency-name: "Microsoft.OpenApi"
@@ -31,13 +53,50 @@ updates:
     directory: "/frontend-html"
     open-pull-requests-limit: 20
     schedule:
-      interval: "daily"
+      interval: "weekly"
     cooldown:
       default-days: 7
       include:
         - "*"
     commit-message:
       prefix: "DEV: "
+    groups:
+      frontend-react:
+        patterns: ["react", "react-dom", "@types/react", "@types/react-dom"]
+        update-types: ["minor", "patch"]
+      frontend-test-patches:
+        dependency-type: "development"
+        patterns:
+          - "@testing-library/dom"
+          - "@testing-library/jest-dom"
+          - "@testing-library/react"
+          - "@testing-library/user-event"
+          - "@types/jest"
+          - "identity-obj-proxy"
+          - "jest"
+          - "jest-environment-jsdom"
+          - "ts-jest"
+        update-types: ["patch"]
+      frontend-test-minors:
+        dependency-type: "development"
+        patterns:
+          - "@testing-library/dom"
+          - "@testing-library/jest-dom"
+          - "@testing-library/react"
+          - "@testing-library/user-event"
+          - "@types/jest"
+          - "identity-obj-proxy"
+          - "jest"
+          - "jest-environment-jsdom"
+          - "ts-jest"
+        update-types: ["minor"]
+      frontend-vite:
+        dependency-type: "development"
+        patterns: ["vite", "@vitejs/plugin-react"]
+        update-types: ["patch", "minor"]
+      frontend-dev-updates:
+        dependency-type: "development"
+        update-types: ["patch", "minor"]
     ignore:
       # Keep mobx on the 6.x release line. Upgrading to 7.x requires additional migration work.
       - dependency-name: "mobx"
@@ -49,13 +108,24 @@ updates:
     directory: "/architect-html"
     open-pull-requests-limit: 20
     schedule:
-      interval: "daily"
+      interval: "weekly"
     cooldown:
       default-days: 7
       include:
         - "*"
     commit-message:
       prefix: "DEV: "
+    groups:
+      architect-react:
+        patterns: ["react", "react-dom", "@types/react", "@types/react-dom"]
+        update-types: ["minor", "patch"]
+      architect-vite:
+        dependency-type: "development"
+        patterns: ["vite", "@vitejs/plugin-react"]
+        update-types: ["patch", "minor"]
+      architect-dev-updates:
+        dependency-type: "development"
+        update-types: ["patch", "minor"]
     ignore:
       - dependency-name: "eslint"
         versions: [">=10.0.0 <10.1.0"]
@@ -63,13 +133,20 @@ updates:
     directory: "/chat-html"
     open-pull-requests-limit: 20
     schedule:
-      interval: "daily"
+      interval: "weekly"
     cooldown:
       default-days: 7
       include:
         - "*"
     commit-message:
       prefix: "DEV: "
+    groups:
+      chat-react:
+        patterns: ["react", "react-dom", "@types/react", "@types/react-dom"]
+        update-types: ["minor", "patch"]
+      chat-dev-updates:
+        dependency-type: "development"
+        update-types: ["patch", "minor"]
     ignore:
       # Draft.js and react-draft-wysiwyg require Immutable 3.x or 4.x.
       - dependency-name: "immutable"

@@ -1,0 +1,162 @@
+name: Dependabot eligibility label
+
+on:
+  pull_request_target:
+    types: [opened, reopened, synchronize, edited, ready_for_review, converted_to_draft]
+  workflow_run:
+    workflows: [Integration Tests, Architect NUnit Tests, Architect HTML E2E (integration)]
+    types: [in_progress, completed]
+    branches: ['dependabot/**']
+
+permissions:
+  actions: read
+  pull-requests: write
+
+jobs:
+  label:
+    if: >-
+      (github.event_name == 'pull_request_target' &&
+       github.event.pull_request.user.login == 'dependabot[bot]' &&
+       github.event.pull_request.head.repo.full_name == github.repository) ||
+      (github.event_name == 'workflow_run' &&
+       github.event.workflow_run.event == 'pull_request' &&
+       github.event.workflow_run.head_repository.id == github.event.repository.id &&
+       github.event.workflow_run.pull_requests[0].number != null &&
+       github.event.workflow_run.pull_requests[1].number == null)
+    runs-on: ubuntu-latest
+    concurrency:
+      group: dependabot-eligibility-${{ github.event.pull_request.number || github.event.workflow_run.pull_requests[0].number }}
+    env:
+      GH_TOKEN: ${{ github.token }}
+      PR_NUMBER: ${{ github.event.pull_request.number || github.event.workflow_run.pull_requests[0].number }}
+      LABEL: eligible-for-auto-merge
+    steps:
+      - name: Check test workflows for the current PR commit
+        id: ci
+        shell: bash
+        run: |
+          repo_api="repos/$GITHUB_REPOSITORY"
+          pr=$(gh api "$repo_api/pulls/$PR_NUMBER")
+          if ! jq -e --arg repo "$GITHUB_REPOSITORY" '
+            .state == "open" and .user.login == "dependabot[bot]" and .head.repo.full_name == $repo
+          ' <<< "$pr" > /dev/null; then
+            exit 0
+          fi
+          printf '%s\n' "$pr" > "$RUNNER_TEMP/dependabot-pr.json"
+
+          if ! jq -e '.base.ref == "master" and .draft == false and .commits == 1' <<< "$pr" > /dev/null; then
+            exit 0
+          fi
+          head_sha=$(jq -r '.head.sha' <<< "$pr")
+          for workflow in integration-tests.yml nunit-tests.yml architect-html-e2e-integration.yml; do
+            runs=$(gh api --paginate "$repo_api/actions/workflows/$workflow/runs?event=pull_request&head_sha=$head_sha&per_page=100")
+            if ! jq -e -s --arg sha "$head_sha" --argjson pr "$PR_NUMBER" '
+              [.[].workflow_runs[]
+                | select(.event == "pull_request" and .head_sha == $sha
+                    and any(.pull_requests[]; .number == $pr and .base.ref == "master"))]
+              | max_by(.run_number)
+              | .status == "completed" and .conclusion == "success"
+            ' <<< "$runs" > /dev/null; then
+              echo "$workflow has no successful latest run for this PR commit."
+              exit 0
+            fi
+          done
+          echo "passed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Set up Node for Dependabot metadata
+        if: steps.ci.outputs.passed == 'true'
+        uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          package-manager-cache: false
+
+      - name: Fetch verified Dependabot metadata
+        if: steps.ci.outputs.passed == 'true'
+        id: metadata
+        shell: bash
+        run: |
+          # workflow_run has no top-level PR object. Give the pinned action the
+          # same PR data from the GitHub API, without checking out PR code.
+          jq '{pull_request: .}' "$RUNNER_TEMP/dependabot-pr.json" > "$RUNNER_TEMP/dependabot-event.json"
+          curl --fail --silent --show-error --location \
+            'https://raw.githubusercontent.com/dependabot/fetch-metadata/25dd0e34f4fe68f24cc83900b1fe3fe149efef98/dist/index.js' \
+            --output "$RUNNER_TEMP/dependabot-fetch-metadata.cjs"
+          env GITHUB_EVENT_PATH="$RUNNER_TEMP/dependabot-event.json" \
+            "INPUT_GITHUB-TOKEN=$GH_TOKEN" INPUT_SKIP-VERIFICATION=false INPUT_SKIP-COMMIT-VERIFICATION=false \
+            node "$RUNNER_TEMP/dependabot-fetch-metadata.cjs"
+
+      - name: Reconcile eligibility label
+        if: ${{ !cancelled() }}
+        shell: bash
+        env:
+          METADATA_OUTCOME: ${{ steps.metadata.outcome }}
+          UPDATED_DEPENDENCIES: ${{ steps.metadata.outputs.updated-dependencies-json }}
+        run: |
+          snapshot="$RUNNER_TEMP/dependabot-pr.json"
+          if [[ ! -f "$snapshot" ]]; then
+            exit 0
+          fi
+          repo_api="repos/$GITHUB_REPOSITORY"
+          pr=$(gh api "$repo_api/pulls/$PR_NUMBER")
+          if ! jq -e --slurpfile snapshot "$snapshot" '
+            .state == "open" and .head.sha == $snapshot[0].head.sha
+            and .base.ref == $snapshot[0].base.ref and .draft == $snapshot[0].draft
+          ' <<< "$pr" > /dev/null; then
+            exit 0
+          fi
+
+          labels_api="$repo_api/issues/$PR_NUMBER/labels"
+          # Keep these allowlists aligned with the test and Vite groups.
+          if [[ "$METADATA_OUTCOME" == success ]] &&
+            jq -e '.base.ref == "master" and .draft == false and .commits == 1' <<< "$pr" > /dev/null &&
+            jq -e -s '
+              def stable_version:
+                capture("^(?<major>[1-9][0-9]*)\\.(?<minor>0|[1-9][0-9]*)\\.(?<patch>0|[1-9][0-9]*)$");
+              def stable_update:
+                [.prevVersion, .newVersion | stable_version] as $versions
+                | ($versions | length) == 2
+                  and $versions[0].major == $versions[1].major
+                  and (
+                    (.updateType == "version-update:semver-patch"
+                      and $versions[0].minor == $versions[1].minor
+                      and ($versions[0].patch | tonumber) < ($versions[1].patch | tonumber))
+                    or (.updateType == "version-update:semver-minor"
+                      and ($versions[0].minor | tonumber) < ($versions[1].minor | tonumber))
+                  );
+              def vite_dependency:
+                .packageEcosystem == "npm_and_yarn"
+                and .dependencyType == "direct:development"
+                and (.directory | IN("/frontend-html", "/architect-html"))
+                and (.dependencyName | IN("vite", "@vitejs/plugin-react"));
+              def test_dependency:
+                if .packageEcosystem == "nuget" then
+                  .dependencyName | ascii_downcase |
+                  IN("microsoft.net.test.sdk", "moq", "nunit", "nunit3testadapter")
+                elif .packageEcosystem == "npm_and_yarn" then
+                  .directory == "/frontend-html"
+                  and .dependencyType == "direct:development"
+                  and (.dependencyName | IN(
+                    "@testing-library/dom", "@testing-library/jest-dom", "@testing-library/react",
+                    "@testing-library/user-event", "@types/jest", "identity-obj-proxy",
+                    "jest", "jest-environment-jsdom", "ts-jest"
+                  ))
+                else
+                  false
+                end;
+              length == 1 and (.[0] |
+                type == "array" and length > 0 and all(.[];
+                  .maintainerChanges == false
+                  and stable_update
+                  and (vite_dependency or (.updateType == "version-update:semver-patch" and test_dependency))
+                )
+              )
+            ' <<< "$UPDATED_DEPENDENCIES" > /dev/null; then
+            if ! gh api "$repo_api/labels/$LABEL" --silent 2>/dev/null; then
+              gh api "$repo_api/labels" --silent -f name="$LABEL" -f color=0e8a16 \
+                -f description="Dependabot update candidate based on dependency metadata" ||
+                gh api "$repo_api/labels/$LABEL" --silent
+            fi
+            gh api "$labels_api" --silent -f "labels[]=$LABEL"
+          elif jq -e --arg label "$LABEL" 'any(.labels[]; .name == $label)' <<< "$pr" > /dev/null; then
+            gh api --method DELETE "$labels_api/$LABEL" --silent
+          fi
